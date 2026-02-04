@@ -8,7 +8,7 @@ interface TopicSelectorProps {
 }
 
 const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect, dailyUsage }) => {
-  const FREE_TIER_LIMIT = 50; // Reference to Gemini 1.5 Flash potential daily limit
+  const FREE_TIER_LIMIT = 100; // Updated limit to verify deployment propagation
 
   return (
     <div className="space-y-12 animate-in fade-in slide-in-from-top-4 duration-700">
