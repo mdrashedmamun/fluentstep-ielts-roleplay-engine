@@ -36,14 +36,19 @@ export const generateRoleplay = async (topic: string): Promise<string> => {
     
     STEP 1 — ROLEPLAY GENERATION:
     - Topic: ${topic}.
-    - Length: Long, multi-turn (15-20 dialogue turns). Must feel real, slightly messy, and human.
-    - Constraints: HARD-ENFORCE reuse of 12-18 instances of universal chunks. Same chunks should reappear multiple times.
+    - Logical Flow is Paramount: Chunks must ONLY be used where they fit 100% naturally. Do NOT force a chunk if it sounds awkward.
+    - Length: Long, multi-turn (12-15 dialogue turns).
+    - Constraints: Use 8-12 unique universal chunks. Quality and naturalness over quantity.
 
     STEP 2 — ANSWER GENERATION:
     - Heading: "## Answer Variations".
     - Rule: For EVERY blank used above, provide:
-      [Index]. [The Universal Chunk used] | Alternatives: [Advanced Native Phrasing 1], [IELTS Band 9 Phrasing 2], [Natural UK Idiom 3]
-    - Requirement: Alternatives MUST be high-level (Band 8.5-9.0), idiomatic, and sophisticated while remaining natural.
+      [Index]. [The Universal Chunk used] | Alternatives: [IELTS Band 9 Option 1], [Natural UK Idiom 2]
+
+    STEP 3 — EDUCATIONAL DEEP DIVE:
+    - Heading: "## Deep Dive & Usage".
+    - Format: [Index]. [Chunk Name]: [One sentence explaining WHY this specific phrase was used in this context and how it affects the tone (e.g., 'Polite redirection', 'Softening a request')].
+    - Rule: Focus on the "Social Logic" of the phrase.
 
     LOCKED UNIVERSAL CHUNKS:
     ${UNIVERSAL_CHUNKS}

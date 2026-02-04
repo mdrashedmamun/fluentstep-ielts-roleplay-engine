@@ -89,27 +89,26 @@ const InteractiveBlank: React.FC<{ primary: string; alts: string; index: number;
 const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ content, onReset }) => {
   const [showAllAnswers, setShowAllAnswers] = useState(false);
 
-  const { contextLine, roleplayLines, answers, topicKey } = useMemo(() => {
+  const { contextLine, roleplayLines, answers, topicKey, explanations } = useMemo(() => {
     // Only clean asterisks to keep "________" intact
     const cleanContent = content.replace(/\*/g, '');
 
-    const sections = cleanContent.split(/## (Roleplay|Answer Variations)/i);
+    const parsedAns: { primary: string; alts: string }[] = [];
+    const parsedExplanations: Record<number, string> = {};
+
+    const sections = cleanContent.split(/## (Roleplay|Answer Variations|Deep Dive & Usage)/i);
     const rpRaw = sections.indexOf('Roleplay') !== -1 ? sections[sections.indexOf('Roleplay') + 1] : cleanContent;
     const ansRaw = sections.indexOf('Answer Variations') !== -1 ? sections[sections.indexOf('Answer Variations') + 1] : '';
+    const divRaw = sections.indexOf('Deep Dive & Usage') !== -1 ? sections[sections.indexOf('Deep Dive & Usage') + 1] : '';
 
     const lines = rpRaw.split('\n').filter(l => l.trim().length > 0);
 
     const contextMatch = cleanContent.match(/Context:\s*(.*)/i);
     const context = contextMatch ? contextMatch[1] : null;
 
-    const lowContext = (context || "").toLowerCase();
-    const topicKey = Object.keys(TOPIC_ICONS).find(k => lowContext.includes(k)) || 'daily';
-
-    const parsedAns: { primary: string; alts: string }[] = [];
+    // Parse Answers
     const ansLines = ansRaw.split('\n');
     ansLines.forEach(line => {
-      // Flexible regex for: 1. Chunk | Alternatives: Alt1, Alt2
-      // or 1. Chunk / Alts: Alt1, Alt2
       const match = line.match(/^\d+\.\s*(.*?)\s*[|/]\s*(?:Alternatives|Alts):\s*(.*)/i);
       if (match) {
         parsedAns.push({ primary: match[1].trim(), alts: match[2].trim() });
@@ -123,10 +122,23 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ content, onReset }) => 
       }
     });
 
+    // Parse Explanations
+    const divLines = divRaw.split('\n');
+    divLines.forEach(line => {
+      const match = line.match(/^(\d+)\.\s*(.*?):\s*(.*)/);
+      if (match) {
+        parsedExplanations[parseInt(match[1], 10)] = match[3].trim();
+      }
+    });
+
+    const lowContext = (context || "").toLowerCase();
+    const topicKey = Object.keys(TOPIC_ICONS).find(k => lowContext.includes(k)) || 'daily';
+
     return {
       contextLine: context,
       roleplayLines: lines.filter(l => !l.toLowerCase().startsWith('context:')),
       answers: parsedAns,
+      explanations: parsedExplanations,
       topicKey
     };
   }, [content]);
@@ -238,6 +250,37 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ content, onReset }) => 
           );
         })}
       </div>
+
+      {Object.keys(explanations).length > 0 && (
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
+          <div className="flex items-center gap-4 px-2">
+            <div className="h-px flex-1 bg-emerald-100"></div>
+            <div className="flex items-center gap-2">
+              <i className="fas fa-graduation-cap text-emerald-500 text-sm"></i>
+              <span className="text-xs font-black text-emerald-900 uppercase tracking-[0.2em]">Linguistic Mastery</span>
+            </div>
+            <div className="h-px flex-1 bg-emerald-100"></div>
+          </div>
+
+          <div className="grid gap-4">
+            {Object.entries(explanations).map(([idx, text]) => (
+              <div key={idx} className="bg-white border border-emerald-50 rounded-2xl p-6 flex gap-4 hover:border-emerald-200 transition-colors shadow-sm">
+                <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center flex-shrink-0">
+                  <span className="text-xs font-black text-emerald-600">{idx}</span>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm text-emerald-950 font-bold tracking-tight">
+                    {answers[parseInt(idx) - 1]?.primary || 'Pattern Analysis'}
+                  </p>
+                  <p className="text-sm text-emerald-800/60 leading-relaxed">
+                    {text}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="bg-emerald-900 rounded-[40px] p-12 text-white shadow-2xl relative overflow-hidden group">
         <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500 rounded-full blur-[120px] -mr-48 -mt-48 opacity-20 transition-all duration-1000 group-hover:scale-150"></div>
