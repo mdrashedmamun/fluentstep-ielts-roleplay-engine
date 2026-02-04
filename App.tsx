@@ -4,7 +4,7 @@ import { AppView } from './types';
 import Layout from './components/Layout';
 import TopicSelector from './components/TopicSelector';
 import RoleplayViewer from './components/RoleplayViewer';
-import { generateRoleplay } from './services/geminiService';
+import { generateRoleplay } from './services/groqService';
 
 const LEARNING_QUOTES = [
   { text: "The limits of my language mean the limits of my world.", author: "Ludwig Wittgenstein" },
