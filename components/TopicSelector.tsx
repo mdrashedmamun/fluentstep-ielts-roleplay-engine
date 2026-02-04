@@ -28,7 +28,7 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect, dailyUsage }) =
         <div className="pt-4">
           <div className="inline-flex items-center gap-4 px-6 py-3 bg-white border border-emerald-100 rounded-2xl shadow-sm">
             <div className="flex flex-col items-start">
-              <span className="text-[10px] font-black uppercase tracking-tighter text-emerald-800/40">Daily Capacity</span>
+              <span className="text-[10px] font-black uppercase tracking-tighter text-emerald-800/40">Daily Capacity <span className="ml-1 text-[8px] opacity-30 italic">v1.2-LITE</span></span>
               <div className="flex items-baseline gap-1">
                 <span className="text-xl font-black text-emerald-600">{dailyUsage}</span>
                 <span className="text-sm font-bold text-emerald-800/30">/ {FREE_TIER_LIMIT} sessions</span>
