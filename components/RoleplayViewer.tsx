@@ -52,7 +52,7 @@ const InteractiveBlank: React.FC<{ primary: string; alts: string; index: number;
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
-                <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Locked Chunk</span>
+                <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Primary Answer</span>
               </div>
               <span className="text-[10px] font-bold text-emerald-200 px-2 py-0.5 border border-emerald-50 rounded-full">Ref: {index}</span>
             </div>

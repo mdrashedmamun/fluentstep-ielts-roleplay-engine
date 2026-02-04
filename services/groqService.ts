@@ -21,38 +21,29 @@ export const generateRoleplay = async (topic: string): Promise<string> => {
     You are a language-learning engine specialised in fluency acquisition through long, realistic role-play.
     Your task is to generate immersive role-plays that deliberately and repeatedly reuse a fixed set of UNIVERSAL CHUNKS, while minimising topic-specific language.
 
-    GLOBAL RULES (NON-NEGOTIABLE):
-    1. This system trains PATTERNS, not vocabulary. Novelty is a bug, not a feature.
-    2. Chunk repetition is intentional and required. Locked chunks take priority over all other phrasing.
-    3. Goal: automatic, fluent deployment of core conversational moves.
-    4. Style: UK native, day-to-day English. Calm, understated, adult tone.
+    GLOBAL RULES (NATURALNESS > PATTERNS):
+    1. **PRIORITY #1: NATURAL LOGIC.** The dialogue must make perfect sense. If a "Universal Chunk" feels even slightly forced, DO NOT USE IT.
+    2. **Roleplay First:** Write a completely natural, high-level native conversation first.
+    3. **Blanks Second:** *After* writing the dialogue, identify 8-10 phrases that are excellent for learning (idioms, collocations, natural reactions) and turn THOSE into blanks.
+    4. **No Forced Chunks:** Do not try to shoehorn specific words from a list if they don't fit.
 
     STRICT FORMATTING RULES:
-    - NO MARKDOWN BOLDING: Never use asterisks (*) or underscores (_) to highlight words.
-    - Speaker Format: Always use "Speaker Name: Message".
-    - Preface with Context: First line MUST be "Context: [Setting Description]".
-    - Roleplay Header: "## Roleplay".
-    - Blanks: Replace every instance of a Universal Chunk from the locked set with a clearly visible blank (e.g., "________").
-    
-    STEP 1 — ROLEPLAY GENERATION:
-    - Topic: ${topic}.
-    - Tone: Natural UK native dialogue only.
-    - Blanks: For every Universal Chunk used, replace it with EXACTLY "________" (8 underscores). 
-    - CRITICAL: Do NOT write the chunk name or any labels inside the dialogue. JUST the underscores.
-    - Constraints: 8-10 chunks max. Only use if 100% natural context.
+    - Speaker Format: "Speaker: Message"
+    - Blanks: Use EXACTLY "________" (8 underscores) for the learning phrases.
+    - NO context notes inside the dialogue.
+
+    STEP 1 — GENERATE NATURAL DIALOGUE:
+    - Topic: ${topic}
+    - Create a 12-15 turn conversation. It must flow like real life.
+    - Select 8-10 "High Value" phrases to blank out. These can be from the Universal List OR new natural phrases that fit the context perfectly.
 
     STEP 2 — ANSWERS:
     - Heading: "## Answer Variations".
-    - Rule: For every blank (in order), provide:
-      [Index]. [Original Chunk] | Alts: [Alt 1], [Alt 2]
+    - Rule: [Index]. [The Phrase You Blanked Out] | Alts: [Alt 1], [Alt 2]
 
     STEP 3 — EXPLANATIONS:
     - Heading: "## Deep Dive & Usage".
-    - Rule: For every blank, provide:
-      [Index]. [Original Chunk]: [Explanation of social usage]
-
-    LOCKED UNIVERSAL CHUNKS:
-    ${UNIVERSAL_CHUNKS}
+    - Rule: [Index]. [The Phrase]: [Why this is the perfect thing to say here]
   `;
 
     try {
