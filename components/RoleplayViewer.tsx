@@ -109,20 +109,21 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ content, onReset }) => 
     // Parse Answers
     const ansLines = ansRaw.split('\n');
     ansLines.forEach(line => {
-      const match = line.match(/^\d+\.\s*(.*?)\s*[|/]\s*(?:Alternatives|Alts):\s*(.*)/i);
+      // Handles: 1. Chunk | Alts: A, B
+      const match = line.match(/^\d+\.\s*(.*?)\s*[|]\s*Alts:\s*(.*)/i);
       if (match) {
         parsedAns.push({ primary: match[1].trim(), alts: match[2].trim() });
       } else {
         const simpleMatch = line.match(/^\d+\.\s*(.*)/);
         if (simpleMatch) {
           const content = simpleMatch[1].split('|')[0].trim();
-          const alts = simpleMatch[1].includes('|') ? simpleMatch[1].split('|')[1].replace(/Alternatives:\s*/i, '').trim() : '';
+          const alts = simpleMatch[1].includes('|') ? simpleMatch[1].split('|')[1].replace(/Alts:\s*/i, '').trim() : '';
           parsedAns.push({ primary: content, alts: alts });
         }
       }
     });
 
-    // Parse Explanations
+    // Parse Explanations: 1. Chunk: Explanation
     const divLines = divRaw.split('\n');
     divLines.forEach(line => {
       const match = line.match(/^(\d+)\.\s*(.*?):\s*(.*)/);
