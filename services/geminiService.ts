@@ -48,7 +48,7 @@ export const generateRoleplay = async (topic: string): Promise<string> => {
 
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-2.0-flash-lite', // Upgrading to the latest standard lite model
+      model: 'gemini-1.5-flash-latest', // Stable model with 1,500 RPD free tier
       contents: `Start the practice for topic: ${topic}. Ensure every universal chunk used is replaced by "________" in the dialogue.`,
       config: {
         systemInstruction: systemInstruction.trim(),
