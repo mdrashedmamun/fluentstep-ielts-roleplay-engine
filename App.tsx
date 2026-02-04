@@ -54,11 +54,17 @@ const App: React.FC = () => {
   }, [isLoading]);
 
   const handleTopicSelect = useCallback(async (topic: string) => {
-    // Check Cache First
+    // Check Cache First (Zero cost)
     if (roleplayCache[topic]) {
       setRoleplayContent(roleplayCache[topic]);
       setSelectedTopic(topic);
       setView(AppView.ROLEPLAY_DISPLAY);
+      return;
+    }
+
+    // Hard Limit for Free Tier Protection
+    if (dailyUsage >= 50) {
+      setError("Daily Free Tier Limit Reached (50/50). Please try again tomorrow or select a previously generated topic from your cache.");
       return;
     }
 
