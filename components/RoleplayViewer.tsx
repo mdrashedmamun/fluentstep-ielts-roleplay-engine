@@ -29,21 +29,22 @@ const InteractiveBlank: React.FC<{ primary: string; alts: string; index: number;
     <span className="relative inline-block group mx-1 align-baseline">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`px-4 py-1.5 transition-all duration-300 rounded-xl font-bold border-2 flex items-center gap-2 group/btn ${
-          showAnswer 
-            ? 'border-emerald-500 bg-emerald-50 text-emerald-700 shadow-md ring-2 ring-emerald-500/10' 
-            : 'border-emerald-200 bg-white text-emerald-300 hover:border-emerald-400 hover:text-emerald-500 hover:shadow-lg'
-        }`}
+        className={`px-4 py-1.5 transition-all duration-300 rounded-xl font-bold border-2 flex items-center gap-3 group/btn min-w-[120px] justify-center ${showAnswer
+          ? 'border-emerald-500 bg-emerald-50 text-emerald-700 shadow-md ring-2 ring-emerald-500/10'
+          : 'border-emerald-100 bg-emerald-50/30 text-emerald-300 hover:border-emerald-400 hover:text-emerald-500 hover:shadow-lg hover:bg-white'
+          }`}
       >
-        <span className="text-[10px] opacity-40 font-black group-hover/btn:opacity-100 transition-opacity">{index}</span>
+        <span className={`text-[10px] ${showAnswer ? 'text-emerald-400' : 'text-emerald-300'} font-black uppercase tracking-tighter`}>Slot {index}</span>
         <span className="tracking-tight whitespace-nowrap">
-          {showAnswer ? primary.replace(/\*/g, '') : '________'}
+          {showAnswer ? primary.replace(/\*/g, '') : 'REVEAL'}
         </span>
-        {!showAnswer && (
-          <i className="fas fa-eye text-[10px] opacity-0 group-hover/btn:opacity-40 transition-opacity"></i>
+        {showAnswer ? (
+          <i className="fas fa-check-circle text-[10px] text-emerald-500"></i>
+        ) : (
+          <i className="fas fa-plus text-[10px] opacity-20 group-hover/btn:opacity-100 transition-opacity"></i>
         )}
       </button>
-      
+
       {isOpen && (
         <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-80 p-6 bg-white rounded-3xl shadow-[0_20px_50px_rgba(6,78,59,0.15)] border border-emerald-100 z-50 animate-in zoom-in-95 fade-in duration-200">
           <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-b border-r border-emerald-100 rotate-45"></div>
@@ -55,9 +56,9 @@ const InteractiveBlank: React.FC<{ primary: string; alts: string; index: number;
               </div>
               <span className="text-[10px] font-bold text-emerald-200 px-2 py-0.5 border border-emerald-50 rounded-full">Ref: {index}</span>
             </div>
-            
+
             <p className="text-emerald-950 font-black leading-tight text-xl tracking-tight">{primary.replace(/\*/g, '')}</p>
-            
+
             {alts && alts.trim() !== '' && (
               <div className="pt-4 border-t border-emerald-50">
                 <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-2">Native Alternatives</span>
@@ -71,8 +72,8 @@ const InteractiveBlank: React.FC<{ primary: string; alts: string; index: number;
                 </div>
               </div>
             )}
-            
-            <button 
+
+            <button
               onClick={(e) => { e.stopPropagation(); setIsOpen(false); }}
               className="w-full mt-2 py-2 text-[10px] font-bold text-emerald-400 uppercase tracking-widest hover:text-emerald-600 transition-colors"
             >
@@ -91,13 +92,13 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ content, onReset }) => 
   const { contextLine, roleplayLines, answers, topicKey } = useMemo(() => {
     // Only clean asterisks to keep "________" intact
     const cleanContent = content.replace(/\*/g, '');
-    
+
     const sections = cleanContent.split(/## (Roleplay|Answer Variations)/i);
     const rpRaw = sections.indexOf('Roleplay') !== -1 ? sections[sections.indexOf('Roleplay') + 1] : cleanContent;
     const ansRaw = sections.indexOf('Answer Variations') !== -1 ? sections[sections.indexOf('Answer Variations') + 1] : '';
 
     const lines = rpRaw.split('\n').filter(l => l.trim().length > 0);
-    
+
     const contextMatch = cleanContent.match(/Context:\s*(.*)/i);
     const context = contextMatch ? contextMatch[1] : null;
 
@@ -107,18 +108,24 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ content, onReset }) => 
     const parsedAns: { primary: string; alts: string }[] = [];
     const ansLines = ansRaw.split('\n');
     ansLines.forEach(line => {
-      const match = line.match(/^\d+\.\s*(.*?)\s*\/\s*Alts:\s*(.*)/i);
+      // Flexible regex for: 1. Chunk | Alternatives: Alt1, Alt2
+      // or 1. Chunk / Alts: Alt1, Alt2
+      const match = line.match(/^\d+\.\s*(.*?)\s*[|/]\s*(?:Alternatives|Alts):\s*(.*)/i);
       if (match) {
         parsedAns.push({ primary: match[1].trim(), alts: match[2].trim() });
       } else {
         const simpleMatch = line.match(/^\d+\.\s*(.*)/);
-        if (simpleMatch) parsedAns.push({ primary: simpleMatch[1].trim(), alts: '' });
+        if (simpleMatch) {
+          const content = simpleMatch[1].split('|')[0].trim();
+          const alts = simpleMatch[1].includes('|') ? simpleMatch[1].split('|')[1].replace(/Alternatives:\s*/i, '').trim() : '';
+          parsedAns.push({ primary: content, alts: alts });
+        }
       }
     });
 
-    return { 
-      contextLine: context, 
-      roleplayLines: lines.filter(l => !l.toLowerCase().startsWith('context:')), 
+    return {
+      contextLine: context,
+      roleplayLines: lines.filter(l => !l.toLowerCase().startsWith('context:')),
       answers: parsedAns,
       topicKey
     };
@@ -129,20 +136,19 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ content, onReset }) => 
   return (
     <div className="max-w-4xl mx-auto space-y-10 animate-in slide-in-from-bottom-8 duration-700 pb-20">
       <div className="flex justify-between items-center px-2">
-        <button 
+        <button
           onClick={onReset}
           className="group px-5 py-2.5 bg-white border border-emerald-100 text-emerald-700 hover:text-emerald-900 rounded-xl flex items-center gap-3 font-bold shadow-sm transition-all hover:shadow-md hover:scale-[1.02] active:scale-95"
         >
-          <i className="fas fa-arrow-left text-xs group-hover:-translate-x-1 transition-transform"></i> 
+          <i className="fas fa-arrow-left text-xs group-hover:-translate-x-1 transition-transform"></i>
           Change Topic
         </button>
-        <button 
+        <button
           onClick={() => setShowAllAnswers(!showAllAnswers)}
-          className={`text-sm font-bold px-6 py-2.5 rounded-xl border-2 transition-all hover:scale-[1.02] active:scale-95 flex items-center gap-2 ${
-            showAllAnswers 
-              ? 'bg-emerald-600 border-emerald-600 text-white shadow-lg shadow-emerald-200' 
-              : 'bg-white border-emerald-100 text-emerald-600 hover:border-emerald-300'
-          }`}
+          className={`text-sm font-bold px-6 py-2.5 rounded-xl border-2 transition-all hover:scale-[1.02] active:scale-95 flex items-center gap-2 ${showAllAnswers
+            ? 'bg-emerald-600 border-emerald-600 text-white shadow-lg shadow-emerald-200'
+            : 'bg-white border-emerald-100 text-emerald-600 hover:border-emerald-300'
+            }`}
         >
           <i className={`fas ${showAllAnswers ? 'fa-eye-slash' : 'fa-eye'}`}></i>
           {showAllAnswers ? 'Hide All Keys' : 'Reveal All Answers'}
@@ -152,14 +158,14 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ content, onReset }) => 
       {contextLine && (
         <div className="relative overflow-hidden bg-white border border-emerald-100 rounded-[32px] p-8 md:p-10 shadow-sm flex flex-col md:flex-row items-center gap-10 group transition-all hover:shadow-xl hover:shadow-emerald-900/5">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent opacity-20"></div>
-          
+
           <div className="relative w-28 h-28 flex-shrink-0">
             <div className="absolute inset-0 bg-emerald-50 rounded-[2.5rem] rotate-6 group-hover:rotate-12 transition-transform duration-500"></div>
             <div className="absolute inset-0 bg-emerald-100/50 rounded-[2.5rem] -rotate-3 group-hover:-rotate-6 transition-transform duration-500"></div>
             <div className="relative w-full h-full bg-white border border-emerald-100 rounded-[2.5rem] flex items-center justify-center shadow-inner overflow-hidden">
-               <div className="w-16 h-16 bg-emerald-500/10 rounded-full absolute -bottom-4 -left-4 blur-xl"></div>
-               <div className="w-16 h-16 bg-teal-500/10 rounded-full absolute -top-4 -right-4 blur-xl"></div>
-               <i className={`fas ${TOPIC_ICONS[topicKey] || 'fa-comment-dots'} text-4xl text-emerald-500 group-hover:scale-125 transition-transform duration-700`}></i>
+              <div className="w-16 h-16 bg-emerald-500/10 rounded-full absolute -bottom-4 -left-4 blur-xl"></div>
+              <div className="w-16 h-16 bg-teal-500/10 rounded-full absolute -top-4 -right-4 blur-xl"></div>
+              <i className={`fas ${TOPIC_ICONS[topicKey] || 'fa-comment-dots'} text-4xl text-emerald-500 group-hover:scale-125 transition-transform duration-700`}></i>
             </div>
           </div>
 
@@ -172,8 +178,8 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ content, onReset }) => 
               {contextLine}
             </p>
             <div className="flex flex-wrap justify-center md:justify-start gap-2 mt-4">
-               <span className="text-[10px] bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full font-bold uppercase tracking-widest border border-emerald-100">Practice Mode: Active Recall</span>
-               <span className="text-[10px] bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full font-bold uppercase tracking-widest border border-emerald-100">UK Native Tone</span>
+              <span className="text-[10px] bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full font-bold uppercase tracking-widest border border-emerald-100">Practice Mode: Active Recall</span>
+              <span className="text-[10px] bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full font-bold uppercase tracking-widest border border-emerald-100">UK Native Tone</span>
             </div>
           </div>
         </div>
@@ -186,12 +192,12 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ content, onReset }) => 
           const text = speaker ? line.substring(speaker.length + 1).trim() : line;
           const isYou = speaker?.toLowerCase().includes('you');
 
-          // Split by exactly 8 underscores
-          const parts = text.split(/________/);
+          // Split by 6 or more underscores (flexible AI output)
+          const parts = text.split(/_{6,}/);
 
           return (
-            <div 
-              key={lineIdx} 
+            <div
+              key={lineIdx}
               className={`flex flex-col ${isYou ? 'items-end' : 'items-start'} group/line animate-in fade-in slide-in-from-bottom-4 duration-700`}
               style={{ animationDelay: `${lineIdx * 150}ms` }}
             >
@@ -203,11 +209,10 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ content, onReset }) => 
                   </span>
                 </div>
               )}
-              <div className={`max-w-[95%] md:max-w-[85%] px-10 py-8 rounded-[2.5rem] shadow-sm leading-relaxed transition-all duration-300 text-lg ${
-                isYou 
-                  ? 'bg-gradient-to-br from-emerald-600 to-emerald-700 text-white rounded-tr-none shadow-emerald-200/50 hover:shadow-xl hover:shadow-emerald-300/30' 
-                  : 'bg-white text-emerald-950 border border-emerald-100 rounded-tl-none group-hover/line:border-emerald-300 hover:shadow-xl hover:shadow-emerald-100/50'
-              }`}>
+              <div className={`max-w-[95%] md:max-w-[85%] px-10 py-8 rounded-[2.5rem] shadow-sm leading-relaxed transition-all duration-300 text-lg ${isYou
+                ? 'bg-gradient-to-br from-emerald-600 to-emerald-700 text-white rounded-tr-none shadow-emerald-200/50 hover:shadow-xl hover:shadow-emerald-300/30'
+                : 'bg-white text-emerald-950 border border-emerald-100 rounded-tl-none group-hover/line:border-emerald-300 hover:shadow-xl hover:shadow-emerald-100/50'
+                }`}>
                 <div className="inline leading-relaxed">
                   {parts.map((part, partIdx) => {
                     const items = [];
@@ -215,10 +220,10 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ content, onReset }) => 
                     if (partIdx < parts.length - 1) {
                       const ans = answers[blankCounter] || { primary: '???', alts: '' };
                       items.push(
-                        <InteractiveBlank 
-                          key={`blank-${blankCounter}`} 
+                        <InteractiveBlank
+                          key={`blank-${blankCounter}`}
                           index={blankCounter + 1}
-                          primary={ans.primary} 
+                          primary={ans.primary}
                           alts={ans.alts}
                           forceShow={showAllAnswers}
                         />
@@ -252,7 +257,7 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ content, onReset }) => 
                 Try to guess the missing <span className="text-white font-bold">Universal Chunk</span> before clicking a blank. This interactive reveal reinforces the <span className="text-emerald-400">pattern retrieval</span> mechanism in your brain.
               </p>
             </div>
-            
+
             <div className="bg-emerald-950/50 backdrop-blur-md border border-emerald-800/50 p-10 rounded-[2rem] space-y-5 shadow-2xl">
               <div className="flex items-center gap-2 text-emerald-400 font-black text-xs uppercase tracking-widest">
                 <i className="fas fa-microscope"></i> Methodology

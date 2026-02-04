@@ -32,7 +32,7 @@ export const generateRoleplay = async (topic: string): Promise<string> => {
     - Speaker Format: Always use "Speaker Name: Message".
     - Preface with Context: First line MUST be "Context: [Setting Description]".
     - Roleplay Header: "## Roleplay".
-    - Blanks: Replace every instance of a Universal Chunk from the locked set with the EXACT string "________" (exactly 8 underscores).
+    - Blanks: Replace every instance of a Universal Chunk from the locked set with a clearly visible blank (e.g., "________").
     
     STEP 1 — ROLEPLAY GENERATION:
     - Topic: ${topic}.
@@ -41,8 +41,9 @@ export const generateRoleplay = async (topic: string): Promise<string> => {
 
     STEP 2 — ANSWER GENERATION:
     - Heading: "## Answer Variations".
-    - Format: 1. [PRIMARY CHUNK] / Alts: [Alternative native option 1], [Alternative native option 2]
-    - Rule: Provide the PRIMARY answer using the user’s UNIVERSAL CHUNK. Then provide 1–2 alternatives ONLY if genuinely natural for a UK native.
+    - Rule: For EVERY blank used above, provide:
+      [Index]. [The Universal Chunk used] | Alternatives: [Advanced Native Phrasing 1], [IELTS Band 9 Phrasing 2], [Natural UK Idiom 3]
+    - Requirement: Alternatives MUST be high-level (Band 8.5-9.0), idiomatic, and sophisticated while remaining natural.
 
     LOCKED UNIVERSAL CHUNKS:
     ${UNIVERSAL_CHUNKS}
