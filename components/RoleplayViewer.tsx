@@ -1,319 +1,320 @@
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
+import { RoleplayScript } from '../services/staticData';
+
+import { getChunkContext } from '../services/groqService';
 
 interface RoleplayViewerProps {
-  content: string;
+  script: RoleplayScript;
   onReset: () => void;
 }
 
-const TOPIC_ICONS: Record<string, string> = {
-  'daily': 'fa-mug-hot',
-  'work': 'fa-briefcase',
-  'travel': 'fa-plane-departure',
-  'health': 'fa-heartbeat',
-  'shopping': 'fa-shopping-bag',
-  'education': 'fa-book-reader',
-  'technology': 'fa-microchip',
-  'environment': 'fa-seedling',
-  'relationships': 'fa-hands-helping',
-  'services': 'fa-concierge-bell',
-  'problems': 'fa-shield-virus',
-  'plans': 'fa-map-marked-alt'
-};
+const InteractiveBlank: React.FC<{
+  answer: string;
+  alternatives: string[];
+  index: number;
+  isRevealed: boolean;
+  topic: string;
+  onReveal: () => void;
+}> = ({ answer, alternatives, index, isRevealed, topic, onReveal }) => {
+  const [examples, setExamples] = useState<string[]>([]);
+  const [isLoadingExamples, setIsLoadingExamples] = useState(false);
 
-const InteractiveBlank: React.FC<{ primary: string; alts: string; index: number; forceShow: boolean }> = ({ primary, alts, index, forceShow }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const showAnswer = isOpen || forceShow;
+  const fetchExamples = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (examples.length > 0) return;
+    setIsLoadingExamples(true);
+    try {
+      const ex = await getChunkContext(answer, topic);
+      setExamples(ex);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoadingExamples(false);
+    }
+  };
 
   return (
     <span className="relative inline-block group mx-1 align-baseline">
       <button
-        onClick={() => setIsOpen(!isOpen)}
-        className={`px-4 py-1.5 transition-all duration-300 rounded-xl font-bold border-2 flex items-center gap-3 group/btn min-w-[120px] justify-center ${showAnswer
-          ? 'border-emerald-500 bg-emerald-50 text-emerald-700 shadow-md ring-2 ring-emerald-500/10'
-          : 'border-emerald-100 bg-emerald-50/30 text-emerald-300 hover:border-emerald-400 hover:text-emerald-500 hover:shadow-lg hover:bg-white'
+        onClick={onReveal}
+        disabled={isRevealed}
+        className={`px-4 py-1.5 transition-all duration-300 rounded-xl font-bold border-2 flex items-center gap-3 min-w-[120px] justify-center ${isRevealed
+          ? 'border-indigo-500 bg-white text-indigo-700 shadow-md ring-4 ring-indigo-500/10 scale-105'
+          : 'border-slate-200 bg-slate-50/50 text-slate-300 hover:border-indigo-400 hover:text-indigo-500 hover:bg-white'
           }`}
       >
-        <span className={`text-[10px] ${showAnswer ? 'text-emerald-400' : 'text-emerald-300'} font-black uppercase tracking-tighter`}>Slot {index}</span>
+        <span className={`text-[10px] ${isRevealed ? 'text-indigo-400' : 'text-slate-300'} font-black uppercase tracking-tighter`}>Slot {index}</span>
         <span className="tracking-tight whitespace-nowrap">
-          {showAnswer ? primary.replace(/\*/g, '') : 'REVEAL'}
+          {isRevealed ? answer : 'REVEAL'}
         </span>
-        {showAnswer ? (
-          <i className="fas fa-check-circle text-[10px] text-emerald-500"></i>
-        ) : (
-          <i className="fas fa-plus text-[10px] opacity-20 group-hover/btn:opacity-100 transition-opacity"></i>
-        )}
+        {isRevealed && <i className="fas fa-sparkles text-[10px] text-indigo-400 animate-pulse"></i>}
       </button>
 
-      {isOpen && (
-        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-80 p-6 bg-white rounded-3xl shadow-[0_20px_50px_rgba(6,78,59,0.15)] border border-emerald-100 z-50 animate-in zoom-in-95 fade-in duration-200">
-          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-b border-r border-emerald-100 rotate-45"></div>
-          <div className="space-y-4 text-left">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
-                <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Primary Answer</span>
+      {isRevealed && (
+        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-72 p-6 bg-white rounded-[2rem] shadow-2xl border border-slate-100 z-50 animate-in zoom-in-95 fade-in duration-300">
+          <div className="space-y-4">
+            <div>
+              <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest block mb-2">Native Alternatives</span>
+              <div className="flex flex-wrap gap-2">
+                {alternatives.length > 0 ? alternatives.map((alt, i) => (
+                  <span key={i} className="px-2 py-1 bg-slate-50 text-slate-600 text-[10px] font-bold rounded-lg border border-slate-100">
+                    {alt}
+                  </span>
+                )) : <span className="text-slate-400 text-[10px] italic">No common alternatives</span>}
               </div>
-              <span className="text-[10px] font-bold text-emerald-200 px-2 py-0.5 border border-emerald-50 rounded-full">Ref: {index}</span>
             </div>
 
-            <p className="text-emerald-950 font-black leading-tight text-xl tracking-tight">{primary.replace(/\*/g, '')}</p>
+            <div className="pt-4 border-t border-slate-50">
+              <button
+                onClick={fetchExamples}
+                disabled={isLoadingExamples}
+                className="w-full flex items-center justify-between text-indigo-600 hover:text-indigo-800 transition-colors"
+              >
+                <span className="text-[10px] font-black uppercase tracking-widest">See in Real Life</span>
+                {isLoadingExamples ? (
+                  <i className="fas fa-spinner animate-spin text-[10px]"></i>
+                ) : (
+                  <i className="fas fa-bolt text-[10px]"></i>
+                )}
+              </button>
 
-            {alts && alts.trim() !== '' && (
-              <div className="pt-4 border-t border-emerald-50">
-                <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-2">Native Alternatives</span>
-                <div className="space-y-2">
-                  {alts.split(',').map((alt, i) => (
-                    <div key={i} className="flex items-start gap-2 text-emerald-800/70 text-sm font-semibold italic bg-emerald-50/50 p-2 rounded-lg border border-emerald-100/50">
-                      <span className="text-emerald-300 mt-1">•</span>
-                      <span>{alt.trim()}</span>
+              {examples.length > 0 && (
+                <div className="mt-3 space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
+                  {examples.map((ex, i) => (
+                    <div key={i} className="text-[11px] text-slate-600 font-medium leading-relaxed bg-indigo-50/50 p-2.5 rounded-xl border border-indigo-100/30 italic">
+                      "{ex}"
                     </div>
                   ))}
                 </div>
-              </div>
-            )}
-
-            <button
-              onClick={(e) => { e.stopPropagation(); setIsOpen(false); }}
-              className="w-full mt-2 py-2 text-[10px] font-bold text-emerald-400 uppercase tracking-widest hover:text-emerald-600 transition-colors"
-            >
-              Close Detail
-            </button>
+              )}
+            </div>
           </div>
+          {/* Arrow */}
+          <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 w-4 h-4 bg-white border-b border-r border-slate-100 rotate-45"></div>
         </div>
       )}
     </span>
   );
 };
 
-const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ content, onReset }) => {
-  const [showAllAnswers, setShowAllAnswers] = useState(false);
+import { speakText } from '../services/speechService';
 
-  const { contextLine, roleplayLines, answers, topicKey, explanations } = useMemo(() => {
-    // Only clean asterisks to keep "________" intact
-    const cleanContent = content.replace(/\*/g, '');
+const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
+  const [currentStep, setCurrentStep] = useState(0);
+  const [revealedBlanks, setRevealedBlanks] = useState<Set<number>>(new Set());
+  const [showDeepDive, setShowDeepDive] = useState(false);
+  const [activeSpeechIdx, setActiveSpeechIdx] = useState<number | null>(null);
 
-    const parsedAns: { primary: string; alts: string }[] = [];
-    const parsedExplanations: Record<number, string> = {};
+  const totalSteps = script.dialogue.length;
 
-    const sections = cleanContent.split(/## (Roleplay|Answer Variations|Deep Dive & Usage)/i);
-    const rpRaw = sections.indexOf('Roleplay') !== -1 ? sections[sections.indexOf('Roleplay') + 1] : cleanContent;
-    const ansRaw = sections.indexOf('Answer Variations') !== -1 ? sections[sections.indexOf('Answer Variations') + 1] : '';
-    const divRaw = sections.indexOf('Deep Dive & Usage') !== -1 ? sections[sections.indexOf('Deep Dive & Usage') + 1] : '';
+  const handleListen = (lineText: string, lineBlanks: number[], idx: number) => {
+    setActiveSpeechIdx(idx);
 
-    const lines = rpRaw.split('\n').filter(l => l.trim().length > 0);
+    // Replace blanks with answers if revealed, otherwise use a placeholder/pause
+    let textToSpeak = lineText;
+    const parts = lineText.split(/_{6,}/);
 
-    const contextMatch = cleanContent.match(/Context:\s*(.*)/i);
-    const context = contextMatch ? contextMatch[1] : null;
-
-    // Parse Answers
-    const ansLines = ansRaw.split('\n');
-    ansLines.forEach(line => {
-      // Handles: 1. Chunk | Alts: A, B
-      const match = line.match(/^\d+\.\s*(.*?)\s*[|]\s*Alts:\s*(.*)/i);
-      if (match) {
-        parsedAns.push({ primary: match[1].trim(), alts: match[2].trim() });
-      } else {
-        const simpleMatch = line.match(/^\d+\.\s*(.*)/);
-        if (simpleMatch) {
-          const content = simpleMatch[1].split('|')[0].trim();
-          const alts = simpleMatch[1].includes('|') ? simpleMatch[1].split('|')[1].replace(/Alts:\s*/i, '').trim() : '';
-          parsedAns.push({ primary: content, alts: alts });
+    if (parts.length > 1) {
+      let reconstructed = "";
+      for (let i = 0; i < parts.length; i++) {
+        reconstructed += parts[i];
+        if (i < lineBlanks.length) {
+          const blankIdx = lineBlanks[i];
+          const answer = script.answerVariations.find(v => v.index === blankIdx)?.answer || "";
+          reconstructed += revealedBlanks.has(blankIdx) ? answer : "..."; // Slight pause for unrevealed
         }
       }
+      textToSpeak = reconstructed;
+    }
+
+    speakText(textToSpeak, {
+      onEnd: () => setActiveSpeechIdx(null)
     });
+  };
+  const isFinished = currentStep === totalSteps - 1;
 
-    // Parse Explanations: 1. Chunk: Explanation
-    const divLines = divRaw.split('\n');
-    divLines.forEach(line => {
-      const match = line.match(/^(\d+)\.\s*(.*?):\s*(.*)/);
-      if (match) {
-        parsedExplanations[parseInt(match[1], 10)] = match[3].trim();
-      }
-    });
+  const handleNext = () => {
+    if (currentStep < totalSteps - 1) {
+      setCurrentStep(prev => prev + 1);
+    } else {
+      setShowDeepDive(true);
+    }
+  };
 
-    const lowContext = (context || "").toLowerCase();
-    const topicKey = Object.keys(TOPIC_ICONS).find(k => lowContext.includes(k)) || 'daily';
+  const toggleBlank = (index: number) => {
+    const newSet = new Set(revealedBlanks);
+    if (newSet.has(index)) {
+      newSet.delete(index);
+    } else {
+      newSet.add(index);
+    }
+    setRevealedBlanks(newSet);
+  };
 
-    return {
-      contextLine: context,
-      roleplayLines: lines.filter(l => !l.toLowerCase().startsWith('context:')),
-      answers: parsedAns,
-      explanations: parsedExplanations,
-      topicKey
-    };
-  }, [content]);
+  // Auto-scroll to bottom of dialogue
+  useEffect(() => {
+    const el = document.getElementById('dialogue-container');
+    if (el) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+  }, [currentStep]);
 
-  let blankCounter = 0;
+  let blankGlobalCounter = 0;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-10 animate-in slide-in-from-bottom-8 duration-700 pb-20">
-      <div className="flex justify-between items-center px-2">
+    <div className="max-w-4xl mx-auto h-[85vh] flex flex-col gap-6 animate-world-entry">
+      {/* Header */}
+      <div className="flex justify-between items-center bg-white/50 backdrop-blur-md p-4 rounded-3xl border border-white shadow-sm">
         <button
           onClick={onReset}
-          className="group px-5 py-2.5 bg-white border border-emerald-100 text-emerald-700 hover:text-emerald-900 rounded-xl flex items-center gap-3 font-bold shadow-sm transition-all hover:shadow-md hover:scale-[1.02] active:scale-95"
+          className="group px-5 py-2.5 text-slate-600 hover:text-indigo-600 flex items-center gap-3 font-bold transition-all"
         >
-          <i className="fas fa-arrow-left text-xs group-hover:-translate-x-1 transition-transform"></i>
-          Change Topic
+          <i className="fas fa-chevron-left text-sm group-hover:-translate-x-1 transition-transform"></i>
+          Back to Library
         </button>
-        <button
-          onClick={() => setShowAllAnswers(!showAllAnswers)}
-          className={`text-sm font-bold px-6 py-2.5 rounded-xl border-2 transition-all hover:scale-[1.02] active:scale-95 flex items-center gap-2 ${showAllAnswers
-            ? 'bg-emerald-600 border-emerald-600 text-white shadow-lg shadow-emerald-200'
-            : 'bg-white border-emerald-100 text-emerald-600 hover:border-emerald-300'
-            }`}
-        >
-          <i className={`fas ${showAllAnswers ? 'fa-eye-slash' : 'fa-eye'}`}></i>
-          {showAllAnswers ? 'Hide All Keys' : 'Reveal All Answers'}
-        </button>
-      </div>
-
-      {contextLine && (
-        <div className="relative overflow-hidden bg-white border border-emerald-100 rounded-[32px] p-8 md:p-10 shadow-sm flex flex-col md:flex-row items-center gap-10 group transition-all hover:shadow-xl hover:shadow-emerald-900/5">
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent opacity-20"></div>
-
-          <div className="relative w-28 h-28 flex-shrink-0">
-            <div className="absolute inset-0 bg-emerald-50 rounded-[2.5rem] rotate-6 group-hover:rotate-12 transition-transform duration-500"></div>
-            <div className="absolute inset-0 bg-emerald-100/50 rounded-[2.5rem] -rotate-3 group-hover:-rotate-6 transition-transform duration-500"></div>
-            <div className="relative w-full h-full bg-white border border-emerald-100 rounded-[2.5rem] flex items-center justify-center shadow-inner overflow-hidden">
-              <div className="w-16 h-16 bg-emerald-500/10 rounded-full absolute -bottom-4 -left-4 blur-xl"></div>
-              <div className="w-16 h-16 bg-teal-500/10 rounded-full absolute -top-4 -right-4 blur-xl"></div>
-              <i className={`fas ${TOPIC_ICONS[topicKey] || 'fa-comment-dots'} text-4xl text-emerald-500 group-hover:scale-125 transition-transform duration-700`}></i>
-            </div>
-          </div>
-
-          <div className="flex-1 space-y-3 text-center md:text-left">
-            <div className="flex items-center justify-center md:justify-start gap-2">
-              <span className="w-2 h-2 bg-emerald-400 rounded-full"></span>
-              <span className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.2em]">Scenario Blueprint</span>
-            </div>
-            <p className="text-emerald-950 font-bold text-xl leading-tight tracking-tight">
-              {contextLine}
-            </p>
-            <div className="flex flex-wrap justify-center md:justify-start gap-2 mt-4">
-              <span className="text-[10px] bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full font-bold uppercase tracking-widest border border-emerald-100">Practice Mode: Active Recall</span>
-              <span className="text-[10px] bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full font-bold uppercase tracking-widest border border-emerald-100">UK Native Tone</span>
-            </div>
+        <div className="flex flex-col items-center">
+          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{script.category}</span>
+          <h2 className="text-lg font-black text-slate-900 tracking-tight">{script.topic}</h2>
+        </div>
+        <div className="w-[120px] flex justify-end">
+          <div className="px-4 py-1.5 bg-indigo-50 text-indigo-600 rounded-full text-[10px] font-black">
+            {currentStep + 1} / {totalSteps}
           </div>
         </div>
-      )}
+      </div>
 
-      <div className="bg-white/40 backdrop-blur-xl rounded-[40px] p-6 md:p-12 border border-emerald-100 shadow-2xl shadow-emerald-900/5 space-y-12">
-        {roleplayLines.map((line, lineIdx) => {
-          const speakerMatch = line.match(/^([^:]+):/);
-          const speaker = speakerMatch ? speakerMatch[1] : null;
-          const text = speaker ? line.substring(speaker.length + 1).trim() : line;
-          const isYou = speaker?.toLowerCase().includes('you');
+      {/* Main Story Area */}
+      <div className="flex-grow bg-white rounded-[3rem] shadow-2xl shadow-indigo-500/5 border border-slate-100 overflow-hidden flex flex-col relative">
+        {/* Environment Background Plate (Placeholder style) */}
+        <div className="absolute top-0 left-0 w-full h-40 bg-gradient-to-b from-indigo-50 to-transparent flex items-center justify-center pointer-events-none">
+          <div className="text-[100px] opacity-[0.03] font-black select-none uppercase">{script.category}</div>
+        </div>
 
-          // Split by 6 or more underscores (flexible AI output)
-          const parts = text.split(/_{6,}/);
+        {/* Dialogue Scroll Area */}
+        <div id="dialogue-container" className="flex-grow overflow-y-auto p-8 md:p-12 space-y-8 scroll-smooth pb-32">
+          {script.dialogue.slice(0, currentStep + 1).map((line, idx) => {
+            const isYou = line.speaker.toLowerCase() === 'you';
+            const char = script.characters.find(c => c.name === line.speaker) || { name: line.speaker, description: '' };
 
-          return (
-            <div
-              key={lineIdx}
-              className={`flex flex-col ${isYou ? 'items-end' : 'items-start'} group/line animate-in fade-in slide-in-from-bottom-4 duration-700`}
-              style={{ animationDelay: `${lineIdx * 150}ms` }}
+            // Handle blanks
+            const parts = line.text.split(/_{6,}/);
+            const lineBlanks: number[] = [];
+            if (parts.length > 1) {
+              for (let i = 0; i < parts.length - 1; i++) {
+                lineBlanks.push(++blankGlobalCounter);
+              }
+            }
+
+            return (
+              <div
+                key={idx}
+                className={`flex gap-6 ${isYou ? 'flex-row-reverse' : 'flex-row'} animate-in fade-in slide-in-from-bottom-4 duration-500`}
+              >
+                {/* Avatar Slot */}
+                <div className="flex-shrink-0 flex flex-col items-center gap-2 animate-float">
+                  <div className={`w-14 h-14 rounded-2xl shadow-sm flex items-center justify-center text-xl font-black ${isYou ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-400'
+                    }`}>
+                    {char.avatarUrl ? (
+                      <img src={char.avatarUrl} alt={char.name} className="w-full h-full object-cover rounded-2xl" />
+                    ) : (
+                      char.name[0]
+                    )}
+                  </div>
+                  <span className="text-[9px] font-black uppercase text-slate-400 tracking-tighter">{char.name}</span>
+                </div>
+
+                {/* Speech Bubble Container */}
+                <div className={`relative max-w-[80%] group/bubble ${isYou ? 'flex flex-row-reverse' : 'flex'}`}>
+                  <div className={`p-6 rounded-[2rem] text-lg leading-relaxed shadow-sm transition-all ${isYou
+                      ? 'bg-slate-50 text-slate-800 rounded-tr-none border border-slate-100'
+                      : 'bg-indigo-50 text-indigo-900 rounded-tl-none border border-indigo-100/50'
+                    } ${activeSpeechIdx === idx ? 'ring-2 ring-indigo-400' : ''}`}>
+                    <div className="inline">
+                      {parts.map((part, pIdx) => (
+                        <React.Fragment key={pIdx}>
+                          <span className="font-medium">{part}</span>
+                          {pIdx < parts.length - 1 && (
+                            <InteractiveBlank
+                              answer={script.answerVariations.find(v => v.index === lineBlanks[pIdx])?.answer || '??'}
+                              alternatives={script.answerVariations.find(v => v.index === lineBlanks[pIdx])?.alternatives || []}
+                              index={lineBlanks[pIdx]}
+                              isRevealed={revealedBlanks.has(lineBlanks[pIdx])}
+                              topic={script.topic}
+                              onReveal={() => toggleBlank(lineBlanks[pIdx])}
+                            />
+                          )}
+                        </React.Fragment>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Listen Button */}
+                  <button
+                    onClick={() => handleListen(line.text, lineBlanks, idx)}
+                    className={`mt-2 mx-2 w-10 h-10 rounded-full flex items-center justify-center transition-all ${activeSpeechIdx === idx
+                        ? 'bg-indigo-600 text-white animate-pulse shadow-lg shadow-indigo-200'
+                        : 'bg-white text-slate-400 hover:text-indigo-600 border border-slate-100 shadow-sm opacity-0 group-hover/bubble:opacity-100'
+                      }`}
+                    title="Listen to native pronunciation"
+                  >
+                    <i className={`fas ${activeSpeechIdx === idx ? 'fa-volume-up' : 'fa-volume-low'} text-xs`}></i>
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Action Bar */}
+        <div className="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-white via-white/90 to-transparent flex justify-center">
+          {!showDeepDive && (
+            <button
+              onClick={handleNext}
+              className="group px-12 py-5 bg-indigo-600 text-white rounded-[2rem] font-black text-xl shadow-2xl shadow-indigo-500/40 hover:bg-slate-900 hover:shadow-slate-500/40 transition-all hover:scale-105 active:scale-95 flex items-center gap-4"
             >
-              {speaker && (
-                <div className={`flex items-center gap-2 mb-2 mx-6 ${isYou ? 'flex-row-reverse' : 'flex-row'}`}>
-                  <div className={`w-2 h-2 rounded-full ${isYou ? 'bg-emerald-400' : 'bg-emerald-200'}`}></div>
-                  <span className={`text-[10px] font-black uppercase tracking-widest ${isYou ? 'text-emerald-600' : 'text-emerald-300'}`}>
-                    {speaker}
-                  </span>
-                </div>
-              )}
-              <div className={`max-w-[95%] md:max-w-[85%] px-10 py-8 rounded-[2.5rem] shadow-sm leading-relaxed transition-all duration-300 text-lg ${isYou
-                ? 'bg-gradient-to-br from-emerald-600 to-emerald-700 text-white rounded-tr-none shadow-emerald-200/50 hover:shadow-xl hover:shadow-emerald-300/30'
-                : 'bg-white text-emerald-950 border border-emerald-100 rounded-tl-none group-hover/line:border-emerald-300 hover:shadow-xl hover:shadow-emerald-100/50'
-                }`}>
-                <div className="inline leading-relaxed">
-                  {parts.map((part, partIdx) => {
-                    const items = [];
-                    items.push(<span key={`txt-${partIdx}`} className="font-medium inline">{part}</span>);
-                    if (partIdx < parts.length - 1) {
-                      const ans = answers[blankCounter] || { primary: '???', alts: '' };
-                      items.push(
-                        <InteractiveBlank
-                          key={`blank-${blankCounter}`}
-                          index={blankCounter + 1}
-                          primary={ans.primary}
-                          alts={ans.alts}
-                          forceShow={showAllAnswers}
-                        />
-                      );
-                      blankCounter++;
-                    }
-                    return items;
-                  })}
-                </div>
-              </div>
-            </div>
-          );
-        })}
+              {isFinished ? 'Complete Mastery' : 'Next Turn'}
+              <i className="fas fa-chevron-right text-sm"></i>
+            </button>
+          )}
+        </div>
       </div>
 
-      {Object.keys(explanations).length > 0 && (
-        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
-          <div className="flex items-center gap-4 px-2">
-            <div className="h-px flex-1 bg-emerald-100"></div>
-            <div className="flex items-center gap-2">
-              <i className="fas fa-graduation-cap text-emerald-500 text-sm"></i>
-              <span className="text-xs font-black text-emerald-900 uppercase tracking-[0.2em]">Linguistic Mastery</span>
-            </div>
-            <div className="h-px flex-1 bg-emerald-100"></div>
-          </div>
-
-          <div className="grid gap-4">
-            {Object.entries(explanations).map(([idx, text]) => (
-              <div key={idx} className="bg-white border border-emerald-50 rounded-2xl p-6 flex gap-4 hover:border-emerald-200 transition-colors shadow-sm">
-                <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center flex-shrink-0">
-                  <span className="text-xs font-black text-emerald-600">{idx}</span>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-sm text-emerald-950 font-bold tracking-tight">
-                    {answers[parseInt(idx) - 1]?.primary || 'Pattern Analysis'}
-                  </p>
-                  <p className="text-sm text-emerald-800/60 leading-relaxed">
-                    {text}
-                  </p>
-                </div>
+      {/* Deep Dive Overlay / Section */}
+      {showDeepDive && (
+        <div className="fixed inset-0 z-50 bg-slate-950/20 backdrop-blur-xl p-8 flex items-center justify-center animate-in fade-in duration-500">
+          <div className="bg-white max-w-2xl w-full max-h-[90vh] rounded-[3rem] shadow-2xl overflow-hidden flex flex-col animate-in zoom-in-95 duration-500">
+            <div className="p-8 border-b border-slate-100 flex justify-between items-center">
+              <div>
+                <span className="text-[10px] font-black text-indigo-500 uppercase tracking-widest">Story Conclusion</span>
+                <h3 className="text-2xl font-black text-slate-900">Author's Deep Dive</h3>
               </div>
-            ))}
+              <button onClick={() => setShowDeepDive(false)} className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 hover:bg-red-50 hover:text-red-500 transition-all">
+                <i className="fas fa-times"></i>
+              </button>
+            </div>
+            <div className="flex-grow overflow-y-auto p-8 space-y-6">
+              {script.deepDive.map((dive) => (
+                <div key={dive.index} className="flex gap-4 p-6 bg-indigo-50/50 rounded-3xl border border-indigo-100/30">
+                  <div className="w-10 h-10 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-black flex-shrink-0 shadow-lg shadow-indigo-500/20">
+                    {dive.index}
+                  </div>
+                  <div className="space-y-1">
+                    <p className="font-black text-indigo-900 text-lg uppercase tracking-tight">"{dive.phrase}"</p>
+                    <p className="text-slate-600 leading-relaxed font-medium">{dive.insight}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="p-8 bg-slate-50 border-t border-slate-100">
+              <button
+                onClick={onReset}
+                className="w-full py-5 bg-slate-900 text-white rounded-2xl font-black text-lg hover:shadow-xl transition-all active:scale-95"
+              >
+                Finish Journey
+              </button>
+            </div>
           </div>
         </div>
       )}
-
-      <div className="bg-emerald-900 rounded-[40px] p-12 text-white shadow-2xl relative overflow-hidden group">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500 rounded-full blur-[120px] -mr-48 -mt-48 opacity-20 transition-all duration-1000 group-hover:scale-150"></div>
-        <div className="relative z-10 space-y-12">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
-            <div className="space-y-6">
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 bg-emerald-500 rounded-2xl flex items-center justify-center text-emerald-950 shadow-xl shadow-emerald-400/20">
-                  <i className="fas fa-brain animate-pulse text-2xl"></i>
-                </div>
-                <div>
-                  <h3 className="text-3xl font-black tracking-tight">Interactive Training</h3>
-                  <span className="text-[10px] font-black uppercase text-emerald-400 tracking-[0.3em]">Synaptic Priming Protocol</span>
-                </div>
-              </div>
-              <p className="text-emerald-100/70 text-lg leading-relaxed font-medium">
-                Try to guess the missing <span className="text-white font-bold">Universal Chunk</span> before clicking a blank. This interactive reveal reinforces the <span className="text-emerald-400">pattern retrieval</span> mechanism in your brain.
-              </p>
-            </div>
-
-            <div className="bg-emerald-950/50 backdrop-blur-md border border-emerald-800/50 p-10 rounded-[2rem] space-y-5 shadow-2xl">
-              <div className="flex items-center gap-2 text-emerald-400 font-black text-xs uppercase tracking-widest">
-                <i className="fas fa-microscope"></i> Methodology
-              </div>
-              <h4 className="text-xl font-bold">Interleaved Practice</h4>
-              <p className="text-emerald-100/60 text-base italic leading-relaxed">
-                Clicking the blanks revealed the primary pattern while hovering shows native alternatives. This targeted difficulty forces <span className="text-emerald-400">Neuroplasticity</span> by simulating real conversational pressure.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };

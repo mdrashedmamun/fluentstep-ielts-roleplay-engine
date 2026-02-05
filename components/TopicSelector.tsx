@@ -1,61 +1,93 @@
 
-import React from 'react';
-import { IELTS_TOPICS } from '../constants';
+import React, { useState } from 'react';
+import { CURATED_ROLEPLAYS } from '../services/staticData';
 
 interface TopicSelectorProps {
-  onSelect: (topic: string) => void;
-  dailyUsage: number;
+  onSelect: (scriptId: string) => void;
 }
 
-const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect, dailyUsage }) => {
-  const FREE_TIER_LIMIT = 100; // Updated limit to verify deployment propagation
+const CATEGORIES = ['Social', 'Workplace', 'Service/Logistics', 'Advanced'] as const;
+
+const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect }) => {
+  const [activeCategory, setActiveCategory] = useState<typeof CATEGORIES[number]>('Social');
+
+  const filteredScripts = CURATED_ROLEPLAYS.filter(s => s.category === activeCategory);
 
   return (
-    <div className="space-y-12 animate-in fade-in slide-in-from-top-4 duration-700">
+    <div className="space-y-12 animate-in fade-in slide-in-from-top-4 duration-1000">
+      {/* Hero Section */}
       <div className="text-center max-w-2xl mx-auto space-y-6">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-xs font-bold uppercase tracking-widest mb-2">
-          <i className="fas fa-bolt text-[10px]"></i>
-          Fluent Acquisition Mode
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-indigo-100 text-indigo-700 rounded-full text-xs font-bold uppercase tracking-widest">
+          <i className="fas fa-book-open"></i>
+          The Immersion Library
         </div>
-        <h1 className="text-5xl font-black text-emerald-950 tracking-tight leading-tight">
-          Master Fluency <br /><span className="text-emerald-600">Through Roleplay</span>
+        <h1 className="text-5xl font-black text-slate-900 tracking-tight leading-tight">
+          Enter Your <br /><span className="text-indigo-600 italic">Fluency Story</span>
         </h1>
-        <p className="text-lg text-emerald-800/70 leading-relaxed">
-          Select a topic to generate a high-fidelity roleplay. <br />
-          Designed to drill core conversational patterns into your subconscious.
+        <p className="text-lg text-slate-600 leading-relaxed font-medium">
+          Choose a scenario from our curated collection. <br />
+          Each story is crafted for 100% natural, high-impact English acquisition.
         </p>
-
-        <div className="pt-4">
-          <div className="inline-flex items-center gap-4 px-6 py-3 bg-white border border-emerald-100 rounded-2xl shadow-sm">
-            <div className="flex flex-col items-start">
-              <span className="text-[10px] font-black uppercase tracking-tighter text-emerald-800/40">Daily Capacity <span className="ml-1 text-[8px] opacity-30 italic">v2.2-NATURAL</span></span>
-              <div className="flex items-baseline gap-1">
-                <span className="text-xl font-black text-emerald-600">{dailyUsage}</span>
-                <span className="text-sm font-bold text-emerald-800/30">/ {FREE_TIER_LIMIT} sessions</span>
-              </div>
-            </div>
-            <div className="w-px h-8 bg-emerald-50"></div>
-            <p className="text-xs font-medium text-emerald-800/60 max-w-[180px] text-left">
-              {dailyUsage >= FREE_TIER_LIMIT
-                ? "Limit reached. Caching enabled for previous topics."
-                : "Optimization active: Patterns are cached for efficiency."}
-            </p>
-          </div>
-        </div>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-        {IELTS_TOPICS.map((topic) => (
+      {/* Category Tabs */}
+      <div className="flex justify-center gap-2 p-1 bg-slate-100 rounded-2xl max-w-fit mx-auto border border-slate-200">
+        {CATEGORIES.map((cat) => (
           <button
-            key={topic}
-            onClick={() => onSelect(topic)}
-            className="group p-8 bg-white border border-emerald-100 rounded-2xl hover:border-emerald-400 hover:shadow-2xl hover:shadow-emerald-500/10 hover:-translate-y-1 transition-all text-left flex flex-col items-center justify-center gap-4 relative overflow-hidden"
+            key={cat}
+            onClick={() => setActiveCategory(cat)}
+            className={`px-8 py-3 rounded-xl font-bold transition-all text-sm ${activeCategory === cat
+                ? 'bg-white text-indigo-600 shadow-md scale-105'
+                : 'text-slate-500 hover:text-slate-800'
+              }`}
           >
-            <div className="absolute top-0 right-0 w-20 h-20 bg-emerald-50 rounded-full -mr-10 -mt-10 group-hover:bg-emerald-100 transition-colors"></div>
-            <div className="w-16 h-16 rounded-2xl bg-emerald-50 flex items-center justify-center group-hover:bg-emerald-600 group-hover:rotate-6 transition-all duration-300">
-              <i className={`fas ${getIcon(topic)} text-emerald-500 group-hover:text-white text-2xl`}></i>
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      {/* Storybook Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {filteredScripts.map((script) => (
+          <button
+            key={script.id}
+            onClick={() => onSelect(script.id)}
+            className="group relative h-96 bg-white rounded-[2.5rem] shadow-xl hover:shadow-2xl hover:shadow-indigo-500/20 transition-all duration-500 overflow-hidden border border-slate-100 text-left flex flex-col p-8 hover:-translate-y-2"
+          >
+            {/* Background Aesthetic */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-bl-[10rem] group-hover:bg-indigo-100 transition-colors -mr-16 -mt-16"></div>
+
+            <div className="relative z-10 h-full flex flex-col">
+              <div className="mb-6 w-14 h-14 bg-indigo-50 rounded-2xl flex items-center justify-center group-hover:bg-indigo-600 transition-all duration-500">
+                <i className={`fas ${getIcon(script.category)} text-indigo-500 group-hover:text-white text-xl`}></i>
+              </div>
+
+              <div className="space-y-4 flex-grow">
+                <h3 className="text-2xl font-black text-slate-800 leading-tight group-hover:text-indigo-600 transition-colors">
+                  {script.topic}
+                </h3>
+                <p className="text-slate-500 font-medium leading-relaxed">
+                  {script.context}
+                </p>
+              </div>
+
+              <div className="pt-6 border-t border-slate-50 mt-auto flex items-center justify-between">
+                <div className="flex -space-x-2">
+                  {script.characters.map((char, i) => (
+                    <div key={i} className="w-8 h-8 rounded-full bg-slate-200 border-2 border-white flex items-center justify-center text-[10px] font-bold text-slate-500">
+                      {char.name[0]}
+                    </div>
+                  ))}
+                </div>
+                <div className="text-indigo-600 font-black text-xs uppercase tracking-widest flex items-center gap-2 group-hover:translate-x-1 transition-transform">
+                  Enter Story
+                  <i className="fas fa-arrow-right"></i>
+                </div>
+              </div>
             </div>
-            <span className="font-bold text-emerald-900 group-hover:text-emerald-600 text-center">{topic}</span>
+
+            {/* Book Spine Aesthetic */}
+            <div className="absolute left-0 top-0 w-1.5 h-full bg-indigo-600/10 group-hover:bg-indigo-600 transition-colors"></div>
           </button>
         ))}
       </div>
@@ -63,21 +95,13 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect, dailyUsage }) =
   );
 };
 
-function getIcon(topic: string) {
-  switch (topic) {
-    case 'Daily Life': return 'fa-mug-hot';
-    case 'Work': return 'fa-briefcase';
-    case 'Travel': return 'fa-plane';
-    case 'Health': return 'fa-stethoscope';
-    case 'Shopping': return 'fa-shopping-cart';
-    case 'Education': return 'fa-graduation-cap';
-    case 'Technology': return 'fa-laptop-code';
-    case 'Environment': return 'fa-leaf';
-    case 'Relationships': return 'fa-users';
-    case 'Services': return 'fa-concierge-bell';
-    case 'Problems': return 'fa-exclamation-triangle';
-    case 'Plans': return 'fa-calendar-alt';
-    default: return 'fa-comment';
+function getIcon(category: string) {
+  switch (category) {
+    case 'Social': return 'fa-users';
+    case 'Workplace': return 'fa-briefcase';
+    case 'Service/Logistics': return 'fa-concierge-bell';
+    case 'Advanced': return 'fa-brain';
+    default: return 'fa-book';
   }
 }
 
