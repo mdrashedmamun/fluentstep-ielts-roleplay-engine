@@ -34,14 +34,35 @@ const InteractiveBlank: React.FC<{
     }
   };
 
+  useEffect(() => {
+    if (!isRevealed) {
+      setExamples([]);
+      return;
+    }
+
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest('.interactive-blank-container')) {
+        onReveal(); // This will toggle it closed if revealed
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('wheel', handleClickOutside, { passive: true });
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('wheel', handleClickOutside);
+    };
+  }, [isRevealed, onReveal]);
+
   return (
-    <span className="relative inline-block group mx-1 align-baseline">
+    <span className="relative inline-block group mx-1 align-baseline interactive-blank-container">
       <button
         onClick={onReveal}
         disabled={isRevealed}
         className={`px-4 py-1.5 transition-all duration-300 rounded-xl font-bold border-2 flex items-center gap-3 min-w-[120px] justify-center ${isRevealed
-          ? 'border-indigo-500 bg-white text-indigo-700 shadow-md ring-4 ring-indigo-500/10 scale-105'
-          : 'border-slate-200 bg-slate-50/50 text-slate-300 hover:border-indigo-400 hover:text-indigo-500 hover:bg-white'
+          ? 'border-indigo-500 bg-white text-indigo-700 shadow-md ring-4 ring-indigo-500/10 scale-105 z-20'
+          : 'border-slate-200 bg-slate-50/50 text-slate-300 hover:border-indigo-400 hover:text-indigo-500 hover:bg-white z-0'
           }`}
       >
         <span className={`text-[10px] ${isRevealed ? 'text-indigo-400' : 'text-slate-300'} font-black uppercase tracking-tighter`}>Slot {index}</span>
@@ -52,7 +73,7 @@ const InteractiveBlank: React.FC<{
       </button>
 
       {isRevealed && (
-        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-72 p-6 bg-white rounded-[2rem] shadow-2xl border border-slate-100 z-50 animate-in zoom-in-95 fade-in duration-300">
+        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-72 p-6 bg-white rounded-[2rem] shadow-2xl border border-slate-100 z-[100] animate-in zoom-in-95 fade-in duration-300">
           <div className="space-y-4">
             <div>
               <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest block mb-2">Native Alternatives</span>
@@ -190,7 +211,11 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
         </div>
 
         {/* Dialogue Scroll Area */}
-        <div id="dialogue-container" className="flex-grow overflow-y-auto p-8 md:p-12 space-y-8 scroll-smooth pb-32">
+        <div
+          id="dialogue-container"
+          className="flex-grow overflow-y-auto p-8 md:p-12 space-y-8 scroll-smooth"
+          style={{ paddingBottom: '240px' }}
+        >
           {script.dialogue.slice(0, currentStep + 1).map((line, idx) => {
             const isYou = line.speaker.toLowerCase() === 'you';
             const char = script.characters.find(c => c.name === line.speaker) || { name: line.speaker, description: '' };
@@ -225,8 +250,8 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
                 {/* Speech Bubble Container */}
                 <div className={`relative max-w-[80%] group/bubble ${isYou ? 'flex flex-row-reverse' : 'flex'}`}>
                   <div className={`p-6 rounded-[2rem] text-lg leading-relaxed shadow-sm transition-all ${isYou
-                      ? 'bg-slate-50 text-slate-800 rounded-tr-none border border-slate-100'
-                      : 'bg-indigo-50 text-indigo-900 rounded-tl-none border border-indigo-100/50'
+                    ? 'bg-slate-50 text-slate-800 rounded-tr-none border border-slate-100'
+                    : 'bg-indigo-50 text-indigo-900 rounded-tl-none border border-indigo-100/50'
                     } ${activeSpeechIdx === idx ? 'ring-2 ring-indigo-400' : ''}`}>
                     <div className="inline">
                       {parts.map((part, pIdx) => (
@@ -251,8 +276,8 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
                   <button
                     onClick={() => handleListen(line.text, lineBlanks, idx)}
                     className={`mt-2 mx-2 w-10 h-10 rounded-full flex items-center justify-center transition-all ${activeSpeechIdx === idx
-                        ? 'bg-indigo-600 text-white animate-pulse shadow-lg shadow-indigo-200'
-                        : 'bg-white text-slate-400 hover:text-indigo-600 border border-slate-100 shadow-sm opacity-0 group-hover/bubble:opacity-100'
+                      ? 'bg-indigo-600 text-white animate-pulse shadow-lg shadow-indigo-200'
+                      : 'bg-white text-slate-400 hover:text-indigo-600 border border-slate-100 shadow-sm opacity-0 group-hover/bubble:opacity-100'
                       }`}
                     title="Listen to native pronunciation"
                   >
@@ -265,11 +290,11 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
         </div>
 
         {/* Action Bar */}
-        <div className="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-white via-white/90 to-transparent flex justify-center">
+        <div className="absolute bottom-0 left-0 w-full p-10 bg-gradient-to-t from-white via-white/95 to-transparent flex justify-center z-50">
           {!showDeepDive && (
             <button
               onClick={handleNext}
-              className="group px-12 py-5 bg-indigo-600 text-white rounded-[2rem] font-black text-xl shadow-2xl shadow-indigo-500/40 hover:bg-slate-900 hover:shadow-slate-500/40 transition-all hover:scale-105 active:scale-95 flex items-center gap-4"
+              className="group px-12 py-5 bg-indigo-600 text-white rounded-[2rem] font-black text-xl shadow-2xl shadow-indigo-500/40 hover:bg-slate-900 hover:shadow-slate-500/40 transition-all hover:scale-105 active:scale-95 flex items-center gap-4 border-4 border-white"
             >
               {isFinished ? 'Complete Mastery' : 'Next Turn'}
               <i className="fas fa-chevron-right text-sm"></i>
