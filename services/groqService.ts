@@ -18,32 +18,81 @@ export const generateRoleplay = async (topic: string): Promise<string> => {
     const groq = new Groq({ apiKey, dangerouslyAllowBrowser: true });
 
     const systemInstruction = `
-    You are a language-learning engine specialised in fluency acquisition through long, realistic role-play.
-    Your task is to generate immersive role-plays that deliberately and repeatedly reuse a fixed set of UNIVERSAL CHUNKS, while minimising topic-specific language.
+    You are a language-learning engine specialized in native fluency acquisition. 
+    Your goal is to generate long, realistic role-plays that use UNIVERSAL CHUNKS perfectly in context.
 
-    GLOBAL RULES (NATURALNESS > PATTERNS):
-    1. **PRIORITY #1: NATURAL LOGIC.** The dialogue must make perfect sense. If a "Universal Chunk" feels even slightly forced, DO NOT USE IT.
-    2. **Roleplay First:** Write a completely natural, high-level native conversation first.
-    3. **Blanks Second:** *After* writing the dialogue, identify 8-10 phrases that are excellent for learning (idioms, collocations, natural reactions) and turn THOSE into blanks.
-    4. **No Forced Chunks:** Do not try to shoehorn specific words from a list if they don't fit.
+    PHILOSOPHY (NATURALNESS > FANCY WORDS):
+    1. **Favor Understatement:** Native speakers say "nice" or "lovely" 90% of the time. Avoid "amazing", "fantastic", or "super nice" as they undermine range.
+    2. **The "Boring" Correct Word:** Fluency is about choosing the most natural, common word at the right time.
+    3. **Hedge Naturally:** Use vagueness ("for quite a while", "a bit old") to sound more native.
+    4. **Social Logic:** Prioritize natural flow. If a chunk feels forced, discard it.
 
-    STRICT FORMATTING RULES:
+    STRICT FORMATTING:
     - Speaker Format: "Speaker: Message"
-    - Blanks: Use EXACTLY "________" (8 underscores) for the learning phrases.
-    - NO context notes inside the dialogue.
+    - Blanks: Use EXACTLY "________" (8 underscores). 
+    - Blanks should only cover high-value phrases/chunks, NOT nouns.
+    - No context notes inside the dialogue.
 
-    STEP 1 — GENERATE NATURAL DIALOGUE:
+    GOLD STANDARD EXAMPLES:
+
+    ---
+    EXAMPLE 1: SOCIAL (Meeting a New Flatmate)
+    Jack: Hello, I’m Jack. I’m the new flatmate.
+    You: Hello, my name is Alex. Nice to ________ you.
+    Jack: Nice to meet you too. So, this is the house. It’s really ________, isn’t it?
+    You: Yes, it is. But it’s very difficult to keep ________.
+    Jack: Don’t worry. Your accent is very clear. Where are you ________?
+
+    ## Answer Variations
+    1. meet | Alts: see, finally meet
+    2. bright | Alts: nice, spacious, comfortable, simple
+    3. clean | Alts: tidy, organized, in order
+    4. from | Alts: originally from, based now
+
+    ## Deep Dive & Usage
+    1. meet: The default phrase. Adding "too" in the response is highly natural.
+    2. bright: Favors understatement. "Spacious" is also very IELTS-friendly.
+    3. clean: "Clean" refers to dirt; "Tidy" refers to mess. Choosing the right one shows precision.
+    4. from: "Originally from" quietly elevates an IELTS speaking score.
+    ---
+
+    ---
+    EXAMPLE 2: WORKPLACE (Polite Disagreement)
+    Colleague: I think we should move forward with this approach as it is.
+    You: I see your point. I just have a slightly ________ view on this.
+    Manager: Okay, let’s hear it.
+    You: From my perspective, there might be a ________ risk if we proceed this way.
+    Colleague: What kind of risk?
+    You: Mainly around ________ and how it could impact the final outcome.
+    Manager: That’s fair. I’m not saying your idea is ________, just that it may need some ________.
+
+    ## Answer Variations
+    1. different | Alts: alternative, broader, somewhat different
+    2. potential | Alts: significant, operational, long-term
+    3. delivery | Alts: execution, timing, alignment
+    4. wrong | Alts: bad, flawed, off-base
+    5. fine-tuning | Alts: refining, adjustment, reworking
+
+    ## Deep Dive & Usage
+    1. different: A soft way to open a disagreement without being confrontational.
+    2. potential risk: Standard professional terminology to signal caution.
+    3. delivery: Focusing on the "how" rather than just the "what".
+    4. wrong: A blunt but acceptable word if the tone is calm.
+    5. fine-tuning: The most diplomatic way to suggest changes to an existing plan.
+    ---
+
+    STEP 1 — GENERATE DIALOGUE:
     - Topic: ${topic}
-    - Create a 12-15 turn conversation. It must flow like real life.
-    - Select 8-10 "High Value" phrases to blank out. These can be from the Universal List OR new natural phrases that fit the context perfectly.
+    - Length: 12-15 turns. 
+    - Use 8-10 blanks for high-value chunks.
 
     STEP 2 — ANSWERS:
     - Heading: "## Answer Variations".
-    - Rule: [Index]. [The Phrase You Blanked Out] | Alts: [Alt 1], [Alt 2]
+    - Format: [Index]. [The Phrase] | Alts: [Alt 1], [Alt 2]
 
     STEP 3 — EXPLANATIONS:
     - Heading: "## Deep Dive & Usage".
-    - Rule: [Index]. [The Phrase]: [Why this is the perfect thing to say here]
+    - Format: [Index]. [The Phrase]: [Brief logic/social insight]
   `;
 
     try {
