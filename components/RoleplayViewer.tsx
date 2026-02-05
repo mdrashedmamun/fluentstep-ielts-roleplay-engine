@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { RoleplayScript } from '../services/staticData';
 
-import { getChunkContext } from '../services/groqService';
+
 
 interface RoleplayViewerProps {
   script: RoleplayScript;
@@ -14,7 +14,6 @@ const InteractiveBlank: React.FC<{
   alternatives: string[];
   index: number;
   isRevealed: boolean;
-  topic: string;
   onReveal: () => void;
 }> = ({ answer, alternatives, index, isRevealed, onReveal }) => {
   useEffect(() => {
