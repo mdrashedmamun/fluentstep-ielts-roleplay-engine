@@ -16,43 +16,20 @@ const InteractiveBlank: React.FC<{
   isRevealed: boolean;
   topic: string;
   onReveal: () => void;
-}> = ({ answer, alternatives, index, isRevealed, topic, onReveal }) => {
-  const [examples, setExamples] = useState<string[]>([]);
-  const [isLoadingExamples, setIsLoadingExamples] = useState(false);
-
-  const fetchExamples = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (examples.length > 0) return;
-    setIsLoadingExamples(true);
-    try {
-      const ex = await getChunkContext(answer, topic);
-      setExamples(ex);
-    } catch (err) {
-      console.error(err);
-      setExamples(["Could you help me with this?", "It's always better to check before you start.", "I really appreciate your help."]);
-    } finally {
-      setIsLoadingExamples(false);
-    }
-  };
-
+}> = ({ answer, alternatives, index, isRevealed, onReveal }) => {
   useEffect(() => {
-    if (!isRevealed) {
-      setExamples([]);
-      return;
-    }
+    if (!isRevealed) return;
 
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       if (!target.closest('.interactive-blank-container')) {
-        onReveal(); // This will toggle it closed if revealed
+        onReveal();
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('wheel', handleClickOutside, { passive: true });
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('wheel', handleClickOutside);
     };
   }, [isRevealed, onReveal]);
 
@@ -60,7 +37,6 @@ const InteractiveBlank: React.FC<{
     <span className="relative inline-block group mx-1 align-baseline interactive-blank-container">
       <button
         onClick={onReveal}
-        disabled={isRevealed}
         className={`px-4 py-1.5 transition-all duration-300 rounded-xl font-bold border-2 flex items-center gap-3 min-w-[120px] justify-center ${isRevealed
           ? 'border-indigo-500 bg-white text-indigo-700 shadow-md ring-4 ring-indigo-500/10 scale-105 z-20'
           : 'border-slate-200 bg-slate-50/50 text-slate-300 hover:border-indigo-400 hover:text-indigo-500 hover:bg-white z-0'
@@ -70,48 +46,31 @@ const InteractiveBlank: React.FC<{
         <span className="tracking-tight whitespace-nowrap">
           {isRevealed ? answer : 'REVEAL'}
         </span>
-        {isRevealed && <i className="fas fa-sparkles text-[10px] text-indigo-400 animate-pulse"></i>}
+        {isRevealed ? (
+          <i className="fas fa-times text-[10px] text-slate-400 hover:text-red-500"></i>
+        ) : (
+          <i className="fas fa-eye text-[10px] text-slate-300 group-hover:text-indigo-400"></i>
+        )}
       </button>
 
       {isRevealed && (
         <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-6 w-64 p-5 bg-white rounded-[1.5rem] shadow-2xl border border-slate-100 z-[100] animate-in zoom-in-95 fade-in duration-300">
           <div className="space-y-3">
-            <div>
-              <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest block mb-2">Native Alternatives</span>
-              <div className="flex flex-wrap gap-2">
-                {alternatives.length > 0 ? alternatives.map((alt, i) => (
-                  <span key={i} className="px-2 py-1 bg-slate-50 text-slate-600 text-[10px] font-bold rounded-lg border border-slate-100">
-                    {alt}
-                  </span>
-                )) : <span className="text-slate-400 text-[10px] italic">No common alternatives</span>}
-              </div>
-            </div>
-
-            <div className="pt-4 border-t border-slate-50">
+            <div className="flex justify-between items-center">
+              <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest block">Native Alternatives</span>
               <button
-                onClick={fetchExamples}
-                disabled={isLoadingExamples}
-                className="w-full flex items-center justify-between text-indigo-600 hover:text-indigo-800 transition-colors"
+                onClick={(e) => { e.stopPropagation(); onReveal(); }}
+                className="text-slate-300 hover:text-slate-500"
               >
-                <span className="text-[10px] font-black uppercase tracking-widest">See in Real Life</span>
-                {isLoadingExamples ? (
-                  <i className="fas fa-spinner animate-spin text-[10px]"></i>
-                ) : (
-                  <i className="fas fa-bolt text-[10px]"></i>
-                )}
+                <i className="fas fa-times text-xs"></i>
               </button>
-
-              {examples.length > 0 ? (
-                <div className="mt-3 space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
-                  {examples.map((ex, i) => (
-                    <div key={i} className="text-[11px] text-slate-600 font-medium leading-relaxed bg-indigo-50/50 p-2.5 rounded-xl border border-indigo-100/30 italic">
-                      "{ex}"
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                !isLoadingExamples && <div className="mt-2 text-[9px] text-slate-400 italic">Click the bolt for real-world examples</div>
-              )}
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {alternatives.length > 0 ? alternatives.map((alt, i) => (
+                <span key={i} className="px-2 py-1 bg-slate-50 text-slate-600 text-[10px] font-bold rounded-lg border border-slate-100">
+                  {alt}
+                </span>
+              )) : <span className="text-slate-400 text-[10px] italic">No common alternatives</span>}
             </div>
           </div>
           {/* Arrow */}
