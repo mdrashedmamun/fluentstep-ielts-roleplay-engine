@@ -29,6 +29,7 @@ const InteractiveBlank: React.FC<{
       setExamples(ex);
     } catch (err) {
       console.error(err);
+      setExamples(["Could you help me with this?", "It's always better to check before you start.", "I really appreciate your help."]);
     } finally {
       setIsLoadingExamples(false);
     }
@@ -73,8 +74,8 @@ const InteractiveBlank: React.FC<{
       </button>
 
       {isRevealed && (
-        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-72 p-6 bg-white rounded-[2rem] shadow-2xl border border-slate-100 z-[100] animate-in zoom-in-95 fade-in duration-300">
-          <div className="space-y-4">
+        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-6 w-64 p-5 bg-white rounded-[1.5rem] shadow-2xl border border-slate-100 z-[100] animate-in zoom-in-95 fade-in duration-300">
+          <div className="space-y-3">
             <div>
               <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest block mb-2">Native Alternatives</span>
               <div className="flex flex-wrap gap-2">
@@ -100,7 +101,7 @@ const InteractiveBlank: React.FC<{
                 )}
               </button>
 
-              {examples.length > 0 && (
+              {examples.length > 0 ? (
                 <div className="mt-3 space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
                   {examples.map((ex, i) => (
                     <div key={i} className="text-[11px] text-slate-600 font-medium leading-relaxed bg-indigo-50/50 p-2.5 rounded-xl border border-indigo-100/30 italic">
@@ -108,6 +109,8 @@ const InteractiveBlank: React.FC<{
                     </div>
                   ))}
                 </div>
+              ) : (
+                !isLoadingExamples && <div className="mt-2 text-[9px] text-slate-400 italic">Click the bolt for real-world examples</div>
               )}
             </div>
           </div>

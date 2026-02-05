@@ -13,25 +13,30 @@ const getApiKey = () => {
  * Generates 3 real-life, high-fidelity example sentences for a specific language chunk.
  */
 export const getChunkContext = async (phrase: string, topic: string): Promise<string[]> => {
-    const apiKey = getApiKey();
-    const groq = new Groq({ apiKey, dangerouslyAllowBrowser: true });
-
-    const systemInstruction = `
-    You are a linguistic expert specialized in high-fidelity, natural English (UK/Native tone).
-    Your goal is to provide exactly 3 distinct, realistic, and understated example sentences for a specific phrase (chunk).
-
-    PHRASE: "${phrase}"
-    SCENARIO CONTEXT: "${topic}"
-
-    RULES:
-    1. **Understatement:** Avoid overly dramatic or "textbook" sentences.
-    2. **Natural Flow:** Use contractions (it's, I'm) and native social logic.
-    3. **Variety:** Provide 3 different situations (one similar to the topic, two others).
-    4. **Conciseness:** Keep each sentence under 15 words.
-    5. **Format:** Return only the sentences, one per line, no numbers or bullets.
-    `;
-
     try {
+        const key = process.env.GROQ_API_KEY || process.env.API_KEY;
+        if (!key || key === 'PLACEHOLDER_API_KEY' || key === 'PLACEHOLDER_GROQ_KEY') {
+            console.warn("Groq API Key missing, using fallback examples.");
+            return getFallbackExamples(phrase);
+        }
+
+        const groq = new Groq({ apiKey: key, dangerouslyAllowBrowser: true });
+
+        const systemInstruction = `
+        You are a linguistic expert specialized in high-fidelity, natural English (UK/Native tone).
+        Your goal is to provide exactly 3 distinct, realistic, and understated example sentences for a specific phrase (chunk).
+
+        PHRASE: "${phrase}"
+        SCENARIO CONTEXT: "${topic}"
+
+        RULES:
+        1. **Understatement:** Avoid overly dramatic or "textbook" sentences.
+        2. **Natural Flow:** Use contractions (it's, I'm) and native social logic.
+        3. **Variety:** Provide 3 different situations (one similar to the topic, two others).
+        4. **Conciseness:** Keep each sentence under 15 words.
+        5. **Format:** Return only the sentences, one per line, no numbers or bullets.
+        `;
+
         const chatCompletion = await groq.chat.completions.create({
             messages: [
                 { role: "system", content: systemInstruction.trim() },
@@ -43,13 +48,21 @@ export const getChunkContext = async (phrase: string, topic: string): Promise<st
         });
 
         const text = chatCompletion.choices[0]?.message?.content;
-        if (!text) throw new Error("Empty response from Groq API");
+        if (!text) throw new Error("Empty response");
 
         return text.split('\n').filter(l => l.trim().length > 0).slice(0, 3);
     } catch (error: any) {
         console.error("Groq Context Error:", error);
-        return ["Slow and steady wins the race.", "It takes a bit of time to get it right.", "Practice makes perfect."]; // Fallback
+        return getFallbackExamples(phrase);
     }
+};
+
+const getFallbackExamples = (phrase: string): string[] => {
+    return [
+        `Could you help me with this ${phrase}?`,
+        `It's always better to ${phrase} before you start.`,
+        `I really appreciate you taking the time to ${phrase}.`
+    ];
 };
 
 /**

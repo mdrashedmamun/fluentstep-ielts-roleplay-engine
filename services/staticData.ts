@@ -245,10 +245,10 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
     {
         id: 'service-4-return-no-receipt',
         category: 'Service/Logistics',
-        topic: 'Returning without a Receipt',
+        topic: 'Returning a Faulty Item',
         context: 'Handling a return for a faulty item when you’ve lost the receipt.',
         characters: [
-            { name: 'Assistant', description: 'Helpful store assistant.' },
+            { name: 'Assistant', description: 'Helpful store assistant.', avatarUrl: '/avatars/assistant.png' },
             { name: 'You', description: 'Customer seeking a fair outcome.' }
         ],
         dialogue: [
