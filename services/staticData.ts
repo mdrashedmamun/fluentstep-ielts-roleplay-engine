@@ -235,8 +235,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 12, answer: 'free', alternatives: ['included', 'unlimited'] },
             { index: 13, answer: 'check-out', alternatives: [] },
             { index: 14, answer: 'eleven', alternatives: ['noon'] },
-            { index: 15, answer: 'help', alternatives: ['assistance'] },
-            { index: 16, answer: 'stay', alternatives: ['visit'] }
+            { index: 15, answer: 'help', alternatives: ['assistance'] }
         ],
         deepDive: [
             { index: 12, phrase: 'completely free', insight: 'High-value signal. "Included" is standard, but "completely free" sounds more native.' }
@@ -451,8 +450,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 9, answer: 'tactical', alternatives: ['minor', 'minor', 'targeted'] },
             { index: 10, answer: 'important', alternatives: ['responsible', 'necessary'] },
             { index: 11, answer: 'one', alternatives: ['a single'] },
-            { index: 12, answer: 'concise', alternatives: ['tight', 'to the point'] },
-            { index: 13, answer: 'openness', alternatives: ['time', 'discussion'] }
+            { index: 12, answer: 'concise', alternatives: ['tight', 'to the point'] }
         ],
         deepDive: [
             { index: 2, phrase: 'downstream issues', insight: 'High-level business term for future problems caused by today’s choices.' },
@@ -608,9 +606,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 8, answer: 'sense', alternatives: ['myself clear'] },
             { index: 9, answer: 'enough', alternatives: ['point taken'] },
             { index: 10, answer: 'differ', alternatives: ['disagree'] },
-            { index: 11, answer: 'this', alternatives: [] },
-            { index: 12, answer: 'plan', alternatives: ['good plan'] },
-            { index: 13, answer: 'on', alternatives: ['forward'] }
+            { index: 11, answer: 'this', alternatives: [] }
         ],
         deepDive: [
             { index: 1, phrase: 'straight to the point', insight: 'Professional request for efficiency.' },
@@ -650,9 +646,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 8, answer: 'help', alternatives: ['time'] },
             { index: 9, answer: 'mention it', alternatives: ['worry'] },
             { index: 10, answer: 'make', alternatives: ['change'] },
-            { index: 11, answer: 'leave', alternatives: ['finish'] },
-            { index: 12, answer: 'touch', alternatives: ['contact'] },
-            { index: 13, answer: 'care', alternatives: ['it easy'] }
+            { index: 11, answer: 'leave', alternatives: ['finish'] }
         ],
         deepDive: [
             { index: 3, phrase: 'do me a favour', insight: 'Actually makes the other person feel valued, rather than bothered.' },
@@ -686,10 +680,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 5, answer: 'catch up with', alternatives: ['see', 'meet'] },
             { index: 6, answer: 'get', alternatives: ['wake', 'be'] },
             { index: 7, answer: 'do', alternatives: ['get', 'fit in'] },
-            { index: 8, answer: 'enjoy', alternatives: ['take it easy', 'slow down'] },
-            { index: 9, answer: 'alone', alternatives: ['on my own', 'by myself'] },
-            { index: 10, answer: 'peaceful', alternatives: ['relaxed', 'quiet'] },
-            { index: 11, answer: 'flexible', alternatives: ['independent', 'free'] }
+            { index: 8, answer: 'enjoy', alternatives: ['take it easy', 'slow down'] }
         ],
         deepDive: [
             { index: 3, phrase: 'unwind', insight: 'More advanced than "relax". Very common in native UK English.' },
@@ -719,8 +710,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 3, answer: 'perspective', alternatives: ['side', 'point of view'] },
             { index: 4, answer: 'this', alternatives: [] },
             { index: 5, answer: 'hand', alternatives: ['side'] },
-            { index: 6, answer: 'stronger', alternatives: ['clearer', 'better'] },
-            { index: 7, answer: 'open', alternatives: ['receptive', 'flexible'] }
+            { index: 6, answer: 'stronger', alternatives: ['clearer', 'better'] }
         ],
         deepDive: [
             { index: 1, phrase: 'To be honest', insight: 'The classic "softener" for an opposing opinion.' },
@@ -750,8 +740,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 3, answer: 'up', alternatives: ['doing'] },
             { index: 4, answer: 'hurry', alternatives: ['rush'] },
             { index: 5, answer: 'labour', alternatives: ['push'] },
-            { index: 6, answer: 'touch', alternatives: ['contact'] },
-            { index: 7, answer: 'care', alternatives: ['it easy'] }
+            { index: 6, answer: 'touch', alternatives: ['contact'] }
         ],
         deepDive: [
             { index: 2, phrase: 'what are the chances', insight: 'The standard native way to comment on an unexpected encounter.' }
@@ -811,10 +800,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 2, answer: 'on track', alternatives: ['moving'] },
             { index: 3, answer: 'Actually', alternatives: [] },
             { index: 4, answer: 'perspective', alternatives: ['view'] },
-            { index: 5, answer: 'timing', alternatives: ['delivery'] },
-            { index: 6, answer: 'flag', alternatives: ['raise'] },
-            { index: 7, answer: 'open', alternatives: ['receptive'] },
-            { index: 8, answer: 'take', alternatives: ['discuss'] }
+            { index: 5, answer: 'timing', alternatives: ['delivery'] }
         ],
         deepDive: [
             { index: 1, phrase: 'touch base', insight: 'The most common corporate idiom for a short check-in.' }
@@ -870,9 +856,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 2, answer: 'Actually', alternatives: ['To be honest'] },
             { index: 3, answer: 'relaxed', alternatives: ['flexible'] },
             { index: 4, answer: 'tidy', alternatives: ['clean'] },
-            { index: 5, answer: 'sense', alternatives: ['logic'] },
-            { index: 6, answer: 'fussy', alternatives: ['picky'] },
-            { index: 7, answer: 'taking out', alternatives: [] }
+            { index: 5, answer: 'sense', alternatives: ['logic'] }
         ],
         deepDive: [
             { index: 6, phrase: 'fussy', insight: 'Common UK word for being hard to please.' }
@@ -1059,8 +1043,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 3, answer: 'honest', alternatives: ['frank', 'upfront'] },
             { index: 4, answer: 'calm', alternatives: ['sit', 'settle'] },
             { index: 5, answer: 'figured out', alternatives: ['worked out', 'ironed out'] },
-            { index: 6, answer: 'shortly', alternatives: ['soon', 'in a bit'] },
-            { index: 7, answer: 'learned', alternatives: ['noted', 'taken on board'] }
+            { index: 6, answer: 'shortly', alternatives: ['soon', 'in a bit'] }
         ],
         deepDive: [
             { index: 2, phrase: 'something has come up', insight: 'The perfect vague phrase for a problem.' },
@@ -1124,8 +1107,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 3, answer: 'faulty', alternatives: ['damaged', 'broken', 'defective'] },
             { index: 4, answer: 'properly', alternatives: ['correctly', 'at all'] },
             { index: 5, answer: 'receipt', alternatives: ['proof of purchase'] },
-            { index: 6, answer: 'go', alternatives: ['are'] },
-            { index: 7, answer: 'refund', alternatives: ['replacement', 'exchange'] }
+            { index: 6, answer: 'go', alternatives: ['are'] }
         ],
         deepDive: [
             { index: 1, phrase: 'I\'d like to return', insight: 'Direct but polite opening.' },
@@ -1158,9 +1140,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 4, answer: 'charged', alternatives: ['billed'] },
             { index: 5, answer: 'room key', alternatives: ['keycard', 'folio'] },
             { index: 6, answer: 'standard', alternatives: ['basic', 'single'] },
-            { index: 7, answer: 'premium', alternatives: ['deluxe', 'suite'] },
-            { index: 8, answer: 'right', alternatives: ['correct'] },
-            { index: 9, answer: 'correct', alternatives: ['fix', 'adjust'] }
+            { index: 7, answer: 'premium', alternatives: ['deluxe', 'suite'] }
         ],
         deepDive: [
             { index: 2, phrase: 'charge on my bill', insight: 'The polite way to question unexpected costs.' },
@@ -1374,9 +1354,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 13, answer: 'free', alternatives: ['included', 'unlimited'] },
             { index: 14, answer: 'check-out', alternatives: [] },
             { index: 15, answer: 'eleven', alternatives: ['ten', 'noon'] },
-            { index: 16, answer: 'help', alternatives: ['assistance'] },
-            { index: 17, answer: 'stay', alternatives: ['visit'] },
-            { index: 18, answer: 'nice', alternatives: ['good', 'pleasant'] }
+            { index: 16, answer: 'help', alternatives: ['assistance'] }
         ],
         deepDive: [
             { index: 1, phrase: 'How can I help you?', insight: 'LOCKED CHUNK - standard opening for service interactions.' },
@@ -1429,9 +1407,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 14, answer: 'three', alternatives: ['five', 'seven'] },
             { index: 15, answer: 'problem', alternatives: ['worries'] },
             { index: 16, answer: 'help', alternatives: ['assist'] },
-            { index: 17, answer: 'all', alternatives: ['everything'] },
-            { index: 18, answer: 'help', alternatives: ['assistance', 'time'] },
-            { index: 19, answer: 'nice', alternatives: ['good', 'lovely'] }
+            { index: 17, answer: 'all', alternatives: ['everything'] }
         ],
         deepDive: [
             { index: 2, phrase: 'I\'d like to return', insight: 'Direct but polite LOCKED CHUNK for formal requests.' },
