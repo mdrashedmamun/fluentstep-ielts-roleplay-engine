@@ -283,7 +283,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 10, answer: 'three', alternatives: ['four', 'half past three'] },
             { index: 11, answer: 'exchange', alternatives: ['replacement'] },
             { index: 12, answer: 'refund', alternatives: ['full refund'] },
-            { index: 13, 城镇: ['store credit', 'partial', 'gift card'] },
+            { index: 13, answer: 'partial', alternatives: ['store credit', 'gift card'] },
             { index: 14, answer: 'used', alternatives: ['touched', 'had a chance to use'] }
         ],
         deepDive: [
@@ -748,7 +748,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 1, answer: 'going', alternatives: ['moving'] },
             { index: 2, answer: 'pleasure', alternatives: ['surprise'] },
             { index: 3, answer: 'up', alternatives: ['doing'] },
-            { index: 4, 区间: ['hurry', 'rush'] },
+            { index: 4, answer: 'hurry', alternatives: ['rush'] },
             { index: 5, answer: 'labour', alternatives: ['push'] },
             { index: 6, answer: 'touch', alternatives: ['contact'] },
             { index: 7, answer: 'care', alternatives: ['it easy'] }
