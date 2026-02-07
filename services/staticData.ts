@@ -877,5 +877,294 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         deepDive: [
             { index: 6, phrase: 'fussy', insight: 'Common UK word for being hard to please.' }
         ]
+    },
+    {
+        id: 'social-8-old-friend',
+        category: 'Social',
+        topic: 'Catching Up with an Old Friend',
+        context: 'Two old friends meet and reconnect.',
+        characters: [
+            { name: 'Sam', description: 'Relaxed.' },
+            { name: 'Chris', description: 'Busy but friendly.' }
+        ],
+        dialogue: [
+            { speaker: 'Sam', text: 'Chris! Is that you? I haven\'t seen you in ages.' },
+            { speaker: 'Chris', text: 'Sam! What a surprise. How ________?' },
+            { speaker: 'Sam', text: 'I\'m ________, thanks. Just taking a stroll. What have you ________?' },
+            { speaker: 'Chris', text: 'Not much, just ________ with work lately. By the way, did you hear about Sarah\'s wedding?' },
+            { speaker: 'Sam', text: 'No! That ________. When is it?' },
+            { speaker: 'Chris', text: 'Next month. I still need to ________ if I can make it, though.' }
+        ],
+        answerVariations: [
+            { index: 1, answer: 'is it going', alternatives: ['are you doing', 'have you been'] },
+            { index: 2, answer: 'doing well', alternatives: ['not too bad', 'pretty good'] },
+            { index: 3, answer: 'been up to', alternatives: ['been doing', 'been up to lately'] },
+            { index: 4, answer: 'swamped', alternatives: ['busy', 'tied up'] },
+            { index: 5, answer: 'sounds nice', alternatives: ['sounds good', 'sounds lovely'] },
+            { index: 6, answer: 'make up my mind', alternatives: ['decide', 'figure out'] }
+        ],
+        deepDive: [
+            { index: 1, phrase: 'is it going', insight: 'The classic warm greeting for friends.' },
+            { index: 4, phrase: 'swamped', insight: 'A very natural way to describe being busy without sounding stressed.' },
+            { index: 6, phrase: 'make up my mind', insight: 'Used for decisions that require some thought.' }
+        ]
+    },
+    {
+        id: 'social-9-weekend-plans',
+        category: 'Social',
+        topic: 'Making Weekend Plans',
+        context: 'Two colleagues deciding what to do on Saturday.',
+        characters: [
+            { name: 'Jo', description: 'Proactive.' },
+            { name: 'Alex', description: 'Flexible.' }
+        ],
+        dialogue: [
+            { speaker: 'Jo', text: 'Hey Alex, any plans for the weekend?' },
+            { speaker: 'Alex', text: 'Not yet. I was thinking of just ________.' },
+            { speaker: 'Jo', text: 'Why don\'t we go for a hike? The weather is supposed to be ________.' },
+            { speaker: 'Alex', text: 'That sounds ________. What time were you ________?' },
+            { speaker: 'Jo', text: 'Maybe around ten?' },
+            { speaker: 'Alex', text: 'Perfect. Let\'s ________ on Friday to confirm the details.' },
+            { speaker: 'Jo', text: 'Great. We can always ________ if the weather changes.' }
+        ],
+        answerVariations: [
+            { index: 1, answer: 'taking it easy', alternatives: ['relaxing', 'staying in'] },
+            { index: 2, answer: 'lovely', alternatives: ['nice', 'bright', 'pleasant'] },
+            { index: 3, answer: 'like a plan', alternatives: ['good', 'great'] },
+            { index: 4, answer: 'thinking', alternatives: ['planning', 'aiming'] },
+            { index: 5, answer: 'touch base', alternatives: ['catch up', 'check in'] },
+            { index: 6, answer: 'play it by ear', alternatives: ['see how it goes', 'decide then'] }
+        ],
+        deepDive: [
+            { index: 1, phrase: 'taking it easy', insight: 'High-value phrase for "relaxing".' },
+            { index: 2, phrase: 'lovely', insight: 'British/IELTS 9 favorite for "good".' },
+            { index: 5, phrase: 'touch base', insight: 'Professional but friendly way to say "let\'s talk later".' },
+            { index: 6, phrase: 'play it by ear', insight: 'Idiom for being flexible.' }
+        ]
+    },
+    {
+        id: 'social-10-new-neighbor',
+        category: 'Social',
+        topic: 'Meeting a New Neighbor',
+        context: 'Welcoming someone who just moved in next door.',
+        characters: [
+            { name: 'Mrs. Higgins', description: 'Welcoming.' },
+            { name: 'Mark', description: 'New neighbor.' }
+        ],
+        dialogue: [
+            { speaker: 'Mrs. Higgins', text: 'Hello there! I\'m Mrs. Higgins from next door.' },
+            { speaker: 'Mark', text: 'Oh, hi! I\'m Mark. ________ you.' },
+            { speaker: 'Mrs. Higgins', text: 'Welcome to the neighborhood. It\'s quite ________ here, I hope you like it.' },
+            { speaker: 'Mark', text: 'Thanks. It seems ________ so far.' },
+            { speaker: 'Mrs. Higgins', text: 'If you ever need a ________, just let me know.' },
+            { speaker: 'Mark', text: 'That\'s very ________ of you. I appreciate it.' }
+        ],
+        answerVariations: [
+            { index: 1, answer: 'Nice to meet', alternatives: ['Pleasure to meet', 'Good to meet'] },
+            { index: 2, answer: 'peaceful', alternatives: ['quiet', 'residential', 'calm'] },
+            { index: 3, answer: 'lovely', alternatives: ['nice', 'great', 'fine'] },
+            { index: 4, answer: 'hand', alternatives: ['favor', 'bit of help'] },
+            { index: 5, answer: 'kind', alternatives: ['thoughtful', 'nice'] }
+        ],
+        deepDive: [
+            { index: 1, phrase: 'Nice to meet', insight: 'Standard, can\'t go wrong.' },
+            { index: 2, phrase: 'peaceful', insight: 'Describes an area well—very IELTS friendly.' },
+            { index: 4, phrase: 'need a hand', insight: 'Native idiom for "need help".' }
+        ]
+    },
+    {
+        id: 'workplace-6-proposal-feedback',
+        category: 'Workplace',
+        topic: 'Giving Feedback on a Proposal',
+        context: 'Discussing a new project timeline with a colleague.',
+        characters: [
+            { name: 'Taylor', description: 'Lead.' },
+            { name: 'Alex', description: 'Coordinator.' }
+        ],
+        dialogue: [
+            { speaker: 'Taylor', text: 'Thanks for sending over the proposal, Alex.' },
+            { speaker: 'Alex', text: 'No problem. What did you think?' },
+            { speaker: 'Taylor', text: 'Overall, I see your ________. However, I have a slightly ________ view on the timeline.' },
+            { speaker: 'Alex', text: 'Oh? Is it too ________?' },
+            { speaker: 'Taylor', text: 'Possibly. From my ________, it might need some ________ to be realistic.' },
+            { speaker: 'Alex', text: 'That\'s fair. Maybe we could ________ the rollout and see?' }
+        ],
+        answerVariations: [
+            { index: 1, answer: 'point', alternatives: ['reasoning', 'logic'] },
+            { index: 2, answer: 'different', alternatives: ['alternative', 'broader'] },
+            { index: 3, answer: 'tight', alternatives: ['critical', 'sensitive'] },
+            { index: 4, answer: 'perspective', alternatives: ['point of view', 'experience'] },
+            { index: 5, answer: 'fine-tuning', alternatives: ['refining', 'adjustment'] },
+            { index: 6, answer: 'pilot', alternatives: ['phase', 'stagger'] }
+        ],
+        deepDive: [
+            { index: 2, phrase: 'different view', insight: 'A soft way to disagree without being negative.' },
+            { index: 5, phrase: 'fine-tuning', insight: 'Implies the idea is good, but needs minor changes.' },
+            { index: 6, phrase: 'pilot', insight: 'Very professional "corporate" English for "testing".' }
+        ]
+    },
+    {
+        id: 'workplace-7-ask-help',
+        category: 'Workplace',
+        topic: 'Asking for Help at Work',
+        context: 'Needing assistance with a complex spreadsheet.',
+        characters: [
+            { name: 'Sarah', description: 'Busy.' },
+            { name: 'Sam', description: 'Needing help.' }
+        ],
+        dialogue: [
+            { speaker: 'Sam', text: 'Hey Sarah, do you ________ a minute?' },
+            { speaker: 'Sarah', text: 'Yeah, what\'s up?' },
+            { speaker: 'Sam', text: 'Well, to be ________, I\'m a bit ________ with this data.' },
+            { speaker: 'Sarah', text: 'No worries. What do you need?' },
+            { speaker: 'Sam', text: 'Could you do me a ________ and take a ________ look at this formula?' },
+            { speaker: 'Sarah', text: 'Sure. Go ________.' },
+            { speaker: 'Sam', text: 'Thanks, I really ________ your help.' }
+        ],
+        answerVariations: [
+            { index: 1, answer: 'have got', alternatives: ['have'] },
+            { index: 2, answer: 'honest', alternatives: ['frank', 'upfront'] },
+            { index: 3, answer: 'swamped', alternatives: ['overwhelmed', 'busy'] },
+            { index: 4, answer: 'favour', alternatives: ['hand'] },
+            { index: 5, answer: 'quick', alternatives: ['brief', 'fast'] },
+            { index: 6, answer: 'ahead', alternatives: ['on then'] },
+            { index: 7, answer: 'appreciate', alternatives: ['value', 'thank you for'] }
+        ],
+        deepDive: [
+            { index: 1, phrase: 'have you got', insight: 'Natural British/Common English for "do you have".' },
+            { index: 3, phrase: 'swamped', insight: 'Great for admitting you\'re busy/overwhelmed professionally.' },
+            { index: 4, phrase: 'do me a favour', insight: 'Actually makes the other person feel valued.' }
+        ]
+    },
+    {
+        id: 'workplace-8-handle-mistake',
+        category: 'Workplace',
+        topic: 'Handling a Mistake at Work',
+        context: 'A report was sent with the wrong numbers.',
+        characters: [
+            { name: 'Manager', description: 'Calm.' },
+            { name: 'Employee', description: 'Responsible.' }
+        ],
+        dialogue: [
+            { speaker: 'Employee', text: 'I\'m sorry to ________ you, but something has ________ up.' },
+            { speaker: 'Manager', text: 'What happened?' },
+            { speaker: 'Employee', text: 'To be ________, I made a small mistake on the report.' },
+            { speaker: 'Manager', text: 'I see. Well, let\'s ________ down and look at it properly.' },
+            { speaker: 'Employee', text: 'I\'ve already ________ how to fix it. I\'ll send a revised version ________.' },
+            { speaker: 'Manager', text: 'Good. Lesson ________. Let\'s make sure it doesn\'t happen again.' }
+        ],
+        answerVariations: [
+            { index: 1, answer: 'interrupt', alternatives: ['bother', 'disturb'] },
+            { index: 2, answer: 'come', alternatives: ['cropped', 'turned'] },
+            { index: 3, answer: 'honest', alternatives: ['frank', 'upfront'] },
+            { index: 4, answer: 'calm', alternatives: ['sit', 'settle'] },
+            { index: 5, answer: 'figured out', alternatives: ['worked out', 'ironed out'] },
+            { index: 6, answer: 'shortly', alternatives: ['soon', 'in a bit'] },
+            { index: 7, answer: 'learned', alternatives: ['noted', 'taken on board'] }
+        ],
+        deepDive: [
+            { index: 2, phrase: 'something has come up', insight: 'The perfect vague phrase for a problem.' },
+            { index: 5, phrase: 'figured out', insight: 'Collaborative and proactive phrasing.' },
+            { index: 7, phrase: 'lesson learned', insight: 'Accepts responsibility and signals moving forward.' }
+        ]
+    },
+    {
+        id: 'service-8-restaurant-order',
+        category: 'Service/Logistics',
+        topic: 'Ordering at a Restaurant',
+        context: 'Ordering lunch for two.',
+        characters: [
+            { name: 'Waiter', description: 'Professional.' },
+            { name: 'Customer', description: 'Polite.' }
+        ],
+        dialogue: [
+            { speaker: 'Waiter', text: 'Are you ready to order, or do you need a ________?' },
+            { speaker: 'Customer', text: 'I think we\'re ________.' },
+            { speaker: 'Waiter', text: 'Great. What can I get for you?' },
+            { speaker: 'Customer', text: 'I\'ll ________ the grilled fish, please.' },
+            { speaker: 'Waiter', text: 'Excellent choice. And for you?' },
+            { speaker: 'Customer', text: 'Could I have the salad, but ________ the dressing?' },
+            { speaker: 'Waiter', text: 'Of course. Anything else?' },
+            { speaker: 'Customer', text: 'No, that\'s ________. Thanks for your ________.' }
+        ],
+        answerVariations: [
+            { index: 1, answer: 'moment', alternatives: ['minute', 'second'] },
+            { index: 2, answer: 'good', alternatives: ['set', 'ready'] },
+            { index: 3, answer: 'have', alternatives: ['take', 'order'] },
+            { index: 4, answer: 'without', alternatives: ['no', 'easy on'] },
+            { index: 5, answer: 'everything', alternatives: ['all', 'it'] },
+            { index: 6, answer: 'help', alternatives: ['assistance', 'time'] }
+        ],
+        deepDive: [
+            { index: 1, phrase: 'need a moment', insight: 'Standard restaurant etiquette.' },
+            { index: 3, phrase: 'I\'ll have the...', insight: 'The most natural way to order.' },
+            { index: 5, phrase: 'that\'s everything', insight: 'Signals the end of the order clearly.' }
+        ]
+    },
+    {
+        id: 'service-9-return-faulty',
+        category: 'Service/Logistics',
+        topic: 'Returning a Faulty Item',
+        context: 'Bringing back a toaster that doesn\'t work.',
+        characters: [
+            { name: 'Shop Assistant', description: 'Polite.' },
+            { name: 'Customer', description: 'Firm but calm.' }
+        ],
+        dialogue: [
+            { speaker: 'Shop Assistant', text: 'Hello. How can I assist you today?' },
+            { speaker: 'Customer', text: 'Hi. I\'d like to ________ this toaster, please.' },
+            { speaker: 'Shop Assistant', text: 'Of course. What seems to be the ________?' },
+            { speaker: 'Customer', text: 'It\'s ________, and it doesn\'t toast ________.' },
+            { speaker: 'Shop Assistant', text: 'I see. Do you have the ________?' },
+            { speaker: 'Customer', text: 'Yes, here you ________. I\'d prefer a ________, if possible.' }
+        ],
+        answerVariations: [
+            { index: 1, answer: 'return', alternatives: ['refund', 'bring back'] },
+            { index: 2, answer: 'problem', alternatives: ['issue', 'trouble'] },
+            { index: 3, answer: 'faulty', alternatives: ['damaged', 'broken', 'defective'] },
+            { index: 4, answer: 'properly', alternatives: ['correctly', 'at all'] },
+            { index: 5, answer: 'receipt', alternatives: ['proof of purchase'] },
+            { index: 6, answer: 'go', alternatives: ['are'] },
+            { index: 7, answer: 'refund', alternatives: ['replacement', 'exchange'] }
+        ],
+        deepDive: [
+            { index: 1, phrase: 'I\'d like to return', insight: 'Direct but polite opening.' },
+            { index: 3, phrase: 'faulty', insight: 'The standard word for "doesn\'t work well".' },
+            { index: 5, phrase: 'receipt', insight: 'Essential for returns.' }
+        ]
+    },
+    {
+        id: 'service-10-hotel-checkout',
+        category: 'Service/Logistics',
+        topic: 'Hotel Checkout with Issues',
+        context: 'Checking out of a hotel and addressing unexpected charges.',
+        characters: [
+            { name: 'Receptionist', description: 'Professional.' },
+            { name: 'Guest', description: 'Concerned.' }
+        ],
+        dialogue: [
+            { speaker: 'Receptionist', text: 'Good morning. How was your ________?' },
+            { speaker: 'Guest', text: 'It was lovely, thanks. But I noticed there\'s a ________ on my bill.' },
+            { speaker: 'Receptionist', text: 'I see. What seems to be the issue?' },
+            { speaker: 'Guest', text: 'I didn\'t ________ anything from the minibar, but I\'ve been ________.' },
+            { speaker: 'Receptionist', text: 'Let me check that for you. Can I see your ________?' },
+            { speaker: 'Guest', text: 'Of course. I booked a ________ room, not a ________ one.' },
+            { speaker: 'Receptionist', text: 'You\'re absolutely ________. I apologize for the error. I\'ll ________ it immediately.' }
+        ],
+        answerVariations: [
+            { index: 1, answer: 'stay', alternatives: ['visit', 'time'] },
+            { index: 2, answer: 'charge', alternatives: ['fee', 'cost'] },
+            { index: 3, answer: 'order', alternatives: ['take', 'use'] },
+            { index: 4, answer: 'charged', alternatives: ['billed'] },
+            { index: 5, answer: 'room key', alternatives: ['keycard', 'folio'] },
+            { index: 6, answer: 'standard', alternatives: ['basic', 'single'] },
+            { index: 7, answer: 'premium', alternatives: ['deluxe', 'suite'] },
+            { index: 8, answer: 'right', alternatives: ['correct'] },
+            { index: 9, answer: 'correct', alternatives: ['fix', 'adjust'] }
+        ],
+        deepDive: [
+            { index: 2, phrase: 'charge on my bill', insight: 'The polite way to question unexpected costs.' },
+            { index: 8, phrase: 'you\'re absolutely right', insight: 'Acknowledgment that signals a quick resolution.' }
+        ]
     }
 ];

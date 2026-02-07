@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { RoleplayScript } from '../services/staticData';
 
 
@@ -16,10 +16,13 @@ const InteractiveBlank: React.FC<{
   isRevealed: boolean;
   onReveal: () => void;
 }> = ({ answer, alternatives, index, isRevealed, onReveal }) => {
+  const isClosingRef = useRef(false);
+
   useEffect(() => {
     if (!isRevealed) return;
 
     const handleClickOutside = (e: MouseEvent) => {
+      if (isClosingRef.current) return;
       const target = e.target as HTMLElement;
       if (!target.closest('.interactive-blank-container')) {
         onReveal();
@@ -58,7 +61,12 @@ const InteractiveBlank: React.FC<{
             <div className="flex justify-between items-center">
               <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest block">Native Alternatives</span>
               <button
-                onClick={(e) => { e.stopPropagation(); onReveal(); }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  isClosingRef.current = true;
+                  onReveal();
+                  setTimeout(() => { isClosingRef.current = false; }, 100);
+                }}
                 className="text-slate-300 hover:text-slate-500"
               >
                 <i className="fas fa-times text-xs"></i>
@@ -124,15 +132,17 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
     }
   };
 
-  const toggleBlank = (index: number) => {
-    const newSet = new Set(revealedBlanks);
-    if (newSet.has(index)) {
-      newSet.delete(index);
-    } else {
-      newSet.add(index);
-    }
-    setRevealedBlanks(newSet);
-  };
+  const toggleBlank = useCallback((index: number) => {
+    setRevealedBlanks(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(index)) {
+        newSet.delete(index);
+      } else {
+        newSet.add(index);
+      }
+      return newSet;
+    });
+  }, []);
 
   // Auto-scroll to bottom of dialogue
   useEffect(() => {
