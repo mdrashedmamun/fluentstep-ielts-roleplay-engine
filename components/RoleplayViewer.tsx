@@ -60,7 +60,7 @@ const InteractiveBlank: React.FC<{
       </button>
 
       {isRevealed && (
-        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-6 w-64 p-5 bg-white rounded-[1.5rem] shadow-2xl border border-slate-100 z-[100] animate-in zoom-in-95 fade-in duration-300">
+        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-64 p-5 bg-white rounded-[1.5rem] shadow-2xl border border-slate-100 z-[100] animate-in zoom-in-95 fade-in duration-300">
           <div className="space-y-3">
             <div className="flex justify-between items-center">
               <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest block">Native Alternatives</span>
@@ -85,7 +85,7 @@ const InteractiveBlank: React.FC<{
             </div>
           </div>
           {/* Arrow */}
-          <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 w-4 h-4 bg-white border-b border-r border-slate-100 rotate-45"></div>
+          <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-t border-l border-slate-100 rotate-45"></div>
         </div>
       )}
     </span>
