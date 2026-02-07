@@ -1,9 +1,12 @@
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { AppView } from './types';
 import Layout from './components/Layout';
 import TopicSelector from './components/TopicSelector';
 import RoleplayViewer from './components/RoleplayViewer';
+import { OnboardingModal } from './components/OnboardingModal';
+import { KeyboardShortcutsModal } from './components/KeyboardShortcutsModal';
+import { useKeyboard } from './hooks/useKeyboard';
 import { CURATED_ROLEPLAYS, RoleplayScript } from './services/staticData';
 
 const App: React.FC = () => {
@@ -11,6 +14,21 @@ const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [activeScript, setActiveScript] = useState<RoleplayScript | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
+
+  // Show onboarding on first visit
+  useEffect(() => {
+    const skipOnboarding = localStorage.getItem('fluentstep:skipOnboarding');
+    if (!skipOnboarding) {
+      setShowOnboarding(true);
+    }
+  }, []);
+
+  // Keyboard shortcuts
+  useKeyboard({
+    onHelp: () => setShowKeyboardShortcuts(!showKeyboardShortcuts)
+  });
 
   const handleScriptSelect = useCallback((scriptId: string) => {
     setIsLoading(true);
@@ -82,6 +100,16 @@ const App: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {renderContent()}
       </div>
+
+      {/* Modals */}
+      <OnboardingModal
+        isOpen={showOnboarding}
+        onClose={() => setShowOnboarding(false)}
+      />
+      <KeyboardShortcutsModal
+        isOpen={showKeyboardShortcuts}
+        onClose={() => setShowKeyboardShortcuts(false)}
+      />
     </Layout>
   );
 };

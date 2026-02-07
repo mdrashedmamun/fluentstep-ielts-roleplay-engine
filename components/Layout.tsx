@@ -1,48 +1,46 @@
 
 import React from 'react';
-import { AppView } from '../types';
 
 interface LayoutProps {
   children: React.ReactNode;
-  currentView: AppView;
-  setView: (view: AppView) => void;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children, currentView, setView }) => {
+const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="bg-white/80 backdrop-blur-md border-b border-emerald-100 sticky top-0 z-50">
-        <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2 cursor-pointer group" onClick={() => setView(AppView.TOPIC_SELECTION)}>
-            <div className="w-9 h-9 bg-emerald-600 rounded-xl flex items-center justify-center text-white font-bold shadow-lg shadow-emerald-200 group-hover:scale-105 transition-transform">FS</div>
-            <span className="font-extrabold text-emerald-900 text-xl tracking-tight">FluentStep</span>
-          </div>
-          <nav className="hidden md:flex items-center gap-8">
-            <button 
-              onClick={() => setView(AppView.TOPIC_SELECTION)}
-              className={`text-sm font-semibold transition-colors ${currentView === AppView.TOPIC_SELECTION || currentView === AppView.ROLEPLAY_DISPLAY ? 'text-emerald-600' : 'text-emerald-900/40 hover:text-emerald-700'}`}
+    <div className="min-h-screen flex flex-col bg-slate-50">
+      <header className="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          <a href="/" className="flex items-center gap-2 cursor-pointer group hover:opacity-75 transition-opacity">
+            <div className="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-bold shadow-md shadow-indigo-200 group-hover:scale-105 transition-transform">FS</div>
+            <span className="font-black text-slate-900 text-xl tracking-tight">FluentStep</span>
+          </a>
+
+          <div className="flex items-center gap-3">
+            <button
+              title="Keyboard Shortcuts (Press ?)"
+              onClick={() => {}}
+              className="hidden sm:flex px-3 py-1.5 text-slate-600 hover:text-indigo-600 font-medium text-sm bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
             >
-              Roleplays
+              <i className="fas fa-keyboard mr-2"></i>
+              ? Help
             </button>
-          </nav>
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-bold uppercase tracking-widest border border-emerald-200">Pro Engine</span>
+            <span className="text-[10px] bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded-full font-bold uppercase tracking-widest border border-indigo-200">Pro Engine v1</span>
           </div>
         </div>
       </header>
 
-      <main className="flex-1 max-w-5xl w-full mx-auto px-4 py-12">
+      <main className="flex-1 w-full">
         {children}
       </main>
 
-      <footer className="bg-emerald-950 py-10 mt-auto">
-        <div className="max-w-5xl mx-auto px-4 text-center space-y-4">
-          <div className="flex justify-center gap-4 text-emerald-500/50">
-             <i className="fab fa-twitter"></i>
-             <i className="fab fa-linkedin"></i>
-             <i className="fas fa-envelope"></i>
+      <footer className="bg-slate-900 py-10 mt-auto text-slate-400">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+          <div className="flex justify-center gap-4 text-slate-500">
+             <i className="fab fa-twitter hover:text-slate-300 cursor-pointer transition-colors"></i>
+             <i className="fab fa-linkedin hover:text-slate-300 cursor-pointer transition-colors"></i>
+             <i className="fas fa-envelope hover:text-slate-300 cursor-pointer transition-colors"></i>
           </div>
-          <p className="text-sm text-emerald-600 font-medium">© 2024 FluentStep AI Engine. Elevating language acquisition through design.</p>
+          <p className="text-sm text-slate-500 font-medium">© 2024 FluentStep. Master IELTS speaking through native pattern recognition.</p>
         </div>
       </footer>
     </div>

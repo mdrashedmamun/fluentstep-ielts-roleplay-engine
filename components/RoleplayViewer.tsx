@@ -1,6 +1,8 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { RoleplayScript } from '../services/staticData';
+import { progressService } from '../services/progressService';
+import { useKeyboard } from '../hooks/useKeyboard';
 
 
 
@@ -95,8 +97,25 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
   const [revealedBlanks, setRevealedBlanks] = useState<Set<number>>(new Set());
   const [showDeepDive, setShowDeepDive] = useState(false);
   const [activeSpeechIdx, setActiveSpeechIdx] = useState<number | null>(null);
+  const [startTime] = useState(Date.now());
 
   const totalSteps = script.dialogue.length;
+
+  // Initialize progress tracking on mount
+  useEffect(() => {
+    progressService.markScenarioStarted(script.id);
+  }, [script.id]);
+
+  // Save progress on step/blank change
+  useEffect(() => {
+    const timeSpent = Math.floor((Date.now() - startTime) / 1000);
+    progressService.updateScenarioProgress(
+      script.id,
+      currentStep,
+      Array.from(revealedBlanks),
+      timeSpent
+    );
+  }, [currentStep, revealedBlanks, script.id, startTime]);
 
   const handleListen = (lineText: string, lineBlanks: number[], idx: number) => {
     setActiveSpeechIdx(idx);
@@ -128,9 +147,15 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
     if (currentStep < totalSteps - 1) {
       setCurrentStep(prev => prev + 1);
     } else {
+      progressService.markScenarioCompleted(script.id);
       setShowDeepDive(true);
     }
   };
+
+  const handleReset = useCallback(() => {
+    progressService.markScenarioCompleted(script.id);
+    onReset();
+  }, [script.id, onReset]);
 
   const toggleBlank = useCallback((index: number) => {
     setRevealedBlanks(prev => {
@@ -143,6 +168,17 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
       return newSet;
     });
   }, []);
+
+  // Keyboard navigation
+  useKeyboard({
+    onNext: handleNext,
+    onEscape: () => {
+      if (showDeepDive) {
+        setShowDeepDive(false);
+      }
+    },
+    onBack: handleReset
+  });
 
   // Auto-scroll to bottom of dialogue
   useEffect(() => {
@@ -157,8 +193,9 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
       {/* Header */}
       <div className="flex justify-between items-center bg-white/50 backdrop-blur-md p-4 rounded-3xl border border-white shadow-sm">
         <button
-          onClick={onReset}
+          onClick={handleReset}
           className="group px-5 py-2.5 text-slate-600 hover:text-indigo-600 flex items-center gap-3 font-bold transition-all"
+          title="Back to Library (Cmd/Ctrl + B)"
         >
           <i className="fas fa-chevron-left text-sm group-hover:-translate-x-1 transition-transform"></i>
           Back to Library
@@ -234,7 +271,6 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
                               alternatives={script.answerVariations.find(v => v.index === lineBlanks[pIdx])?.alternatives || []}
                               index={lineBlanks[pIdx]}
                               isRevealed={revealedBlanks.has(lineBlanks[pIdx])}
-                              topic={script.topic}
                               onReveal={() => toggleBlank(lineBlanks[pIdx])}
                             />
                           )}
@@ -266,6 +302,7 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
             <button
               onClick={handleNext}
               className="group px-12 py-5 bg-indigo-600 text-white rounded-[2rem] font-black text-xl shadow-2xl shadow-indigo-500/40 hover:bg-slate-900 hover:shadow-slate-500/40 transition-all hover:scale-105 active:scale-95 flex items-center gap-4 border-4 border-white"
+              title="Advance (Space or Enter)"
             >
               {isFinished ? 'Complete Mastery' : 'Next Turn'}
               <i className="fas fa-chevron-right text-sm"></i>
@@ -302,7 +339,7 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
             </div>
             <div className="p-8 bg-slate-50 border-t border-slate-100">
               <button
-                onClick={onReset}
+                onClick={handleReset}
                 className="w-full py-5 bg-slate-900 text-white rounded-2xl font-black text-lg hover:shadow-xl transition-all active:scale-95"
               >
                 Finish Journey
