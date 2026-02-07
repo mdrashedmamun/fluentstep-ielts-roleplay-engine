@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useFloating, flip, shift, offset } from '@floating-ui/react';
 import { RoleplayScript } from '../services/staticData';
 import { progressService } from '../services/progressService';
 import { useKeyboard } from '../hooks/useKeyboard';
@@ -19,6 +20,17 @@ const InteractiveBlank: React.FC<{
   onReveal: () => void;
 }> = ({ answer, alternatives, index, isRevealed, onReveal }) => {
   const isClosingRef = useRef(false);
+  const [referenceElement, setReferenceElement] = useState<HTMLButtonElement | null>(null);
+  const [floatingElement, setFloatingElement] = useState<HTMLDivElement | null>(null);
+
+  const { floatingStyles, placement } = useFloating({
+    elements: { reference: referenceElement, floating: floatingElement },
+    middleware: [
+      offset(12),
+      flip(),
+      shift({ padding: 8 })
+    ]
+  });
 
   useEffect(() => {
     if (!isRevealed) return;
@@ -38,8 +50,9 @@ const InteractiveBlank: React.FC<{
   }, [isRevealed, onReveal]);
 
   return (
-    <span className="relative inline-block group mx-1 align-baseline interactive-blank-container">
+    <span className="inline-block group mx-1 align-baseline interactive-blank-container">
       <button
+        ref={setReferenceElement}
         onClick={onReveal}
         className={`px-4 py-1.5 transition-all duration-300 rounded-xl font-bold border-2 flex items-center gap-2 justify-center ${isRevealed
           ? 'border-indigo-500 bg-white text-indigo-700 shadow-md ring-4 ring-indigo-500/10 scale-105 z-20 min-w-fit'
@@ -60,7 +73,11 @@ const InteractiveBlank: React.FC<{
       </button>
 
       {isRevealed && (
-        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-64 p-5 bg-white rounded-[1.5rem] shadow-2xl border border-slate-100 z-[100] animate-in zoom-in-95 fade-in duration-300">
+        <div
+          ref={setFloatingElement}
+          style={floatingStyles}
+          className="fixed w-64 p-5 bg-white rounded-[1.5rem] shadow-2xl border border-slate-100 z-[100] animate-in zoom-in-95 fade-in duration-300"
+        >
           <div className="space-y-3">
             <div className="flex justify-between items-center">
               <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest block">Native Alternatives</span>
@@ -85,7 +102,12 @@ const InteractiveBlank: React.FC<{
             </div>
           </div>
           {/* Arrow */}
-          <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-t border-l border-slate-100 rotate-45"></div>
+          {placement === 'bottom' && (
+            <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-t border-l border-slate-100 rotate-45"></div>
+          )}
+          {placement === 'top' && (
+            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-b border-r border-slate-100 rotate-45"></div>
+          )}
         </div>
       )}
     </span>

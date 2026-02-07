@@ -10,6 +10,7 @@
     "validate": "tsx scripts/validateScenarios.ts"
   },
   "dependencies": {
+    "@floating-ui/react": "^0.27.17",
     "@google/genai": "^1.39.0",
     "groq-sdk": "^0.37.0",
     "pdf-parse": "^2.4.5",
