@@ -41,17 +41,19 @@ const InteractiveBlank: React.FC<{
     <span className="relative inline-block group mx-1 align-baseline interactive-blank-container">
       <button
         onClick={onReveal}
-        className={`px-4 py-1.5 transition-all duration-300 rounded-xl font-bold border-2 flex items-center gap-3 min-w-[120px] justify-center ${isRevealed
-          ? 'border-indigo-500 bg-white text-indigo-700 shadow-md ring-4 ring-indigo-500/10 scale-105 z-20'
-          : 'border-slate-200 bg-slate-50/50 text-slate-300 hover:border-indigo-400 hover:text-indigo-500 hover:bg-white z-0'
+        className={`px-4 py-1.5 transition-all duration-300 rounded-xl font-bold border-2 flex items-center gap-2 justify-center ${isRevealed
+          ? 'border-indigo-500 bg-white text-indigo-700 shadow-md ring-4 ring-indigo-500/10 scale-105 z-20 min-w-fit'
+          : 'border-slate-200 bg-slate-50/50 text-slate-300 hover:border-indigo-400 hover:text-indigo-500 hover:bg-white z-0 min-w-[120px]'
           }`}
       >
-        <span className={`text-[10px] ${isRevealed ? 'text-indigo-400' : 'text-slate-300'} font-black uppercase tracking-tighter`}>Slot {index}</span>
-        <span className="tracking-tight whitespace-nowrap">
+        {!isRevealed && (
+          <span className="text-[10px] text-slate-300 font-black uppercase tracking-tighter">Slot {index}</span>
+        )}
+        <span className="tracking-tight whitespace-nowrap font-semibold">
           {isRevealed ? answer : 'REVEAL'}
         </span>
         {isRevealed ? (
-          <i className="fas fa-times text-[10px] text-slate-400 hover:text-red-500"></i>
+          <i className="fas fa-times text-[10px] text-slate-400 hover:text-red-500 ml-1"></i>
         ) : (
           <i className="fas fa-eye text-[10px] text-slate-300 group-hover:text-indigo-400"></i>
         )}
