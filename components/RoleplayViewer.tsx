@@ -55,20 +55,20 @@ const InteractiveBlank: React.FC<{
         ref={setReferenceElement}
         onClick={onReveal}
         className={`px-4 py-1.5 transition-all duration-300 rounded-xl font-bold border-2 flex items-center gap-2 justify-center ${isRevealed
-          ? 'border-indigo-500 bg-white text-indigo-700 shadow-md ring-4 ring-indigo-500/10 scale-105 z-20 min-w-fit'
-          : 'border-slate-200 bg-slate-50/50 text-slate-300 hover:border-indigo-400 hover:text-indigo-500 hover:bg-white z-0 min-w-[120px]'
+          ? 'border-primary-500 bg-gradient-to-r from-primary-50 to-accent-50 text-primary-700 shadow-md ring-4 ring-primary-500/20 scale-105 z-20 min-w-fit'
+          : 'border-dashed border-primary-300 bg-gradient-to-r from-orange-100/50 to-teal-100/50 text-neutral-600 hover:border-primary-400 hover:text-primary-600 hover:bg-gradient-to-r hover:from-orange-100 hover:to-teal-100 z-0 min-w-[140px]'
           }`}
       >
         {!isRevealed && (
-          <span className="text-[10px] text-slate-300 font-black uppercase tracking-tighter">Slot {index}</span>
+          <span className="text-[10px] text-primary-500 font-bold uppercase tracking-tighter">✨ Tap to discover</span>
         )}
         <span className="tracking-tight whitespace-nowrap font-semibold">
-          {isRevealed ? answer : 'REVEAL'}
+          {isRevealed ? answer : ''}
         </span>
         {isRevealed ? (
-          <i className="fas fa-times text-[10px] text-slate-400 hover:text-red-500 ml-1"></i>
+          <i className="fas fa-times text-[10px] text-neutral-400 hover:text-neutral-600 ml-1"></i>
         ) : (
-          <i className="fas fa-eye text-[10px] text-slate-300 group-hover:text-indigo-400"></i>
+          <i className="fas fa-sparkles text-[10px] text-primary-400 group-hover:text-primary-500 animate-pulse"></i>
         )}
       </button>
 
@@ -76,37 +76,58 @@ const InteractiveBlank: React.FC<{
         <div
           ref={setFloatingElement}
           style={floatingStyles}
-          className="fixed w-64 p-5 bg-white rounded-[1.5rem] shadow-2xl border border-slate-100 z-[100] animate-in zoom-in-95 fade-in duration-300"
+          className="fixed w-72 rounded-2xl z-[100] animate-in zoom-in-95 fade-in duration-300 overflow-hidden"
         >
-          <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest block">Native Alternatives</span>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  isClosingRef.current = true;
-                  onReveal();
-                  setTimeout(() => { isClosingRef.current = false; }, 100);
-                }}
-                className="text-slate-300 hover:text-slate-500"
-              >
-                <i className="fas fa-times text-xs"></i>
-              </button>
+          {/* Warm gradient background with elegant shadow */}
+          <div className="bg-white shadow-2xl border-2 border-primary-100 rounded-2xl overflow-hidden">
+            {/* Header with warm gradient */}
+            <div className="bg-gradient-to-r from-primary-50 to-accent-50 px-6 py-4 border-b border-primary-100">
+              <div className="flex justify-between items-center">
+                <span className="text-xs font-bold text-primary-700 uppercase tracking-wider block">Native Alternatives</span>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    isClosingRef.current = true;
+                    onReveal();
+                    setTimeout(() => { isClosingRef.current = false; }, 100);
+                  }}
+                  className="text-neutral-400 hover:text-neutral-600 transition-colors"
+                >
+                  <i className="fas fa-times text-sm"></i>
+                </button>
+              </div>
             </div>
-            <div className="flex flex-wrap gap-2">
-              {alternatives.length > 0 ? alternatives.map((alt, i) => (
-                <span key={i} className="px-2 py-1 bg-slate-50 text-slate-600 text-[10px] font-bold rounded-lg border border-slate-100">
-                  {alt}
-                </span>
-              )) : <span className="text-slate-400 text-[10px] italic">No common alternatives</span>}
+
+            {/* Content */}
+            <div className="p-5 space-y-4">
+              {/* Main answer in highlight */}
+              <div className="bg-gradient-to-r from-primary-50 to-accent-50 p-4 rounded-xl border border-primary-100">
+                <p className="text-sm text-neutral-500 uppercase tracking-wider font-semibold mb-1">Answer</p>
+                <p className="text-lg font-bold text-primary-700">{answer}</p>
+              </div>
+
+              {/* Alternatives */}
+              {alternatives.length > 0 && (
+                <div>
+                  <p className="text-xs text-neutral-600 font-semibold uppercase tracking-wider mb-2">Other ways to say it</p>
+                  <div className="flex flex-wrap gap-2">
+                    {alternatives.map((alt, i) => (
+                      <span key={i} className="px-3 py-1.5 bg-neutral-100 text-neutral-700 text-xs font-semibold rounded-lg border border-neutral-200 hover:border-primary-300 transition-colors">
+                        {alt}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
+
           {/* Arrow */}
           {placement === 'bottom' && (
-            <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-t border-l border-slate-100 rotate-45"></div>
+            <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-t-2 border-l-2 border-primary-100 rotate-45"></div>
           )}
           {placement === 'top' && (
-            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-b border-r border-slate-100 rotate-45"></div>
+            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-b-2 border-r-2 border-primary-100 rotate-45"></div>
           )}
         </div>
       )}
@@ -214,32 +235,32 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
 
   return (
     <div className="max-w-4xl mx-auto h-[85vh] flex flex-col gap-6 animate-world-entry">
-      {/* Header */}
-      <div className="flex justify-between items-center bg-white/50 backdrop-blur-md p-4 rounded-3xl border border-white shadow-sm">
+      {/* Header - Warm Gradient */}
+      <div className="flex justify-between items-center bg-gradient-to-r from-orange-50 via-white to-teal-50 backdrop-blur-md p-4 rounded-3xl border-2 border-orange-100 shadow-sm">
         <button
           onClick={handleReset}
-          className="group px-5 py-2.5 text-slate-600 hover:text-indigo-600 flex items-center gap-3 font-bold transition-all"
+          className="group px-5 py-2.5 text-neutral-600 hover:text-primary-600 flex items-center gap-3 font-bold transition-all"
           title="Back to Library (Cmd/Ctrl + B)"
         >
           <i className="fas fa-chevron-left text-sm group-hover:-translate-x-1 transition-transform"></i>
           Back to Library
         </button>
         <div className="flex flex-col items-center">
-          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{script.category}</span>
-          <h2 className="text-lg font-black text-slate-900 tracking-tight">{script.topic}</h2>
+          <span className="text-[10px] font-bold text-primary-600 uppercase tracking-wider">{script.category}</span>
+          <h2 className="text-lg font-black text-neutral-800 tracking-tight font-display">{script.topic}</h2>
         </div>
         <div className="w-[120px] flex justify-end">
-          <div className="px-4 py-1.5 bg-indigo-50 text-indigo-600 rounded-full text-[10px] font-black">
+          <div className="px-4 py-1.5 bg-gradient-to-r from-primary-100 to-accent-100 text-primary-700 rounded-full text-[10px] font-bold">
             {currentStep + 1} / {totalSteps}
           </div>
         </div>
       </div>
 
-      {/* Main Story Area */}
-      <div className="flex-grow bg-white rounded-[3rem] shadow-2xl shadow-indigo-500/5 border border-slate-100 overflow-hidden flex flex-col relative">
-        {/* Environment Background Plate (Placeholder style) */}
-        <div className="absolute top-0 left-0 w-full h-40 bg-gradient-to-b from-indigo-50 to-transparent flex items-center justify-center pointer-events-none">
-          <div className="text-[100px] opacity-[0.03] font-black select-none uppercase">{script.category}</div>
+      {/* Main Story Area - Warm Gradient */}
+      <div className="flex-grow bg-gradient-to-br from-white via-orange-50/20 to-white rounded-[3rem] shadow-2xl shadow-primary-500/10 border-2 border-orange-100 overflow-hidden flex flex-col relative">
+        {/* Environment Background Plate - Warm Watercolor */}
+        <div className="absolute top-0 left-0 w-full h-40 bg-gradient-to-b from-orange-50/30 to-transparent flex items-center justify-center pointer-events-none">
+          <div className="text-[100px] opacity-[0.05] font-black select-none uppercase">{script.category}</div>
         </div>
 
         {/* Dialogue Scroll Area */}
@@ -268,23 +289,25 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
               >
                 {/* Avatar Slot */}
                 <div className="flex-shrink-0 flex flex-col items-center gap-2 animate-float">
-                  <div className={`w-14 h-14 rounded-2xl shadow-sm flex items-center justify-center text-xl font-black ${isYou ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-400'
+                  <div className={`w-16 h-16 rounded-2xl shadow-md flex items-center justify-center text-xl font-bold font-display ${isYou
+                    ? 'bg-gradient-to-br from-primary-400 to-primary-500 text-white ring-3 ring-orange-100'
+                    : 'bg-gradient-to-br from-accent-400 to-accent-500 text-white ring-3 ring-teal-100'
                     }`}>
                     {char.avatarUrl ? (
                       <img src={char.avatarUrl} alt={char.name} className="w-full h-full object-cover rounded-2xl" />
                     ) : (
-                      char.name[0]
+                      char.name[0].toUpperCase()
                     )}
                   </div>
-                  <span className="text-[9px] font-black uppercase text-slate-400 tracking-tighter">{char.name}</span>
+                  <span className="text-[9px] font-bold uppercase text-neutral-600 tracking-tight">{char.name}</span>
                 </div>
 
                 {/* Speech Bubble Container */}
                 <div className={`relative max-w-[80%] group/bubble ${isYou ? 'flex flex-row-reverse' : 'flex'}`}>
-                  <div className={`p-6 rounded-[2rem] text-lg leading-relaxed shadow-sm transition-all ${isYou
-                    ? 'bg-slate-50 text-slate-800 rounded-tr-none border border-slate-100'
-                    : 'bg-indigo-50 text-indigo-900 rounded-tl-none border border-indigo-100/50'
-                    } ${activeSpeechIdx === idx ? 'ring-2 ring-indigo-400' : ''}`}>
+                  <div className={`p-6 rounded-3xl text-lg leading-relaxed shadow-md transition-all ${isYou
+                    ? 'bg-gradient-to-br from-primary-50 to-primary-100 text-neutral-800 rounded-tr-none border-2 border-primary-200'
+                    : 'bg-gradient-to-br from-accent-50 to-accent-100 text-neutral-800 rounded-tl-none border-2 border-accent-200'
+                    } ${activeSpeechIdx === idx ? 'ring-2 ring-primary-400 shadow-lg' : ''}`}>
                     <div className="inline">
                       {parts.map((part, pIdx) => (
                         <React.Fragment key={pIdx}>
@@ -306,13 +329,13 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
                   {/* Listen Button */}
                   <button
                     onClick={() => handleListen(line.text, lineBlanks, idx)}
-                    className={`mt-2 mx-2 w-10 h-10 rounded-full flex items-center justify-center transition-all ${activeSpeechIdx === idx
-                      ? 'bg-indigo-600 text-white animate-pulse shadow-lg shadow-indigo-200'
-                      : 'bg-white text-slate-400 hover:text-indigo-600 border border-slate-100 shadow-sm opacity-0 group-hover/bubble:opacity-100'
+                    className={`mt-2 mx-2 w-12 h-12 rounded-full flex items-center justify-center transition-all font-bold ${activeSpeechIdx === idx
+                      ? 'bg-gradient-to-br from-primary-500 to-primary-600 text-white animate-pulse shadow-lg shadow-primary-500/40'
+                      : 'bg-white text-neutral-400 hover:text-primary-600 border-2 border-neutral-200 hover:border-primary-300 shadow-md opacity-0 group-hover/bubble:opacity-100'
                       }`}
                     title="Listen to native pronunciation"
                   >
-                    <i className={`fas ${activeSpeechIdx === idx ? 'fa-volume-up' : 'fa-volume-low'} text-xs`}></i>
+                    <i className={`fas ${activeSpeechIdx === idx ? 'fa-volume-up' : 'fa-volume-low'}`}></i>
                   </button>
                 </div>
               </div>
@@ -325,48 +348,53 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
           {!showDeepDive && (
             <button
               onClick={handleNext}
-              className="group px-12 py-5 bg-indigo-600 text-white rounded-[2rem] font-black text-xl shadow-2xl shadow-indigo-500/40 hover:bg-slate-900 hover:shadow-slate-500/40 transition-all hover:scale-105 active:scale-95 flex items-center gap-4 border-4 border-white"
+              className="group px-12 py-5 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-2xl font-bold text-xl shadow-2xl shadow-primary-500/40 hover:shadow-lg hover:shadow-primary-400/50 transition-all hover:scale-105 active:scale-95 flex items-center gap-4 border-4 border-white"
               title="Advance (Space or Enter)"
             >
-              {isFinished ? 'Complete Mastery' : 'Next Turn'}
-              <i className="fas fa-chevron-right text-sm"></i>
+              {isFinished ? '✨ Complete Mastery' : 'Next Turn →'}
+              <i className="fas fa-chevron-right text-sm group-hover:translate-x-1 transition-transform"></i>
             </button>
           )}
         </div>
       </div>
 
-      {/* Deep Dive Overlay / Section */}
+      {/* Deep Dive Overlay / Section - Celebration */}
       {showDeepDive && (
-        <div className="fixed inset-0 z-50 bg-slate-950/20 backdrop-blur-xl p-8 flex items-center justify-center animate-in fade-in duration-500">
-          <div className="bg-white max-w-2xl w-full max-h-[90vh] rounded-[3rem] shadow-2xl overflow-hidden flex flex-col animate-in zoom-in-95 duration-500">
-            <div className="p-8 border-b border-slate-100 flex justify-between items-center">
+        <div className="fixed inset-0 z-50 bg-neutral-950/20 backdrop-blur-xl p-8 flex items-center justify-center animate-in fade-in duration-500">
+          <div className="bg-white max-w-2xl w-full max-h-[90vh] rounded-3xl shadow-2xl overflow-hidden flex flex-col animate-in zoom-in-95 duration-500">
+            {/* Warm gradient header */}
+            <div className="p-8 bg-gradient-to-r from-primary-50 to-accent-50 border-b-2 border-primary-100 flex justify-between items-center">
               <div>
-                <span className="text-[10px] font-black text-indigo-500 uppercase tracking-widest">Story Conclusion</span>
-                <h3 className="text-2xl font-black text-slate-900">Author's Deep Dive</h3>
+                <span className="text-xs font-bold text-primary-700 uppercase tracking-wider">Key Insights</span>
+                <h3 className="text-2xl font-black text-neutral-800 font-display">Your Language Discoveries</h3>
               </div>
-              <button onClick={() => setShowDeepDive(false)} className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 hover:bg-red-50 hover:text-red-500 transition-all">
+              <button onClick={() => setShowDeepDive(false)} className="w-10 h-10 rounded-full bg-white border-2 border-neutral-200 flex items-center justify-center text-neutral-400 hover:text-neutral-600 hover:border-primary-300 transition-all">
                 <i className="fas fa-times"></i>
               </button>
             </div>
-            <div className="flex-grow overflow-y-auto p-8 space-y-6">
+
+            {/* Insights list */}
+            <div className="flex-grow overflow-y-auto p-8 space-y-4">
               {script.deepDive.map((dive) => (
-                <div key={dive.index} className="flex gap-4 p-6 bg-indigo-50/50 rounded-3xl border border-indigo-100/30">
-                  <div className="w-10 h-10 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-black flex-shrink-0 shadow-lg shadow-indigo-500/20">
+                <div key={dive.index} className="flex gap-4 p-5 bg-gradient-to-r from-primary-50/50 to-accent-50/50 rounded-2xl border-2 border-primary-100/50 hover:border-primary-200 transition-colors">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-white flex items-center justify-center font-bold flex-shrink-0 shadow-md">
                     {dive.index}
                   </div>
-                  <div className="space-y-1">
-                    <p className="font-black text-indigo-900 text-lg uppercase tracking-tight">"{dive.phrase}"</p>
-                    <p className="text-slate-600 leading-relaxed font-medium">{dive.insight}</p>
+                  <div className="space-y-2">
+                    <p className="font-bold text-neutral-800 text-base">"{dive.phrase}"</p>
+                    <p className="text-neutral-600 leading-relaxed text-sm">{dive.insight}</p>
                   </div>
                 </div>
               ))}
             </div>
-            <div className="p-8 bg-slate-50 border-t border-slate-100">
+
+            {/* Footer with warm gradient */}
+            <div className="p-8 bg-gradient-to-r from-orange-50 to-teal-50 border-t-2 border-orange-100">
               <button
                 onClick={handleReset}
-                className="w-full py-5 bg-slate-900 text-white rounded-2xl font-black text-lg hover:shadow-xl transition-all active:scale-95"
+                className="w-full py-4 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all active:scale-95"
               >
-                Finish Journey
+                🏆 Return to Library
               </button>
             </div>
           </div>

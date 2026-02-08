@@ -12,10 +12,12 @@ export default {
     extend: {
       colors: {
         primary: tokens.colors.primary,
+        accent: tokens.colors.accent,
         neutral: tokens.colors.neutral,
-        success: tokens.colors.semantic.success,
+        success: tokens.colors.success,
         error: tokens.colors.semantic.error,
-        warning: tokens.colors.semantic.warning
+        warning: tokens.colors.semantic.warning,
+        info: tokens.colors.semantic.info
       },
       borderRadius: {
         ...Object.entries(tokens.radius).reduce((acc, [key, value]) => {
@@ -31,7 +33,8 @@ export default {
       },
       fontFamily: {
         sans: tokens.typography.fontFamily.sans,
-        display: tokens.typography.fontFamily.display
+        display: tokens.typography.fontFamily.display,
+        accent: tokens.typography.fontFamily.accent
       },
       fontSize: {
         ...Object.entries(tokens.typography.fontSize).reduce((acc, [key, value]) => {
@@ -43,7 +46,8 @@ export default {
       transitionDuration: {
         fast: tokens.transitions.fast,
         base: tokens.transitions.base,
-        slow: tokens.transitions.slow
+        slow: tokens.transitions.slow,
+        spring: tokens.transitions.spring
       }
     }
   },

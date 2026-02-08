@@ -3,7 +3,13 @@
  * Centralized design values for colors, spacing, typography, and shadows
  */
 
-export const tokens = {
+import { warmTokens } from './warmTokens';
+
+// Use warm tokens as the primary design system
+export const tokens = warmTokens;
+
+// Keep legacy tokens export for backwards compatibility
+export const legacyTokens = {
   colors: {
     primary: {
       50: '#eef2ff',    // indigo-50

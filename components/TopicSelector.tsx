@@ -28,46 +28,58 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect }) => {
     <div className="space-y-12 animate-in fade-in slide-in-from-top-4 duration-1000">
       {/* Hero Section with Progress */}
       <div className="text-center max-w-2xl mx-auto space-y-6">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-indigo-100 text-indigo-700 rounded-full text-xs font-bold uppercase tracking-widest">
+        {/* Warm Badge */}
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-100 to-orange-50 text-orange-700 rounded-full text-xs font-bold uppercase tracking-wider border border-orange-200">
           <i className="fas fa-book-open"></i>
-          The Immersion Library
+          Your Learning Journey
         </div>
-        <h1 className="text-5xl font-black text-slate-900 tracking-tight leading-tight">
-          Enter Your <br /><span className="text-indigo-600 italic">Fluency Story</span>
+
+        {/* Main Heading */}
+        <h1 className="text-5xl font-black text-neutral-800 tracking-tight leading-tight font-display">
+          Choose Your <br /><span className="bg-gradient-to-r from-primary-500 to-primary-600 bg-clip-text text-transparent">Next Conversation</span>
         </h1>
-        <p className="text-lg text-slate-600 leading-relaxed font-medium">
-          Choose a scenario from our curated collection. <br />
-          Each story is crafted for 100% natural, high-impact English acquisition.
+
+        {/* Subheading */}
+        <p className="text-lg text-neutral-600 leading-relaxed font-medium">
+          Each scenario brings you closer to confident, natural English fluency. <br />
+          Pick one and dive into a real-world conversation.
         </p>
 
-        {/* Progress Bar */}
-        <div className="mt-8 space-y-2 max-w-xs mx-auto">
-          <div className="flex items-center justify-between text-sm">
-            <span className="font-semibold text-slate-900">Your Progress</span>
-            <span className="font-bold text-indigo-600">{completionPercentage}%</span>
+        {/* Progress Visualization - Warm Gradient */}
+        <div className="mt-8 space-y-3 max-w-sm mx-auto bg-gradient-to-br from-orange-50 to-teal-50 p-6 rounded-3xl border border-orange-100">
+          <div className="flex items-center justify-between">
+            <span className="font-semibold text-neutral-800">Your Progress</span>
+            <span className="font-bold text-transparent bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text">{completionPercentage}%</span>
           </div>
-          <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+          <div className="w-full h-3 bg-neutral-200 rounded-full overflow-hidden">
             <div
-              className="h-full bg-indigo-600 transition-all duration-500"
+              className="h-full bg-gradient-to-r from-primary-500 to-primary-600 transition-all duration-700"
               style={{ width: `${completionPercentage}%` }}
             />
           </div>
-          <p className="text-xs text-slate-500">{completedScenarios.size} of {CURATED_ROLEPLAYS.length} scenarios completed</p>
+          <p className="text-xs text-neutral-600 font-medium">
+            <span className="text-primary-600 font-bold">{completedScenarios.size}</span> of <span className="text-accent-600 font-bold">{CURATED_ROLEPLAYS.length}</span> scenarios completed
+          </p>
         </div>
       </div>
 
-      {/* Category Tabs */}
-      <div className="flex justify-center gap-2 p-1 bg-slate-100 rounded-2xl max-w-fit mx-auto border border-slate-200">
+      {/* Category Tabs - Underline Style */}
+      <div className="flex justify-center gap-8 pb-4 border-b-2 border-neutral-200 max-w-fit mx-auto px-4">
         {CATEGORIES.map((cat) => (
-          <Button
+          <button
             key={cat}
-            variant={activeCategory === cat ? 'primary' : 'ghost'}
-            size="sm"
             onClick={() => setActiveCategory(cat)}
-            className={activeCategory === cat ? 'scale-105' : ''}
+            className={`pb-3 font-semibold text-sm uppercase tracking-wider transition-all duration-200 relative ${
+              activeCategory === cat
+                ? 'text-primary-600'
+                : 'text-neutral-500 hover:text-neutral-700'
+            }`}
           >
             {cat}
-          </Button>
+            {activeCategory === cat && (
+              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary-500 to-primary-600 rounded-full"></div>
+            )}
+          </button>
         ))}
       </div>
 
@@ -79,51 +91,65 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect }) => {
             <button
               key={script.id}
               onClick={() => onSelect(script.id)}
-              className="group relative h-96 bg-white rounded-[2.5rem] shadow-lg hover:shadow-xl hover:shadow-indigo-500/20 transition-all duration-300 overflow-hidden border border-slate-100 text-left flex flex-col p-8 hover:-translate-y-1"
+              className="group relative bg-white rounded-3xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden text-left flex flex-col p-6 border-2 border-transparent hover:border-orange-200 hover:-translate-y-1"
             >
-              {/* Background Aesthetic */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-bl-[10rem] group-hover:bg-indigo-100 transition-colors -mr-16 -mt-16"></div>
+              {/* Gradient Accent Strip */}
+              <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary-400 to-accent-400 group-hover:h-2 transition-all duration-300"></div>
+
+              {/* Background Aesthetic - Warm Gradient */}
+              <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-orange-50 to-teal-50 rounded-bl-[8rem] group-hover:from-orange-100 group-hover:to-teal-100 transition-all duration-300 -mr-12 -mt-12 opacity-50"></div>
 
               {/* Completion Badge */}
               {isCompleted && (
                 <div className="absolute top-6 right-6 z-20">
-                  <Badge variant="success" size="sm" icon="✓">
-                    Complete
-                  </Badge>
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-success-400 to-success-500 text-white flex items-center justify-center shadow-lg text-sm font-bold">
+                    ✓
+                  </div>
                 </div>
               )}
 
               <div className="relative z-10 h-full flex flex-col">
-                <div className="mb-6 w-14 h-14 bg-indigo-50 rounded-2xl flex items-center justify-center group-hover:bg-indigo-600 transition-all duration-300">
-                  <i className={`fas ${getIcon(script.category)} text-indigo-500 group-hover:text-white text-xl`}></i>
+                {/* Character Avatars - Larger, with rings */}
+                <div className="mb-5 flex items-center gap-3">
+                  {script.characters.slice(0, 2).map((char, i) => (
+                    <div
+                      key={i}
+                      className={`w-16 h-16 rounded-full flex items-center justify-center font-bold text-white text-lg font-display shadow-md ring-3 ${
+                        i === 0
+                          ? 'bg-gradient-to-br from-primary-400 to-primary-500 ring-orange-100'
+                          : 'bg-gradient-to-br from-accent-400 to-accent-500 ring-teal-100 -ml-3'
+                      }`}
+                    >
+                      {char.name[0].toUpperCase()}
+                    </div>
+                  ))}
                 </div>
 
-                <div className="space-y-4 flex-grow">
-                  <h3 className="text-2xl font-black text-slate-800 leading-tight group-hover:text-indigo-600 transition-colors">
+                {/* Content */}
+                <div className="space-y-3 flex-grow">
+                  <h3 className="text-2xl font-bold text-neutral-800 leading-tight group-hover:text-primary-600 transition-colors font-display">
                     {script.topic}
                   </h3>
-                  <p className="text-slate-500 font-medium leading-relaxed">
+                  <p className="text-sm text-neutral-600 leading-relaxed line-clamp-2 group-hover:text-neutral-700 transition-colors">
                     {script.context}
                   </p>
                 </div>
 
-                <div className="pt-6 border-t border-slate-50 mt-auto flex items-center justify-between">
-                  <div className="flex -space-x-2">
-                    {script.characters.map((char, i) => (
-                      <div key={i} className="w-8 h-8 rounded-full bg-slate-200 border-2 border-white flex items-center justify-center text-[10px] font-bold text-slate-500">
-                        {char.name[0]}
-                      </div>
-                    ))}
+                {/* Metadata Footer */}
+                <div className="pt-4 border-t border-neutral-100 mt-4 flex items-center justify-between">
+                  <div className="flex items-center gap-3 text-xs text-neutral-600 font-medium">
+                    <span>⏱️ 5-8 min</span>
+                    <span>💬 {script.dialogue.length} phrases</span>
                   </div>
-                  <div className="text-indigo-600 font-black text-xs uppercase tracking-widest flex items-center gap-2 group-hover:translate-x-1 transition-transform">
-                    {isCompleted ? 'Review' : 'Enter Story'}
+                  <div className="text-primary-600 font-semibold text-xs uppercase tracking-wider flex items-center gap-2 group-hover:translate-x-1 transition-transform">
+                    {isCompleted ? 'Review' : 'Start'}
                     <i className="fas fa-arrow-right"></i>
                   </div>
                 </div>
               </div>
 
-              {/* Book Spine Aesthetic */}
-              <div className="absolute left-0 top-0 w-1.5 h-full bg-indigo-600/10 group-hover:bg-indigo-600 transition-colors"></div>
+              {/* Warm Glow on Hover */}
+              <div className="absolute inset-0 bg-gradient-to-br from-primary-500/0 to-accent-500/0 group-hover:from-primary-500/5 group-hover:to-accent-500/5 transition-all duration-300 rounded-3xl pointer-events-none"></div>
             </button>
           );
         })}
