@@ -80,11 +80,23 @@ export function validateDeepDive(scenario: RoleplayScript): ValidationFinding[] 
       });
     }
 
-    // Check 3: Phrase consistency (phrase should match actual answer in dialogue)
-    const dialogueLine = scenario.dialogue[dd.index]?.text || '';
-    const phraseInDialogue = dialogueLine.toLowerCase().includes(dd.phrase.toLowerCase());
+    // Check 3: Phrase consistency (phrase should relate to answer variations at this index)
+    // Deep dives teach phrases from the answers, not phrases in the dialogue text
+    // For fill-in-the-blank, the answer won't appear in dialogue - it fills a blank
+    // Validation: Either phrase contains answer, or answer contains phrase (partial teaching context)
+    const answerAtIndex = answerVariation.answer.toLowerCase();
+    const alternativesText = (answerVariation.alternatives || []).map(a => a.toLowerCase()).join(' ');
+    const allAnswerText = `${answerAtIndex} ${alternativesText}`.toLowerCase();
+    const phraseLower = dd.phrase.toLowerCase();
 
-    if (!phraseInDialogue) {
+    // Valid if: (1) phrase is in answers, OR (2) answer is in phrase (teaching full context)
+    const phraseRelatedToAnswers =
+      allAnswerText.includes(phraseLower) ||     // Phrase is in answers
+      phraseLower.includes(answerAtIndex) ||     // Answer word is in the phrase (teaching context)
+      phraseLower.includes(' ' + answerAtIndex + ' ') ||  // Answer word surrounded by spaces
+      phraseLower.endsWith(' ' + answerAtIndex); // Answer word at end
+
+    if (!phraseRelatedToAnswers) {
       const confidence = scoreConfidence({
         issueType: 'alternative-quality',
         affectedText: dd.phrase,
@@ -95,11 +107,11 @@ export function validateDeepDive(scenario: RoleplayScript): ValidationFinding[] 
         validatorName: 'Deep Dive Quality',
         scenarioId: scenario.id,
         location: `deepDive[${i}].phrase`,
-        issue: `Phrase doesn't appear in the dialogue line`,
+        issue: `Phrase doesn't relate to answer variations at this index`,
         currentValue: dd.phrase,
-        context: `Dialogue[${dd.index}]: "${dialogueLine}"`,
+        context: `Primary answer: "${answerAtIndex}" | Alternatives: ${alternativesText || 'none'}`,
         confidence: confidence.score * 0.8,
-        reasoning: `Deep dive phrase should match the actual answer being highlighted. Current phrase: "${dd.phrase}"`,
+        reasoning: `Deep dive phrase should be related to answers. Phrase "${dd.phrase}" not related to answer "${answerAtIndex}" at index ${dd.index}`,
         suggestedValue: undefined
       });
     }

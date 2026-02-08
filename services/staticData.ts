@@ -1234,7 +1234,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         ],
         deepDive: [
             { index: 1, phrase: 'flat white', insight: 'Universal IELTS chunk - specific coffee order, very common in UK.' },
-            { index: 8, phrase: 'take away', insight: 'Phrasal verb: extremely common in British English, native speech marker.' },
+            { index: 6, phrase: 'take away', insight: 'Phrasal verb: extremely common in British English, native speech marker.' },
             { index: 10, phrase: 'there you go', insight: 'Fixed phrase from LOCKED CHUNKS - used constantly by natives.' },
             { index: 18, phrase: 'sorry to bother you', insight: 'Polite interruption phrase - shows deference, very natural.' },
             { index: 26, phrase: 'I really appreciate it', insight: 'Universal chunk - expresses gratitude in mature, professional way.' }
