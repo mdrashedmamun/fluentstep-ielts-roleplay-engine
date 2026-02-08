@@ -135,7 +135,7 @@ const InteractiveBlank: React.FC<{
   );
 };
 
-import { speakText } from '../services/speechService';
+import { speakText, speakAnswer } from '../services/speechService';
 
 const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -213,6 +213,31 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
       return newSet;
     });
   }, []);
+
+  const handleBlankReveal = useCallback((blankIndex: number) => {
+    // Toggle reveal state
+    setRevealedBlanks(prev => {
+      const newSet = new Set(prev);
+      const wasRevealed = newSet.has(blankIndex);
+
+      if (wasRevealed) {
+        newSet.delete(blankIndex);  // Close popup
+      } else {
+        newSet.add(blankIndex);     // Open popup
+
+        // Play audio for the answer when revealing
+        const answerData = script.answerVariations.find(v => v.index === blankIndex);
+        if (answerData) {
+          // Small delay allows popup to appear first (better UX)
+          setTimeout(() => {
+            speakAnswer(answerData.answer);
+          }, 150);
+        }
+      }
+
+      return newSet;
+    });
+  }, [script.answerVariations]);
 
   // Keyboard navigation
   useKeyboard({
@@ -318,7 +343,7 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
                               alternatives={script.answerVariations.find(v => v.index === lineBlanks[pIdx])?.alternatives || []}
                               index={lineBlanks[pIdx]}
                               isRevealed={revealedBlanks.has(lineBlanks[pIdx])}
-                              onReveal={() => toggleBlank(lineBlanks[pIdx])}
+                              onReveal={() => handleBlankReveal(lineBlanks[pIdx])}
                             />
                           )}
                         </React.Fragment>

@@ -36,6 +36,35 @@ export const speakText = (text: string, options: SpeechOptions = {}) => {
     window.speechSynthesis.speak(utterance);
 };
 
+/**
+ * Speaks a single word or short phrase with British English pronunciation
+ * Optimized for vocabulary learning (slower rate, clear enunciation)
+ * Does NOT cancel ongoing dialogue - allows answer pronunciation without interrupting "Listen" button
+ */
+export const speakAnswer = (answer: string, options: SpeechOptions = {}) => {
+    if (!window.speechSynthesis) return;
+
+    const utterance = new SpeechSynthesisUtterance(answer);
+    if (options.onEnd) utterance.onend = options.onEnd;
+
+    // Reuse existing British voice selection logic
+    const voices = window.speechSynthesis.getVoices();
+    const britishVoice = voices.find(v => v.lang === 'en-GB' && (v.name.includes('Daniel') || v.name.includes('Serena')))
+        || voices.find(v => v.lang === 'en-GB')
+        || voices.find(v => v.lang.startsWith('en'));
+
+    if (britishVoice) {
+        utterance.voice = britishVoice;
+    }
+
+    // Slower rate for vocabulary pronunciation (0.85 vs 0.9 for dialogue)
+    utterance.rate = options.rate || 0.85;
+    utterance.pitch = options.pitch || 1.0;
+    utterance.volume = options.volume || 1.0;
+
+    window.speechSynthesis.speak(utterance);
+};
+
 // Pre-load voices (some browsers need this)
 if (typeof window !== 'undefined' && window.speechSynthesis) {
     window.speechSynthesis.getVoices();
