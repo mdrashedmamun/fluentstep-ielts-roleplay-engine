@@ -181,3 +181,40 @@ body {
     outline-width: 4px;
   }
 }
+
+/* === HERO VIDEO ENHANCEMENTS === */
+
+/* Video loading skeleton */
+.video-skeleton {
+  background: linear-gradient(
+    90deg,
+    #1f2937 25%,
+    #374151 50%,
+    #1f2937 75%
+  );
+  background-size: 200% 100%;
+  animation: loading 1.5s ease-in-out infinite;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Reduced motion: pause video, disable animations */
+@media (prefers-reduced-motion: reduce) {
+  video {
+    animation: none !important;
+  }
+
+  .animate-bounce {
+    animation: none;
+  }
+}
+
+/* High contrast mode: ensure hero text is visible */
+@media (prefers-contrast: high) {
+  .hero-video-overlay {
+    background: rgba(0, 0, 0, 0.9) !important;
+  }
+}
