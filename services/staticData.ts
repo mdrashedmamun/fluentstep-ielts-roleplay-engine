@@ -1634,5 +1634,165 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 1, phrase: 'insufficient', insight: 'Formal business critique showing gaps.' },
             { index: 8, phrase: 'dichotomy', insight: 'Advanced debate term for false choice.' }
         ]
+    },
+    {
+        id: 'advanced-virtual-meetings',
+        category: 'Advanced',
+        topic: 'Adjusting to Virtual Meeting Culture',
+        context: 'Colleagues discussing challenges of remote work and video conferencing etiquette',
+        characters: [
+            { name: 'Alex', description: 'Colleague reflecting on remote work challenges' },
+            { name: 'Sam', description: 'Colleague sharing perspective on video call fatigue' }
+        ],
+        dialogue: [
+            { speaker: 'Alex', text: 'I\'ve been reflecting on how differently we communicate now compared to before the pandemic. Video calls have definitely ________ the way we interact professionally.' },
+            { speaker: 'Sam', text: 'Absolutely. I find that people are more ________ to speak up on video than they were in person, which can be both positive and challenging.' },
+            { speaker: 'Alex', text: 'That\'s a fair ________. I\'ve noticed we ________ less informal chat before meetings start. We just log in and get straight to business.' },
+            { speaker: 'Sam', text: 'Exactly. There\'s a loss of ________. Those water cooler moments where you\'d catch up on personal matters are ________.' },
+            { speaker: 'Alex', text: 'Do you think we should ________ schedule some casual virtual coffee meetings?' },
+            { speaker: 'Sam', text: 'That\'s a ________ idea, but people seem ________ by "Zoom fatigue." We need to ________ the number of meetings overall.' },
+            { speaker: 'Alex', text: 'I ________ your perspective. Perhaps we could establish clearer norms - like video-off Fridays or meeting-free afternoons?' },
+            { speaker: 'Sam', text: 'That would be ________. It would give people space to concentrate on deep work.' }
+        ],
+        answerVariations: [
+            { index: 1, answer: 'transformed', alternatives: ['changed', 'altered', 'reshaped'] },
+            { index: 2, answer: 'reluctant', alternatives: ['hesitant', 'unwilling', 'resistant'] },
+            { index: 3, answer: 'point', alternatives: ['observation', 'perspective', 'view'] },
+            { index: 4, answer: 'encounter', alternatives: ['experience', 'have', 'see'] },
+            { index: 5, answer: 'rapport', alternatives: ['connection', 'relationship', 'bond'] },
+            { index: 6, answer: 'diminished', alternatives: ['reduced', 'weakened', 'lessened'] },
+            { index: 7, answer: 'intentionally', alternatives: ['deliberately', 'on purpose', 'purposefully'] },
+            { index: 8, answer: 'valid', alternatives: ['good', 'sound', 'reasonable'] }
+        ],
+        deepDive: [
+            { index: 1, phrase: 'transformed', insight: 'C1 verb: metaphorical transformation. Better than "changed" in formal discourse.' },
+            { index: 2, phrase: 'reluctant', insight: 'Adjective collocation: "reluctant to" + infinitive. Shows hesitation with reluctance.' },
+            { index: 3, phrase: 'point', insight: 'Casual but effective: "That\'s a good point" is universal in academic discussion.' },
+            { index: 4, phrase: 'encounter', insight: 'Formal verb: "encounter" more sophisticated than "have" or "see".' },
+            { index: 5, phrase: 'rapport', insight: 'French origin noun meaning interpersonal connection. Key in social/professional contexts.' },
+            { index: 6, phrase: 'diminished', insight: 'Past participle as adjective. Suggests gradual or natural decline.' },
+            { index: 7, phrase: 'intentionally', insight: 'Adverb from intent. Emphasizes deliberate action, not accident.' },
+            { index: 8, phrase: 'valid', insight: 'C1 adjective: grants legitimacy to an idea more forcefully than "good".' }
+        ]
+    },
+    {
+        id: 'advanced-ai-displacement',
+        category: 'Advanced',
+        topic: 'Debating AI and Job Displacement',
+        context: 'Two professionals discussing impact of artificial intelligence on employment and careers',
+        characters: [
+            { name: 'Jordan', description: 'Professional concerned about AI impact on employment' },
+            { name: 'Casey', description: 'Optimistic professional advocating for upskilling' }
+        ],
+        dialogue: [
+            { speaker: 'Jordan', text: 'The rapid advancement of AI has been creating considerable ________ in the workplace. Many worry their jobs will become ________.' },
+            { speaker: 'Casey', text: 'I understand the concern, but historically, technological innovation has ________ rather than eliminated employment opportunities.' },
+            { speaker: 'Jordan', text: 'That may be true historically, but the pace is ________ now. We don\'t have time to ________ and reskill.' },
+            { speaker: 'Casey', text: 'True, but I think we\'re seeing ________ in how companies approach this. Some are investing in upskilling programmes.' },
+            { speaker: 'Jordan', text: 'I ________ that\'s commendable, though it\'s not universal. The burden shouldn\'t fall entirely on ________.' },
+            { speaker: 'Casey', text: 'Agreed. There\'s a pressing need for policy ________. Governments should establish frameworks to support transitions.' },
+            { speaker: 'Jordan', text: 'And not just financially. Workers need ________ that career pivots are feasible and achievable.' },
+            { speaker: 'Casey', text: 'Absolutely. The narrative around AI needs to shift from threat to ________.' }
+        ],
+        answerVariations: [
+            { index: 1, answer: 'concern', alternatives: ['worry', 'anxiety', 'apprehension'] },
+            { index: 2, answer: 'redundant', alternatives: ['obsolete', 'unnecessary', 'superfluous'] },
+            { index: 3, answer: 'created', alternatives: ['generated', 'produced', 'made'] },
+            { index: 4, answer: 'unprecedented', alternatives: ['unparalleled', 'extraordinary', 'remarkable'] },
+            { index: 5, answer: 'adapt', alternatives: ['adjust', 'acclimate', 'evolve'] },
+            { index: 6, answer: 'positive momentum', alternatives: ['progress', 'advancement', 'improvement'] },
+            { index: 7, answer: 'acknowledge', alternatives: ['recognize', 'admit', 'concede'] },
+            { index: 8, answer: 'opportunity', alternatives: ['chance', 'possibility', 'prospect'] }
+        ],
+        deepDive: [
+            { index: 1, phrase: 'concern', insight: 'Noun abstract. Collocation: "express concern", "raise concern".' },
+            { index: 2, phrase: 'redundant', insight: 'C1 adjective: replaced/unnecessary. Technical term borrowed from engineering.' },
+            { index: 3, phrase: 'created', insight: 'Simple past with strong context: AI "created" opportunities, not just effects.' },
+            { index: 4, phrase: 'unprecedented', insight: 'C1 adjective: "without precedent". Emphasizes novelty and challenge.' },
+            { index: 5, phrase: 'adapt', insight: 'Key verb in IELTS Speaking Part 3: how people respond to change.' },
+            { index: 6, phrase: 'positive momentum', insight: 'Collocation: abstract noun + direction indicator. Business jargon.' },
+            { index: 7, phrase: 'acknowledge', insight: 'Formal verb: recognize validity even while disagreeing.' },
+            { index: 8, phrase: 'opportunity', insight: 'Positive reframing: from "job loss" to "opportunity". Rhetorical strategy.' }
+        ]
+    },
+    {
+        id: 'advanced-sustainability',
+        category: 'Advanced',
+        topic: 'Corporate Sustainability and Profit Tensions',
+        context: 'Executives discussing balancing environmental responsibility with shareholder returns',
+        characters: [
+            { name: 'Morgan', description: 'Executive balancing sustainability with shareholder returns' },
+            { name: 'Taylor', description: 'Executive advocating for long-term ESG value' }
+        ],
+        dialogue: [
+            { speaker: 'Morgan', text: 'Our sustainability initiatives are being ________ by investors who prioritize short-term profits.' },
+            { speaker: 'Taylor', text: 'It\'s a genuine ________, though I believe the calculus is changing. ESG considerations are increasingly ________ with long-term value.' },
+            { speaker: 'Morgan', text: 'Perhaps, but the evidence remains ________. We\'ve had to scale back several programmes due to budget ________.' },
+            { speaker: 'Taylor', text: 'I sympathize with the constraint, but consider this: brand damage from environmental negligence is far more ________.' },
+            { speaker: 'Morgan', text: 'That\'s a valid ________. We\'ve seen competitors suffer reputationally. Still, our board wants ________ that investments yield measurable returns.' },
+            { speaker: 'Taylor', text: 'Have you ________ communicating the indirect benefits? Cost savings from efficiency, talent attraction, regulatory advantage?' },
+            { speaker: 'Morgan', text: 'We have, but the messaging hasn\'t quite ________ through. The business case needs to be more ________.' },
+            { speaker: 'Taylor', text: 'Perhaps we could partner with analysts to quantify the ROI more ________. That might help persuade the sceptics.' }
+        ],
+        answerVariations: [
+            { index: 1, answer: 'questioned', alternatives: ['challenged', 'disputed', 'scrutinized'] },
+            { index: 2, answer: 'tension', alternatives: ['conflict', 'strain', 'competition'] },
+            { index: 3, answer: 'aligned', alternatives: ['connected', 'related', 'associated'] },
+            { index: 4, answer: 'mixed', alternatives: ['inconclusive', 'unclear', 'ambiguous'] },
+            { index: 5, answer: 'constraints', alternatives: ['limitations', 'restrictions', 'obstacles'] },
+            { index: 6, answer: 'devastating', alternatives: ['catastrophic', 'terrible', 'ruinous'] },
+            { index: 7, answer: 'assurance', alternatives: ['guarantee', 'proof', 'evidence'] },
+            { index: 8, answer: 'comprehensively', alternatives: ['thoroughly', 'carefully', 'systematically'] }
+        ],
+        deepDive: [
+            { index: 1, phrase: 'questioned', insight: 'Past participle: passive voice construction for neutrality.' },
+            { index: 2, phrase: 'tension', insight: 'Abstract noun: intellectual conflict without personal animosity.' },
+            { index: 3, phrase: 'aligned', insight: 'Business metaphor: strategy/values/interests "align" (become compatible).' },
+            { index: 4, phrase: 'mixed', insight: 'Adjective for evidence: results neither clearly positive nor negative.' },
+            { index: 5, phrase: 'constraints', insight: 'Business jargon: limitations imposed by external factors (budget, resources).' },
+            { index: 6, phrase: 'devastating', insight: 'Hyperbolic but defensible: reputation damage costs more than remediation.' },
+            { index: 7, phrase: 'assurance', insight: 'Noun from assure: commitment to certainty. Corporate language.' },
+            { index: 8, phrase: 'comprehensively', insight: 'Adverb: covering all aspects thoroughly. Shows systematic thinking.' }
+        ]
+    },
+    {
+        id: 'advanced-language-learning',
+        category: 'Advanced',
+        topic: 'Strategies for Effective Language Acquisition',
+        context: 'Language professionals discussing modern approaches to adult language learning',
+        characters: [
+            { name: 'Professor Chen', description: 'Language educator promoting communicative approaches' },
+            { name: 'David', description: 'Student discussing modern language learning methodology' }
+        ],
+        dialogue: [
+            { speaker: 'Professor Chen', text: 'The traditional approach to language education has been ________ for decades, yet outcomes haven\'t improved proportionally.' },
+            { speaker: 'David', text: 'What specifically would you ________ to change?' },
+            { speaker: 'Professor Chen', text: 'The over-emphasis on grammar rules. Students memorize paradigms but remain ________ when attempting real communication.' },
+            { speaker: 'David', text: 'So you\'d advocate for more ________ speaking practice?' },
+            { speaker: 'Professor Chen', text: 'Precisely. Coupled with authentic materials - podcasts, films, social media. Learners need to be ________ to genuine language as it\'s actually used.' },
+            { speaker: 'David', text: 'But doesn\'t that create difficulties for beginners who lack the foundation to ________ complex input?' },
+            { speaker: 'Professor Chen', text: 'A fair ________. I\'d advocate for a ________ approach - scaffolded exposure combined with targeted grammar instruction when it serves communication.' },
+            { speaker: 'David', text: 'That sounds pragmatic. Have you had success ________ this methodology in formal classroom settings?' }
+        ],
+        answerVariations: [
+            { index: 1, answer: 'unchanged', alternatives: ['the same', 'unaltered', 'constant'] },
+            { index: 2, answer: 'argue', alternatives: ['suggest', 'propose', 'advocate'] },
+            { index: 3, answer: 'incompetent', alternatives: ['incapable', 'unable', 'unqualified'] },
+            { index: 4, answer: 'extensive', alternatives: ['significant', 'substantial', 'considerable'] },
+            { index: 5, answer: 'exposed', alternatives: ['subjected', 'vulnerable', 'open'] },
+            { index: 6, answer: 'process', alternatives: ['understand', 'grasp', 'comprehend'] },
+            { index: 7, answer: 'observation', alternatives: ['point', 'comment', 'note'] },
+            { index: 8, answer: 'implementing', alternatives: ['applying', 'using', 'employing'] }
+        ],
+        deepDive: [
+            { index: 1, phrase: 'unchanged', insight: 'Negative prefix + past participle: remains as it was.' },
+            { index: 2, phrase: 'argue', insight: 'Academic verb: "argue for/against" = present evidence-based position.' },
+            { index: 3, phrase: 'incompetent', insight: 'C1+ negative judgment: lacking skill/ability. Stronger than "unable".' },
+            { index: 4, phrase: 'extensive', insight: 'C1 adjective: large in scope/scale. Indicates serious engagement.' },
+            { index: 5, phrase: 'exposed', insight: 'Passive construction: "be exposed to" = receive/encounter (often involuntary).' },
+            { index: 6, phrase: 'process', insight: 'Verb in learning context: mentally work through information.' },
+            { index: 7, phrase: 'observation', insight: 'Formal noun: result of careful attention. Grounds opinion in evidence.' },
+            { index: 8, phrase: 'implementing', insight: 'Gerund: putting plan/method into action. Shows practical application.' }
+        ]
     }
 ];
