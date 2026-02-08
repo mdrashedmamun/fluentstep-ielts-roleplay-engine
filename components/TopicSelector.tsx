@@ -4,6 +4,7 @@ import { CURATED_ROLEPLAYS } from '../services/staticData';
 import { Button } from '../design-system/components/Button';
 import { Badge } from '../design-system/components/Badge';
 import { progressService } from '../services/progressService';
+import { celebrationService } from '../services/celebrationService';
 
 interface TopicSelectorProps {
   onSelect: (scriptId: string) => void;
@@ -21,6 +22,17 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect }) => {
     setCompletedScenarios(new Set(progress.completedScenarios));
     setCompletionPercentage(progressService.getCompletionPercentage(CURATED_ROLEPLAYS.length));
   }, []);
+
+  // Milestone celebrations
+  useEffect(() => {
+    const milestones = [25, 50, 75, 100];
+    if (milestones.includes(completionPercentage) && completionPercentage > 0) {
+      // Small delay to let the UI update first
+      setTimeout(() => {
+        celebrationService.milestone();
+      }, 300);
+    }
+  }, [completionPercentage]);
 
   const filteredScripts = CURATED_ROLEPLAYS.filter(s => s.category === activeCategory);
 
@@ -49,7 +61,7 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect }) => {
         <div className="mt-8 space-y-3 max-w-sm mx-auto bg-gradient-to-br from-orange-50 to-teal-50 p-6 rounded-3xl border border-orange-100">
           <div className="flex items-center justify-between">
             <span className="font-semibold text-neutral-800">Your Progress</span>
-            <span className="font-bold text-transparent bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text">{completionPercentage}%</span>
+            <span className="editorial-stat">{completionPercentage}%</span>
           </div>
           <div className="w-full h-3 bg-neutral-200 rounded-full overflow-hidden">
             <div
@@ -60,6 +72,20 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect }) => {
           <p className="text-xs text-neutral-600 font-medium">
             <span className="text-primary-600 font-bold">{completedScenarios.size}</span> of <span className="text-accent-600 font-bold">{CURATED_ROLEPLAYS.length}</span> scenarios completed
           </p>
+
+          {/* Handwritten celebration notes */}
+          {completionPercentage >= 25 && completionPercentage < 50 && (
+            <p className="handwritten-note mt-3 inline-block">You're doing great!</p>
+          )}
+          {completionPercentage >= 50 && completionPercentage < 75 && (
+            <p className="handwritten-note mt-3 inline-block">Halfway there! Keep going!</p>
+          )}
+          {completionPercentage >= 75 && completionPercentage < 100 && (
+            <p className="handwritten-note mt-3 inline-block">Almost there! 🚀</p>
+          )}
+          {completionPercentage === 100 && (
+            <p className="handwritten-note mt-3 inline-block text-lg">Champion! 🏆</p>
+          )}
         </div>
       </div>
 
@@ -91,7 +117,7 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect }) => {
             <button
               key={script.id}
               onClick={() => onSelect(script.id)}
-              className="group relative bg-white rounded-3xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden text-left flex flex-col p-6 border-2 border-transparent hover:border-orange-200 hover:-translate-y-1"
+              className="group relative bg-white rounded-[2rem] shadow-editorial-medium hover:shadow-editorial-large transition-all duration-300 overflow-hidden text-left flex flex-col p-6 border-2 border-transparent hover:border-orange-200 hover:-translate-y-1"
             >
               {/* Gradient Accent Strip */}
               <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary-400 to-accent-400 group-hover:h-2 transition-all duration-300"></div>

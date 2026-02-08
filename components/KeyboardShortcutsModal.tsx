@@ -60,7 +60,7 @@ export const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({ 
           {shortcuts.map((shortcut, idx) => (
             <div
               key={idx}
-              className="flex items-start gap-4 p-4 rounded-lg border border-slate-100 hover:border-indigo-200 hover:bg-indigo-50/30 transition-all"
+              className="flex items-start gap-4 p-4 rounded-lg border border-slate-100 hover:border-primary-200 hover:bg-primary-50/30 transition-all"
             >
               <div className="flex-shrink-0">
                 <kbd className="px-3 py-1.5 bg-slate-100 text-slate-900 text-sm font-bold rounded-md border border-slate-300">

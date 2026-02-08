@@ -4,6 +4,8 @@ import { useFloating, flip, shift, offset } from '@floating-ui/react';
 import { RoleplayScript } from '../services/staticData';
 import { progressService } from '../services/progressService';
 import { useKeyboard } from '../hooks/useKeyboard';
+import { CharacterAvatar } from './CharacterAvatar';
+import { celebrationService } from '../services/celebrationService';
 
 
 
@@ -142,6 +144,7 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
   const [revealedBlanks, setRevealedBlanks] = useState<Set<number>>(new Set());
   const [showDeepDive, setShowDeepDive] = useState(false);
   const [activeSpeechIdx, setActiveSpeechIdx] = useState<number | null>(null);
+  const [characterReaction, setCharacterReaction] = useState<{ speaker: string; reaction: 'correct' | 'thinking' | 'speaking' } | null>(null);
   const [startTime] = useState(Date.now());
 
   const totalSteps = script.dialogue.length;
@@ -193,6 +196,7 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
       setCurrentStep(prev => prev + 1);
     } else {
       progressService.markScenarioCompleted(script.id);
+      celebrationService.scenarioComplete();
       setShowDeepDive(true);
     }
   };
@@ -209,6 +213,9 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
         newSet.delete(index);
       } else {
         newSet.add(index);
+        // Celebration reaction when blank is revealed
+        setCharacterReaction({ speaker: 'You', reaction: 'correct' });
+        setTimeout(() => setCharacterReaction(null), 2000);
       }
       return newSet;
     });
@@ -288,26 +295,22 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
                 className={`flex gap-6 ${isYou ? 'flex-row-reverse' : 'flex-row'} animate-in fade-in slide-in-from-bottom-4 duration-500`}
               >
                 {/* Avatar Slot */}
-                <div className="flex-shrink-0 flex flex-col items-center gap-2 animate-float">
-                  <div className={`w-16 h-16 rounded-2xl shadow-md flex items-center justify-center text-xl font-bold font-display ${isYou
-                    ? 'bg-gradient-to-br from-primary-400 to-primary-500 text-white ring-3 ring-orange-100'
-                    : 'bg-gradient-to-br from-accent-400 to-accent-500 text-white ring-3 ring-teal-100'
-                    }`}>
-                    {char.avatarUrl ? (
-                      <img src={char.avatarUrl} alt={char.name} className="w-full h-full object-cover rounded-2xl" />
-                    ) : (
-                      char.name[0].toUpperCase()
-                    )}
-                  </div>
-                  <span className="text-[9px] font-bold uppercase text-neutral-600 tracking-tight">{char.name}</span>
+                <div className="flex-shrink-0 animate-float">
+                  <CharacterAvatar
+                    name={char.name}
+                    size="md"
+                    isActive={activeSpeechIdx === idx}
+                    reaction={characterReaction?.speaker === char.name ? characterReaction.reaction : undefined}
+                    mood={activeSpeechIdx === idx ? 'speaking' : 'neutral'}
+                  />
                 </div>
 
                 {/* Speech Bubble Container */}
                 <div className={`relative max-w-[80%] group/bubble ${isYou ? 'flex flex-row-reverse' : 'flex'}`}>
-                  <div className={`p-6 rounded-3xl text-lg leading-relaxed shadow-md transition-all ${isYou
+                  <div className={`p-6 rounded-3xl text-lg leading-[1.7] shadow-editorial-medium transition-all ${isYou
                     ? 'bg-gradient-to-br from-primary-50 to-primary-100 text-neutral-800 rounded-tr-none border-2 border-primary-200'
                     : 'bg-gradient-to-br from-accent-50 to-accent-100 text-neutral-800 rounded-tl-none border-2 border-accent-200'
-                    } ${activeSpeechIdx === idx ? 'ring-2 ring-primary-400 shadow-lg' : ''}`}>
+                    } ${activeSpeechIdx === idx ? 'ring-2 ring-primary-400 shadow-editorial-large' : ''}`}>
                     <div className="inline">
                       {parts.map((part, pIdx) => (
                         <React.Fragment key={pIdx}>
@@ -367,6 +370,7 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
               <div>
                 <span className="text-xs font-bold text-primary-700 uppercase tracking-wider">Key Insights</span>
                 <h3 className="text-2xl font-black text-neutral-800 font-display">Your Language Discoveries</h3>
+                <p className="handwritten-note mt-2">Well done, champion!</p>
               </div>
               <button onClick={() => setShowDeepDive(false)} className="w-10 h-10 rounded-full bg-white border-2 border-neutral-200 flex items-center justify-center text-neutral-400 hover:text-neutral-600 hover:border-primary-300 transition-all">
                 <i className="fas fa-times"></i>

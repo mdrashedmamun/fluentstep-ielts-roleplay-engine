@@ -55,10 +55,10 @@ const App: React.FC = () => {
     if (isLoading) {
       return (
         <div className="flex flex-col items-center justify-center min-h-[70vh] gap-12 text-center animate-in fade-in duration-500">
-          <div className="w-32 h-32 border-[6px] border-indigo-100 border-t-indigo-600 rounded-full animate-spin"></div>
+          <div className="w-32 h-32 border-[6px] border-primary-100 border-t-primary-600 rounded-full animate-spin"></div>
           <div className="space-y-2">
-            <p className="text-indigo-950 font-black text-2xl tracking-tight animate-pulse">Entering Story World</p>
-            <p className="text-indigo-800/40 text-sm font-medium">Preparing immersive environment...</p>
+            <p className="text-primary-950 font-black text-2xl tracking-tight animate-pulse">Entering Story World</p>
+            <p className="text-primary-800/40 text-sm font-medium">Preparing immersive environment...</p>
           </div>
         </div>
       );
@@ -73,7 +73,7 @@ const App: React.FC = () => {
           <div className="text-center space-y-4 max-w-lg">
             <h2 className="text-3xl font-black text-slate-900 tracking-tight">System Interruption</h2>
             <p className="text-slate-600 font-medium leading-relaxed px-6">{error}</p>
-            <button onClick={handleReset} className="px-8 py-3.5 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 transition-all">
+            <button onClick={handleReset} className="px-8 py-3.5 bg-primary-600 text-white rounded-2xl font-bold hover:bg-primary-700 transition-all">
               Reset
             </button>
           </div>
