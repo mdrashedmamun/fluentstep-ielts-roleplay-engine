@@ -1,0 +1,169 @@
+{
+  "id": "youtube-social-english-conversations-1705402200",
+  "category": "Social",
+  "topic": "English Learning - Real-Life Conversations",
+  "context": "A comprehensive English learning course featuring multiple real-life conversation scenarios including shopping at grocery stores and cafes, family discussions, holiday planning, and various daily interactions.",
+  "dialogue": [
+    {
+      "speaker": "Jessica",
+      "text": "________. ________ here. ________ channel."
+    },
+    {
+      "speaker": "Jessica",
+      "text": "Is your English learning journey going well?"
+    },
+    {
+      "speaker": "Jessica",
+      "text": "Today we are at the grocery store with a real customer."
+    },
+    {
+      "speaker": "Customer",
+      "text": "Yes, I'm trying to make a cake, but I'm missing a few things."
+    },
+    {
+      "speaker": "Shop Assistant",
+      "text": "Yes, you got it right—flour!"
+    },
+    {
+      "speaker": "Shop Assistant",
+      "text": "What else are you looking for today?"
+    },
+    {
+      "speaker": "Customer",
+      "text": "I need butter, eggs, and sugar."
+    },
+    {
+      "speaker": "Shop Assistant",
+      "text": "Great choice. These are all in aisle three."
+    },
+    {
+      "speaker": "Customer",
+      "text": "Perfect! Thank you for your help."
+    },
+    {
+      "speaker": "Shop Assistant",
+      "text": "You're welcome. Have a great day!"
+    },
+    {
+      "speaker": "Sarah",
+      "text": "I love shopping at this store."
+    },
+    {
+      "speaker": "Max",
+      "text": "Me too, but I want to eat healthy."
+    },
+    {
+      "speaker": "Sarah",
+      "text": "You can find healthy options here."
+    },
+    {
+      "speaker": "Max",
+      "text": "That's great. I enjoy variety."
+    },
+    {
+      "speaker": "Sarah",
+      "text": "Let's go to the cafe for a break."
+    },
+    {
+      "speaker": "Barista",
+      "text": "What would you like to drink today?"
+    },
+    {
+      "speaker": "Customer 2",
+      "text": "I'll have a cappuccino, please."
+    },
+    {
+      "speaker": "Barista",
+      "text": "Would you like that hot or iced?"
+    },
+    {
+      "speaker": "Customer 2",
+      "text": "Hot, please. And make it a large one."
+    },
+    {
+      "speaker": "Barista",
+      "text": "One large hot cappuccino coming right up."
+    },
+    {
+      "speaker": "Customer 3",
+      "text": "Can I get a smoothie instead?"
+    },
+    {
+      "speaker": "Barista",
+      "text": "Of course. What flavor would you like?"
+    },
+    {
+      "speaker": "Customer 3",
+      "text": "Strawberry, please."
+    },
+    {
+      "speaker": "Friend 1",
+      "text": "Happy New Year! What are your goals this year?"
+    },
+    {
+      "speaker": "Laura",
+      "text": "I want to learn to cook better."
+    },
+    {
+      "speaker": "Friend 1",
+      "text": "That's wonderful! I'm planning to travel more."
+    },
+    {
+      "speaker": "Laura",
+      "text": "Where do you want to go?"
+    },
+    {
+      "speaker": "Friend 1",
+      "text": "I want to visit Europe and Asia."
+    },
+    {
+      "speaker": "Emily",
+      "text": "I'm getting very excited about Christmas."
+    },
+    {
+      "speaker": "Alex",
+      "text": "Me too! What are you planning to do?"
+    },
+    {
+      "speaker": "Emily",
+      "text": "We're preparing a big dinner for the family."
+    },
+    {
+      "speaker": "Alex",
+      "text": "That sounds wonderful. I'm looking forward to celebrating with my family too."
+    },
+    {
+      "speaker": "Emily",
+      "text": "Let's celebrate together this year!"
+    }
+  ],
+  "answerVariations": [
+    {
+      "index": 0,
+      "answer": "Welcome back",
+      "alternatives": []
+    },
+    {
+      "index": 1,
+      "answer": "It's Jessica",
+      "alternatives": []
+    },
+    {
+      "index": 2,
+      "answer": "Welcome to my",
+      "alternatives": []
+    }
+  ],
+  "metadata": {
+    "source": "Tool 2 Output",
+    "blank_density": 0.09,
+    "total_blanks": 3,
+    "quality_issues": [
+      "Random noun blanking instead of pedagogically valuable items",
+      "No alternatives provided for any blanks",
+      "Missing Cambridge-grade linguistic analysis",
+      "No IELTS insights or deep dive explanations",
+      "Low coverage of high-value verbs and expressions"
+    ]
+  }
+}
