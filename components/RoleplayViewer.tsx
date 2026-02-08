@@ -135,7 +135,8 @@ const InteractiveBlank: React.FC<{
   );
 };
 
-import { speakText, speakAnswer } from '../services/speechService';
+import { speakText } from '../services/speechService';
+import { speakWithGoogle } from '../services/ttsService';
 
 const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -182,7 +183,9 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
       textToSpeak = reconstructed;
     }
 
-    speakText(textToSpeak, {
+    speakWithGoogle({
+      text: textToSpeak,
+      rate: 0.95,
       onEnd: () => setActiveSpeechIdx(null)
     });
   };
@@ -230,7 +233,10 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
         if (answerData) {
           // Small delay allows popup to appear first (better UX)
           setTimeout(() => {
-            speakAnswer(answerData.answer);
+            speakWithGoogle({
+              text: answerData.answer,
+              rate: 0.95
+            });
           }, 150);
         }
       }
