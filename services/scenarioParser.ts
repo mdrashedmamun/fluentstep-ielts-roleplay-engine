@@ -27,6 +27,7 @@ export interface ParsedScenario {
 
 /**
  * Extract scenario title (usually prefixed with emoji or "Role-Play"/"Mini-Story")
+ * Extended with Oxford Headway patterns
  */
 function extractTitle(text: string): string {
   // Try "Mini-Story X: Title" format
@@ -39,6 +40,12 @@ function extractTitle(text: string): string {
   const roleplayMatch = text.match(/(?:^|\n)([\p{Emoji}]*\s*)?Role-?Play:?\s*([^\n]+)/iu);
   if (roleplayMatch) {
     return roleplayMatch[2].trim();
+  }
+
+  // Try Oxford Headway patterns: "Everyday English: Title" or "Listening: Title"
+  const headwayMatch = text.match(/(?:Everyday\s+English|Listening|Speaking)[:\s]+\n?([^\n]+)/i);
+  if (headwayMatch) {
+    return headwayMatch[1].trim();
   }
 
   // Try emoji + title format
@@ -82,6 +89,7 @@ function extractCharacters(dialogue: ParsedDialogue[]): string[] {
 
 /**
  * Parse dialogue lines: "Speaker: Text with ________ blanks"
+ * Extended with Oxford speaker format: "Person A  Text" (double-space separator)
  */
 function parseDialogue(text: string): ParsedDialogue[] {
   const dialogue: ParsedDialogue[] = [];
@@ -90,7 +98,14 @@ function parseDialogue(text: string): ParsedDialogue[] {
   const lines = text.split(/\n+/);
 
   for (const line of lines) {
-    const match = line.match(/^([^:]+):\s*(.+)$/);
+    // Try standard format first: "Speaker: text"
+    let match = line.match(/^([^:]+):\s*(.+)$/);
+
+    // Try Oxford Headway format: "Person A  text" (double-space separator)
+    if (!match) {
+      match = line.match(/^(Person\s+[A-Z]|Speaker\s+\d+|[A-Z][a-z]+)\s{2,}(.+)$/);
+    }
+
     if (match) {
       const speaker = match[1].trim();
       const text = match[2].trim();

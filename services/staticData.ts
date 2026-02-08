@@ -1512,4 +1512,127 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 7, phrase: 'let\'s keep in touch', insight: 'LOCKED CHUNK - natural closing phrase.' }
         ]
     }
+,
+
+    {
+        id: 'advanced-5',
+        category: 'Advanced',
+        topic: 'Negotiating Business Partnership Terms',
+        context: 'Two entrepreneurs discussing equity split and governance for a joint venture.',
+        characters: [
+            { name: 'Alex', description: 'Experienced entrepreneur' },
+            { name: 'Jordan', description: 'Entrepreneur with distribution network' },
+            { name: 'You', description: 'You' }
+        ],
+        dialogue: [
+            { speaker: 'Alex', text: 'I ________ your interest in partnering with us.' },
+            { speaker: 'Jordan', text: 'Your market positioning is ________, but we need to ________ equity split.' },
+            { speaker: 'Alex', text: 'We were ________ a 60-40 arrangement.' },
+            { speaker: 'Jordan', text: 'That seems somewhat ________ given our distribution reach.' },
+            { speaker: 'Alex', text: 'I ________ your point. What if we structured it with ________-based adjustments?' },
+            { speaker: 'Jordan', text: 'Now we\'re ________. That introduces ________ and rewards for results.' },
+            { speaker: 'Alex', text: 'Exactly. We should ________ operational control too.' },
+            { speaker: 'Jordan', text: 'Essential. We\'ll need ________ access to financial records.' },
+            { speaker: 'Alex', text: 'Understood. Shall we ________ a follow-up with legal teams?' },
+            { speaker: 'Jordan', text: 'Perfect. I\'ll have counsel draft an MOU by ________.' }
+        ],
+        answerVariations: [
+            { index: 1, answer: 'appreciate', alternatives: ['value'] },
+            { index: 2, answer: 'impeccable', alternatives: ['excellent'] },
+            { index: 3, answer: 'discuss', alternatives: ['clarify'] },
+            { index: 4, answer: 'thinking', alternatives: ['proposing'] },
+            { index: 5, answer: 'lopsided', alternatives: ['unbalanced'] },
+            { index: 6, answer: 'see', alternatives: ['understand'] },
+            { index: 7, answer: 'performance', alternatives: ['merit'] },
+            { index: 8, answer: 'talking', alternatives: ['on the same page'] },
+            { index: 9, answer: 'clarify', alternatives: ['define'] },
+            { index: 10, answer: 'transparent', alternatives: ['open'] }
+        ],
+        deepDive: [
+            { index: 1, phrase: 'appreciate', insight: 'Formal opening showing respect in negotiations.' },
+            { index: 2, phrase: 'impeccable', insight: 'Premium adjective for business reputation.' },
+            { index: 5, phrase: 'lopsided', insight: 'Diplomatic way to say unfair or unbalanced.' }
+        ]
+    },
+    {
+        id: 'workplace-32',
+        category: 'Workplace',
+        topic: 'Performance Review and Career Advancement',
+        context: 'Manager and employee discussing promotion and development opportunity.',
+        characters: [
+            { name: 'Manager', description: 'Senior manager' },
+            { name: 'Sam', description: 'High-performing employee' },
+            { name: 'You', description: 'You' }
+        ],
+        dialogue: [
+            { speaker: 'Manager', text: 'Sam, your performance has been ________. I want to discuss your career.' },
+            { speaker: 'Sam', text: 'Thank you. I\'ve been ________ to explore growth opportunities.' },
+            { speaker: 'Manager', text: 'We\'re considering ________ you to senior analyst.' },
+            { speaker: 'Sam', text: 'That\'s exciting. What would the role ________?' },
+            { speaker: 'Manager', text: 'You\'d ________ a team and report to the department head.' },
+            { speaker: 'Sam', text: 'What about ________ development and certifications?' },
+            { speaker: 'Manager', text: 'Absolutely. We allocate ________ for continuous learning.' },
+            { speaker: 'Sam', text: 'And ________ terms, what range do you envision?' },
+            { speaker: 'Manager', text: 'A 25% increase plus ________ bonuses.' },
+            { speaker: 'Sam', text: 'That\'s ________. When would this start?' },
+            { speaker: 'Manager', text: 'Next month, pending your ________.' }
+        ],
+        answerVariations: [
+            { index: 1, answer: 'exceptional', alternatives: ['outstanding'] },
+            { index: 2, answer: 'keen', alternatives: ['eager'] },
+            { index: 3, answer: 'promoting', alternatives: ['advancing'] },
+            { index: 4, answer: 'entail', alternatives: ['involve'] },
+            { index: 5, answer: 'oversee', alternatives: ['manage'] },
+            { index: 6, answer: 'professional', alternatives: ['career'] },
+            { index: 7, answer: 'funds', alternatives: ['budget', 'money'] },
+            { index: 8, answer: 'salary', alternatives: ['compensation'] },
+            { index: 9, answer: 'performance', alternatives: ['merit'] },
+            { index: 10, answer: 'generous', alternatives: ['competitive'] },
+            { index: 11, answer: 'acceptance', alternatives: ['approval'] }
+        ],
+        deepDive: [
+            { index: 1, phrase: 'exceptional', insight: 'Standard praise showing genuine impression.' },
+            { index: 3, phrase: 'promoting', insight: 'Professional term for career advancement.' }
+        ]
+    },
+    {
+        id: 'advanced-6',
+        category: 'Advanced',
+        topic: 'Debating Environmental Sustainability',
+        context: 'Leadership team discussing climate targets and feasibility.',
+        characters: [
+            { name: 'Lisa', description: 'Sustainability director' },
+            { name: 'Martin', description: 'Finance director' },
+            { name: 'CEO', description: 'Chief executive' },
+            { name: 'You', description: 'You' }
+        ],
+        dialogue: [
+            { speaker: 'Lisa', text: 'Our sustainability targets are ________. We need carbon neutrality by 2030.' },
+            { speaker: 'Martin', text: 'I ________ the sentiment, but that\'s ________ given our constraints.' },
+            { speaker: 'Lisa', text: 'Or simply ________? Competitors are already ________ this.' },
+            { speaker: 'Martin', text: 'They can ________ it. Our margins are ________.' },
+            { speaker: 'Lisa', text: 'That\'s a false ________. Early investment yields long-term ________.' },
+            { speaker: 'Martin', text: 'Perhaps, but ________ costs are substantial.' },
+            { speaker: 'CEO', text: 'Lisa, prepare a ________. Martin, document your ________.' },
+            { speaker: 'Lisa', text: 'I\'ll include ________ from successful transitions.' },
+            { speaker: 'Martin', text: 'I\'ll provide ________ on our capabilities.' },
+            { speaker: 'CEO', text: 'Excellent. Let\'s ________ in two weeks.' }
+        ],
+        answerVariations: [
+            { index: 1, answer: 'insufficient', alternatives: ['inadequate'] },
+            { index: 2, answer: 'appreciate', alternatives: ['understand'] },
+            { index: 3, answer: 'unrealistic', alternatives: ['unfeasible'] },
+            { index: 4, answer: 'unambitious', alternatives: ['timid'] },
+            { index: 5, answer: 'making', alternatives: ['embracing'] },
+            { index: 6, answer: 'afford', alternatives: ['sustain'] },
+            { index: 7, answer: 'tighter', alternatives: ['lower'] },
+            { index: 8, answer: 'dichotomy', alternatives: ['false choice'] },
+            { index: 9, answer: 'benefits', alternatives: ['returns'] },
+            { index: 10, answer: 'transition', alternatives: ['implementation'] }
+        ],
+        deepDive: [
+            { index: 1, phrase: 'insufficient', insight: 'Formal business critique showing gaps.' },
+            { index: 8, phrase: 'dichotomy', insight: 'Advanced debate term for false choice.' }
+        ]
+    }
 ];

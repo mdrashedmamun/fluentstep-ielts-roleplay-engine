@@ -11,7 +11,9 @@
     "audit": "tsx cli/auditLanguage.ts",
     "audit:report": "tsx cli/auditLanguage.ts --report-only",
     "audit:dry-run": "tsx cli/auditLanguage.ts --dry-run",
-    "audit:test": "tsx scripts/testAuditSystem.ts"
+    "audit:test": "tsx scripts/testAuditSystem.ts",
+    "extract:headway": "tsx scripts/extractHeadwayScenarios.ts",
+    "extract:headway:dry": "tsx scripts/extractHeadwayScenarios.ts --dry-run"
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.17",

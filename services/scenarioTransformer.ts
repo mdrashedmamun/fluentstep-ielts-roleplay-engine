@@ -28,7 +28,7 @@ function categorizeScenario(
   ).toLowerCase();
 
   // Keywords for each category
-  const socialKeywords = ['friend', 'meet', 'flatmate', 'weekend', 'coffee', 'casual', 'chat'];
+  const socialKeywords = ['friend', 'meet', 'flatmate', 'weekend', 'coffee', 'casual', 'chat', 'catching'];
   const workplaceKeywords = [
     'work',
     'colleague',
@@ -36,10 +36,23 @@ function categorizeScenario(
     'report',
     'project',
     'meeting',
-    'professional'
+    'professional',
+    'team'
   ];
-  const serviceKeywords = ['café', 'cafe', 'hotel', 'airport', 'shop', 'restaurant', 'customer'];
-  const advancedKeywords = ['escalate', 'negotiate', 'disagreement', 'complex', 'senior'];
+  const serviceKeywords = ['café', 'cafe', 'hotel', 'airport', 'shop', 'restaurant', 'customer', 'booking'];
+  const advancedKeywords = [
+    'escalate',
+    'negotiate',
+    'disagreement',
+    'complex',
+    'senior',
+    'philosophical',
+    'abstract',
+    'debate',
+    'discuss',
+    'negotiat',
+    'controversy'
+  ];
 
   const countMatches = (keywords: string[]) =>
     keywords.filter(kw => allText.includes(kw)).length;
