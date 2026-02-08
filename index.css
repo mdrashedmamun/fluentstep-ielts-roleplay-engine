@@ -104,3 +104,80 @@ body {
     background-color: #e2e8f0;
   }
 }
+
+/* === JOURNEY MAP ENHANCEMENTS === */
+
+/* Handwritten note styling with Caveat font */
+.handwritten-note {
+  font-family: 'Caveat', cursive;
+  font-size: 1.5rem;
+  line-height: 1.6;
+  font-weight: 600;
+}
+
+/* Editorial shadows for journey map cards */
+.shadow-editorial-soft {
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.08), 0 4px 16px rgba(249, 115, 22, 0.06);
+}
+
+.shadow-editorial-medium {
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.12), 0 8px 24px rgba(249, 115, 22, 0.08);
+}
+
+.shadow-editorial-large {
+  box-shadow: 0 8px 20px rgba(249, 115, 22, 0.15), 0 12px 32px rgba(249, 115, 22, 0.1);
+}
+
+.shadow-editorial-dramatic {
+  box-shadow: 0 12px 28px rgba(249, 115, 22, 0.18), 0 16px 40px rgba(249, 115, 22, 0.12);
+}
+
+/* Waypoint keyboard focus indicator */
+.waypoint-focus:focus-visible {
+  outline: 3px solid #F97316;
+  outline-offset: 4px;
+}
+
+/* Landscape swaying animation */
+@keyframes landscape-sway {
+  0%, 100% {
+    transform: translateX(0px);
+  }
+  50% {
+    transform: translateX(2px);
+  }
+}
+
+.landscape-sway {
+  animation: landscape-sway 3s ease-in-out infinite;
+}
+
+/* Reduced motion support - respects user preferences */
+@media (prefers-reduced-motion: reduce) {
+  .animate-float,
+  .animate-pulse,
+  .animate-bounce,
+  .landscape-elements,
+  .hiker-avatar,
+  .footstep-trail {
+    animation: none !important;
+  }
+
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .shadow-editorial-medium,
+  .shadow-editorial-large {
+    box-shadow: 0 0 0 2px currentColor;
+  }
+
+  .waypoint-focus:focus-visible {
+    outline-width: 4px;
+  }
+}
