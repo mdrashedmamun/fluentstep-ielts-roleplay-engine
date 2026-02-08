@@ -1,7 +1,7 @@
 
 export interface RoleplayScript {
     id: string;
-    category: 'Social' | 'Workplace' | 'Service/Logistics' | 'Advanced';
+    category: 'Social' | 'Workplace' | 'Service/Logistics' | 'Advanced' | 'Academic' | 'Healthcare' | 'Cultural' | 'Community';
     topic: string;
     context: string;
     characters: {
@@ -1864,6 +1864,275 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 3, phrase: 'Excuse me', insight: 'Can mean either asking for forgiveness (\'I\'m sorry\') or getting attention. Context determines meaning.' },
             { index: 4, phrase: 'can you help me', insight: 'Key phrase for universal communication. Essential across all English contexts for polite requests.' },
             { index: 0, phrase: 'Welcome back', insight: 'Key greeting phrase used in everyday situations and general communication contexts.' }
+        ]
+    },
+    // ===== NEW: ACADEMIC CATEGORY =====
+    {
+        id: 'academic-1-tutorial-discussion',
+        category: 'Academic',
+        topic: 'University Tutorial - Essay Planning',
+        context: 'Discussing essay structure and argument development with your tutor at Oxford/Cambridge.',
+        characters: [
+            { name: 'Dr. Harrison', description: 'Academic tutor at prestigious university', avatarUrl: '/avatars/tutor.png' },
+            { name: 'You', description: 'Undergraduate student' }
+        ],
+        dialogue: [
+            { speaker: 'Dr. Harrison', text: 'Come in, come in. How are you ________ on with the essay?' },
+            { speaker: 'You', text: 'Honestly, I\'m in two ________ about my main argument.' },
+            { speaker: 'Dr. Harrison', text: 'Well, let\'s ________ through it together. What\'s your thesis?' },
+            { speaker: 'You', text: 'I want to argue that the author was deliberately ________ with structure.' },
+            { speaker: 'Dr. Harrison', text: 'That\'s a promising ________ . Have you gathered sufficient evidence?' },
+            { speaker: 'You', text: 'I\'ve found three key passages, but I\'m keen on ________ them more thoroughly.' },
+            { speaker: 'Dr. Harrison', text: 'Good. The ________ of a strong essay is rigorous textual analysis.' },
+            { speaker: 'You', text: 'Should I ________ the secondary sources you mentioned?' },
+            { speaker: 'Dr. Harrison', text: 'By all means. But ________ that primary sources take precedence.' },
+            { speaker: 'You', text: 'Right. That makes ________ . How many words should I aim for?' },
+            { speaker: 'Dr. Harrison', text: 'Three thousand is the ballpark, but don\'t ________ to the word count.' },
+            { speaker: 'You', text: 'Would you mind awfully if I ________ you my draft next week?' }
+        ],
+        answerVariations: [
+            { index: 0, answer: 'getting', alternatives: ['coming', 'progressing', 'moving'] },
+            { index: 1, answer: 'minds', alternatives: ['thoughts', 'ways', 'views'] },
+            { index: 2, answer: 'work', alternatives: ['walk', 'go', 'think'] },
+            { index: 3, answer: 'experimenting', alternatives: ['playing', 'toying', 'tinkering'] },
+            { index: 4, answer: 'line', alternatives: ['avenue', 'direction', 'angle'] },
+            { index: 5, answer: 'unpacking', alternatives: ['exploring', 'examining', 'dissecting'] },
+            { index: 6, answer: 'foundation', alternatives: ['cornerstone', 'bedrock', 'basis'] },
+            { index: 7, answer: 'incorporate', alternatives: ['include', 'weave in', 'integrate'] },
+            { index: 8, answer: 'bear in mind', alternatives: ['remember', 'note that', 'keep in mind'] },
+            { index: 9, answer: 'sense', alternatives: ['point', 'logic', 'way'] },
+            { index: 10, answer: 'sacrifice', alternatives: ['compromise', 'prioritise', 'subordinate'] },
+            { index: 11, answer: 'run', alternatives: ['send', 'share', 'pass'] }
+        ],
+        deepDive: [
+            { index: 1, phrase: 'in two minds', insight: 'British idiom for genuine indecision, more emotionally nuanced than "undecided". Band 8-9 marker for ambivalent reasoning.' },
+            { index: 6, phrase: 'foundation', insight: 'Metaphorical use shows sophisticated academic vocabulary. Alternative "bedrock" achieves same effect in geology/construction contexts.' },
+            { index: 8, phrase: 'bear in mind', insight: 'Essential British academic phrase. Softer than "remember" and registers as experienced researcher maintaining nuance.' },
+            { index: 11, phrase: 'run...draft', insight: 'Phrasal verb "run by" = submit for feedback. Casual enough for student-tutor dynamic whilst maintaining professionalism.' }
+        ]
+    },
+    // ===== NEW: HEALTHCARE CATEGORY =====
+    {
+        id: 'healthcare-1-gp-appointment',
+        category: 'Healthcare',
+        topic: 'GP Appointment - Chronic Condition Discussion',
+        context: 'Consulting with a GP about ongoing health concerns in the NHS system.',
+        characters: [
+            { name: 'Dr. Patel', description: 'Experienced GP', avatarUrl: '/avatars/gp.png' },
+            { name: 'You', description: 'Patient with long-standing health issue' }
+        ],
+        dialogue: [
+            { speaker: 'Dr. Patel', text: 'Right then, what seems to be the trouble today?' },
+            { speaker: 'You', text: 'I\'ve been ________ from persistent headaches for three months now.' },
+            { speaker: 'Dr. Patel', text: 'That sounds rather bothersome. ________ you noticed any patterns?' },
+            { speaker: 'You', text: 'They\'re worse when I\'m under ________ at work, I reckon.' },
+            { speaker: 'Dr. Patel', text: 'I see. Have you tried ________ your stress levels?' },
+            { speaker: 'You', text: 'I\'ve been trying to manage it, but it\'s quite ________ .' },
+            { speaker: 'Dr. Patel', text: 'Let\'s not ________ this. I\'d like to refer you for some tests.' },
+            { speaker: 'You', text: 'What sort of ________ are we talking about?' },
+            { speaker: 'Dr. Patel', text: 'Blood work and possibly an MRI, just to ________ things out.' },
+            { speaker: 'You', text: 'How long will the ________ process take?' },
+            { speaker: 'Dr. Patel', text: 'You should hear from the hospital within a fortnight. In the meantime, I\'ll ________ this prescription.' }
+        ],
+        answerVariations: [
+            { index: 0, answer: 'suffering', alternatives: ['struggling', 'dealing', 'contending'] },
+            { index: 1, answer: 'Have', alternatives: ['Did', 'Could', 'Would'] },
+            { index: 2, answer: 'stress', alternatives: ['pressure', 'strain', 'tension'] },
+            { index: 3, answer: 'addressing', alternatives: ['tackling', 'managing', 'reducing'] },
+            { index: 4, answer: 'challenging', alternatives: ['difficult', 'demanding', 'tough'] },
+            { index: 5, answer: 'brush this aside', alternatives: ['dismiss this', 'overlook it', 'take lightly'] },
+            { index: 6, answer: 'investigations', alternatives: ['tests', 'scans', 'checks'] },
+            { index: 7, answer: 'rule', alternatives: ['eliminate', 'exclude', 'verify'] },
+            { index: 8, answer: 'referral', alternatives: ['wait', 'process', 'appointment'] },
+            { index: 9, answer: 'issue', alternatives: ['write', 'give', 'provide'] }
+        ],
+        deepDive: [
+            { index: 0, phrase: 'suffering from', insight: 'Clinical register in medical contexts. British doctors often soften with "I\'m afraid" but patient use signals genuine concern (Band 8).' },
+            { index: 4, phrase: 'challenging', insight: 'Understatement is quintessentially British. Shows emotional restraint whilst communicating genuine difficulty (Band 7.5+).' },
+            { index: 5, phrase: 'brush this aside', insight: 'Phrasal verb shows Dr commitment to thorough care. "Dismiss" is too formal, "overlook" too careless for medical context.' },
+            { index: 8, phrase: 'referral process', insight: 'NHS-specific terminology. Demonstrates familiarity with British healthcare system (Band 8-9 contextual awareness).' }
+        ]
+    },
+    // ===== NEW: CULTURAL CATEGORY =====
+    {
+        id: 'cultural-1-theatre-booking',
+        category: 'Cultural',
+        topic: 'Theatre Box Office - Complex Seating Request',
+        context: 'Booking premium West End theatre tickets with specific accessibility and group requirements.',
+        characters: [
+            { name: 'Sophie', description: 'Theatre box office clerk', avatarUrl: '/avatars/theatre.png' },
+            { name: 'You', description: 'Theatre patron with detailed requirements' }
+        ],
+        dialogue: [
+            { speaker: 'Sophie', text: 'Good afternoon. How can I assist you today?' },
+            { speaker: 'You', text: 'I\'d like to ________ four seats for the Saturday matinée performance.' },
+            { speaker: 'Sophie', text: 'Splendid. And which production are you ________ in?' },
+            { speaker: 'You', text: 'The revival of "Waiting for Godot". I\'m rather ________ on the cast.' },
+            { speaker: 'Sophie', text: 'Excellent choice. Now, the thing ________, we\'ve a group booking discount if you\'re a party of six or more.' },
+            { speaker: 'You', text: 'We\'re only four, I\'m afraid. But one audience member has ________ mobility, so we need accessible seating.' },
+            { speaker: 'Sophie', text: 'Of ________ . We have specially designated spaces with ample room for wheelchairs.' },
+            { speaker: 'You', text: 'That\'s brilliant. Would you ________ us the best available options?' },
+            { speaker: 'Sophie', text: 'Let me ________ our system. We have two excellent seats in the dress circle, orchestra level access...' },
+            { speaker: 'You', text: 'The dress circle sounds ________ , actually.' },
+            { speaker: 'Sophie', text: 'Marvellous. That will be £156 total, including the booking ________ .' },
+            { speaker: 'You', text: 'Can I ________ my card details over the phone?' }
+        ],
+        answerVariations: [
+            { index: 0, answer: 'book', alternatives: ['reserve', 'secure', 'arrange'] },
+            { index: 1, answer: 'interested', alternatives: ['keen', 'focused', 'absorbed'] },
+            { index: 2, answer: 'keen', alternatives: ['interested', 'enthusiastic', 'delighted'] },
+            { index: 3, answer: 'is', alternatives: ['goes', 'stands', 'works'] },
+            { index: 4, answer: 'limited', alternatives: ['restricted', 'reduced', 'compromised'] },
+            { index: 5, answer: 'course', alternatives: ['problem', 'question', 'issue'] },
+            { index: 6, answer: 'show', alternatives: ['share', 'present', 'outline'] },
+            { index: 7, answer: 'check', alternatives: ['look at', 'pull up', 'access'] },
+            { index: 8, answer: 'perfect', alternatives: ['ideal', 'marvellous', 'splendid'] },
+            { index: 9, answer: 'fee', alternatives: ['charge', 'cost', 'expense'] },
+            { index: 10, answer: 'provide', alternatives: ['give', 'offer', 'submit'] }
+        ],
+        deepDive: [
+            { index: 2, phrase: 'keen on', insight: 'Native British idiom expressing genuine enthusiasm. More conversational than "interested in" and signals refined taste (Band 8).' },
+            { index: 3, phrase: 'the thing is', insight: 'Conversational discourse marker unique to British English. Signals transition whilst maintaining rapport. Essential for Band 7.5+ natural speech.' },
+            { index: 5, phrase: 'Of course', insight: 'British politeness convention. Sophie uses it to indicate helpful professionalism, not condescension. Register-critical for service interactions.' },
+            { index: 8, phrase: 'check our system', insight: 'Professional phrasal verb in service context. "Look at" is too casual, "access" too technical. Demonstrates operational familiarity.' }
+        ]
+    },
+    // ===== NEW: COMMUNITY CATEGORY =====
+    {
+        id: 'community-1-council-meeting',
+        category: 'Community',
+        topic: 'Council Meeting - Local Development Proposal',
+        context: 'Public speaking at town council meeting opposing a proposed development that affects the community.',
+        characters: [
+            { name: 'Councillor Ahmed', description: 'Council chair', avatarUrl: '/avatars/councillor.png' },
+            { name: 'You', description: 'Community representative and resident' }
+        ],
+        dialogue: [
+            { speaker: 'Councillor Ahmed', text: 'Right then, the floor is yours. Please ________ your concerns about the planning application.' },
+            { speaker: 'You', text: 'Thank you. Residents are ________ concerned about the scale of this development.' },
+            { speaker: 'You', text: 'We\'ve ________ a petition with 387 signatures objecting to the proposal.' },
+            { speaker: 'Councillor Ahmed', text: 'We take public ________ seriously. What are your main objections?' },
+            { speaker: 'You', text: 'First, ________ would fundamentally alter our neighbourhood character. Second, the ________ impact is unacceptable.' },
+            { speaker: 'Councillor Ahmed', text: 'I see your ________ . Could you elaborate on the traffic concern?' },
+            { speaker: 'You', text: 'The development will ________ traffic by an estimated 40%. Our roads simply can\'t ________ this volume.' },
+            { speaker: 'Councillor Ahmed', text: 'That\'s a fair ________ . Have you spoken with the developers?' },
+            { speaker: 'You', text: 'We have, but they\'re not ________ to compromise on scale. We\'d be grateful if the council would ________ the proposal.' },
+            { speaker: 'Councillor Ahmed', text: 'Your ________ is noted for the official record. We\'ll ________ all viewpoints before making a decision.' }
+        ],
+        answerVariations: [
+            { index: 0, answer: 'outline', alternatives: ['set forth', 'present', 'explain'] },
+            { index: 1, answer: 'extremely', alternatives: ['genuinely', 'deeply', 'understandably'] },
+            { index: 2, answer: 'organised', alternatives: ['gathered', 'compiled', 'collected'] },
+            { index: 3, answer: 'feedback', alternatives: ['input', 'opinion', 'comment'] },
+            { index: 4, answer: 'This development', alternatives: ['The proposal', 'This project', 'The plans'] },
+            { index: 5, answer: 'traffic', alternatives: ['transport', 'congestion', 'volume'] },
+            { index: 6, answer: 'point', alternatives: ['comment', 'remark', 'observation'] },
+            { index: 7, answer: 'increase', alternatives: ['escalate', 'magnify', 'compound'] },
+            { index: 8, answer: 'handle', alternatives: ['accommodate', 'support', 'manage'] },
+            { index: 9, answer: 'point', alternatives: ['contention', 'argument', 'view'] },
+            { index: 10, answer: 'willing', alternatives: ['open', 'amenable', 'prepared'] },
+            { index: 11, answer: 'reject', alternatives: ['refuse', 'block', 'decline'] },
+            { index: 12, answer: 'objection', alternatives: ['complaint', 'concern', 'reservations'] },
+            { index: 13, answer: 'weigh', alternatives: ['consider', 'evaluate', 'assess'] }
+        ],
+        deepDive: [
+            { index: 2, phrase: 'organised a petition', insight: 'British English: "organised" (s), not "organized". Shows civic engagement vocabulary. Key phrase for community representation (Band 7.5+).' },
+            { index: 4, phrase: 'fundamentally alter', insight: 'Sophisticated register for formal objection. "Would change" is too casual, "would modify" too weak for council record.' },
+            { index: 10, phrase: 'willing', insight: 'Diplomatic language in adversarial context. "Amenable" signals respectful disagreement (Band 8 register calibration).' },
+            { index: 13, phrase: 'weigh all viewpoints', insight: 'Formal bureaucratic phrasing. Shows council\'s impartial role. Essential for understanding civic discourse (Band 8-9 contextual register).' }
+        ]
+    },
+    // ===== NEW: WORKPLACE (ELEVATED) CATEGORY =====
+    {
+        id: 'workplace-1-performance-review',
+        category: 'Workplace',
+        topic: 'Annual Performance Review - Career Development Discussion',
+        context: 'Meeting with line manager for annual appraisal, discussing performance, development, and career aspirations.',
+        characters: [
+            { name: 'Margaret', description: 'Senior manager', avatarUrl: '/avatars/manager.png' },
+            { name: 'You', description: 'Employee undergoing review' }
+        ],
+        dialogue: [
+            { speaker: 'Margaret', text: 'Right, let\'s ________ your performance over the past year.' },
+            { speaker: 'You', text: 'I\'ve endeavoured to ________ measurable results on the Taylor account.' },
+            { speaker: 'Margaret', text: 'Absolutely. The client feedback has been ________ . You\'ve clearly made considerable progress.' },
+            { speaker: 'You', text: 'Thank you. I\'ve had to ________ my approach to account management, which was quite demanding.' },
+            { speaker: 'Margaret', text: 'That adaptability is precisely what we ________ here. However, I\'d like to flag one area for development.' },
+            { speaker: 'You', text: 'Right, I\'m ________ to hear that. What concerns you?' },
+            { speaker: 'Margaret', text: 'Delegation. You tend to ________ too much responsibility rather than ________ your team.' },
+            { speaker: 'You', text: 'That\'s ________ feedback. I\'ll endeavour to be more conscious of ________ junior colleagues.' },
+            { speaker: 'Margaret', text: 'Good. Looking ahead, where would you like to ________ your career?' },
+            { speaker: 'You', text: 'I\'m keen on ________ my expertise in project leadership and possibly moving into a team lead position.' },
+            { speaker: 'Margaret', text: 'We\'d be delighted to ________ that progression. I\'ll ________ some management training for you.' },
+            { speaker: 'You', text: 'That\'s brilliant. Thank you for the opportunity.' }
+        ],
+        answerVariations: [
+            { index: 0, answer: 'review', alternatives: ['assess', 'evaluate', 'discuss'] },
+            { index: 1, answer: 'deliver', alternatives: ['achieve', 'produce', 'generate'] },
+            { index: 2, answer: 'exemplary', alternatives: ['excellent', 'outstanding', 'superb'] },
+            { index: 3, answer: 'refine', alternatives: ['adjust', 'modify', 'revise'] },
+            { index: 4, answer: 'value', alternatives: ['appreciate', 'need', 'require'] },
+            { index: 5, answer: 'keen', alternatives: ['interested', 'open', 'glad'] },
+            { index: 6, answer: 'shoulder', alternatives: ['take on', 'carry', 'assume'] },
+            { index: 7, answer: 'empower', alternatives: ['enable', 'support', 'develop'] },
+            { index: 8, answer: 'fair', alternatives: ['valid', 'constructive', 'helpful'] },
+            { index: 9, answer: 'mentoring', alternatives: ['supporting', 'coaching', 'developing'] },
+            { index: 10, answer: 'take', alternatives: ['pursue', 'chart', 'map'] },
+            { index: 11, answer: 'consolidating', alternatives: ['deepening', 'strengthening', 'advancing'] },
+            { index: 12, answer: 'facilitate', alternatives: ['support', 'enable', 'arrange'] },
+            { index: 13, answer: 'arrange', alternatives: ['organise', 'book', 'schedule'] }
+        ],
+        deepDive: [
+            { index: 1, phrase: 'endeavoured to deliver', insight: 'Formal British register uses "endeavour" (s spelling) for professional effort. Shows conscientiousness and formal tone (Band 8).' },
+            { index: 5, phrase: 'keen to hear', insight: 'Native idiom signaling receptiveness to feedback. More sophisticated than "interested to hear" in professional context.' },
+            { index: 8, phrase: 'fair feedback', insight: 'British understatement: accepting critical feedback as "fair" shows professional maturity and psychological safety awareness.' },
+            { index: 10, phrase: 'keen on deepening', insight: 'Repeated use of "keen" shows authenticity. Different from "keen to hear" - demonstrates consistent personal motivation (Band 8-9).' }
+        ]
+    },
+    // ===== NEW: SERVICE/LOGISTICS (ELEVATED COMPLEXITY) =====
+    {
+        id: 'service-1-estate-agent-viewing',
+        category: 'Service/Logistics',
+        topic: 'Estate Agent Property Viewing - Negotiating Terms',
+        context: 'Viewing a residential property with estate agent, discussing price, condition, and moving forward with offer.',
+        characters: [
+            { name: 'Victoria', description: 'Estate agent', avatarUrl: '/avatars/estate-agent.png' },
+            { name: 'You', description: 'Prospective buyer' }
+        ],
+        dialogue: [
+            { speaker: 'Victoria', text: 'Lovely to have you here. This property is really quite ________ , isn\'t it?' },
+            { speaker: 'You', text: 'It certainly has ________ . However, I\'m a bit concerned about the survey findings.' },
+            { speaker: 'Victoria', text: 'Those issues are largely cosmetic. The structure is absolutely ________ .' },
+            { speaker: 'You', text: 'I understand, but the damp issue is rather ________ . That\'ll require specialist treatment.' },
+            { speaker: 'Victoria', text: 'Fair point. The vendors would be ________ to negotiate on price to reflect remedial costs.' },
+            { speaker: 'You', text: 'I appreciate that. Could they ________ a discount of around £25,000?' },
+            { speaker: 'Victoria', text: 'That\'s quite ________ . The asking price is already very competitive. Let me ________ with the vendors.' },
+            { speaker: 'You', text: 'When do you reckon you\'ll ________ from them?' },
+            { speaker: 'Victoria', text: 'By tomorrow evening, I should think. In the meantime, would you ________ putting an offer in writing?' },
+            { speaker: 'You', text: 'Yes, I\'m prepared to ________ an offer subject to a satisfactory final survey.' },
+            { speaker: 'Victoria', text: 'Excellent. We\'ll ________ the paperwork today and submit by close of business.' },
+            { speaker: 'You', text: 'Splendid. What\'s the timeline if the vendors ________ ?' }
+        ],
+        answerVariations: [
+            { index: 0, answer: 'charming', alternatives: ['attractive', 'lovely', 'delightful'] },
+            { index: 1, answer: 'potential', alternatives: ['promise', 'charm', 'appeal'] },
+            { index: 2, answer: 'sound', alternatives: ['solid', 'secure', 'intact'] },
+            { index: 3, answer: 'problematic', alternatives: ['troublesome', 'concerning', 'serious'] },
+            { index: 4, answer: 'willing', alternatives: ['open', 'amenable', 'prepared'] },
+            { index: 5, answer: 'entertain', alternatives: ['consider', 'accept', 'allow'] },
+            { index: 6, answer: 'steep', alternatives: ['substantial', 'considerable', 'ambitious'] },
+            { index: 7, answer: 'run this past', alternatives: ['discuss with', 'put to', 'speak to'] },
+            { index: 8, answer: 'hear', alternatives: ['get back', 'find out', 'learn'] },
+            { index: 9, answer: 'consider', alternatives: ['think of', 'be interested in', 'mind'] },
+            { index: 10, answer: 'lodge', alternatives: ['submit', 'put forward', 'make'] },
+            { index: 11, answer: 'prepare', alternatives: ['draw up', 'arrange', 'process'] },
+            { index: 12, answer: 'accept', alternatives: ['agree', 'take', 'proceed with'] }
+        ],
+        deepDive: [
+            { index: 0, phrase: 'charming', insight: 'Sophisticated property vocabulary. Preferred by British estate agents over "nice" or "pretty" for premium properties (Band 8).' },
+            { index: 3, phrase: 'rather problematic', insight: 'British understatement with "rather". Softens serious issue diplomatically whilst remaining clear. Essential register for negotiations.' },
+            { index: 6, phrase: 'quite steep', insight: 'Euphemistic British phrasing for "expensive" or "unreasonable". Shows negotiation expertise through strategic word choice (Band 8).' },
+            { index: 10, phrase: 'lodge an offer', insight: 'Formal property transaction terminology. "Make an offer" is too casual, "submit" too bureaucratic. Demonstrates property market familiarity (Band 8-9).' }
         ]
     }
 ];
