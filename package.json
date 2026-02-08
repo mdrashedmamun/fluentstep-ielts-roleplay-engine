@@ -10,7 +10,8 @@
     "validate": "tsx scripts/validateScenarios.ts",
     "audit": "tsx cli/auditLanguage.ts",
     "audit:report": "tsx cli/auditLanguage.ts --report-only",
-    "audit:dry-run": "tsx cli/auditLanguage.ts --dry-run"
+    "audit:dry-run": "tsx cli/auditLanguage.ts --dry-run",
+    "audit:test": "tsx scripts/testAuditSystem.ts"
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.17",
