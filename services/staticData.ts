@@ -1794,5 +1794,76 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 7, phrase: 'observation', insight: 'Formal noun: result of careful attention. Grounds opinion in evidence.' },
             { index: 8, phrase: 'implementing', insight: 'Gerund: putting plan/method into action. Shows practical application.' }
         ]
+    },
+    {
+        id: 'youtube-social-english-conversations-1705402200',
+        category: 'Social',
+        topic: 'English Learning - Real-Life Conversations',
+        context: 'A comprehensive English learning course featuring multiple real-life conversation scenarios including shopping at grocery stores and cafes, family discussions, holiday planning, and various daily interactions. Designed to help learners understand natural English pronunciation, common phrases, and practical communication skills used in everyday situations.',
+        characters: [
+            { name: 'Jessica', description: 'English learning channel host providing real-life conversation lessons' },
+            { name: 'Customer', description: 'A person shopping for baking supplies at a grocery store' },
+            { name: 'Shop Assistant', description: 'Helpful grocery store employee assisting with locating items' },
+            { name: 'Sarah', description: 'Shopper discussing grocery purchases' },
+            { name: 'Max', description: 'Shopper concerned about healthy eating while enjoying variety' },
+            { name: 'Barista', description: 'Coffee shop employee helping customers choose drinks' },
+            { name: 'Customer 2', description: 'Customer ordering smoothies at a cafe' },
+            { name: 'Customer 3', description: 'Customer with health-conscious preferences' },
+            { name: 'Friend 1', description: 'Friend discussing new year goals and plans' },
+            { name: 'Laura', description: 'Friend interested in cooking and personal development' },
+            { name: 'Emily', description: 'Friend celebrating Christmas with family' },
+            { name: 'Alex', description: 'Friend enjoying holiday preparations' }
+        ],
+        dialogue: [
+            { speaker: 'Jessica', text: '________. ________ here. ________ channel. Is your English learning journey going well?' },
+            { speaker: 'Jessica', text: 'I hope you keep it up. Today, let\'s practice real-life conversations.' },
+            { speaker: 'Jessica', text: 'We will focus on simple words and phrases that you can use in everyday life.' },
+            { speaker: 'Customer', text: '________, ________? I\'m looking for baking powder.' },
+            { speaker: 'Shop Assistant', text: 'Sure! It\'s right here on this shelf. Are you baking something today?' },
+            { speaker: 'Customer', text: 'Yes, I\'m trying to make a cake, but I\'m missing a few things. I also need flour.' },
+            { speaker: 'Shop Assistant', text: 'Yes, you got it right—flour! It\'s on the shelf below the baking powder shelf. By the way, is this your first time baking?' },
+            { speaker: 'Customer', text: 'Yes, and I\'m so nervous. My friend told me to wing it, but I\'m not sure what that means.' },
+            { speaker: 'Shop Assistant', text: 'Oh, it means to try without following exact steps or recipes.' },
+            { speaker: 'Sarah', text: 'Do we really need five boxes of cereal?' },
+            { speaker: 'Max', text: '________! They\'re on sale!' },
+            { speaker: 'Sarah', text: 'But we only eat breakfast once a day, right?' },
+            { speaker: 'Max', text: 'True, but think of all the flavors!' },
+            { speaker: 'Sarah', text: 'You mean all the sugar? Just ________ after that.' },
+            { speaker: 'Max', text: 'Deal! Oh, what about chips?' },
+            { speaker: 'Sarah', text: 'I thought we came here to buy healthy food only!' },
+            { speaker: 'Max', text: 'You should have cheat days for yourself. It\'s when you eat less healthy food.' },
+            { speaker: 'Sarah', text: 'Having a few cheat days isn\'t harmful to your health, Max.' },
+            { speaker: 'Barista', text: 'What can I get for you today? Do you have any fresh smoothies?' },
+            { speaker: 'Customer 2', text: 'Yes! We have strawberry, mango, and even a green detox one with spinach and kale.' },
+            { speaker: 'Customer 2', text: 'Hmm, spinach and kale? That sounds healthy, but maybe a little boring.' },
+            { speaker: 'Barista', text: 'Well, if you\'re looking for something fun, we have a chocolate peanut butter smoothie.' },
+            { speaker: 'Customer 2', text: 'Oh, that sounds like a cheat day in a cup!' },
+            { speaker: 'Customer 3', text: 'I\'ll stick to something healthy. I\'ll have the green detox smoothie.' },
+            { speaker: 'Friend 1', text: 'Have you made any plans for the new year, Laura?' },
+            { speaker: 'Laura', text: 'Not yet. I\'m thinking about setting some personal goals. How about you?' },
+            { speaker: 'Friend 1', text: 'I want to start a fitness routine. Maybe join a gym and get healthier.' },
+            { speaker: 'Laura', text: 'That sounds great! I\'m thinking of learning to cook. I hardly ever make home-cooked meals.' },
+            { speaker: 'Friend 1', text: 'Cooking is a useful skill. Maybe you can take a cooking class.' },
+            { speaker: 'Emily', text: 'Hi Alex! I\'ve been helping my family decorate the Christmas tree. And you?' },
+            { speaker: 'Alex', text: 'I\'ve been baking cookies with my little sister. We made chocolate chip and gingerbread cookies.' },
+            { speaker: 'Emily', text: 'That sounds delicious! Do you have any special plans for tonight?' },
+            { speaker: 'Alex', text: 'Yes, we\'re having a family dinner and then we\'ll exchange gifts. What about you?' }
+        ],
+        answerVariations: [
+            { index: 0, answer: 'Welcome back', alternatives: ['Hello everyone', 'Hi there'] },
+            { index: 1, answer: 'It\'s Jessica', alternatives: ['I\'m Jessica', 'This is Jessica'] },
+            { index: 2, answer: 'Welcome to my', alternatives: ['Thank you for visiting my', 'Come to my'] },
+            { index: 3, answer: 'Excuse me', alternatives: ['pardon me', 'sorry', 'I\'m sorry'] },
+            { index: 4, answer: 'can you help me', alternatives: ['could you help me', 'could you assist me', 'can you assist me'] },
+            { index: 5, answer: 'Of course', alternatives: ['absolutely', 'definitely', 'for sure', 'sure'] },
+            { index: 6, answer: 'don\'t drink coffee', alternatives: ['don\'t have caffeine', 'just relax', 'avoid caffeine'] },
+            { index: 10, answer: 'don\'t drink coffee', alternatives: ['don\'t have caffeine', 'just relax'] },
+            { index: 11, answer: 'don\'t drink coffee', alternatives: ['don\'t have caffeine', 'skip the caffeine'] }
+        ],
+        deepDive: [
+            { index: 3, phrase: 'Excuse me', insight: 'Can mean either asking for forgiveness (\'I\'m sorry\') or getting attention. Context determines meaning.' },
+            { index: 4, phrase: 'can you help me', insight: 'Key phrase for universal communication. Essential across all English contexts for polite requests.' },
+            { index: 0, phrase: 'Welcome back', insight: 'Key greeting phrase used in everyday situations and general communication contexts.' }
+        ]
     }
 ];
