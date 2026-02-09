@@ -63,6 +63,71 @@ export function scoreConfidence(params: {
     factors.push('Grammar corrections are standard');
   }
 
+  // Double negatives - clear grammar error (auto-fix)
+  else if (issueType === 'double-negative') {
+    score = 1.0;
+    factors.push('Double negatives are clear grammatical errors');
+  }
+
+  // Redundancy - word repetition (high confidence)
+  else if (issueType === 'redundancy') {
+    score = 0.98;
+    factors.push('Unintended word repetition is a clear error');
+  }
+
+  // POS mismatches - requires more care
+  else if (issueType === 'pos-mismatch') {
+    score = 0.90;
+    factors.push('Part-of-speech mismatches are grammar errors');
+    if (affectedText.length < 4) {
+      score *= 0.95;
+      factors.push('Short words have clearer POS');
+    } else {
+      score *= 0.85;
+      factors.push('Longer words may have multiple POS forms');
+    }
+  }
+
+  // Data integrity issues (missing references, etc)
+  else if (issueType === 'data-integrity') {
+    score = 1.0;
+    factors.push('Data integrity errors are always critical');
+  }
+
+  // Invalid categories or missing data
+  else if (issueType === 'invalid-category' || issueType === 'missing-content') {
+    score = 0.95;
+    factors.push('Data validation errors are high confidence');
+  }
+
+  // Duplicate alternatives
+  else if (issueType === 'duplicate-alternative') {
+    score = 1.0;
+    factors.push('Duplicate alternatives are always an error');
+  }
+
+  // Semantic alignment issues
+  else if (issueType === 'semantic-alignment') {
+    score = 0.80;
+    factors.push('Semantic alignment depends on context interpretation');
+  }
+
+  // Low diversity in alternatives
+  else if (issueType === 'low-diversity') {
+    score = 0.85;
+    factors.push('Alternative diversity can be subjective');
+  }
+
+  // Contextual fit - alternatives in context
+  else if (issueType === 'contextual-fit') {
+    score = 0.75;
+    factors.push('Contextual fit depends on sentence semantics');
+    if (context.length > 50) {
+      score *= 0.95;
+      factors.push('Sufficient context improves confidence');
+    }
+  }
+
   // Tonality issues are medium-confidence (context-dependent)
   else if (issueType === 'tonality') {
     score = 0.75;

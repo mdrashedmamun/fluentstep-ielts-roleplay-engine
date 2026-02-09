@@ -17,6 +17,9 @@ import { validateNaturalPatterns } from '../services/linguisticAudit/validators/
 import { validateDialogueFlow } from '../services/linguisticAudit/validators/dialogueFlowValidator';
 import { validateAlternatives } from '../services/linguisticAudit/validators/alternativesValidator';
 import { validateDeepDive } from '../services/linguisticAudit/validators/deepDiveValidator';
+import { validateGrammarContext } from '../services/linguisticAudit/validators/grammarContextValidator';
+import { validateContextualSubstitution } from '../services/linguisticAudit/validators/contextualSubstitutionValidator';
+import { validateBlankAnswerPairing } from '../services/linguisticAudit/validators/blankAnswerPairingValidator';
 import { generateSuggestions, sortSuggestions, UserSuggestion, formatOptions } from '../services/linguisticAudit/fixers/suggestionEngine';
 import { applyAutoFixes } from '../services/linguisticAudit/fixers/autoFixer';
 
@@ -59,6 +62,21 @@ registerValidator({
 registerValidator({
   name: 'Deep Dive Quality',
   validate: validateDeepDive
+} as ValidatorFn);
+
+registerValidator({
+  name: 'Grammar Context',
+  validate: validateGrammarContext
+} as ValidatorFn);
+
+registerValidator({
+  name: 'Contextual Substitution',
+  validate: validateContextualSubstitution
+} as ValidatorFn);
+
+registerValidator({
+  name: 'Blank-Answer Pairing',
+  validate: validateBlankAnswerPairing
 } as ValidatorFn);
 
 /**
