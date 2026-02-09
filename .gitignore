@@ -24,3 +24,12 @@ dist-ssr
 *.sw?
 .vercel
 .env*.local
+
+# Temporary outputs
+temp/
+*.tmp
+pdf-extracted.txt
+*-extraction-results.json
+
+# Browser automation
+.playwright-mcp/
