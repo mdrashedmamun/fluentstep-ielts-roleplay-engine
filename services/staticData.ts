@@ -985,7 +985,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 4, answer: 'mental', alternatives: ['hectic', 'manic'] },
             { index: 5, answer: 'toll', alternatives: ['effect', 'toll on me'] },
             { index: 6, answer: 'gorgeous', alternatives: ['beautiful', 'lovely', 'stunning'] },
-            { index: 7, answer: 'little', alternatives: ['minor', 'tiny'] },
+            { index: 7, answer: 'minor', alternatives: ['little', 'tiny'] },
             { index: 8, answer: 'work out', alternatives: ['get', 'figure out'] },
             { index: 9, answer: 'get used to', alternatives: ['settle into', 'like'] },
             { index: 10, answer: 'kind', alternatives: ['sweet', 'lovely', 'thoughtful'] },
@@ -996,11 +996,10 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 15, answer: 'fit', alternatives: ['work', 'squeeze in'] },
             { index: 16, answer: 'decision', alternatives: ['move', 'choice'] },
             { index: 17, answer: 'work out', alternatives: ['grow on me', 'click'] },
-            { index: 18, answer: 'not', alternatives: ['never'] },
+            { index: 18, answer: 'particularly', alternatives: [] },
             { index: 19, answer: 'burn', alternatives: ['stress', 'push'] },
-            { index: 20, answer: 'particularly', alternatives: ['super', 'really'] },
-            { index: 21, answer: 'straight', alternatives: ['together', 'presentable'] },
-            { index: 22, answer: 'chin', alternatives: [] }
+            { index: 20, answer: 'straight', alternatives: ['together', 'sorted'] },
+            { index: 21, answer: 'chin', alternatives: [] }
         ],
         deepDive: [
             { index: 1, phrase: 'quite mental', insight: 'British slang for "hectic/chaotic". Top-tier native expression at IELTS 9.' },
