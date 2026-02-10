@@ -1,0 +1,198 @@
+{
+  "metadata": {
+    "roleplay_id": "workplace_negotiation_deadline_001",
+    "title": "Negotiate Project Deadline Extension",
+    "topic": "workplace negotiation",
+    "cefr_level": "B2",
+    "duration_minutes": 5,
+    "learning_outcomes_aligned_with": ["outcome_1_soften_disagreement", "outcome_2_repair_tension", "outcome_3_propose_alternatives"],
+    "date_created": "2026-02-11",
+    "designer_notes": "This task creates authentic tension through unequal information: Learner knows project complexity, Manager only knows deadline. This forces genuine negotiation."
+  },
+
+  "scenario_context": {
+    "setting": "Office, manager's desk or meeting room",
+    "speakers": [
+      {
+        "role": "learner",
+        "character": "Project Lead",
+        "background": "Responsible for complex feature development. Realistic assessment: 3 weeks minimum needed. Has discovered critical technical challenge."
+      },
+      {
+        "role": "interlocutor",
+        "character": "Manager/Director",
+        "background": "Client committed to delivering in 1 week. Doesn't know about technical complexity yet. Under pressure to meet external deadline."
+      }
+    ],
+    "scenario_trigger": "Manager calls you in to confirm you'll meet the 1-week deadline",
+    "authenticity_check": "Would this conversation happen in real workplace? YES. Project scope misalignment is common."
+  },
+
+  "tension_design": {
+    "tension_type": "preference_conflict_with_unequal_information",
+    "unequal_information": {
+      "learner_knows": "Project requires 3+ weeks due to complex database redesign discovered during sprint",
+      "manager_knows": "Client deadline is 1 week; assumes original estimate was accurate",
+      "information_gap": "Manager doesn't know about the technical complexity change"
+    },
+    "tension_trigger": "Manager: 'So we're on track for the one-week deadline, right?'",
+    "conflict_intensity": "Moderate-high (tight deadline vs. realistic assessment)",
+    "conflict_authenticity": "Very high (common in tech/project management)"
+  },
+
+  "pragmatic_functions_required": [
+    {
+      "function": "soften_disagreement",
+      "moment": "Opening (you must disagree with deadline feasibility)",
+      "urgency": "Critical - how you soften determines if manager listens or dismisses you",
+      "examples_of_authentic_softeners": [
+        "I see your point about the deadline, and I want to be upfront...",
+        "I understand the pressure you're under, but something's come up...",
+        "I've been thinking about this, and honestly..."
+      ]
+    },
+    {
+      "function": "hedge_uncertainty",
+      "moment": "Explaining technical issue (avoid sounding like excuse)",
+      "urgency": "High - credibility depends on honest assessment without defensiveness",
+      "examples_of_authentic_hedges": [
+        "It looks like we've hit an unexpected complexity...",
+        "We're probably looking at needing more time...",
+        "I'm fairly confident we'll need at least three weeks..."
+      ]
+    },
+    {
+      "function": "acknowledge_concern",
+      "moment": "Respond to manager's pressure/frustration",
+      "urgency": "High - maintains collaborative tone despite disagreement",
+      "examples": [
+        "I know this creates a problem for you...",
+        "I realize this is difficult given your client commitment...",
+        "I get that this puts you in a tough spot..."
+      ]
+    },
+    {
+      "function": "propose_alternative",
+      "moment": "Solution phase (multiple paths to resolution)",
+      "urgency": "High - shows you're problem-solving, not just refusing",
+      "examples_of_authentic_proposals": [
+        "What if we delivered in phases?",
+        "Could we push back to the client with a phased delivery?",
+        "How about we finish the core feature in a week and the database redesign in phase 2?"
+      ]
+    },
+    {
+      "function": "repair_tone_if_tension_rises",
+      "moment": "If manager becomes frustrated (e.g., 'This is unacceptable')",
+      "urgency": "Critical - breaks potential deadlock",
+      "examples": [
+        "I get your frustration. Let me be clear: I want to deliver quality work that meets your needs.",
+        "I hear you. Let's figure this out together.",
+        "I'm not trying to create problems. I'm trying to be realistic so we don't miss deadlines twice."
+      ]
+    }
+  ],
+
+  "valid_solution_paths": [
+    {
+      "path_name": "Phased Delivery",
+      "steps": [
+        "Soften disagreement (acknowledge deadline pressure)",
+        "Explain technical complexity (hedge uncertainty)",
+        "Propose phased solution (core + database in phase 2)",
+        "Negotiate timeline (2 weeks for phase 1, 1 week for phase 2)",
+        "Reach agreement + next steps"
+      ],
+      "learner_success_markers": "Manager agrees to phased approach OR agrees to timeline extension"
+    },
+    {
+      "path_name": "Honest Renegotiation",
+      "steps": [
+        "Soften disagreement (show you understand pressure)",
+        "Explain technical discovery (wasn't in original estimate)",
+        "Acknowledge impact (create space for manager's concerns)",
+        "Propose new timeline (3 weeks for full delivery)",
+        "Problem-solve together (how to communicate to client)"
+      ],
+      "learner_success_markers": "Manager acknowledges you were right to speak up + agrees to communicate change to client"
+    },
+    {
+      "path_name": "Collaborative Problem-Solving",
+      "steps": [
+        "Soften disagreement (respect for deadline, but...)",
+        "Ask clarifying questions (What are client's actual priorities?)",
+        "Propose options (full in 3 weeks, OR core in 1 week + rest in 2)",
+        "Suggest joint approach (we ask client what works for them)",
+        "Reach agreement on communication strategy"
+      ],
+      "learner_success_markers": "Manager and learner align on solution + approach to client together"
+    }
+  ],
+
+  "exit_condition": {
+    "roleplay_ends_when": "Both speakers reach explicit agreement on next steps",
+    "agreement_examples": [
+      "Manager: 'Okay, let's go with the phased approach. You'll have the core feature in 2 weeks.'",
+      "Manager: 'Fair point. I'll tell the client we need 3 weeks for quality work.'",
+      "Manager: 'Let's both talk to the client about their actual priorities before we commit to anything.'"
+    ],
+    "failed_exit": "If learner refuses without softening (manager ends conversation in frustration) OR learner accepts impossible deadline without speaking up",
+    "natural_endpoint": "Yes - real workplace negotiations typically end with agreement + action items"
+  },
+
+  "key_pedagogical_features": {
+    "authentic_tension": true,
+    "unequal_information": true,
+    "requires_negotiation": true,
+    "multiple_solution_paths": true,
+    "face_saving_required": true,
+    "would_native_speaker_recognize": true,
+    "tests_learning_outcomes": true
+  },
+
+  "linguistic_complexity": "B2 - Requires softening, hedging, acknowledging, proposing - all moderate complexity",
+
+  "dialogue_length_estimate": "8-12 learner turns (5-10 minutes of roleplay)",
+
+  "potential_complications": [
+    {
+      "complication": "Manager becomes frustrated ('I need you to make this work')",
+      "learner_response_needed": "Repair tone while maintaining position (outcome_2)"
+    },
+    {
+      "complication": "Manager asks technical questions learner can't fully answer",
+      "learner_response_needed": "Hedge appropriately ('I'm still investigating but...') + redirect to solution"
+    },
+    {
+      "complication": "Manager suggests 'just try harder' to meet deadline",
+      "learner_response_needed": "Soften disagreement + propose alternative (outcome_3)"
+    }
+  ],
+
+  "assessment_rubric": {
+    "soften_disagreement": {
+      "excellent": "Opens with softener + explains position clearly. Manager listens attentively.",
+      "good": "Softens after initial statement. Manager accepts explanation.",
+      "developing": "Minimal softening. Manager seems skeptical.",
+      "novice": "No softening. Manager appears frustrated or dismissive."
+    },
+    "maintain_collaborative_tone": {
+      "excellent": "Throughout dialogue, maintains respect + collaborative spirit",
+      "good": "Mostly collaborative, minor lapses",
+      "developing": "Defensive moments, but recovers",
+      "novice": "Adversarial tone"
+    },
+    "propose_solutions": {
+      "excellent": "Multiple solutions proposed with concrete details",
+      "good": "At least one solution proposed clearly",
+      "developing": "Vague solutions or resistance to proposing",
+      "novice": "Refuses without alternative"
+    },
+    "reach_agreement": {
+      "excellent": "Clear mutual agreement on path forward",
+      "good": "Agreement reached, some loose ends",
+      "developing": "Tentative agreement, unclear next steps",
+      "novice": "No agreement or frustrated silence"
+    }
+  }
+}

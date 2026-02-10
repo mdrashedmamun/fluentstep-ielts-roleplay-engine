@@ -1,0 +1,265 @@
+{
+  "metadata": {
+    "roleplay_id": "workplace_negotiation_deadline_001",
+    "topic": "workplace negotiation - deadline conflict",
+    "cefr_level": "B2",
+    "date_created": "2026-02-11",
+    "builder_notes": "Scaffolding fades dramatically from Stage 1 (60% blanks, multiple choice) to Stage 4 (0% blanks, authentic). Focus is on pragmatic function words, with repair markers only triggered if tension rises."
+  },
+
+  "blank_insertion_strategy": {
+    "overall_approach": "Prioritize pragmatic function words over content words",
+    "priority_1": "Softeners and hedges (core to outcome)",
+    "priority_2": "Repair markers (activated if conversation becomes tense)",
+    "priority_3": "Alternatives/proposals (essential for solution phase)",
+    "avoid": "Content words (deadline, project, database), articles (a, the), minor verbs"
+  },
+
+  "blank_placement_rules": {
+    "rule_1_softening_phrases": {
+      "target": "Phrases that soften disagreement",
+      "examples": ["I see your point, but", "I understand that", "To be honest"],
+      "placement": "Before statement of disagreement",
+      "priority": "HIGHEST - always blank unless very early recognition stage",
+      "cognitive_load": "Medium - requires understanding context to generate"
+    },
+    "rule_2_hedging_language": {
+      "target": "Words/phrases that hedge uncertainty",
+      "examples": ["It looks like", "I'm fairly confident", "Seems like"],
+      "placement": "When explaining problem or limitation",
+      "priority": "HIGH - essential for realistic explanation",
+      "cognitive_load": "Medium - requires selecting appropriate hedge"
+    },
+    "rule_3_acknowledgment": {
+      "target": "Phrases acknowledging other person's concern",
+      "examples": ["I get that", "I know this creates", "That puts you in"],
+      "placement": "After each point made by interlocutor",
+      "priority": "HIGH - maintains collaborative tone",
+      "cognitive_load": "Low-Medium - relatively simple retrieval"
+    },
+    "rule_4_proposals": {
+      "target": "Proposing alternatives or solutions",
+      "examples": ["What if we", "Could we", "How about we"],
+      "placement": "During solution phase",
+      "priority": "MEDIUM - important but not in every turn",
+      "cognitive_load": "Medium - requires generating context-appropriate option"
+    },
+    "rule_5_repair_markers": {
+      "target": "Repair and clarification phrases",
+      "examples": ["Let me clarify", "I didn't mean to", "What I mean is"],
+      "placement": "ONLY if tension detected in dialogue",
+      "priority": "CONDITIONAL - needed only if tone becomes negative",
+      "cognitive_load": "High - requires reading emotional tone"
+    },
+    "rule_6_avoid_blanking": {
+      "avoid": ["the", "a", "and", "but", "from", "to", "project", "deadline", "database"],
+      "rationale": "These are either grammatical items (not pedagogical targets) or content words (learner should use if they know)",
+      "exception": "Some content blanks OK in Stage 1 (recognition), but minimized in Stages 3-4"
+    }
+  },
+
+  "stage_1_recognition_and_recall": {
+    "name": "Recognition + Recall with Maximum Support",
+    "blanks_percentage": 60,
+    "blank_format": "multiple_choice",
+    "blank_example": "I see your point, but ___ we extend the deadline? (A) should (B) can (C) could",
+    "support_level": "Maximum",
+    "support_details": {
+      "model_answer": true,
+      "visual_cue": true,
+      "pronunciation": true,
+      "context_hint": "Shows full sentence"
+    },
+    "cognitive_load": "High - focus on recognition, not production",
+    "learner_task": "Recognize correct softener in context and understand meaning",
+    "pragmatic_functions_emphasized": ["soften_disagreement", "acknowledge_concern"],
+    "success_metric": "≥85% correct responses",
+    "feedback": {
+      "timing": "Immediate (after each blank)",
+      "tone": "Encouraging and celebratory",
+      "content": "'Good! That's how we soften disagreement without refusing.'",
+      "tone_detail": "Positive reinforcement of pragmatic choice"
+    },
+    "blank_frequency_per_turn": 2,
+    "approx_blanks_per_roleplay": "~12 blanks in 6 turns"
+  },
+
+  "stage_2_guided_production": {
+    "name": "Guided Production with Scaffolding",
+    "blanks_percentage": 45,
+    "blank_format": "word_prompts",
+    "blank_example": "I understand your deadline pressure, [t__ be ____ ], we need more time.",
+    "support_level": "Medium",
+    "support_details": {
+      "first_letter": true,
+      "blank_count": true,
+      "context_hint": "Sentence structure visible",
+      "model_answer": false
+    },
+    "cognitive_load": "Medium - retrieval + production with support",
+    "learner_task": "Retrieve softener from memory and produce it, with letter cues",
+    "pragmatic_functions_emphasized": ["soften_disagreement", "hedge_uncertainty", "acknowledge_concern"],
+    "success_metric": "≥75% correct responses + natural delivery",
+    "feedback": {
+      "timing": "Immediate (after blank filled)",
+      "tone": "Constructive and guiding",
+      "content": "'Good attempt! The softener needs 2 words. Think of 'To be ___'.",
+      "tone_detail": "Hints towards correct answer rather than giving it"
+    },
+    "blank_frequency_per_turn": 2,
+    "approx_blanks_per_roleplay": "~9 blanks in 6-8 turns"
+  },
+
+  "stage_3_semi_authentic_task": {
+    "name": "Semi-Authentic Negotiation with Minimal Support",
+    "blanks_percentage": 20,
+    "blank_format": "situational_cues",
+    "blank_example": "[CUES: Manager just said deadline is firm. You disagree. Soften your disagreement.] Learner: ___",
+    "support_level": "Minimal",
+    "support_details": {
+      "situational_cue": true,
+      "pragmatic_function_hinted": true,
+      "full_response": false,
+      "no_model_answer": true
+    },
+    "cognitive_load": "Low - authentic task with minimal hints",
+    "learner_task": "Spontaneously soften disagreement in authentic negotiation scenario",
+    "pragmatic_functions_emphasized": ["soften_disagreement", "hedge_uncertainty", "propose_alternative", "repair_tone_if_needed"],
+    "success_metric": "Uses softening spontaneously without prompts",
+    "feedback": {
+      "timing": "Delayed (after complete roleplay, 2-3 minutes)",
+      "tone": "Positive + growth-focused",
+      "content": "'Great job softening in turns 2 and 4. What about turn 6 - how did you handle it?'",
+      "tone_detail": "Praise + reflection on pragmatic choices"
+    },
+    "blank_frequency_per_turn": 1,
+    "approx_blanks_per_roleplay": "~3-4 blanks in 8-12 turns"
+  },
+
+  "stage_4_authentic_negotiation": {
+    "name": "Fully Authentic Negotiation with Zero Support",
+    "blanks_percentage": 0,
+    "blank_format": "none",
+    "support_level": "None",
+    "support_details": {
+      "no_hints": true,
+      "no_prompts": true,
+      "no_cues": true,
+      "unrehearsed_partner": true
+    },
+    "cognitive_load": "None - authentic, natural communication",
+    "learner_task": "Negotiate authentically with dynamic partner. Use chunks spontaneously.",
+    "pragmatic_functions_emphasized": ["ALL - softening, hedging, acknowledging, proposing, repairing"],
+    "success_metric": "Peer evaluation of pragmatic competence + self-reflection",
+    "feedback": {
+      "timing": "Reflective (after roleplay, learner leads)",
+      "tone": "Collaborative and evaluative",
+      "content": "'What softeners did you use? Did they help you reach agreement?'",
+      "tone_detail": "Learner identifies own pragmatic choices; teacher facilitates reflection"
+    },
+    "blank_frequency_per_turn": 0,
+    "approx_blanks_per_roleplay": "~0 (authentic roleplay)"
+  },
+
+  "progression_cognitive_load": {
+    "stage_1_to_2": "Scaffolding: Multiple choice → Word prompts (-25% cognitive load)",
+    "stage_2_to_3": "Scaffolding: Word prompts → Situational cues (-25% cognitive load)",
+    "stage_3_to_4": "Scaffolding: Cues → None (-20% cognitive load)",
+    "overall_pattern": "Linear reduction from HIGH scaffolding (Stage 1) to ZERO scaffolding (Stage 4)",
+    "validation": "Each stage is achievable next step from previous; no jumps in difficulty"
+  },
+
+  "tension_activated_features": {
+    "trigger_for_repair_markers": "If dialogue becomes tense (manager frustrated, learner defensive)",
+    "when_activated": "Usually Stage 3-4 (earlier stages have enough scaffolding)",
+    "repair_functions": ["clarify_position", "acknowledge_concern", "soften_tone", "reassure"],
+    "examples": [
+      {
+        "situation": "Manager: 'This is unacceptable. I promised the client.'",
+        "repair_blank": "[CUES: Manager is frustrated. Repair the tone without backing down.] Learner: ___",
+        "expected": "I hear you. I'm not trying to make this difficult; I'm being realistic so we don't fail twice."
+      },
+      {
+        "situation": "Learner becomes defensive after criticism",
+        "repair_blank": "[CUES: You sounded defensive. Clarify your position calmly.] Learner: ___",
+        "expected": "What I mean is, I'm not refusing - I'm saying we need time to do this right."
+      }
+    ]
+  },
+
+  "blank_placement_algorithm": {
+    "step_1_identify_candidate_phrases": "Find all phrases matching priority rules (softeners, hedges, acknowledgments, proposals)",
+    "step_2_score_by_stage": {
+      "stage_1": "Score = 1.0 if softener/acknowledgment, 0.7 if hedge, 0.5 if proposal",
+      "stage_2": "Score = 1.0 if softener/hedge, 0.8 if acknowledgment, 0.5 if proposal",
+      "stage_3": "Score = 0.8 if softener/hedge, 0.7 if acknowledgment/proposal, 0.3 if other",
+      "stage_4": "Score = 0 (no blanks)"
+    },
+    "step_3_apply_percentage": "Select top-scored phrases up to stage's blank percentage",
+    "step_4_validate_linguistic_sense": "Ensure blank placement doesn't disrupt grammar or meaning",
+    "step_5_ensure_variety": "No same blank format appears twice in a row"
+  },
+
+  "vocabulary_prioritization_order": {
+    "first_priority": "soften_disagreement chunks (outcome 1 critical)",
+    "second_priority": "hedge_uncertainty chunks (outcome 1 support)",
+    "third_priority": "acknowledge_concern chunks (maintain tone)",
+    "fourth_priority": "propose_alternative chunks (outcome 3)",
+    "conditional": "repair_tone chunks (only if tension detected)"
+  },
+
+  "feedback_strategy": {
+    "stage_1_feedback": {
+      "type": "Reinforcement",
+      "content": "Praise correct answers + explain pragmatic choice",
+      "example": "'Yes! 'I see your point' softens the disagreement. It shows respect before you say you disagree.'",
+      "timing": "Immediate"
+    },
+    "stage_2_feedback": {
+      "type": "Scaffolded hints",
+      "content": "If wrong, hint at shape/meaning without giving answer",
+      "example": "'Almost! This softener has 3 words: 'To be ___'. What's the emotional state you're expressing?'",
+      "timing": "Immediate"
+    },
+    "stage_3_feedback": {
+      "type": "Growth-focused reflection",
+      "content": "Praise pragmatic choices; ask learner to reflect on effectiveness",
+      "example": "'You softened nicely. Did the manager respond better because of your softening?'",
+      "timing": "Delayed (end of roleplay)"
+    },
+    "stage_4_feedback": {
+      "type": "Peer + self-evaluation",
+      "content": "Partner feedback on tone; learner self-assesses pragmatic competence",
+      "example": "'Did you feel the softening helped reach agreement? What would you do differently?'",
+      "timing": "Reflective (after roleplay)"
+    }
+  },
+
+  "integration_with_blank_inserter": {
+    "input_file": "core_repertoire.json (from chunk-curator)",
+    "blank_insertion_sequence": [
+      "Load core_repertoire.json chunks",
+      "Apply stage-specific percentages (60% → 45% → 20% → 0%)",
+      "Prioritize by pragmatic function",
+      "Validate linguistic sense",
+      "Apply tension-activated rules if needed",
+      "Generate blanks with appropriate format (MC → prompts → cues → none)"
+    ],
+    "configuration_parameters": {
+      "stage": "1, 2, 3, or 4",
+      "blank_percentage": "Will be looked up from this config",
+      "blank_format": "Will be looked up from this config",
+      "pragmatic_priority_order": "Will be looked up from this config"
+    }
+  },
+
+  "validation_checklist": {
+    "cognitive_load_decreases": true,
+    "scaffolding_fades_appropriately": true,
+    "pragmatic_functions_prioritized": true,
+    "blank_placement_linguistically_sound": true,
+    "feedback_is_constructive": true,
+    "exit_at_stage_4_is_authentic": true,
+    "tension_repair_logic_sound": true
+  }
+}

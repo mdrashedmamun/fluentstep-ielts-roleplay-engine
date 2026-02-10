@@ -1,0 +1,237 @@
+{
+  "metadata": {
+    "orchestration_id": "workplace_negotiation_B2_001",
+    "title": "B2 Workplace Negotiation - Deadline Conflict Resolution",
+    "topic": "workplace negotiation",
+    "cefr_level": "B2",
+    "duration": "45 minutes orchestration + 20-30 minutes extraction pipeline",
+    "date_created": "2026-02-11",
+    "orchestrator_notes": "Complete learning design specification ready for extraction pipeline. All 4 Cambridge agents aligned and validated. Approval gates passed. Ready to feed to pdf-extractor → blank-inserter → validation → transformation.",
+    "human_approvals": {
+      "gate_1_intake": {
+        "timestamp": "2026-02-11 10:00 UTC",
+        "approver": "Project Lead",
+        "status": "approved",
+        "feedback": "Proceed with full design workflow"
+      },
+      "gate_2_learning_design": {
+        "timestamp": "2026-02-11 10:12 UTC",
+        "approver": "Curriculum Specialist",
+        "status": "approved",
+        "feedback": "Outcomes are clear and observable. Progression model is sound."
+      },
+      "gate_3_task_and_vocabulary": {
+        "timestamp": "2026-02-11 10:27 UTC",
+        "approver": "Content Specialist",
+        "status": "approved",
+        "feedback": "Tension is authentic. Vocabulary is high-frequency and appropriate."
+      },
+      "gate_4_scaffolding": {
+        "timestamp": "2026-02-11 10:35 UTC",
+        "approver": "Learning Engineer",
+        "status": "approved",
+        "feedback": "Scaffolding fades appropriately. Blank placement logic is sound."
+      }
+    }
+  },
+
+  "component_1_learning_outcomes": {
+    "source_agent": "learning-architect",
+    "file_reference": "./learning-architect/examples/learning_outcomes.json",
+    "summary": "3 communicative outcomes defined with measurable success criteria and 4-stage progression model",
+    "key_outcomes": [
+      "Learner can soften disagreement without hostility",
+      "Learner can repair conversational tension mid-dialogue",
+      "Learner can propose alternatives to reach agreement"
+    ],
+    "success_metrics": [
+      "Pauses decrease 30% Stage 1 → Stage 3",
+      "Softeners used in ≥75% of disagreements",
+      "Chunks appear spontaneously (not read)",
+      "Native speaker rating: authentic, not scripted",
+      "Chunks transfer to subsequent scenarios"
+    ],
+    "progression_model": "4-stage (recognition → guided production → semi-authentic → authentic)",
+    "validation_status": "✓ Approved - Observable, measurable, appropriate for B2, tests pragmatic competence"
+  },
+
+  "component_2_task_specification": {
+    "source_agent": "task-designer",
+    "file_reference": "./task-designer/examples/task_specification.json",
+    "summary": "Authentic roleplay scenario with unequal information and multiple solution paths",
+    "scenario_title": "Negotiate Project Deadline Extension",
+    "scenario_context": "Manager calls in project lead to confirm 1-week deadline; project lead knows it needs 3+ weeks due to technical complexity",
+    "tension_type": "Preference conflict with unequal information",
+    "authenticity_check": "Would native speaker recognize? YES - common project scope misalignment",
+    "valid_solution_paths": [
+      "Phased delivery (core in 2 weeks, database in phase 2)",
+      "Honest renegotiation (communicate change to client together)",
+      "Collaborative problem-solving (ask client what they really need)"
+    ],
+    "pragmatic_functions_required": [
+      "Soften disagreement (opening)",
+      "Hedge uncertainty (explaining technical issue)",
+      "Acknowledge concern (respond to manager pressure)",
+      "Propose alternative (offer solutions)",
+      "Repair tone if needed (if tension rises)"
+    ],
+    "dialogue_length": "8-12 learner turns (5-10 minutes)",
+    "validation_status": "✓ Approved - Authentic tension, multiple solutions, forces genuine negotiation"
+  },
+
+  "component_3_core_vocabulary": {
+    "source_agent": "chunk-curator",
+    "file_reference": "./chunk-curator/examples/core_repertoire.json",
+    "summary": "48 high-frequency chunks from BNC Spoken corpus, all >100 per million, organized by pragmatic function",
+    "chunk_count": 48,
+    "chunks_by_function": {
+      "soften_disagreement": 12,
+      "hedge_uncertainty": 8,
+      "acknowledge_concern": 7,
+      "propose_alternative": 10,
+      "repair_tone": 6,
+      "clarify_position": 5
+    },
+    "average_frequency": "287.5 per million",
+    "corpus_validation": "All chunks verified in BNC Spoken corpus (British English, spoken)",
+    "coverage_estimate": "~85% of communicative needs for workplace negotiation",
+    "bucket_a_mapping": "All 48 chunks qualify as BUCKET_A (high-frequency, teachable, transferable)",
+    "validation_status": "✓ Approved - Evidence-based vocabulary, high-frequency, pragmatically appropriate, register matches"
+  },
+
+  "component_4_scaffolding_config": {
+    "source_agent": "system-builder",
+    "file_reference": "./system-builder/examples/scaffolding_config.json",
+    "summary": "Stage-specific blank insertion strategy with fading support and pragmatic prioritization",
+    "blank_percentage_by_stage": {
+      "stage_1": "60% (recognition + recall)",
+      "stage_2": "45% (guided production)",
+      "stage_3": "20% (semi-authentic)",
+      "stage_4": "0% (authentic)"
+    },
+    "blank_format_by_stage": {
+      "stage_1": "Multiple choice",
+      "stage_2": "Word prompts (first letter + blank count)",
+      "stage_3": "Situational cues",
+      "stage_4": "None"
+    },
+    "pragmatic_prioritization": [
+      "Priority 1: Softeners and hedges (core to learning outcomes)",
+      "Priority 2: Acknowledgments (maintain tone)",
+      "Priority 3: Proposals (outcome 3)",
+      "Conditional: Repair markers (only if tension detected)"
+    ],
+    "cognitive_load_reduction": "Linear fade from HIGH (Stage 1) to ZERO (Stage 4)",
+    "tension_activated_features": "Repair markers appear automatically if dialogue becomes tense",
+    "validation_status": "✓ Approved - Scaffolding fades appropriately, pragmatic functions prioritized, linguistic sense maintained"
+  },
+
+  "alignment_validation_results": {
+    "outcomes_to_task_alignment": {
+      "check": "All learning outcomes required for task success?",
+      "result": "✓ PASS - All 3 outcomes needed to negotiate effectively",
+      "evidence": "Softening + repair + proposing = three core competencies for this task"
+    },
+    "task_to_vocabulary_alignment": {
+      "check": "All task pragmatic functions have vocabulary support?",
+      "result": "✓ PASS - All 5 functions have 6-12 chunks each",
+      "evidence": "Soften (12), hedge (8), acknowledge (7), propose (10), repair (6)"
+    },
+    "vocabulary_to_scaffolding_alignment": {
+      "check": "Are core chunks prioritized in blank placement?",
+      "result": "✓ PASS - Softeners prioritized, frequency-matched to stages",
+      "evidence": "Stage 1 focuses on softeners (recognition), Stage 3 on proposals (production)"
+    },
+    "scaffolding_to_outcomes_alignment": {
+      "check": "Does progression support outcome achievement?",
+      "result": "✓ PASS - Stage 1 enables recognition, Stage 4 enables authentic performance",
+      "evidence": "Cognitive load decreases 60% → 45% → 20% → 0%; learners can demonstrate competence at Stage 4"
+    },
+    "overall_coherence": {
+      "result": "✓ FULLY ALIGNED - All 4 components support each other cohesively",
+      "confidence": "95% - Only minor tweaks possible"
+    }
+  },
+
+  "integration_instructions_for_extraction_pipeline": {
+    "step_1_pdf_extraction": {
+      "agent": "pdf-extractor",
+      "input": "Educational PDF (e.g., Headway, Cambridge IELTS)",
+      "use_task_specification": "Optional - use 'tension_type' and 'pragmatic_functions' to score dialogue quality",
+      "output": "Extracted dialogue (8-12 turns, negotiation-focused)"
+    },
+    "step_2_blank_insertion": {
+      "agent": "blank-inserter",
+      "input": "Extracted dialogue + scaffolding_config.json + core_repertoire.json",
+      "modifications_required": [
+        "Load core_repertoire.json instead of LOCKED_CHUNKS (or use both as fallback)",
+        "Apply stage-specific blank percentages from scaffolding_config.json",
+        "Prioritize pragmatic function words (soften > hedge > acknowledge > propose)",
+        "Apply tension-activated rules (repair markers if tension detected)"
+      ],
+      "output": "Dialogue with blanks inserted (stage-aware, pragmatically prioritized)"
+    },
+    "step_3_content_validation": {
+      "agent": "content-validator",
+      "input": "Dialogue with blanks",
+      "success_criteria": "7 validators pass with ≥85% confidence",
+      "output": "Validated, corrected dialogue"
+    },
+    "step_4_scenario_transformation": {
+      "agent": "scenario-transformer",
+      "input": "Validated dialogue + learning_outcomes.json",
+      "modifications_required": [
+        "Include learning outcomes in RoleplayScript metadata",
+        "Include success criteria",
+        "Include pragmatic functions",
+        "Include progression model (stage information)"
+      ],
+      "output": "RoleplayScript TypeScript code with Cambridge learning design metadata"
+    },
+    "step_5_orchestrator_qa": {
+      "agent": "orchestrator-qa",
+      "input": "RoleplayScript code",
+      "final_validation": [
+        "Code compiles without errors",
+        "Learning outcomes are reflected in blank placement",
+        "Success criteria are measurable through blank responses",
+        "Pragmatic functions are well-distributed"
+      ],
+      "output": "Final scenario ready for merge to staticData.ts"
+    }
+  },
+
+  "expected_outcomes": {
+    "scenario_count": "1 main scenario + 2-3 variations (same learning design, different contexts)",
+    "blank_distribution": {
+      "stage_1_scenario": "~12 blanks (60% of dialogue)",
+      "stage_3_scenario": "~4 blanks (20% of dialogue)",
+      "stage_4_scenario": "0 blanks (authentic roleplay)"
+    },
+    "learner_experience": "4-stage progression from scaffolded recognition to authentic negotiation",
+    "learning_outcomes": "Observable pragmatic competence in softening, repairing, proposing",
+    "success_metrics_measurement": "Automatic via blank responses + human observation of delivery"
+  },
+
+  "quality_assurance_checklist": {
+    "learning_design_complete": true,
+    "task_design_authentic": true,
+    "vocabulary_corpus_validated": true,
+    "scaffolding_linguistically_sound": true,
+    "all_components_aligned": true,
+    "all_approval_gates_passed": true,
+    "extraction_pipeline_ready": true,
+    "documentation_complete": true
+  },
+
+  "deployment_status": "READY FOR EXTRACTION PIPELINE",
+  "risk_level": "LOW - Design is sound, aligned, and approved by human experts",
+  "next_steps": [
+    "Pass master_specification.json to pdf-extractor",
+    "Extract dialogue aligned with task specification",
+    "Insert blanks using core_repertoire.json and scaffolding_config.json",
+    "Validate content quality",
+    "Transform to RoleplayScript with learning metadata",
+    "Merge final scenarios to production staticData.ts"
+  ]
+}

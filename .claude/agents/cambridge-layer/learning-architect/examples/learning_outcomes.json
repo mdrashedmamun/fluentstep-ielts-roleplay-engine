@@ -1,0 +1,134 @@
+{
+  "metadata": {
+    "topic": "workplace negotiation - deadline conflict",
+    "cefr_level": "B2",
+    "context": "Professional setting where different stakeholders have competing interests",
+    "duration_per_roleplay": "5-10 minutes",
+    "date_created": "2026-02-11",
+    "architect_notes": "Focus on pragmatic softening and tension repair. Learners often fail because they either refuse outright or overexplain their position. This curriculum teaches authentic softening + counter-proposal."
+  },
+
+  "communicative_outcomes": [
+    {
+      "id": "outcome_1_soften_disagreement",
+      "outcome": "Learner can soften disagreement without hostility or loss of assertiveness",
+      "description": "Learner uses softening phrases (hedges, mitigators) before expressing different opinion. Maintains assertiveness about key point while showing understanding of other position.",
+      "pragmatic_functions": ["hedge", "mitigate", "concede", "acknowledge"],
+      "cefr_relevance": "B2 - Fluency and spontaneity: Can express personal opinions without extensive preparation",
+      "learning_level": "Complex (requires face-saving balance)"
+    },
+    {
+      "id": "outcome_2_repair_tension",
+      "outcome": "Learner can recognize and repair conversational tension mid-dialogue",
+      "description": "When conversation becomes heated or breaks down, learner uses repair markers (clarification requests, apologies, reframing) to restore collaborative tone.",
+      "pragmatic_functions": ["clarify", "apologize", "reframe", "acknowledge_concern"],
+      "cefr_relevance": "B2 - Handling unforeseen turns: Can adapt communication style when conversation goes off track",
+      "learning_level": "Very complex (requires real-time monitoring + strategic intervention)"
+    },
+    {
+      "id": "outcome_3_propose_alternatives",
+      "outcome": "Learner can propose multiple alternatives to reach agreement",
+      "description": "Rather than accepting or rejecting outright, learner suggests creative solutions that address both parties' core concerns (e.g., 'Could we split the deadline?' 'What if I delivered in phases?').",
+      "pragmatic_functions": ["suggest", "offer", "recommend", "negotiate"],
+      "cefr_relevance": "B2 - Expressing opinions: Can express and defend personal opinions, negotiate compromises",
+      "learning_level": "Moderate (formulaic structure once learned)"
+    }
+  ],
+
+  "success_criteria": {
+    "fluency": {
+      "metric": "Pauses decrease 30% from Stage 1 to Stage 3",
+      "measurement": "Automated: <1 second pauses in Stage 1, <0.5 seconds in Stage 3",
+      "rationale": "Chunks are pre-planned in Stage 1 (more pauses). In Stage 3, learner retrieves spontaneously (fewer pauses)."
+    },
+    "spontaneity": {
+      "metric": "Chunks appear spontaneously, not read from notes",
+      "measurement": "Human observation: Learner delivers softeners without glancing at reference",
+      "rationale": "True automaticity = chunks are in working memory, not external memory"
+    },
+    "pragmatic_accuracy": {
+      "metric": "Softeners used in ≥75% of disagreement moments",
+      "measurement": "Dialogue analysis: Count softeners before each contrasting opinion",
+      "rationale": "If learner softens in 3 out of 4 disagreements, pragmatic competence is demonstrated"
+    },
+    "authenticity": {
+      "metric": "Native speaker evaluator: 'Sounds natural, not scripted'",
+      "measurement": "Qualitative review by Cambridge-trained evaluator",
+      "rationale": "Would a native speaker recognize this as authentic workplace negotiation?"
+    },
+    "retention": {
+      "metric": "Chunks reappear in subsequent scenarios without rehearsal",
+      "measurement": "Learner uses softeners in Scenario 3 without seeing them in Scenario 2",
+      "rationale": "Transfer across contexts = deep learning, not surface learning"
+    }
+  },
+
+  "progression_model": {
+    "stage_1": {
+      "name": "Recognition + Recall",
+      "blanks_percentage": 60,
+      "blank_format": "multiple_choice",
+      "example_blank": "I see your point, but ___ we extend the deadline? (A) should (B) can (C) could",
+      "support": "model answer visible below blank",
+      "cognitive_load": "High scaffolding (recognition only)",
+      "learner_task": "Identify correct softener in context",
+      "success_metric": "≥85% correct responses",
+      "feedback_timing": "Immediate (after each blank)",
+      "feedback_tone": "Encouraging: 'Good! That's how we soften disagreement.'"
+    },
+    "stage_2": {
+      "name": "Guided Production",
+      "blanks_percentage": 45,
+      "blank_format": "word_prompts",
+      "example_blank": "I understand your deadline pressure, [t__ be ____ ], we need more time.",
+      "support": "first letter + context hints, no full answer",
+      "cognitive_load": "Medium scaffolding (retrieval + production)",
+      "learner_task": "Retrieve softener from memory + deliver it",
+      "success_metric": "≥75% correct responses + natural delivery",
+      "feedback_timing": "Immediate (after blank filled)",
+      "feedback_tone": "Constructive: 'Almost! The softener needs 2 words. Think of 'To be ...'"
+    },
+    "stage_3": {
+      "name": "Semi-Authentic Task",
+      "blanks_percentage": 20,
+      "blank_format": "situational_cues",
+      "example_blank": "[CUES: Manager just proposed unrealistic deadline. You need to soften disagreement.] Learner: ___",
+      "support": "role instructions only, no prompt",
+      "cognitive_load": "Low scaffolding (authentic interaction)",
+      "learner_task": "Spontaneously soften disagreement in negotiation",
+      "success_metric": "Uses softeners spontaneously (without prompts)",
+      "feedback_timing": "Delayed (after full roleplay, 2-3 min)",
+      "feedback_tone": "Positive + growth-focused: 'You softened well in turn 3. What about turn 5?'"
+    },
+    "stage_4": {
+      "name": "Authentic Negotiation",
+      "blanks_percentage": 0,
+      "blank_format": "none",
+      "example": "Unrehearsed roleplay with dynamic partner behavior",
+      "support": "None",
+      "cognitive_load": "No scaffolding (authentic task)",
+      "learner_task": "Negotiate deadline authentically with partner",
+      "success_metric": "Peer evaluation + self-reflection on pragmatic competence",
+      "feedback_timing": "Reflective (after roleplay, learner self-assesses)",
+      "feedback_tone": "Collaborative: 'What softeners did you use? How did they land?'"
+    }
+  },
+
+  "validation": {
+    "outcomes_are_observable": true,
+    "outcomes_are_specific_behaviors": true,
+    "success_criteria_are_measurable": true,
+    "success_criteria_have_metrics": true,
+    "progression_reduces_cognitive_load": true,
+    "progression_supports_spiral_learning": true,
+    "functions_suit_cefr_level_B2": true,
+    "no_vocabulary_expansion_goals": true,
+    "focuses_on_communicative_competence": true
+  },
+
+  "alignment_notes": {
+    "to_task_designer": "These outcomes require authentic tension (manager-colleague conflict) and multiple solution paths (different ways to soften + negotiate)",
+    "to_chunk_curator": "Need chunks for: hedge (To be honest, I see your point), mitigate (maybe, possibly), concede (you're right that), repair (Let me rephrase), suggest (Could we, What if, How about)",
+    "to_system_builder": "Blank placement should prioritize softening phrases > repair markers > negotiation starters. Stage 3 should test spontaneity, Stage 4 should be zero support."
+  }
+}
