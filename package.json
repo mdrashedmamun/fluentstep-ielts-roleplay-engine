@@ -12,6 +12,11 @@
     "audit:report": "tsx cli/auditLanguage.ts --report-only",
     "audit:dry-run": "tsx cli/auditLanguage.ts --dry-run",
     "audit:test": "tsx scripts/testAuditSystem.ts",
+    "audit:parallel": "tsx cli/auditOrchestrator.ts",
+    "audit:worker": "tsx cli/auditWorker.ts",
+    "audit:phase1": "tsx cli/auditOrchestrator.ts --phase=1",
+    "audit:phase1:dry": "tsx cli/auditOrchestrator.ts --phase=1 --dry-run",
+    "audit:verify": "npm run build && npm run validate",
     "extract:headway": "tsx scripts/extractHeadwayScenarios.ts",
     "extract:headway:dry": "tsx scripts/extractHeadwayScenarios.ts --dry-run"
   },

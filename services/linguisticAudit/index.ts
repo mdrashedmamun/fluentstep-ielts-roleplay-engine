@@ -52,6 +52,9 @@ export async function runAudit(
       if (config.scenarioFilter && scenario.id !== config.scenarioFilter) {
         continue;
       }
+      if (config.categoryFilter && scenario.category !== config.categoryFilter) {
+        continue;
+      }
 
       const findings = validator.validate(scenario);
       validatorFindings.push(...findings);

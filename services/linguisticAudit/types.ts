@@ -87,3 +87,40 @@ export interface AuditConfig {
   categoryFilter?: string;         // Filter to category
   verbose: boolean;
 }
+
+/**
+ * Task sent to a worker process for parallel validation
+ */
+export interface WorkerTask {
+  workerId: number;
+  scenarios: string[];             // Scenario IDs to process
+  outputPath: string;              // Where to write findings JSON
+}
+
+/**
+ * Output from a worker process
+ */
+export interface WorkerOutput {
+  workerId: number;
+  scenariosProcessed: string[];
+  findings: ValidationFinding[];
+  executionTime: number;           // Milliseconds
+  errors: Array<{ scenarioId: string; error: string }>;
+  timestamp: string;
+}
+
+/**
+ * Finding with metadata about sources and conflicts
+ */
+export interface ConsolidatedFinding extends ValidationFinding {
+  sources: number[];               // Which workers found this issue
+  conflict?: {
+    alternatives: Array<{
+      workerId: number;
+      suggestedValue: string;
+      confidence: number;
+    }>;
+    resolution: 'auto' | 'manual';
+    winner: number;                // Worker ID whose suggestion was chosen
+  };
+}
