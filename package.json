@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsx scripts/detectDataCorruption.ts && vite build",
+    "prebuild": "npm run validate && tsx scripts/detectDataCorruption.ts",
+    "build": "vite build",
     "preview": "vite preview",
     "validate": "tsx scripts/validateScenarios.ts",
     "audit": "tsx cli/auditLanguage.ts",

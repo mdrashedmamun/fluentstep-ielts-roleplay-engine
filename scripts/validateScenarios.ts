@@ -5,9 +5,24 @@ interface ValidationError {
   field: string;
   issue: string;
   value?: string;
+  details?: {
+    expectedBlankCount?: number;
+    actualAnswerCount?: number;
+    missingIndices?: number[];
+    orphanedDeepDiveIndices?: number[];
+    affectedDialogueLines?: string[];
+  };
 }
 
 const errors: ValidationError[] = [];
+const scenariosMissingAnswers: Array<{
+  scenarioId: string;
+  topic: string;
+  blankCount: number;
+  answerCount: number;
+  missingIndices: number[];
+  orphanedDeepDiveIndices: number[];
+}> = [];
 
 // Helper to check if string contains Chinese characters, emoji, or other non-Latin scripts
 // Allows: English letters, numbers, spaces, common punctuation (.,;:!?—–'/"), hyphens, parentheses, brackets
@@ -88,21 +103,75 @@ function validateAnswerVariation(av: any, scenarioId: string): void {
 
 // Validate all scenarios
 CURATED_ROLEPLAYS.forEach(scenario => {
+  // Count blanks in dialogue
+  const blankCount = scenario.dialogue.reduce((sum, line) => {
+    return sum + (line.text.match(/________/g) || []).length;
+  }, 0);
+
   // Validate answerVariations
   if (Array.isArray(scenario.answerVariations)) {
     scenario.answerVariations.forEach(av => {
       validateAnswerVariation(av, scenario.id);
     });
 
-    // Check that indices match blank count in dialogue
-    const dialogueLength = scenario.dialogue.length;
-    const maxIndex = Math.max(...scenario.answerVariations.map(av => av.index), 0);
+    // Check blank count vs answer variations count
+    const answerCount = scenario.answerVariations.length;
+    if (blankCount !== answerCount) {
+      // Identify missing indices
+      const presentIndices = new Set(scenario.answerVariations.map(av => av.index));
+      const missingIndices: number[] = [];
+      for (let i = 1; i <= blankCount; i++) {
+        if (!presentIndices.has(i)) {
+          missingIndices.push(i);
+        }
+      }
 
-    if (maxIndex > dialogueLength) {
+      const affectedDialogueLines: string[] = [];
+      let blankIndex = 0;
+      scenario.dialogue.forEach(line => {
+        const blanksInLine = (line.text.match(/________/g) || []).length;
+        for (let i = 0; i < blanksInLine; i++) {
+          blankIndex++;
+          if (missingIndices.includes(blankIndex)) {
+            affectedDialogueLines.push(`Line ${scenario.dialogue.indexOf(line) + 1}: "${line.text}"`);
+          }
+        }
+      });
+
       errors.push({
         scenario: scenario.id,
         field: 'answerVariations',
-        issue: `Max answer index (${maxIndex}) exceeds dialogue length (${dialogueLength})`
+        issue: `Blank count mismatch: ${blankCount} blanks in dialogue but only ${answerCount} answer variations (missing indices: ${missingIndices.join(', ')})`,
+        details: {
+          expectedBlankCount: blankCount,
+          actualAnswerCount: answerCount,
+          missingIndices,
+          affectedDialogueLines
+        }
+      });
+
+      // Track for report generation
+      const orphanedDeepDiveIndices = scenario.deepDive
+        ?.filter(dd => !presentIndices.has(dd.index))
+        .map(dd => dd.index) || [];
+
+      scenariosMissingAnswers.push({
+        scenarioId: scenario.id,
+        topic: scenario.topic,
+        blankCount,
+        answerCount,
+        missingIndices,
+        orphanedDeepDiveIndices
+      });
+    }
+
+    // Check that indices are sequential (no gaps)
+    const maxIndex = Math.max(...scenario.answerVariations.map(av => av.index), 0);
+    if (maxIndex > blankCount) {
+      errors.push({
+        scenario: scenario.id,
+        field: 'answerVariations',
+        issue: `Max answer index (${maxIndex}) exceeds blank count in dialogue (${blankCount})`
       });
     }
   }
@@ -136,6 +205,19 @@ CURATED_ROLEPLAYS.forEach(scenario => {
           value: dd.insight
         });
       }
+
+      // Check if deepDive index references existing answer variation
+      if (Array.isArray(scenario.answerVariations)) {
+        const presentIndices = new Set(scenario.answerVariations.map(av => av.index));
+        if (!presentIndices.has(dd.index)) {
+          errors.push({
+            scenario: scenario.id,
+            field: `deepDive[${i}]`,
+            issue: `deepDive references index ${dd.index} which has no corresponding answer variation (orphaned)`,
+            value: JSON.stringify(dd)
+          });
+        }
+      }
     });
   }
 });
@@ -154,8 +236,31 @@ if (errors.length === 0) {
     if (error.value) {
       console.error(`   Value: ${error.value}`);
     }
+    if (error.details?.affectedDialogueLines) {
+      console.error(`   Affected dialogue lines:`);
+      error.details.affectedDialogueLines.forEach(line => {
+        console.error(`     - ${line}`);
+      });
+    }
     console.error();
   });
+
+  // Show summary of scenarios needing fixes
+  if (scenariosMissingAnswers.length > 0) {
+    console.error('\n=== Summary: Scenarios with Missing Answer Variations ===\n');
+    console.error(`Total scenarios affected: ${scenariosMissingAnswers.length}\n`);
+
+    scenariosMissingAnswers.sort((a, b) => b.missingIndices.length - a.missingIndices.length);
+    scenariosMissingAnswers.forEach(scenario => {
+      console.error(`• ${scenario.scenarioId} (${scenario.topic})`);
+      console.error(`  Expected: ${scenario.blankCount} blanks, Found: ${scenario.answerCount} answers`);
+      console.error(`  Missing indices: ${scenario.missingIndices.join(', ')}`);
+      if (scenario.orphanedDeepDiveIndices.length > 0) {
+        console.error(`  Orphaned deepDive indices: ${scenario.orphanedDeepDiveIndices.join(', ')}`);
+      }
+      console.error();
+    });
+  }
 
   process.exit(1);
 }

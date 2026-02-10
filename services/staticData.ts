@@ -235,7 +235,8 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 12, answer: 'free', alternatives: ['included', 'unlimited'] },
             { index: 13, answer: 'check-out', alternatives: [] },
             { index: 14, answer: 'eleven', alternatives: ['noon'] },
-            { index: 15, answer: 'help', alternatives: ['assistance'] }
+            { index: 15, answer: 'help', alternatives: ['assistance'] },
+            { index: 16, answer: 'stay', alternatives: ['time', 'visit'] }
         ],
         deepDive: [
             { index: 12, phrase: 'completely free', insight: 'High-value signal. "Included" is standard, but "completely free" sounds more native.' }
@@ -450,7 +451,8 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 9, answer: 'tactical', alternatives: ['minor', 'minor', 'targeted'] },
             { index: 10, answer: 'important', alternatives: ['responsible', 'necessary'] },
             { index: 11, answer: 'one', alternatives: ['a single'] },
-            { index: 12, answer: 'concise', alternatives: ['tight', 'to the point'] }
+            { index: 12, answer: 'concise', alternatives: ['tight', 'to the point'] },
+            { index: 13, answer: 'input', alternatives: ['feedback', 'consideration'] }
         ],
         deepDive: [
             { index: 2, phrase: 'downstream issues', insight: 'High-level business term for future problems caused by today’s choices.' },
@@ -606,7 +608,9 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 8, answer: 'sense', alternatives: ['myself clear'] },
             { index: 9, answer: 'enough', alternatives: ['point taken'] },
             { index: 10, answer: 'differ', alternatives: ['disagree'] },
-            { index: 11, answer: 'this', alternatives: [] }
+            { index: 11, answer: 'this', alternatives: [] },
+            { index: 12, answer: 'plan', alternatives: ['compromise', 'solution'] },
+            { index: 13, answer: 'on', alternatives: ['forward'] }
         ],
         deepDive: [
             { index: 1, phrase: 'straight to the point', insight: 'Professional request for efficiency.' },
@@ -646,7 +650,9 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 8, answer: 'help', alternatives: ['time'] },
             { index: 9, answer: 'mention it', alternatives: ['worry'] },
             { index: 10, answer: 'make', alternatives: ['change'] },
-            { index: 11, answer: 'leave', alternatives: ['finish'] }
+            { index: 11, answer: 'leave', alternatives: ['finish'] },
+            { index: 12, answer: 'touch', alternatives: ['contact'] },
+            { index: 13, answer: 'care', alternatives: ['care of you', 'care about'] }
         ],
         deepDive: [
             { index: 3, phrase: 'do me a favour', insight: 'Actually makes the other person feel valued, rather than bothered.' },
@@ -680,7 +686,10 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 5, answer: 'catch up with', alternatives: ['see', 'meet'] },
             { index: 6, answer: 'get', alternatives: ['wake', 'be'] },
             { index: 7, answer: 'do', alternatives: ['get', 'fit in'] },
-            { index: 8, answer: 'enjoy', alternatives: ['take it easy', 'slow down'] }
+            { index: 8, answer: 'enjoy', alternatives: ['take it easy', 'slow down'] },
+            { index: 9, answer: 'on my own', alternatives: ['alone', 'by myself'] },
+            { index: 10, answer: 'flexible', alternatives: ['peaceful', 'independent', 'free'] },
+            { index: 11, answer: 'flexible', alternatives: ['free', 'in control', 'independent'] }
         ],
         deepDive: [
             { index: 3, phrase: 'unwind', insight: 'More advanced than "relax". Very common in native UK English.' },
@@ -710,7 +719,8 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 3, answer: 'perspective', alternatives: ['side', 'point of view'] },
             { index: 4, answer: 'this', alternatives: [] },
             { index: 5, answer: 'hand', alternatives: ['side'] },
-            { index: 6, answer: 'stronger', alternatives: ['clearer', 'better'] }
+            { index: 6, answer: 'stronger', alternatives: ['clearer', 'better'] },
+            { index: 7, answer: 'open', alternatives: ['receptive', 'amenable'] }
         ],
         deepDive: [
             { index: 1, phrase: 'To be honest', insight: 'The classic "softener" for an opposing opinion.' },
@@ -740,7 +750,8 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 3, answer: 'up', alternatives: ['doing'] },
             { index: 4, answer: 'hurry', alternatives: ['rush'] },
             { index: 5, answer: 'labour', alternatives: ['push'] },
-            { index: 6, answer: 'touch', alternatives: ['contact'] }
+            { index: 6, answer: 'touch', alternatives: ['contact'] },
+            { index: 7, answer: 'care', alternatives: ['care about you', 'care of you'] }
         ],
         deepDive: [
             { index: 2, phrase: 'what are the chances', insight: 'The standard native way to comment on an unexpected encounter.' }
@@ -800,7 +811,10 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 2, answer: 'on track', alternatives: ['moving'] },
             { index: 3, answer: 'Actually', alternatives: [] },
             { index: 4, answer: 'perspective', alternatives: ['view'] },
-            { index: 5, answer: 'timing', alternatives: ['delivery'] }
+            { index: 5, answer: 'timing', alternatives: ['delivery'] },
+            { index: 6, answer: 'flag', alternatives: ['raise', 'highlight'] },
+            { index: 7, answer: 'open', alternatives: ['receptive', 'responsive'] },
+            { index: 8, answer: 'discuss', alternatives: ['tackle', 'hash out'] }
         ],
         deepDive: [
             { index: 1, phrase: 'touch base', insight: 'The most common corporate idiom for a short check-in.' }
@@ -856,7 +870,9 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 2, answer: 'Actually', alternatives: ['To be honest'] },
             { index: 3, answer: 'relaxed', alternatives: ['flexible'] },
             { index: 4, answer: 'tidy', alternatives: ['clean'] },
-            { index: 5, answer: 'sense', alternatives: ['logic'] }
+            { index: 5, answer: 'sense', alternatives: ['logic'] },
+            { index: 6, answer: 'fussy', alternatives: ['picky', 'particular'] },
+            { index: 7, answer: 'disposing of', alternatives: ['taking out', 'throwing out'] }
         ],
         deepDive: [
             { index: 6, phrase: 'fussy', insight: 'Common UK word for being hard to please.' }
@@ -1010,8 +1026,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 15, phrase: 'fit in the space', insight: 'Phrasal verb "fit in" = "have space for" or "find room for".' },
             { index: 16, phrase: 'made the right decision', insight: 'High-value phrase for committing to a choice. Native speakers use "make the right call/decision".' },
             { index: 17, phrase: 'it\'ll work out', insight: 'Phrasal verb "work out" = "resolve itself" / "turn out okay". Optimistic, colloquial.' },
-            { index: 20, phrase: 'particularly urgent', insight: 'Hedge word "particularly" = "especially/really". Shows nuance and native confidence.' },
-            { index: 22, phrase: 'keep your chin up', insight: 'Idiom for "stay positive/don\'t lose hope". Classic encouragement phrase.' }
+            { index: 20, phrase: 'particularly urgent', insight: 'Hedge word "particularly" = "especially/really". Shows nuance and native confidence.' }
         ]
     },
     {
@@ -1131,7 +1146,8 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 3, answer: 'honest', alternatives: ['frank', 'upfront'] },
             { index: 4, answer: 'calm', alternatives: ['sit', 'settle'] },
             { index: 5, answer: 'figured out', alternatives: ['worked out', 'ironed out'] },
-            { index: 6, answer: 'shortly', alternatives: ['soon', 'in a bit'] }
+            { index: 6, answer: 'shortly', alternatives: ['soon', 'in a bit'] },
+            { index: 7, answer: 'learned', alternatives: ['learned', 'noted'] }
         ],
         deepDive: [
             { index: 2, phrase: 'something has come up', insight: 'The perfect vague phrase for a problem.' },
@@ -1195,7 +1211,8 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 3, answer: 'faulty', alternatives: ['damaged', 'broken', 'defective'] },
             { index: 4, answer: 'properly', alternatives: ['correctly', 'at all'] },
             { index: 5, answer: 'receipt', alternatives: ['proof of purchase'] },
-            { index: 6, answer: 'go', alternatives: ['are'] }
+            { index: 6, answer: 'go', alternatives: ['are'] },
+            { index: 7, answer: 'refund', alternatives: ['replacement', 'exchange'] }
         ],
         deepDive: [
             { index: 1, phrase: 'I\'d like to return', insight: 'Direct but polite opening.' },
@@ -1228,7 +1245,9 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 4, answer: 'charged', alternatives: ['billed'] },
             { index: 5, answer: 'room key', alternatives: ['keycard', 'folio'] },
             { index: 6, answer: 'standard', alternatives: ['basic', 'single'] },
-            { index: 7, answer: 'premium', alternatives: ['deluxe', 'suite'] }
+            { index: 7, answer: 'premium', alternatives: ['deluxe', 'suite'] },
+            { index: 8, answer: 'right', alternatives: ['correct'] },
+            { index: 9, answer: 'fix', alternatives: ['correct', 'resolve'] }
         ],
         deepDive: [
             { index: 2, phrase: 'charge on my bill', insight: 'The polite way to question unexpected costs.' },
@@ -1318,7 +1337,10 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 33, answer: 'help', alternatives: ['service'] },
             { index: 34, answer: 'nice', alternatives: ['good', 'lovely'] },
             { index: 35, answer: 'too', alternatives: ['as well'] },
-            { index: 36, answer: 'later', alternatives: ['soon'] }
+            { index: 36, answer: 'later', alternatives: ['soon'] },
+            { index: 37, answer: 'perfect', alternatives: ['lovely', 'nice'] },
+            { index: 38, answer: 'too', alternatives: ['as well'] },
+            { index: 39, answer: 'soon', alternatives: ['later', 'around'] }
         ],
         deepDive: [
             { index: 1, phrase: 'flat white', insight: 'Universal IELTS chunk - specific coffee order, very common in UK.' },
@@ -1390,7 +1412,9 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 22, answer: 'still', alternatives: ['running', 'expected to be'] },
             { index: 23, answer: 'fine', alternatives: ['good', 'on schedule', 'normal'] },
             { index: 24, answer: 'help', alternatives: ['assistance'] },
-            { index: 25, answer: 'pleasant', alternatives: ['safe', 'nice'] }
+            { index: 25, answer: 'pleasant', alternatives: ['safe', 'nice'] },
+            { index: 26, answer: 'help', alternatives: ['assistance', 'support'] },
+            { index: 27, answer: 'good', alternatives: ['pleasant', 'nice'] }
         ],
         deepDive: [
             { index: 1, phrase: 'here you go', insight: 'LOCKED CHUNK - universal phrase for handing items over.' },
@@ -1442,7 +1466,9 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 13, answer: 'free', alternatives: ['included', 'unlimited'] },
             { index: 14, answer: 'check-out', alternatives: [] },
             { index: 15, answer: 'eleven', alternatives: ['ten', 'noon'] },
-            { index: 16, answer: 'help', alternatives: ['assistance'] }
+            { index: 16, answer: 'help', alternatives: ['assistance'] },
+            { index: 17, answer: 'stay', alternatives: ['visit', 'time'] },
+            { index: 18, answer: 'pleasant', alternatives: ['good', 'lovely'] }
         ],
         deepDive: [
             { index: 1, phrase: 'How can I help you?', insight: 'LOCKED CHUNK - standard opening for service interactions.' },
@@ -1495,7 +1521,9 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 14, answer: 'three', alternatives: ['five', 'seven'] },
             { index: 15, answer: 'problem', alternatives: ['worries'] },
             { index: 16, answer: 'help', alternatives: ['assist'] },
-            { index: 17, answer: 'all', alternatives: ['everything'] }
+            { index: 17, answer: 'all', alternatives: ['everything'] },
+            { index: 18, answer: 'help', alternatives: ['assistance'] },
+            { index: 19, answer: 'nice', alternatives: ['good', 'pleasant'] }
         ],
         deepDive: [
             { index: 2, phrase: 'I\'d like to return', insight: 'Direct but polite LOCKED CHUNK for formal requests.' },
@@ -1634,7 +1662,10 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 7, answer: 'performance', alternatives: ['merit'] },
             { index: 8, answer: 'talking', alternatives: ['on the same page'] },
             { index: 9, answer: 'clarify', alternatives: ['define'] },
-            { index: 10, answer: 'transparent', alternatives: ['open'] }
+            { index: 10, answer: 'transparent', alternatives: ['open'] },
+            { index: 11, answer: 'discuss', alternatives: ['align', 'determine'] },
+            { index: 12, answer: 'schedule', alternatives: ['arrange', 'organize'] },
+            { index: 13, answer: 'end of week', alternatives: ['Friday', 'next week'] }
         ],
         deepDive: [
             { index: 1, phrase: 'appreciate', insight: 'Formal opening showing respect in negotiations.' },
@@ -1716,7 +1747,12 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 7, answer: 'tighter', alternatives: ['lower'] },
             { index: 8, answer: 'dichotomy', alternatives: ['false choice'] },
             { index: 9, answer: 'benefits', alternatives: ['returns'] },
-            { index: 10, answer: 'transition', alternatives: ['implementation'] }
+            { index: 10, answer: 'transition', alternatives: ['implementation'] },
+            { index: 11, answer: 'business case', alternatives: ['proposal', 'report'] },
+            { index: 12, answer: 'concerns', alternatives: ['objections', 'position'] },
+            { index: 13, answer: 'case studies', alternatives: ['examples', 'evidence'] },
+            { index: 14, answer: 'details', alternatives: ['information', 'data'] },
+            { index: 15, answer: 'reconvene', alternatives: ['regroup', 'follow up'] }
         ],
         deepDive: [
             { index: 1, phrase: 'insufficient', insight: 'Formal business critique showing gaps.' },
@@ -1750,7 +1786,11 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 5, answer: 'rapport', alternatives: ['connection', 'relationship', 'bond'] },
             { index: 6, answer: 'diminished', alternatives: ['reduced', 'weakened', 'lessened'] },
             { index: 7, answer: 'intentionally', alternatives: ['deliberately', 'on purpose', 'purposefully'] },
-            { index: 8, answer: 'valid', alternatives: ['good', 'sound', 'reasonable'] }
+            { index: 8, answer: 'valid', alternatives: ['good', 'sound', 'reasonable'] },
+            { index: 9, answer: 'overwhelmed', alternatives: ['exhausted', 'fatigued', 'burnt out'] },
+            { index: 10, answer: 'reduce', alternatives: ['limit', 'minimize', 'cut down'] },
+            { index: 11, answer: 'appreciate', alternatives: ['understand', 'respect'] },
+            { index: 12, answer: 'welcome', alternatives: ['helpful', 'beneficial'] }
         ],
         deepDive: [
             { index: 1, phrase: 'transformed', insight: 'C1 verb: metaphorical transformation. Better than "changed" in formal discourse.' },
@@ -1790,7 +1830,10 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 5, answer: 'adapt', alternatives: ['adjust', 'acclimate', 'evolve'] },
             { index: 6, answer: 'positive momentum', alternatives: ['progress', 'advancement', 'improvement'] },
             { index: 7, answer: 'acknowledge', alternatives: ['recognize', 'admit', 'concede'] },
-            { index: 8, answer: 'opportunity', alternatives: ['chance', 'possibility', 'prospect'] }
+            { index: 8, answer: 'opportunity', alternatives: ['chance', 'possibility', 'prospect'] },
+            { index: 9, answer: 'change', alternatives: ['intervention', 'reform'] },
+            { index: 10, answer: 'assurance', alternatives: ['proof', 'evidence'] },
+            { index: 11, answer: 'opportunity', alternatives: ['possibility', 'prospect'] }
         ],
         deepDive: [
             { index: 1, phrase: 'concern', insight: 'Noun abstract. Collocation: "express concern", "raise concern".' },
@@ -1830,7 +1873,11 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 5, answer: 'constraints', alternatives: ['limitations', 'restrictions', 'obstacles'] },
             { index: 6, answer: 'devastating', alternatives: ['catastrophic', 'terrible', 'ruinous'] },
             { index: 7, answer: 'assurance', alternatives: ['guarantee', 'proof', 'evidence'] },
-            { index: 8, answer: 'comprehensively', alternatives: ['thoroughly', 'carefully', 'systematically'] }
+            { index: 8, answer: 'comprehensively', alternatives: ['thoroughly', 'carefully', 'systematically'] },
+            { index: 9, answer: 'attempted', alternatives: ['tried', 'considered', 'explored'] },
+            { index: 10, answer: 'come', alternatives: ['gotten', 'landed', 'broken'] },
+            { index: 11, answer: 'compelling', alternatives: ['persuasive', 'stronger', 'clearer'] },
+            { index: 12, answer: 'precisely', alternatives: ['accurately', 'exactly', 'clearly'] }
         ],
         deepDive: [
             { index: 1, phrase: 'questioned', insight: 'Past participle: passive voice construction for neutrality.' },
@@ -1870,7 +1917,8 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 5, answer: 'exposed', alternatives: ['subjected', 'vulnerable', 'open'] },
             { index: 6, answer: 'process', alternatives: ['understand', 'grasp', 'comprehend'] },
             { index: 7, answer: 'observation', alternatives: ['point', 'comment', 'note'] },
-            { index: 8, answer: 'implementing', alternatives: ['applying', 'using', 'employing'] }
+            { index: 8, answer: 'blended', alternatives: ['balanced', 'combined'] },
+            { index: 9, answer: 'implementing', alternatives: ['applying', 'using', 'employing'] }
         ],
         deepDive: [
             { index: 1, phrase: 'unchanged', insight: 'Negative prefix + past participle: remains as it was.' },
@@ -1938,20 +1986,18 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { speaker: 'Alex', text: 'Yes, we\'re having a family dinner and then we\'ll exchange gifts. What about you?' }
         ],
         answerVariations: [
-            { index: 0, answer: 'Welcome back', alternatives: ['Hello everyone', 'Hi there'] },
-            { index: 1, answer: 'It\'s Jessica', alternatives: ['I\'m Jessica', 'This is Jessica'] },
-            { index: 2, answer: 'Welcome to my', alternatives: ['Thank you for visiting my', 'Come to my'] },
-            { index: 3, answer: 'Excuse me', alternatives: ['pardon me', 'sorry', 'I\'m sorry'] },
-            { index: 4, answer: 'can you help me', alternatives: ['could you help me', 'could you assist me', 'can you assist me'] },
-            { index: 5, answer: 'Of course', alternatives: ['absolutely', 'definitely', 'for sure', 'sure'] },
-            { index: 6, answer: 'don\'t drink coffee', alternatives: ['don\'t have caffeine', 'just relax', 'avoid caffeine'] },
-            { index: 10, answer: 'don\'t drink coffee', alternatives: ['don\'t have caffeine', 'just relax'] },
-            { index: 11, answer: 'don\'t drink coffee', alternatives: ['don\'t have caffeine', 'skip the caffeine'] }
+            { index: 1, answer: 'Welcome back', alternatives: ['Hello everyone', 'Hi there'] },
+            { index: 2, answer: 'It\'s Jessica', alternatives: ['I\'m Jessica', 'This is Jessica'] },
+            { index: 3, answer: 'Welcome to my', alternatives: ['Thank you for visiting my', 'Come to my'] },
+            { index: 4, answer: 'Excuse me', alternatives: ['pardon me', 'sorry', 'I\'m sorry'] },
+            { index: 5, answer: 'can you help me', alternatives: ['could you help me', 'could you assist me', 'can you assist me'] },
+            { index: 6, answer: 'Of course', alternatives: ['absolutely', 'definitely', 'for sure', 'sure'] },
+            { index: 7, answer: 'don\'t drink coffee', alternatives: ['don\'t have caffeine', 'just relax', 'avoid caffeine'] }
         ],
         deepDive: [
-            { index: 3, phrase: 'Excuse me', insight: 'Can mean either asking for forgiveness (\'I\'m sorry\') or getting attention. Context determines meaning.' },
-            { index: 4, phrase: 'can you help me', insight: 'Key phrase for universal communication. Essential across all English contexts for polite requests.' },
-            { index: 0, phrase: 'Welcome back', insight: 'Key greeting phrase used in everyday situations and general communication contexts.' }
+            { index: 4, phrase: 'Excuse me', insight: 'Can mean either asking for forgiveness (\'I\'m sorry\') or getting attention. Context determines meaning.' },
+            { index: 5, phrase: 'can you help me', insight: 'Key phrase for universal communication. Essential across all English contexts for polite requests.' },
+            { index: 1, phrase: 'Welcome back', insight: 'Key greeting phrase used in everyday situations and general communication contexts.' }
         ]
     },
     // ===== NEW: ACADEMIC CATEGORY =====
@@ -1979,18 +2025,18 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { speaker: 'You', text: 'Would you mind awfully if I ________ you my draft next week?' }
         ],
         answerVariations: [
-            { index: 0, answer: 'getting', alternatives: ['coming', 'progressing', 'moving'] },
-            { index: 1, answer: 'minds', alternatives: ['thoughts', 'ways', 'views'] },
-            { index: 2, answer: 'work', alternatives: ['walk', 'go', 'think'] },
-            { index: 3, answer: 'experimenting', alternatives: ['playing', 'toying', 'tinkering'] },
-            { index: 4, answer: 'line', alternatives: ['avenue', 'direction', 'angle'] },
-            { index: 5, answer: 'unpacking', alternatives: ['exploring', 'examining', 'dissecting'] },
-            { index: 6, answer: 'foundation', alternatives: ['cornerstone', 'bedrock', 'basis'] },
-            { index: 7, answer: 'incorporate', alternatives: ['include', 'weave in', 'integrate'] },
-            { index: 8, answer: 'bear in mind', alternatives: ['remember', 'note that', 'keep in mind'] },
-            { index: 9, answer: 'sense', alternatives: ['point', 'logic', 'way'] },
-            { index: 10, answer: 'sacrifice', alternatives: ['compromise', 'prioritise', 'subordinate'] },
-            { index: 11, answer: 'run', alternatives: ['send', 'share', 'pass'] }
+            { index: 1, answer: 'getting', alternatives: ['coming', 'progressing', 'moving'] },
+            { index: 2, answer: 'minds', alternatives: ['thoughts', 'ways', 'views'] },
+            { index: 3, answer: 'work', alternatives: ['walk', 'go', 'think'] },
+            { index: 4, answer: 'experimenting', alternatives: ['playing', 'toying', 'tinkering'] },
+            { index: 5, answer: 'line', alternatives: ['avenue', 'direction', 'angle'] },
+            { index: 6, answer: 'unpacking', alternatives: ['exploring', 'examining', 'dissecting'] },
+            { index: 7, answer: 'foundation', alternatives: ['cornerstone', 'bedrock', 'basis'] },
+            { index: 8, answer: 'incorporate', alternatives: ['include', 'weave in', 'integrate'] },
+            { index: 9, answer: 'bear in mind', alternatives: ['remember', 'note that', 'keep in mind'] },
+            { index: 10, answer: 'sense', alternatives: ['point', 'logic', 'way'] },
+            { index: 11, answer: 'sacrifice', alternatives: ['compromise', 'prioritise', 'subordinate'] },
+            { index: 12, answer: 'run', alternatives: ['send', 'share', 'pass'] }
         ],
         deepDive: [
             { index: 1, phrase: 'in two minds', insight: 'British idiom for genuine indecision, more emotionally nuanced than "undecided". Band 8-9 marker for ambivalent reasoning.' },
@@ -2023,22 +2069,22 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { speaker: 'Dr. Patel', text: 'You should hear from the hospital within a fortnight. In the meantime, I\'ll ________ this prescription.' }
         ],
         answerVariations: [
-            { index: 0, answer: 'suffering', alternatives: ['struggling', 'dealing', 'contending'] },
-            { index: 1, answer: 'Have', alternatives: ['Did', 'Could', 'Would'] },
-            { index: 2, answer: 'stress', alternatives: ['pressure', 'strain', 'tension'] },
-            { index: 3, answer: 'addressing', alternatives: ['tackling', 'managing', 'reducing'] },
-            { index: 4, answer: 'challenging', alternatives: ['difficult', 'demanding', 'tough'] },
-            { index: 5, answer: 'brush this aside', alternatives: ['dismiss this', 'overlook it', 'take lightly'] },
-            { index: 6, answer: 'investigations', alternatives: ['tests', 'scans', 'checks'] },
-            { index: 7, answer: 'rule', alternatives: ['eliminate', 'exclude', 'verify'] },
-            { index: 8, answer: 'referral', alternatives: ['wait', 'process', 'appointment'] },
-            { index: 9, answer: 'issue', alternatives: ['write', 'give', 'provide'] }
+            { index: 1, answer: 'suffering', alternatives: ['struggling', 'dealing', 'contending'] },
+            { index: 2, answer: 'Have', alternatives: ['Did', 'Could', 'Would'] },
+            { index: 3, answer: 'stress', alternatives: ['pressure', 'strain', 'tension'] },
+            { index: 4, answer: 'addressing', alternatives: ['tackling', 'managing', 'reducing'] },
+            { index: 5, answer: 'challenging', alternatives: ['difficult', 'demanding', 'tough'] },
+            { index: 6, answer: 'brush this aside', alternatives: ['dismiss this', 'overlook it', 'take lightly'] },
+            { index: 7, answer: 'investigations', alternatives: ['tests', 'scans', 'checks'] },
+            { index: 8, answer: 'rule', alternatives: ['eliminate', 'exclude', 'verify'] },
+            { index: 9, answer: 'referral', alternatives: ['wait', 'process', 'appointment'] },
+            { index: 10, answer: 'issue', alternatives: ['write', 'give', 'provide'] }
         ],
         deepDive: [
-            { index: 0, phrase: 'suffering from', insight: 'Clinical register in medical contexts. British doctors often soften with "I\'m afraid" but patient use signals genuine concern (Band 8).' },
-            { index: 4, phrase: 'challenging', insight: 'Understatement is quintessentially British. Shows emotional restraint whilst communicating genuine difficulty (Band 7.5+).' },
-            { index: 5, phrase: 'brush this aside', insight: 'Phrasal verb shows Dr commitment to thorough care. "Dismiss" is too formal, "overlook" too careless for medical context.' },
-            { index: 8, phrase: 'referral process', insight: 'NHS-specific terminology. Demonstrates familiarity with British healthcare system (Band 8-9 contextual awareness).' }
+            { index: 1, phrase: 'suffering from', insight: 'Clinical register in medical contexts. British doctors often soften with "I\'m afraid" but patient use signals genuine concern (Band 8).' },
+            { index: 5, phrase: 'challenging', insight: 'Understatement is quintessentially British. Shows emotional restraint whilst communicating genuine difficulty (Band 7.5+).' },
+            { index: 6, phrase: 'brush this aside', insight: 'Phrasal verb shows Dr commitment to thorough care. "Dismiss" is too formal, "overlook" too careless for medical context.' },
+            { index: 9, phrase: 'referral process', insight: 'NHS-specific terminology. Demonstrates familiarity with British healthcare system (Band 8-9 contextual awareness).' }
         ]
     },
     // ===== NEW: CULTURAL CATEGORY =====
@@ -2066,17 +2112,17 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { speaker: 'You', text: 'Can I ________ my card details over the phone?' }
         ],
         answerVariations: [
-            { index: 0, answer: 'book', alternatives: ['reserve', 'secure', 'arrange'] },
-            { index: 1, answer: 'interested', alternatives: ['keen', 'focused', 'absorbed'] },
-            { index: 2, answer: 'keen', alternatives: ['interested', 'enthusiastic', 'delighted'] },
-            { index: 3, answer: 'is', alternatives: ['goes', 'stands', 'works'] },
-            { index: 4, answer: 'limited', alternatives: ['restricted', 'reduced', 'compromised'] },
-            { index: 5, answer: 'course', alternatives: ['problem', 'question', 'issue'] },
-            { index: 6, answer: 'show', alternatives: ['share', 'present', 'outline'] },
-            { index: 7, answer: 'check', alternatives: ['look at', 'pull up', 'access'] },
-            { index: 8, answer: 'perfect', alternatives: ['ideal', 'marvellous', 'splendid'] },
-            { index: 9, answer: 'fee', alternatives: ['charge', 'cost', 'expense'] },
-            { index: 10, answer: 'provide', alternatives: ['give', 'offer', 'submit'] }
+            { index: 1, answer: 'book', alternatives: ['reserve', 'secure', 'arrange'] },
+            { index: 2, answer: 'interested', alternatives: ['keen', 'focused', 'absorbed'] },
+            { index: 3, answer: 'keen', alternatives: ['interested', 'enthusiastic', 'delighted'] },
+            { index: 4, answer: 'is', alternatives: ['goes', 'stands', 'works'] },
+            { index: 5, answer: 'limited', alternatives: ['restricted', 'reduced', 'compromised'] },
+            { index: 6, answer: 'course', alternatives: ['problem', 'question', 'issue'] },
+            { index: 7, answer: 'show', alternatives: ['share', 'present', 'outline'] },
+            { index: 8, answer: 'check', alternatives: ['look at', 'pull up', 'access'] },
+            { index: 9, answer: 'perfect', alternatives: ['ideal', 'marvellous', 'splendid'] },
+            { index: 10, answer: 'fee', alternatives: ['charge', 'cost', 'expense'] },
+            { index: 11, answer: 'provide', alternatives: ['give', 'offer', 'submit'] }
         ],
         deepDive: [
             { index: 2, phrase: 'keen on', insight: 'Native British idiom expressing genuine enthusiasm. More conversational than "interested in" and signals refined taste (Band 8).' },
@@ -2108,20 +2154,20 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { speaker: 'Councillor Ahmed', text: 'Your ________ is noted for the official record. We\'ll ________ all viewpoints before making a decision.' }
         ],
         answerVariations: [
-            { index: 0, answer: 'outline', alternatives: ['set forth', 'present', 'explain'] },
-            { index: 1, answer: 'extremely', alternatives: ['genuinely', 'deeply', 'understandably'] },
-            { index: 2, answer: 'organised', alternatives: ['gathered', 'compiled', 'collected'] },
-            { index: 3, answer: 'feedback', alternatives: ['input', 'opinion', 'comment'] },
-            { index: 4, answer: 'This development', alternatives: ['The proposal', 'This project', 'The plans'] },
-            { index: 5, answer: 'traffic', alternatives: ['transport', 'congestion', 'volume'] },
-            { index: 6, answer: 'point', alternatives: ['comment', 'remark', 'observation'] },
-            { index: 7, answer: 'increase', alternatives: ['escalate', 'magnify', 'compound'] },
-            { index: 8, answer: 'handle', alternatives: ['accommodate', 'support', 'manage'] },
-            { index: 9, answer: 'point', alternatives: ['contention', 'argument', 'view'] },
-            { index: 10, answer: 'willing', alternatives: ['open', 'amenable', 'prepared'] },
-            { index: 11, answer: 'reject', alternatives: ['refuse', 'block', 'decline'] },
-            { index: 12, answer: 'objection', alternatives: ['complaint', 'concern', 'reservations'] },
-            { index: 13, answer: 'weigh', alternatives: ['consider', 'evaluate', 'assess'] }
+            { index: 1, answer: 'outline', alternatives: ['set forth', 'present', 'explain'] },
+            { index: 2, answer: 'extremely', alternatives: ['genuinely', 'deeply', 'understandably'] },
+            { index: 3, answer: 'organised', alternatives: ['gathered', 'compiled', 'collected'] },
+            { index: 4, answer: 'feedback', alternatives: ['input', 'opinion', 'comment'] },
+            { index: 5, answer: 'This development', alternatives: ['The proposal', 'This project', 'The plans'] },
+            { index: 6, answer: 'traffic', alternatives: ['transport', 'congestion', 'volume'] },
+            { index: 7, answer: 'point', alternatives: ['comment', 'remark', 'observation'] },
+            { index: 8, answer: 'increase', alternatives: ['escalate', 'magnify', 'compound'] },
+            { index: 9, answer: 'handle', alternatives: ['accommodate', 'support', 'manage'] },
+            { index: 10, answer: 'point', alternatives: ['contention', 'argument', 'view'] },
+            { index: 11, answer: 'willing', alternatives: ['open', 'amenable', 'prepared'] },
+            { index: 12, answer: 'reject', alternatives: ['refuse', 'block', 'decline'] },
+            { index: 13, answer: 'objection', alternatives: ['complaint', 'concern', 'reservations'] },
+            { index: 14, answer: 'weigh', alternatives: ['consider', 'evaluate', 'assess'] }
         ],
         deepDive: [
             { index: 2, phrase: 'organised a petition', insight: 'British English: "organised" (s), not "organized". Shows civic engagement vocabulary. Key phrase for community representation (Band 7.5+).' },
@@ -2155,20 +2201,20 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { speaker: 'You', text: 'That\'s brilliant. Thank you for the opportunity.' }
         ],
         answerVariations: [
-            { index: 0, answer: 'review', alternatives: ['assess', 'evaluate', 'discuss'] },
-            { index: 1, answer: 'deliver', alternatives: ['achieve', 'produce', 'generate'] },
-            { index: 2, answer: 'exemplary', alternatives: ['excellent', 'outstanding', 'superb'] },
-            { index: 3, answer: 'refine', alternatives: ['adjust', 'modify', 'revise'] },
-            { index: 4, answer: 'value', alternatives: ['appreciate', 'need', 'require'] },
-            { index: 5, answer: 'keen', alternatives: ['interested', 'open', 'glad'] },
-            { index: 6, answer: 'shoulder', alternatives: ['take on', 'carry', 'assume'] },
-            { index: 7, answer: 'empower', alternatives: ['enable', 'support', 'develop'] },
-            { index: 8, answer: 'fair', alternatives: ['valid', 'constructive', 'helpful'] },
-            { index: 9, answer: 'mentoring', alternatives: ['supporting', 'coaching', 'developing'] },
-            { index: 10, answer: 'take', alternatives: ['pursue', 'chart', 'map'] },
-            { index: 11, answer: 'consolidating', alternatives: ['deepening', 'strengthening', 'advancing'] },
-            { index: 12, answer: 'facilitate', alternatives: ['support', 'enable', 'arrange'] },
-            { index: 13, answer: 'arrange', alternatives: ['organise', 'book', 'schedule'] }
+            { index: 1, answer: 'review', alternatives: ['assess', 'evaluate', 'discuss'] },
+            { index: 2, answer: 'deliver', alternatives: ['achieve', 'produce', 'generate'] },
+            { index: 3, answer: 'exemplary', alternatives: ['excellent', 'outstanding', 'superb'] },
+            { index: 4, answer: 'refine', alternatives: ['adjust', 'modify', 'revise'] },
+            { index: 5, answer: 'value', alternatives: ['appreciate', 'need', 'require'] },
+            { index: 6, answer: 'keen', alternatives: ['interested', 'open', 'glad'] },
+            { index: 7, answer: 'shoulder', alternatives: ['take on', 'carry', 'assume'] },
+            { index: 8, answer: 'empower', alternatives: ['enable', 'support', 'develop'] },
+            { index: 9, answer: 'fair', alternatives: ['valid', 'constructive', 'helpful'] },
+            { index: 10, answer: 'mentoring', alternatives: ['supporting', 'coaching', 'developing'] },
+            { index: 11, answer: 'take', alternatives: ['pursue', 'chart', 'map'] },
+            { index: 12, answer: 'consolidating', alternatives: ['deepening', 'strengthening', 'advancing'] },
+            { index: 13, answer: 'facilitate', alternatives: ['support', 'enable', 'arrange'] },
+            { index: 14, answer: 'arrange', alternatives: ['organise', 'book', 'schedule'] }
         ],
         deepDive: [
             { index: 1, phrase: 'endeavoured to deliver', insight: 'Formal British register uses "endeavour" (s spelling) for professional effort. Shows conscientiousness and formal tone (Band 8).' },
@@ -2202,25 +2248,25 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { speaker: 'You', text: 'Splendid. What\'s the timeline if the vendors ________ ?' }
         ],
         answerVariations: [
-            { index: 0, answer: 'charming', alternatives: ['attractive', 'lovely', 'delightful'] },
-            { index: 1, answer: 'potential', alternatives: ['promise', 'charm', 'appeal'] },
-            { index: 2, answer: 'sound', alternatives: ['solid', 'secure', 'intact'] },
-            { index: 3, answer: 'problematic', alternatives: ['troublesome', 'concerning', 'serious'] },
-            { index: 4, answer: 'willing', alternatives: ['open', 'amenable', 'prepared'] },
-            { index: 5, answer: 'entertain', alternatives: ['consider', 'accept', 'allow'] },
-            { index: 6, answer: 'steep', alternatives: ['substantial', 'considerable', 'ambitious'] },
-            { index: 7, answer: 'run this past', alternatives: ['discuss with', 'put to', 'speak to'] },
-            { index: 8, answer: 'hear', alternatives: ['get back', 'find out', 'learn'] },
-            { index: 9, answer: 'consider', alternatives: ['think of', 'be interested in', 'mind'] },
-            { index: 10, answer: 'lodge', alternatives: ['submit', 'put forward', 'make'] },
-            { index: 11, answer: 'prepare', alternatives: ['draw up', 'arrange', 'process'] },
-            { index: 12, answer: 'accept', alternatives: ['agree', 'take', 'proceed with'] }
+            { index: 1, answer: 'charming', alternatives: ['attractive', 'lovely', 'delightful'] },
+            { index: 2, answer: 'potential', alternatives: ['promise', 'charm', 'appeal'] },
+            { index: 3, answer: 'sound', alternatives: ['solid', 'secure', 'intact'] },
+            { index: 4, answer: 'problematic', alternatives: ['troublesome', 'concerning', 'serious'] },
+            { index: 5, answer: 'willing', alternatives: ['open', 'amenable', 'prepared'] },
+            { index: 6, answer: 'entertain', alternatives: ['consider', 'accept', 'allow'] },
+            { index: 7, answer: 'steep', alternatives: ['substantial', 'considerable', 'ambitious'] },
+            { index: 8, answer: 'run this past', alternatives: ['discuss with', 'put to', 'speak to'] },
+            { index: 9, answer: 'hear', alternatives: ['get back', 'find out', 'learn'] },
+            { index: 10, answer: 'consider', alternatives: ['think of', 'be interested in', 'mind'] },
+            { index: 11, answer: 'lodge', alternatives: ['submit', 'put forward', 'make'] },
+            { index: 12, answer: 'prepare', alternatives: ['draw up', 'arrange', 'process'] },
+            { index: 13, answer: 'accept', alternatives: ['agree', 'take', 'proceed with'] }
         ],
         deepDive: [
-            { index: 0, phrase: 'charming', insight: 'Sophisticated property vocabulary. Preferred by British estate agents over "nice" or "pretty" for premium properties (Band 8).' },
-            { index: 3, phrase: 'rather problematic', insight: 'British understatement with "rather". Softens serious issue diplomatically whilst remaining clear. Essential register for negotiations.' },
-            { index: 6, phrase: 'quite steep', insight: 'Euphemistic British phrasing for "expensive" or "unreasonable". Shows negotiation expertise through strategic word choice (Band 8).' },
-            { index: 10, phrase: 'lodge an offer', insight: 'Formal property transaction terminology. "Make an offer" is too casual, "submit" too bureaucratic. Demonstrates property market familiarity (Band 8-9).' }
+            { index: 1, phrase: 'charming', insight: 'Sophisticated property vocabulary. Preferred by British estate agents over "nice" or "pretty" for premium properties (Band 8).' },
+            { index: 4, phrase: 'rather problematic', insight: 'British understatement with "rather". Softens serious issue diplomatically whilst remaining clear. Essential register for negotiations.' },
+            { index: 7, phrase: 'quite steep', insight: 'Euphemistic British phrasing for "expensive" or "unreasonable". Shows negotiation expertise through strategic word choice (Band 8).' },
+            { index: 11, phrase: 'lodge an offer', insight: 'Formal property transaction terminology. "Make an offer" is too casual, "submit" too bureaucratic. Demonstrates property market familiarity (Band 8-9).' }
         ]
     }
 ];
