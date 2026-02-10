@@ -26,10 +26,9 @@ dist-ssr
 .env*.local
 
 # Temporary outputs
-temp/
+temp/*
+!temp/.gitkeep
 *.tmp
-pdf-extracted.txt
-*-extraction-results.json
 
 # Browser automation
 .playwright-mcp/
