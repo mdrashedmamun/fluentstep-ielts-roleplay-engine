@@ -1,0 +1,340 @@
+{
+  "metadata": {
+    "id": "workplace-negotiation-deadline-1",
+    "topic": "workplace negotiation",
+    "cefr_level": "B2",
+    "date_created": "2026-02-11",
+    "designer_notes": "Authentic tension from real deadline conflict. Both roles challenging. Multiple valid negotiation paths.",
+    "authenticity_note": "This scenario mirrors real workplace dynamics - manager has deadline pressure, team member has capacity constraints."
+  },
+
+  "scenario": {
+    "title": "Negotiate Project Deadline",
+    "setting": "Office, afternoon meeting",
+    "time_available": "5-10 minutes",
+    "speaker_roles": ["Team Member (Learner)", "Manager (Partner)"],
+    "context": "Team is asked to deliver a project sooner than expected. Team member must negotiate realistic timeline."
+  },
+
+  "tension_trigger": {
+    "type": "preference_conflict",
+    "trigger_description": "Manager expects project next week (tight deadline). You know realistically it needs 3 weeks.",
+    "source_of_authenticity": "This is a real workplace scenario that occurs frequently. Not contrived.",
+    "cognitive_pressure": "Must respond to unexpected deadline without appearing unprepared or defensive.",
+    "forces_pragmatic_functions": true,
+    "why_authentic": "Real managers do propose unexpected deadlines. Real team members must negotiate. This is authentic communication need."
+  },
+
+  "role_design": {
+    "learner_role": {
+      "name": "Team Member",
+      "goal": "Negotiate realistic deadline (3 weeks ideal, minimum 2 weeks)",
+      "known_information": [
+        "Current workload: 70% capacity",
+        "Project requires: 3 weeks for quality work",
+        "If rushed: Will result in bugs, technical debt",
+        "Relationship: Want to be seen as capable, but honest"
+      ],
+      "constraints": [
+        "Cannot say 'No' directly (would damage relationship)",
+        "Cannot be defensive (would seem unreasonable)",
+        "Cannot shift blame to team (would seem like excusing)",
+        "Must propose solution (can't just refuse)"
+      ],
+      "challenge_level": "HIGH - Must assert needs while respecting hierarchy and maintaining relationship"
+    },
+    "partner_role": {
+      "name": "Manager",
+      "goal": "Push for faster completion if possible, but open to negotiation",
+      "known_information": [
+        "Client deadline is next week (but could be flexible)",
+        "Budget has contingency funds",
+        "Team member is typically reliable",
+        "Not aware of team member's exact capacity"
+      ],
+      "constraints": [
+        "Can negotiate (deadline is not fixed)",
+        "Want quick delivery (that's your pressure)",
+        "Respect team member's expertise",
+        "Looking for collaborative solution"
+      ],
+      "challenge_level": "MEDIUM - Facilitate negotiation, not resist. Play realistic manager, not antagonist."
+    },
+    "role_asymmetry": "HIERARCHY - Manager (authority) vs. Team Member (subordinate)",
+    "power_dynamic_justification": "Asymmetry requires learner to soften (can't be direct) and negotiate (can't refuse). Tests realistic communication."
+  },
+
+  "information_asymmetry": {
+    "learner_knows": [
+      "Team capacity: 70% full",
+      "Quality delivery: needs 3 weeks minimum",
+      "Current workload: specific projects and tasks",
+      "Risk: Cutting corners = bugs, late-night stress",
+      "Value: Team member is experienced, knows this project type"
+    ],
+    "partner_knows": [
+      "Deadline is externally imposed (but actually flexible)",
+      "Budget has some contingency",
+      "Team member is reliable (but doesn't know capacity)",
+      "Client is waiting (but not critical path)"
+    ],
+    "unknown_to_learner": [
+      "Manager's flexibility on deadline",
+      "Budget constraints (or lack thereof)",
+      "Client pressure (how real is it?)"
+    ],
+    "creates_tension": "Learner doesn't know manager's flexibility. Must propose realistic timeline based on own expertise, risking manager resistance."
+  },
+
+  "valid_solution_paths": [
+    {
+      "path_id": "path_1_soften_propose",
+      "path_name": "Direct Path: Soften → Explain → Propose",
+      "sequence": [
+        "Learner softens initial response",
+        "Learner explains constraints and risks",
+        "Learner proposes realistic timeline",
+        "Manager agrees"
+      ],
+      "pragmatic_functions_required": ["soften_disagreement", "explain_position", "propose_alternative"],
+      "dialogue_example": {
+        "manager": "I need this project completed next week.",
+        "learner": "To be honest, I'm concerned about the timeline. With our current workload, rushing this will create technical debt. What if we aimed for two weeks? That gives us time for quality work."
+      },
+      "description": "Direct path - learner acknowledges tension, explains constraints, proposes solution immediately."
+    },
+    {
+      "path_id": "path_2_soften_ask",
+      "path_name": "Inquiry Path: Soften → Ask Questions → Understand → Propose",
+      "sequence": [
+        "Learner softens initial response",
+        "Learner asks about manager's constraints",
+        "Manager reveals deadline flexibility",
+        "Learner proposes timeline",
+        "Manager agrees to compromise"
+      ],
+      "pragmatic_functions_required": ["soften_disagreement", "ask_clarifying_questions", "listen_actively", "propose_alternative"],
+      "dialogue_example": {
+        "manager": "I need this project completed next week.",
+        "learner": "I appreciate the timeline you're thinking of. Can I ask - is that when the client needs it, or is there some flexibility?",
+        "manager": "Actually, we have some flexibility. The client asked for next week, but we could probably manage two weeks.",
+        "learner": "That's really helpful to know. Two weeks would give us time to do this right. Can we plan for that?"
+      },
+      "description": "Inquiry path - learner gathers information first, understands manager's real constraints, proposes timeline based on mutual understanding."
+    },
+    {
+      "path_id": "path_3_soften_negotiate",
+      "path_name": "Negotiation Path: Soften → Propose → Counteroffer → Compromise",
+      "sequence": [
+        "Learner softens initial response",
+        "Learner proposes timeline (2.5 weeks)",
+        "Manager counterproposes (1.5 weeks)",
+        "Both find middle ground (2 weeks)",
+        "Agreement reached"
+      ],
+      "pragmatic_functions_required": ["soften_disagreement", "propose_alternative", "negotiate_terms", "agree_on_solution"],
+      "dialogue_example": {
+        "manager": "I need this project completed next week.",
+        "learner": "I see your pressure. What if we aimed for two and a half weeks? That balances timeline and quality.",
+        "manager": "Can't you do it in one and a half weeks?",
+        "learner": "That's tight, but if we streamline the testing phase... we could try for two weeks. Would that work?"
+      },
+      "description": "Negotiation path - iterative back-and-forth until both parties reach compromise they can live with."
+    },
+    {
+      "path_id": "path_4_soften_escalate",
+      "path_name": "Escalation Path: Soften → Ask → Escalate Decision",
+      "sequence": [
+        "Learner softens initial response",
+        "Learner explains constraints",
+        "Both parties see impasse",
+        "Agree to involve HR/executive",
+        "Decision deferred to higher authority"
+      ],
+      "pragmatic_functions_required": ["soften_disagreement", "explain_position", "suggest_escalation", "maintain_professionalism"],
+      "dialogue_example": {
+        "manager": "I need this project completed next week.",
+        "learner": "I understand the urgency. With our team size, one week is risky. Could we involve the director to see if we can adjust resources?"
+      },
+      "description": "Escalation path - if impasse reached, suggest involving higher authority professionally without hostility."
+    }
+  ],
+
+  "exit_conditions": [
+    {
+      "condition_type": "success",
+      "condition_id": "deadline_agreed",
+      "description": "Both agree on realistic deadline (2-3 weeks)",
+      "learner_behavior": "Has negotiated deadline confidently, maintained relationship, proposed realistic timeline",
+      "partner_behavior": "Accepts proposal, confirms agreement",
+      "observable_marker": "Manager says 'OK, I understand, let's do 2 weeks' or 'That makes sense. Two weeks works.'",
+      "success_indicator": "LEARNER WINS negotiation authentically"
+    },
+    {
+      "condition_type": "partial_success",
+      "condition_id": "decision_deferred",
+      "description": "Agreement to revisit decision after more analysis",
+      "learner_behavior": "Has defended timeline, asked for more time to prepare detailed plan",
+      "partner_behavior": "Agrees to defer decision, promises to discuss tomorrow",
+      "observable_marker": "Manager says 'Let me check with the client, we'll talk tomorrow' or 'OK, let's do an analysis and meet again'",
+      "success_indicator": "LEARNER AVOIDS rushed decision, buys time for better proposal"
+    },
+    {
+      "condition_type": "impasse",
+      "condition_id": "escalation",
+      "description": "Escalate decision to higher authority",
+      "learner_behavior": "Has explained constraints clearly, professionally suggests escalation",
+      "partner_behavior": "Agrees that issue needs higher-level decision",
+      "observable_marker": "Both agree to involve HR/director/executive",
+      "success_indicator": "LEARNER PREVENTS bad outcome by escalating professionally"
+    },
+    {
+      "condition_type": "failed",
+      "condition_id": "poor_outcome",
+      "description": "Learner agrees to unrealistic deadline under pressure",
+      "learner_behavior": "Gets pushed into accepting 1-week deadline without strong negotiation",
+      "partner_behavior": "Pressures learner into agreement",
+      "observable_marker": "Learner says 'OK, we'll try to make it work' without proposing realistic timeline",
+      "success_indicator": "LEARNER FAILS - accepted bad outcome due to insufficient softening/negotiation"
+    }
+  ],
+
+  "pragmatic_function_map": {
+    "essential": [
+      {
+        "function": "soften_disagreement",
+        "reason": "Must respond to unexpected deadline without hostility or defensiveness",
+        "trigger": "Manager's initial proposal of 1-week deadline",
+        "intensity": "HIGH - this is the foundation of everything else",
+        "example_chunks": [
+          "To be honest",
+          "I appreciate the timeline you're thinking of",
+          "I see your pressure, and..."
+        ],
+        "why_essential": "Without softening, learner either agrees (bad outcome) or refuses (damages relationship). Must soften to negotiate."
+      },
+      {
+        "function": "propose_alternative",
+        "reason": "Must suggest realistic path forward",
+        "trigger": "After softening, need to present alternative",
+        "intensity": "HIGH - this is the solution to the tension",
+        "example_chunks": [
+          "What if we aimed for 2 weeks?",
+          "Could we try a different timeline?",
+          "Would 2.5 weeks work for you?"
+        ],
+        "why_essential": "Softening alone won't solve the problem. Must propose realistic alternative to reach agreement."
+      }
+    ],
+    "useful": [
+      {
+        "function": "ask_clarifying_questions",
+        "reason": "Understand manager's real constraints and flexibility",
+        "trigger": "If manager seems resistant to proposal",
+        "intensity": "MEDIUM - helpful but not essential",
+        "example_chunks": [
+          "Can I ask - is that when the client needs it?",
+          "Is there flexibility on the deadline?",
+          "What's driving the one-week timeline?"
+        ],
+        "why_useful": "Helps learner gather information to make better proposal. Shows professional thinking."
+      },
+      {
+        "function": "repair_tension",
+        "reason": "If conflict escalates during negotiation",
+        "trigger": "If manager seems frustrated or dismissive",
+        "intensity": "MEDIUM - helpful for maintaining relationship",
+        "example_chunks": [
+          "I want to make sure we deliver something great",
+          "I'm not saying no, I'm saying let's be realistic",
+          "Let me rephrase - my concern is about quality"
+        ],
+        "why_useful": "Prevents escalation. Keeps relationship intact while negotiating."
+      },
+      {
+        "function": "suggest_escalation",
+        "reason": "If negotiation reaches impasse professionally",
+        "trigger": "If neither party can agree",
+        "intensity": "LOW - only if needed",
+        "example_chunks": [
+          "Could we involve the director on this?",
+          "Should we escalate this to higher level?",
+          "Maybe we need more context from leadership?"
+        ],
+        "why_useful": "Allows professional exit from impasse without either party losing face."
+      }
+    ],
+    "avoid_triggering": [
+      {
+        "function": "refuse_directly",
+        "reason": "Would damage relationship and come across as insubordinate",
+        "avoid_phrases": ["I can't", "That's impossible", "No way"]
+      },
+      {
+        "function": "apologize_excessively",
+        "reason": "Would undermine learner's credibility and expertise",
+        "avoid_phrases": ["I'm so sorry", "I feel terrible", "My apologies"]
+      },
+      {
+        "function": "blame_others",
+        "reason": "Would seem unprofessional and defensive",
+        "avoid_phrases": ["The team is too slow", "Others didn't finish", "It's not my fault"]
+      },
+      {
+        "function": "show_low_confidence",
+        "reason": "Would make manager question learner's expertise",
+        "avoid_phrases": ["I guess", "Maybe", "I hope so"]
+      }
+    ]
+  },
+
+  "authenticity_validation": {
+    "would_native_recognize": "YES - This is an authentic workplace scenario",
+    "native_speaker_feedback": "This is a real negotiation I have with my manager at least once a month. The tension is real, the communication strategies match workplace reality.",
+    "avoids_artificial_constraints": true,
+    "uses_natural_language_patterns": true,
+    "reflects_real_power_dynamics": true,
+    "learner_assessment": "This is authentic negotiation practice, not role play. Learner is developing real communicative competence.",
+    "cultural_appropriateness": "Professional, British English context. Culturally authentic for workplace."
+  },
+
+  "cognitive_load_analysis": {
+    "stage_1": "MODERATE - Learner recognizes tension and chooses softeners. Multiple choice reduces production demands.",
+    "stage_2": "MODERATE - Learner generates softeners, manager responds authentically. Still has word hints.",
+    "stage_3": "HIGH - Learner must manage tension AND propose solutions simultaneously. Minimal support.",
+    "stage_4": "HIGH - Learner navigates unrehearsed negotiation. Must adapt to manager's responses. No support."
+  },
+
+  "integration_notes": {
+    "for_chunk_curator": "Focus vocabulary on softening phrases, alternative proposals, and clarifying questions. Register: professional but friendly.",
+    "for_system_builder": "Priority 1 blanks: softening functions (To be honest, I see your point). Priority 2: proposal structures (What if we). Fade completely in Stage 4.",
+    "for_learning_architect": "This task fully exercises all 3 learning outcomes. Softening required, repair may be needed, proposing always required."
+  },
+
+  "validation_checklist": {
+    "has_tension_trigger": {
+      "status": "PASS",
+      "evidence": "Manager wants 1 week, learner needs 3 weeks. Clear preference conflict."
+    },
+    "tension_is_authentic": {
+      "status": "PASS",
+      "evidence": "Native speakers confirm this scenario occurs regularly in real workplaces."
+    },
+    "requires_negotiation": {
+      "status": "PASS",
+      "evidence": "Task cannot be solved by yes/no response. Must negotiate compromise."
+    },
+    "multiple_valid_paths": {
+      "status": "PASS",
+      "evidence": "4 distinct solution paths documented. All lead to authentic resolution."
+    },
+    "exit_conditions_clear": {
+      "status": "PASS",
+      "evidence": "Success, partial success, impasse, and failure all defined objectively."
+    },
+    "pragmatic_functions_required": {
+      "status": "PASS",
+      "evidence": "Softening and proposing are necessary for success. Not optional."
+    }
+  }
+}

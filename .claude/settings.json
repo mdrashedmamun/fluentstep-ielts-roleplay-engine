@@ -41,6 +41,41 @@
         "model": "opus",
         "tools": ["Read", "Bash", "Write", "Grep", "Glob"],
         "context": "default"
+      },
+      {
+        "name": "learning-architect",
+        "description": "Define learning outcomes + success criteria (Cambridge methodology)",
+        "model": "sonnet",
+        "tools": ["Read", "Write"],
+        "context": "fork"
+      },
+      {
+        "name": "task-designer",
+        "description": "Design roleplay tasks with communicative tension + pragmatic functions",
+        "model": "sonnet",
+        "tools": ["Read", "Write"],
+        "context": "fork"
+      },
+      {
+        "name": "chunk-curator",
+        "description": "Validate core repertoire using corpus linguistics (BNC Spoken, COCA)",
+        "model": "haiku",
+        "tools": ["Read", "Write", "Bash"],
+        "context": "fork"
+      },
+      {
+        "name": "system-builder",
+        "description": "Implement scaffolding logic + blank placement + adaptive progression",
+        "model": "sonnet",
+        "tools": ["Read", "Write"],
+        "context": "fork"
+      },
+      {
+        "name": "design-orchestrator",
+        "description": "Coordinate all 4 Cambridge design agents + validation + approvals",
+        "model": "opus",
+        "tools": ["Read", "Write", "Bash"],
+        "context": "default"
       }
     ]
   },

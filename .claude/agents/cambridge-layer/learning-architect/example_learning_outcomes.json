@@ -1,0 +1,184 @@
+{
+  "metadata": {
+    "topic": "workplace negotiation - deadline conflict",
+    "cefr_level": "B2",
+    "date_created": "2026-02-11",
+    "architect_notes": "Focus on pragmatic softening, not just vocabulary. Build confidence in asserting needs while maintaining relationships.",
+    "estimated_duration_per_stage": "2-3 minutes"
+  },
+
+  "communicative_outcomes": [
+    {
+      "id": "soften_disagreement",
+      "outcome": "Learner can soften disagreement without hostility",
+      "description": "When facing an unexpected or unwanted proposal, learner can express concerns in a way that preserves the relationship and opens dialogue.",
+      "pragmatic_functions": ["soften", "mitigate", "hedge_opinion"],
+      "cefr_relevance": "B2 - Fluency and spontaneity in handling unforeseen turns",
+      "example_usage": "Manager says 'I need this in one week.' Learner responds: 'To be honest, I'm concerned we'd cut corners. I need at least two weeks.'"
+    },
+    {
+      "id": "repair_tension",
+      "outcome": "Learner can repair conversational tension mid-dialogue",
+      "description": "If conflict escalates or misunderstanding occurs, learner can acknowledge the issue and redirect towards solution-finding.",
+      "pragmatic_functions": ["clarify", "apologize", "acknowledge"],
+      "cefr_relevance": "B2 - Managing unexpected communicative challenges",
+      "example_usage": "Conflict escalates. Learner says: 'Wait, I didn't explain clearly. What I meant was that we need more time to do quality work.'"
+    },
+    {
+      "id": "propose_alternatives",
+      "outcome": "Learner can propose alternatives to reach agreement",
+      "description": "Learner can suggest solutions that balance both parties' needs and move towards resolution.",
+      "pragmatic_functions": ["suggest", "offer", "recommend"],
+      "cefr_relevance": "B2 - Expressing opinions and making offers",
+      "example_usage": "After hearing manager's constraints: 'What if we aimed for two weeks? That gives us time for quality without delaying too much.'"
+    }
+  ],
+
+  "success_criteria": {
+    "fluency": {
+      "metric": "Pauses decrease 30% from Stage 1 to Stage 3",
+      "measurement": "Record pauses >2 seconds per learner",
+      "target": "Stage 1: 6 pauses → Stage 3: 4 pauses"
+    },
+    "spontaneity": {
+      "metric": "Chunks appear spontaneously (not read from notes)",
+      "measurement": "Learner delivers without visible reference",
+      "target": "≥80% of chunks delivered spontaneously in Stage 3"
+    },
+    "pragmatic_accuracy": {
+      "metric": "Uses softening in ≥75% of disagreements",
+      "measurement": "Count softener usage vs. total disagreements",
+      "target": "In 4 disagreements, uses softener in ≥3"
+    },
+    "authenticity": {
+      "metric": "Native speaker evaluator rates as authentic",
+      "measurement": "Native speaker judges realness of conversation",
+      "target": "Native speaker: 'Sounds like a real negotiation, not role play'"
+    },
+    "retention": {
+      "metric": "Chunks reappear in subsequent scenarios without rehearsal",
+      "measurement": "Track vocabulary use across scenarios",
+      "target": "Chunks from Scenario 1 reappear in Scenario 3 naturally"
+    },
+    "relationship_management": {
+      "metric": "Both speakers maintain professional relationship throughout",
+      "measurement": "Observe tone and closing remarks",
+      "target": "Both parties willing to work together after negotiation"
+    }
+  },
+
+  "progression_model": {
+    "philosophy": "Reduce cognitive load by scaffolding support that fades as competence grows",
+
+    "stage_1": {
+      "name": "Recognition with Maximum Support",
+      "blanks_percentage": 60,
+      "blank_format": "multiple_choice",
+      "support": "Model answer visible, 3 options shown",
+      "cognitive_load": "HIGH (focus on recognizing softeners)",
+      "learner_task": "Choose correct softener from options",
+      "example": {
+        "dialogue": "___ ___ honest, I'm concerned about the timeline.",
+        "options": ["To be", "I am", "Actually"],
+        "correct": "To be",
+        "feedback": "Correct! 'To be honest' is a common softener that shows you acknowledge the request before expressing your concern."
+      },
+      "success_metric": "≥85% correct responses on first try",
+      "pedagogical_goal": "Build awareness of pragmatic softening functions"
+    },
+
+    "stage_2": {
+      "name": "Guided Production",
+      "blanks_percentage": 45,
+      "blank_format": "word_prompts",
+      "support": "First letter hint + word length + context clue",
+      "cognitive_load": "MODERATE (recognize → produce)",
+      "learner_task": "Generate softener + use naturally",
+      "example": {
+        "dialogue": "T__ be honest, I'm concerned about the timeline.",
+        "hint": "T__ (4 letters) - to soften your disagreement",
+        "feedback": "Good! Now deliver this naturally, like you're speaking in a real conversation."
+      },
+      "success_metric": "≥75% correct + natural delivery",
+      "pedagogical_goal": "Build retrieval fluency and natural pronunciation"
+    },
+
+    "stage_3": {
+      "name": "Minimal Support Task",
+      "blanks_percentage": 20,
+      "blank_format": "situational_cues",
+      "support": "Functional cue: 'Soften your disagreement here'",
+      "cognitive_load": "LOW (authentic task with minimal support)",
+      "learner_task": "Navigate authentic negotiation with support cues",
+      "example": {
+        "context": "Manager proposes 1-week deadline, you need 3 weeks",
+        "cue": "[Soften your disagreement now]",
+        "dialogue": "Manager: 'I need this project completed in one week.' Learner: [responds with softener]",
+        "feedback": "DELAYED (after full roleplay) - Did you soften? If yes, did it sound natural?"
+      },
+      "success_metric": "Uses chunks spontaneously, negotiation succeeds",
+      "pedagogical_goal": "Build automaticity and authentic use in realistic context"
+    },
+
+    "stage_4": {
+      "name": "Authentic Negotiation",
+      "blanks_percentage": 0,
+      "blank_format": "none",
+      "support": "None - authentic unrehearsed conversation",
+      "cognitive_load": "NONE (authentic competence)",
+      "learner_task": "Negotiate deadline authentically without support",
+      "example": {
+        "context": "Unexpected manager call. Must negotiate deadline live.",
+        "dialogue": "Manager: 'I need the project by Friday.' Learner: [responds authentically]",
+        "feedback": "PEER EVALUATION - How well did you negotiate? What pragmatic functions did you use?"
+      },
+      "success_metric": "Peer evaluation: pragmatic competence demonstrated, relationship maintained",
+      "pedagogical_goal": "Achieve communicative competence without support"
+    }
+  },
+
+  "progression_visualization": {
+    "scaffolding_fade": [
+      "Stage 1: [====SUPPORT====] (Maximum)",
+      "Stage 2: [===SUPPORT===] (Moderate)",
+      "Stage 3: [=SUPPORT=] (Minimal)",
+      "Stage 4: [] (None - authentic)"
+    ],
+    "cognitive_load": [
+      "Stage 1: EASY (recognition only)",
+      "Stage 2: MEDIUM (production with support)",
+      "Stage 3: CHALLENGING (authentic task)",
+      "Stage 4: DEMANDING (unrehearsed negotiation)"
+    ]
+  },
+
+  "validation_checklist": {
+    "outcomes_are_observable": {
+      "status": "PASS",
+      "evidence": "Each outcome describes specific speaker behavior (soften, repair, propose)"
+    },
+    "success_criteria_are_measurable": {
+      "status": "PASS",
+      "evidence": "Fluency: 30% pause reduction. Pragmatics: ≥75% softener use. Retention: chunks in subsequent scenarios."
+    },
+    "progression_reduces_cognitive_load": {
+      "status": "PASS",
+      "evidence": "Scaffolding: 60% → 45% → 20% → 0% blanks. Support: Multiple choice → prompts → cues → none."
+    },
+    "functions_suit_cefr_level": {
+      "status": "PASS",
+      "evidence": "Softening, repair, proposing are all B2-level pragmatic functions (not A1-simple, not C1-nuanced)"
+    },
+    "progression_is_realistic": {
+      "status": "PASS",
+      "evidence": "Each stage prepares for next. No sudden jumps. Learner can reasonably succeed at each stage."
+    }
+  },
+
+  "integration_notes": {
+    "for_task_designer": "Use these outcomes to design scenarios that require softening, repair, and proposing.",
+    "for_chunk_curator": "Vocabulary should focus on softening phrases, repair markers, and suggestion forms.",
+    "for_system_builder": "Scaffolding should prioritize softening functions (Priority 1), then repair and proposal functions.",
+    "for_orchestrator": "All outcomes are observable, measurable, and aligned with B2 CEFR level. Ready for task design."
+  }
+}

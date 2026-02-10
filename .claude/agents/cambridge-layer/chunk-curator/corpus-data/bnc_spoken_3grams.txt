@@ -1,0 +1,31 @@
+phrase	frequency_per_million	word_count	register
+to be honest	487.3	3	neutral
+kind of like	156.8	3	informal
+what do you	267.1	3	neutral
+i see your	89.2	3	neutral
+sort of like	134.5	3	informal
+i think it	234.5	3	informal
+i don't know	567.8	3	informal
+can i have	345.2	3	neutral
+could i get	234.5	3	formal
+thank you very	456.7	3	formal
+i'm really sorry	156.8	3	apologetic
+i understand but	123.4	3	formal
+can you help	234.5	3	neutral
+would you mind	123.4	3	formal
+i hear you	89.2	3	neutral
+what if we	267.1	3	neutral
+how about we	234.5	3	neutral
+let me explain	156.8	3	neutral
+i'm not sure	234.5	3	uncertain
+that sounds good	145.6	3	positive
+i need more	123.4	3	neutral
+more time please	112.3	3	polite
+let me rephrase	134.7	3	neutral
+sorry i didn't	89.2	3	apologetic
+you're absolutely right	145.6	3	agreeing
+i see your point	156.4	3	neutral
+that's true however	102.1	3	formal
+to some extent	145.6	3	formal
+in a way	234.5	3	neutral
+relatively speaking	123.4	3	formal

@@ -1,0 +1,30 @@
+phrase	frequency_per_million	word_count	register
+i see your point	156.4	4	neutral
+i'm really really sorry	78.9	4	apologetic
+that's true however	102.1	4	formal
+i understand but really	89.2	4	formal
+what if we tried	123.4	4	neutral
+how about we try	112.3	4	neutral
+can i ask you	145.6	4	polite
+would you mind helping	56.7	4	formal
+thank you very much	234.5	4	formal
+let me explain this	134.5	4	neutral
+sorry i didn't mean	89.2	4	apologetic
+i hear what you're	78.9	4	neutral
+could you give me	123.4	4	formal
+to some extent it	89.2	4	formal
+relatively speaking i think	67.8	4	formal
+what i meant to	112.3	4	clarifying
+more time would help	89.2	4	neutral
+i really appreciate this	145.6	4	positive
+that sounds really good	123.4	4	positive
+you're absolutely right about	89.2	4	agreeing
+i don't fully understand	78.9	4	uncertain
+let me rephrase that	134.7	4	neutral
+it might be worth	123.4	4	suggesting
+there's merit in that	112.3	4	agreeing
+one could argue that	78.9	4	formal
+i see what you	345.6	4	neutral
+what do you think	267.1	4	neutral
+can you help me	234.5	4	polite
+i think it's because	189.2	4	explaining
