@@ -221,7 +221,7 @@ function detectDoubleNegative(text: string): { negatives: string[]; suggestion: 
   if (foundNegatives.length >= 2) {
     return {
       negatives: foundNegatives,
-      suggestion: 'Remove one negative or rephrase as positive'
+      suggestion: null  // Requires manual review, don't auto-apply
     };
   }
 

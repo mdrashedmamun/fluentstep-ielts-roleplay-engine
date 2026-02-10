@@ -135,18 +135,28 @@ function applyFix(
     return { content, modified: false };
   }
 
+  // Validate that suggestion is not a generic instruction
+  if (suggestedValue.includes('Remove one negative') || suggestedValue.includes('rephrase as positive')) {
+    return { content, modified: false };
+  }
+
   // Simple string replacement approach
   // This works for most cases where we're replacing quoted values
   const escapedCurrent = escapeRegex(currentValue);
-  const pattern = new RegExp(escapedCurrent, 'g');
+  const pattern = new RegExp(escapedCurrent);  // First occurrence only (no 'g' flag)
 
   // Check if pattern exists
   if (!pattern.test(content)) {
     return { content, modified: false };
   }
 
-  // Replace only first occurrence (to avoid replacing same value elsewhere)
+  // Replace only first occurrence
   const modified = content.replace(pattern, suggestedValue);
+
+  // Detect corruption: if result contains the generic message, fail
+  if (modified.includes('Remove one negative or rephrase as positive')) {
+    throw new Error(`CORRUPTION DETECTED: Validator message in data at ${location}`);
+  }
 
   return { content: modified, modified: true };
 }
