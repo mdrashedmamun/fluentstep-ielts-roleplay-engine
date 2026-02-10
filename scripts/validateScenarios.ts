@@ -1,4 +1,4 @@
-import { CURATED_ROLEPLAYS } from '../services/staticData';
+import { CURATED_ROLEPLAYS } from '../src/services/staticData';
 
 interface ValidationError {
   scenario: string;

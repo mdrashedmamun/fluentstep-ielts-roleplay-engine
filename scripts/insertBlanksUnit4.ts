@@ -13,7 +13,7 @@
  * 6. Output structured RoleplayScript objects
  */
 
-import { UNIVERSAL_CHUNKS } from '../constants';
+import { UNIVERSAL_CHUNKS } from '../src/constants';
 import { UNIT_4_DIALOGUES } from './unit4Transcription';
 
 interface Unit4RoleplayScript {

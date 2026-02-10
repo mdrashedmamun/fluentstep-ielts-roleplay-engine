@@ -11,18 +11,18 @@
 import fs from 'fs';
 import path from 'path';
 import readline from 'readline';
-import { extractPDFText } from '../services/pdfExtractor';
-import { chunkPDFByUnits, sortChunksByRichness } from '../services/pdfChunker';
+import { extractPDFText } from '../src/services/pdfExtractor';
+import { chunkPDFByUnits, sortChunksByRichness } from '../src/services/pdfChunker';
 import {
   detectAllDialogues,
   filterDialoguesByConfidence,
   groupDialoguesByType,
   DetectedDialogue
-} from '../services/headwayPatternDetector';
-import { insertBlanksIntelligently } from '../services/blankInserter';
-import { transformToRoleplayScript } from '../services/scenarioTransformer';
-import { validateWithAdaptiveCompliance, suggestContentType, createConfigForScenario } from '../services/adaptiveChunkValidator';
-import { parseScenario } from '../services/scenarioParser';
+} from '../src/services/headwayPatternDetector';
+import { insertBlanksIntelligently } from '../src/services/blankInserter';
+import { transformToRoleplayScript } from '../src/services/scenarioTransformer';
+import { validateWithAdaptiveCompliance, suggestContentType, createConfigForScenario } from '../src/services/adaptiveChunkValidator';
+import { parseScenario } from '../src/services/scenarioParser';
 
 /**
  * CLI Configuration

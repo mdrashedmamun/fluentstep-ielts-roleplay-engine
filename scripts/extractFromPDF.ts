@@ -8,9 +8,9 @@
 
 import fs from 'fs';
 import path from 'path';
-import { extractPDFText } from '../services/pdfExtractor';
-import { parseAllScenarios } from '../services/scenarioParser';
-import { transformAllScenarios, TransformResult } from '../services/scenarioTransformer';
+import { extractPDFText } from '../src/services/pdfExtractor';
+import { parseAllScenarios } from '../src/services/scenarioParser';
+import { transformAllScenarios, TransformResult } from '../src/services/scenarioTransformer';
 
 const PDF_PATH = path.join(process.cwd(), 'Learn w_ J.pdf');
 const DEFAULT_OUTPUT = path.join(process.cwd(), 'extracted-scenarios.json');

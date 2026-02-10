@@ -4,11 +4,11 @@
  * with intelligent blank insertion and LOCKED_CHUNKS alignment
  */
 
-import { insertBlanksIntelligently } from '../services/blankInserter';
-import { transformToRoleplayScript } from '../services/scenarioTransformer';
-import { validateWithAdaptiveCompliance } from '../services/adaptiveChunkValidator';
+import { insertBlanksIntelligently } from '../src/services/blankInserter';
+import { transformToRoleplayScript } from '../src/services/scenarioTransformer';
+import { validateWithAdaptiveCompliance } from '../src/services/adaptiveChunkValidator';
 import { UNIT_4_DIALOGUES } from './unit4Transcription';
-import type { RoleplayScript } from '../services/staticData';
+import type { RoleplayScript } from '../src/services/staticData';
 
 interface GeneratedScenario {
   id: string;

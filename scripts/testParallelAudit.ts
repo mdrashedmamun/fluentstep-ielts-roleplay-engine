@@ -2,9 +2,9 @@
  * Test suite for parallel audit architecture components
  */
 
-import { consolidateFindings, calculateConsolidationStats } from '../services/linguisticAudit/consolidator';
-import { resolveConflicts, generateConflictLog } from '../services/linguisticAudit/conflictResolver';
-import { WorkerOutput, ConsolidatedFinding } from '../services/linguisticAudit/types';
+import { consolidateFindings, calculateConsolidationStats } from '../src/services/linguisticAudit/consolidator';
+import { resolveConflicts, generateConflictLog } from '../src/services/linguisticAudit/conflictResolver';
+import { WorkerOutput, ConsolidatedFinding } from '../src/services/linguisticAudit/types';
 
 // Mock worker outputs for testing
 const mockWorkerOutput1: WorkerOutput = {

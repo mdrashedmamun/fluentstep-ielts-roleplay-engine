@@ -5,7 +5,7 @@
  * Focus: Highest quality scenarios with clear LOCKED CHUNKS alignment
  */
 
-import { RoleplayScript } from '../services/staticData';
+import { RoleplayScript } from '../src/services/staticData';
 
 export const extractedScenarios: RoleplayScript[] = [
   // Café Scenario - 33 blanks extracted from PDF

@@ -3,14 +3,14 @@
  * Shows detailed findings breakdown by scenario and validator
  */
 
-import { CURATED_ROLEPLAYS } from '../services/staticData';
-import { validateChunkCompliance } from '../services/linguisticAudit/validators/chunkComplianceValidator';
-import { validateUKEnglish } from '../services/linguisticAudit/validators/ukEnglishValidator';
-import { validateTonality } from '../services/linguisticAudit/validators/tonalityValidator';
-import { validateNaturalPatterns } from '../services/linguisticAudit/validators/naturalPatternsValidator';
-import { validateDialogueFlow } from '../services/linguisticAudit/validators/dialogueFlowValidator';
-import { validateAlternatives } from '../services/linguisticAudit/validators/alternativesValidator';
-import { validateDeepDive } from '../services/linguisticAudit/validators/deepDiveValidator';
+import { CURATED_ROLEPLAYS } from '../src/services/staticData';
+import { validateChunkCompliance } from '../src/services/linguisticAudit/validators/chunkComplianceValidator';
+import { validateUKEnglish } from '../src/services/linguisticAudit/validators/ukEnglishValidator';
+import { validateTonality } from '../src/services/linguisticAudit/validators/tonalityValidator';
+import { validateNaturalPatterns } from '../src/services/linguisticAudit/validators/naturalPatternsValidator';
+import { validateDialogueFlow } from '../src/services/linguisticAudit/validators/dialogueFlowValidator';
+import { validateAlternatives } from '../src/services/linguisticAudit/validators/alternativesValidator';
+import { validateDeepDive } from '../src/services/linguisticAudit/validators/deepDiveValidator';
 
 console.log('\n🧪 Comprehensive Linguistic Audit - ALL 36 Scenarios\n');
 

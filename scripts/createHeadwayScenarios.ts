@@ -11,10 +11,10 @@
  * 5. Integrate into staticData.ts
  */
 
-import { insertBlanksIntelligently } from '../services/blankInserter';
-import { transformToRoleplayScript } from '../services/scenarioTransformer';
-import { validateWithAdaptiveCompliance, suggestContentType, createConfigForScenario } from '../services/adaptiveChunkValidator';
-import { RoleplayScript } from '../services/staticData';
+import { insertBlanksIntelligently } from '../src/services/blankInserter';
+import { transformToRoleplayScript } from '../src/services/scenarioTransformer';
+import { validateWithAdaptiveCompliance, suggestContentType, createConfigForScenario } from '../src/services/adaptiveChunkValidator';
+import { RoleplayScript } from '../src/services/staticData';
 
 /**
  * Headway Advanced Scenarios - Oxford Quality

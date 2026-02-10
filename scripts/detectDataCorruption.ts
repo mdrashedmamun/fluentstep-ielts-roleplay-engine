@@ -7,7 +7,7 @@
 import { readFileSync } from 'fs';
 import * as path from 'path';
 
-const STATIC_DATA_PATH = path.resolve(process.cwd(), 'services/staticData.ts');
+const STATIC_DATA_PATH = path.resolve(process.cwd(), 'src/services/staticData.ts');
 
 // Patterns that indicate data corruption
 const CORRUPTION_PATTERNS = [

@@ -1,12 +1,12 @@
-import { tokens } from './design-system/tokens/index.ts';
+import { tokens } from './src/design-system/tokens/index.ts';
 
 export default {
   content: [
     './index.html',
-    './App.tsx',
-    './index.tsx',
-    './components/**/*.{js,ts,jsx,tsx}',
-    './design-system/**/*.{js,ts,jsx,tsx}'
+    './src/App.tsx',
+    './src/index.tsx',
+    './src/components/**/*.{js,ts,jsx,tsx}',
+    './src/design-system/**/*.{js,ts,jsx,tsx}'
   ],
   theme: {
     extend: {
