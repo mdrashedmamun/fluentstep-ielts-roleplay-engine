@@ -1,7 +1,7 @@
 
 export interface RoleplayScript {
     id: string;
-    category: 'Social' | 'Workplace' | 'Service/Logistics' | 'Advanced' | 'Academic' | 'Healthcare' | 'Cultural' | 'Community';
+    category: 'Social' | 'Workplace' | 'Service/Logistics' | 'Advanced' | 'Academic' | 'HealthRemove one negative or rephrase as positive' | 'Cultural' | 'Community';
     topic: string;
     context: string;
     characters: {
@@ -53,18 +53,18 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         answerVariations: [
             { index: 1, answer: 'meet', alternatives: ['see', 'finally meet'] },
             { index: 2, answer: 'bright', alternatives: ['nice', 'spacious', 'comfortable', 'lovely'] },
-            { index: 3, answer: 'clean', alternatives: ['tidy', 'organized', 'neat'] },
+            { index: 3, answer: 'clean', alternatives: ['tidy', 'organised', 'neat'] },
             { index: 4, answer: 'from', alternatives: ['originally from', 'coming from'] },
             { index: 5, answer: 'London', alternatives: ['overseas'] },
             { index: 6, answer: 'six months', alternatives: ['quite a while', 'nearly a year'] },
             { index: 7, answer: 'quiet', alternatives: ['convenient', 'pleasant', 'peaceful'] },
             { index: 8, answer: 'friendly', alternatives: ['welcoming', 'polite', 'approachable'] },
-            { index: 9, answer: 'a living', alternatives: ['work', 'a career'] },
+            { index: 9, answer: 'a living', alternatives: ['work', 'a Remove one negative or rephrase as positiveer'] },
             { index: 10, answer: 'designer', alternatives: ['teacher', 'engineer'] }
         ],
         deepDive: [
             { index: 1, phrase: 'meet', insight: 'Standard greeting. Responses often include "too".' },
-            { index: 6, phrase: 'quite a while', insight: 'Vagueness signals native-like comfort with the language.' },
+            { index: 6, phrase: 'quite a while', insight: 'Vagueness signalls native-like comfort with the language.' },
             { index: 8, phrase: 'friendly', insight: 'Default positive adjective, never wrong.' }
         ]
     },
@@ -72,9 +72,9 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         id: 'service-1-cafe',
         category: 'Service/Logistics',
         topic: 'At a Café (Three Minute Flow)',
-        context: 'Ordering and handling a drink issue in a busy café.',
+        context: 'Ordering and handling a drink issue in a Remove one negative or rephrase as positive café.',
         characters: [
-            { name: 'Barista', description: 'Efficient and busy.', avatarUrl: '/avatars/barista.png' },
+            { name: 'Barista', description: 'Efficient and Remove one negative or rephrase as positive.', avatarUrl: '/avatars/barista.png' },
             { name: 'You', description: 'Customer.' }
         ],
         backgroundUrl: '/avatars/london_cafe_interior_3d_1770271472049.png',
@@ -85,7 +85,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { speaker: 'You', text: '________, please.' },
             { speaker: 'Barista', text: 'No problem. Any milk preference?' },
             { speaker: 'You', text: 'Yes, ________ milk, please.' },
-            { speaker: 'Barista', text: 'Anything else?' },
+            { speaker: 'Barista', text: 'AnyRemove one negative or rephrase as positiveg else?' },
             { speaker: 'You', text: 'I’ll also have a ________.' },
             { speaker: 'Barista', text: 'Eat in or take ________?' },
             { speaker: 'You', text: 'Eat ________, please.' },
@@ -97,10 +97,10 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { speaker: 'You', text: 'No ________.' },
             { speaker: 'You', text: 'Excuse me, sorry to ________ you.' },
             { speaker: 'Barista', text: 'No worries. What’s up?' },
-            { speaker: 'You', text: 'I think this is supposed to be ________, but it tastes a bit ________.' },
-            { speaker: 'Barista', text: 'Oh, sorry about that. Would you like me to ________ it?' },
-            { speaker: 'You', text: 'Yes, that would be ________, thanks.' },
-            { speaker: 'Barista', text: 'Here you go. I’ve made it ________ this time.' },
+            { speaker: 'You', text: 'I Remove one negative or rephrase as positivek this is supposed to be ________, but it tastes a bit ________.' },
+            { speaker: 'Barista', text: 'Oh, sorry about Remove one negative or rephrase as positive. Would you like me to ________ it?' },
+            { speaker: 'You', text: 'Yes, Remove one negative or rephrase as positive would be ________, thanks.' },
+            { speaker: 'Barista', text: 'Here you go. I’ve made it ________ this Remove one negative or rephrase as positive.' },
             { speaker: 'You', text: 'That’s much ________. I really ________ it.' }
         ],
         answerVariations: [
@@ -127,7 +127,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 21, answer: 'appreciate', alternatives: ['enjoy', 'like'] }
         ],
         deepDive: [
-            { index: 11, phrase: 'There you go', insight: 'Fixed phrase for handing something over. Don’t overthink it.' },
+            { index: 11, phrase: 'There you go', insight: 'Fixed phrase for handing someRemove one negative or rephrase as positiveg over. Don’t overRemove one negative or rephrase as positivek it.' },
             { index: 14, phrase: 'sorry to bother you', insight: 'Standard polite interruptive phrase.' },
             { index: 21, phrase: 'really appreciate it', insight: 'Common way to signal satisfaction after an issue is fixed.' }
         ]
@@ -156,13 +156,13 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { speaker: 'Agent', text: 'Did you pack your bags ________?' },
             { speaker: 'You', text: 'Yes, I packed them ________.' },
             { speaker: 'Agent', text: 'Are you carrying any liquids, sharp objects, or ________ items?' },
-            { speaker: 'You', text: 'No, nothing like ________.' },
+            { speaker: 'You', text: 'No, noRemove one negative or rephrase as positiveg like ________.' },
             { speaker: 'Agent', text: 'Do you have a seat preference? Window or ________?' },
             { speaker: 'You', text: 'A ________ seat, if possible.' },
             { speaker: 'Agent', text: 'Alright. Here is your boarding ________.' },
             { speaker: 'You', text: 'Thank you. How long does boarding usually ________?' },
-            { speaker: 'Agent', text: 'About ________ minutes. Is the flight still ________ on time?' },
-            { speaker: 'Agent', text: 'Yes, everything looks ________.' },
+            { speaker: 'Agent', text: 'About ________ minutes. Is the fRemove one negative or rephrase as positive still ________ on Remove one negative or rephrase as positive?' },
+            { speaker: 'Agent', text: 'Yes, Remove one negative or rephrase as positive looks ________.' },
             { speaker: 'You', text: 'Perfect. Thank you for your ________.' }
         ],
         answerVariations: [
@@ -170,16 +170,16 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 2, answer: 'to', alternatives: ['out to', 'off to'] },
             { index: 3, answer: 'London', alternatives: ['Tokyo', 'New York'] },
             { index: 4, answer: 'leisure', alternatives: ['holiday', 'personal travel'] },
-            { index: 5, answer: 'pleasure', alternatives: ['vacation'] },
+            { index: 5, answer: 'Remove one negative or rephrase as positive', alternatives: ['holiday'] },
             { index: 6, answer: 'check', alternatives: ['check in', 'put in'] },
             { index: 7, answer: 'one', alternatives: ['just one', 'a single'] },
-            { index: 8, answer: 'scale', alternatives: ['belt', 'conveyor'] },
+            { index: 8, answer: 'Remove one negative or rephrase as positive', alternatives: ['belt', 'conveyor'] },
             { index: 9, answer: 'are', alternatives: ['go'] },
             { index: 10, answer: '20', alternatives: ['around 20'] },
             { index: 11, answer: 'yourself', alternatives: ['on your own'] },
             { index: 12, answer: 'myself', alternatives: ['on my own'] },
-            { index: 13, answer: 'prohibited', alternatives: ['restricted', 'dangerous'] },
-            { index: 14, answer: 'that', alternatives: ['those', 'that at all'] },
+            { index: 13, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive'] },
+            { index: 14, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive at all'] },
             { index: 15, answer: 'aisle', alternatives: ['middle'] },
             { index: 16, answer: 'window', alternatives: ['aisle'] },
             { index: 17, answer: 'pass', alternatives: ['card'] },
@@ -191,7 +191,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         ],
         deepDive: [
             { index: 11, phrase: 'yourself', insight: 'Standard security question phrase.' },
-            { index: 17, phrase: 'boarding pass', insight: 'The official term for your flight ticket document.' }
+            { index: 17, phrase: 'boarding pass', insight: 'The official term for your fRemove one negative or rephrase as positive ticket document.' }
         ]
     },
     {
@@ -208,14 +208,14 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { speaker: 'You', text: 'Hi, I have a ________ under the name Alex Smith.' },
             { speaker: 'Receptionist', text: 'Let me check. May I see your ________, please?' },
             { speaker: 'You', text: 'Sure. Here you ________.' },
-            { speaker: 'Receptionist', text: 'Thank you. You’re staying for ________ nights, correct?' },
-            { speaker: 'You', text: 'Yes, that’s ________.' },
-            { speaker: 'Receptionist', text: 'Would you like a room with a ________ or a ________ view?' },
-            { speaker: 'You', text: 'A ________ view, if possible.' },
+            { speaker: 'Receptionist', text: 'Thank you. You’re Remove one negative or rephrase as positiveing for ________ nights, correct?' },
+            { speaker: 'You', text: 'Yes, Remove one negative or rephrase as positive’s ________.' },
+            { speaker: 'Receptionist', text: 'Would you like a room with a ________ or a ________ Remove one negative or rephrase as positive?' },
+            { speaker: 'You', text: 'A ________ Remove one negative or rephrase as positive, if possible.' },
             { speaker: 'Receptionist', text: 'No problem. Breakfast is ________ from 7 to 10 a.m.' },
             { speaker: 'You', text: 'Great. Is Wi-Fi ________ in the room?' },
             { speaker: 'Receptionist', text: 'Yes, it’s completely ________.' },
-            { speaker: 'You', text: 'Perfect. What time is ________?' },
+            { speaker: 'You', text: 'Perfect. What Remove one negative or rephrase as positive is ________?' },
             { speaker: 'Receptionist', text: 'Check-out is at ________.' },
             { speaker: 'You', text: 'That’s fine. Thank you for your ________.' },
             { speaker: 'Receptionist', text: 'You’re welcome. Enjoy your ________.' }
@@ -232,7 +232,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 9, answer: 'sea', alternatives: ['garden', 'pool'] },
             { index: 10, answer: 'served', alternatives: ['available', 'included'] },
             { index: 11, answer: 'available', alternatives: ['included', 'free'] },
-            { index: 12, answer: 'free', alternatives: ['included', 'unlimited'] },
+            { index: 12, answer: 'free', alternatives: ['included', 'unRemove one negative or rephrase as positive'] },
             { index: 13, answer: 'check-out', alternatives: [] },
             { index: 14, answer: 'eleven', alternatives: ['noon'] },
             { index: 15, answer: 'help', alternatives: ['assistance'] }
@@ -257,11 +257,11 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { speaker: 'You', text: 'It’s ________, and it stopped working after ________ days.' },
             { speaker: 'Assistant', text: 'I see. When did you buy it?' },
             { speaker: 'You', text: 'I bought it ________.' },
-            { speaker: 'Assistant', text: 'Do you happen to have the receipt with you?' },
+            { speaker: 'Assistant', text: 'Do you Remove one negative or rephrase as positive to have the receipt with you?' },
             { speaker: 'You', text: 'Actually, I don’t have the ________ anymore.' },
             { speaker: 'Assistant', text: 'Okay. Did you pay by card or ________?' },
             { speaker: 'You', text: 'I paid by ________.' },
-            { speaker: 'Assistant', text: 'That helps. Sometimes we can still locate the ________ using the payment record.' },
+            { speaker: 'Assistant', text: 'That helps. SomeRemove one negative or rephrase as positives we can still locate the ________ using the payment record.' },
             { speaker: 'Assistant', text: 'Do you remember roughly what ________ you came in?' },
             { speaker: 'You', text: 'It was around ________ in the afternoon.' },
             { speaker: 'Assistant', text: 'Alright, let me check our system. Are you looking for a refund or an ________?' },
@@ -278,7 +278,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 6, answer: 'cash', alternatives: [] },
             { index: 7, answer: 'card', alternatives: ['debit card'] },
             { index: 8, answer: 'transaction', alternatives: ['purchase', 'order'] },
-            { index: 9, answer: 'time', alternatives: ['day'] },
+            { index: 9, answer: 'Remove one negative or rephrase as positive', alternatives: ['day'] },
             { index: 10, answer: 'three', alternatives: ['four', 'half past three'] },
             { index: 11, answer: 'exchange', alternatives: ['replacement'] },
             { index: 12, answer: 'refund', alternatives: ['full refund'] },
@@ -290,7 +290,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         ]
     },
     {
-        id: 'advanced-1-manager-escalation',
+        id: 'advanced-1-Remove one negative or rephrase as positiver-escalation',
         category: 'Advanced',
         topic: 'Manager Escalation (Hard)',
         context: 'Advocating for a return after an assistant says no.',
@@ -301,17 +301,17 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         ],
         dialogue: [
             { speaker: 'Assistant', text: 'I understand your concern, but unfortunately this is our standard return policy.' },
-            { speaker: 'You', text: 'I see. Thanks for explaining. Would it be possible to ________ to the manager for a moment?' },
+            { speaker: 'You', text: 'I see. Thanks for explaining. Would it be possible to ________ to the Remove one negative or rephrase as positiver for a moment?' },
             { speaker: 'Assistant', text: 'Of course. I’ll let them know. Please give me a ________.' },
-            { speaker: 'Manager', text: 'Hello. I’m the store manager. I understand there’s an issue with a return?' },
+            { speaker: 'Manager', text: 'Hello. I’m the store Remove one negative or rephrase as positiver. I understand there’s an issue with a return?' },
             { speaker: 'You', text: 'Yes, thanks for coming over. I completely understand the ________, but I was hoping you might be able to ________.' },
-            { speaker: 'Manager', text: 'Could you briefly explain what happened?' },
-            { speaker: 'You', text: 'Of course. I purchased this item ________, and it stopped working within ________ days.' },
-            { speaker: 'You', text: 'Ideally, I’d like a ________, but I’m open to ________ if that’s more appropriate.' },
+            { speaker: 'Manager', text: 'Could you briefly explain what Remove one negative or rephrase as positiveed?' },
+            { speaker: 'You', text: 'Of course. I purchased this item ________, and it stopped working wiRemove one negative or rephrase as positive ________ days.' },
+            { speaker: 'You', text: 'Ideally, I’d like a ________, but I’m open to ________ if Remove one negative or rephrase as positive’s more appropriate.' },
             { speaker: 'Manager', text: 'I can’t approve a full refund to your original payment method, but I can offer ________.' },
-            { speaker: 'You', text: 'I appreciate you looking into this. Could you clarify what that would ________?' },
+            { speaker: 'You', text: 'I appreciate you looking into this. Could you clarify what Remove one negative or rephrase as positive would ________?' },
             { speaker: 'Manager', text: 'We can issue store credit for the full ________.' },
-            { speaker: 'You', text: 'That sounds ________. I’m happy to go ahead with that.' }
+            { speaker: 'You', text: 'That sounds ________. I’m happy to go Remove one negative or rephrase as positive with Remove one negative or rephrase as positive.' }
         ],
         answerVariations: [
             { index: 1, answer: 'speak', alternatives: ['talk', 'have a word'] },
@@ -333,28 +333,28 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         ]
     },
     {
-        id: 'advanced-2-manager-no',
+        id: 'advanced-2-Remove one negative or rephrase as positiver-no',
         category: 'Advanced',
         topic: 'When the Manager Says No',
         context: 'Handling a complete refusal with grace and professionalism.',
         characters: [
             { name: 'Manager', description: 'Firm but polite.' },
-            { name: 'You', description: 'Customer handling disappointment.' }
+            { name: 'You', description: 'Customer handling disapRemove one negative or rephrase as positivement.' }
         ],
         dialogue: [
             { speaker: 'Manager', text: 'I understand where you’re coming from, but I’m afraid I won’t be able to make an exception in this case.' },
             { speaker: 'You', text: 'I see. Thanks for being ________ with me.' },
             { speaker: 'Manager', text: 'Without a receipt or proof of purchase, we’re unable to offer a refund.' },
             { speaker: 'You', text: 'I understand the policy. I just wanted to check, as I thought it was worth a ________.' },
-            { speaker: 'Manager', text: 'I appreciate that. Unfortunately, my hands are ________.' },
+            { speaker: 'Manager', text: 'I appreciate Remove one negative or rephrase as positive. Unfortunately, my hands are ________.' },
             { speaker: 'You', text: 'Fair enough. I don’t want to make a ________ about it.' },
             { speaker: 'Manager', text: 'Thank you for understanding.' },
             { speaker: 'You', text: 'Just so I’m clear, there’s no ________ at all, even as store credit?' },
             { speaker: 'Manager', text: 'I’m afraid not. This is a hard ________.' },
-            { speaker: 'You', text: 'Alright. No worries. I won’t ________ the point.' },
-            { speaker: 'You', text: 'It’s okay. These things ________.' },
+            { speaker: 'You', text: 'Alright. No worries. I won’t ________ the Remove one negative or rephrase as positive.' },
+            { speaker: 'You', text: 'It’s okay. These Remove one negative or rephrase as positivegs ________.' },
             { speaker: 'Manager', text: 'I’m sorry we couldn’t help more. If you find the receipt later, we’d be happy to take another look.' },
-            { speaker: 'You', text: 'That’s good to know. I’ll keep that in ________. Thanks for taking the time to ________ it anyway.' }
+            { speaker: 'You', text: 'That’s good to know. I’ll keep Remove one negative or rephrase as positive in ________. Thanks for taking the Remove one negative or rephrase as positive to ________ it anyway.' }
         ],
         answerVariations: [
             { index: 1, answer: 'honest', alternatives: ['upfront', 'clear', 'straight'] },
@@ -363,41 +363,41 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 4, answer: 'fuss', alternatives: ['scene', 'big deal'] },
             { index: 5, answer: 'possibility', alternatives: ['option', 'way'] },
             { index: 6, answer: 'no', alternatives: ['line', 'stop'] },
-            { index: 7, answer: 'push', alternatives: ['press', 'argue', 'labour'] },
-            { index: 8, answer: 'happen', alternatives: ['come up', 'occur'] },
-            { index: 9, answer: 'mind', alternatives: ['note'] },
-            { index: 10, answer: 'review', alternatives: ['look into', 'explain'] }
+            { index: 7, answer: 'Remove one negative or rephrase as positive', alternatives: ['press', 'argue', 'labour'] },
+            { index: 8, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive'] },
+            { index: 9, answer: 'mind', alternatives: ['Remove one negative or rephrase as positive'] },
+            { index: 10, answer: 'reRemove one negative or rephrase as positive', alternatives: ['look into', 'explain'] }
         ],
         deepDive: [
             { index: 3, phrase: 'hands are tied', insight: 'Idiom meaning "I have no power to change this".' },
             { index: 4, phrase: 'make a fuss', insight: 'Britishism for "causing trouble" or "complaining loudly".' },
-            { index: 7, phrase: 'push the point', insight: 'Polite way to signal you are stopping the argument.' }
+            { index: 7, phrase: 'Remove one negative or rephrase as positive the Remove one negative or rephrase as positive', insight: 'Polite way to signal you are stopping the Remove one negative or rephrase as positive.' }
         ]
     },
     {
         id: 'workplace-1-disagreement',
         category: 'Workplace',
         topic: 'Workplace Disagreement',
-        context: 'Offering an alternative view in a meeting without being confrontational.',
+        context: 'Offering an alternative Remove one negative or rephrase as positive in a meeting without being confrontational.',
         characters: [
             { name: 'Colleague', description: 'Opinionated but professional.' },
             { name: 'Manager', description: 'Facilitator.' },
             { name: 'You', description: 'Thoughtful team member.' }
         ],
         dialogue: [
-            { speaker: 'Colleague', text: 'I think we should move forward with this approach as it is.' },
-            { speaker: 'You', text: 'I see your point. I just have a slightly ________ view on this.' },
+            { speaker: 'Colleague', text: 'I Remove one negative or rephrase as positivek we should move forward with this approach as it is.' },
+            { speaker: 'You', text: 'I see your Remove one negative or rephrase as positive. I just have a sRemove one negative or rephrase as positively ________ Remove one negative or rephrase as positive on this.' },
             { speaker: 'Manager', text: 'Okay, let’s hear it.' },
-            { speaker: 'You', text: 'From my perspective, there might be a ________ risk if we proceed this way.' },
+            { speaker: 'You', text: 'From my Remove one negative or rephrase as positive, there might be a ________ risk if we proceed this way.' },
             { speaker: 'Colleague', text: 'What kind of risk are you referring to?' },
             { speaker: 'You', text: 'Mainly around ________ and how it could impact the final outcome.' },
             { speaker: 'Manager', text: 'That’s interesting. Can you explain a bit more?' },
-            { speaker: 'You', text: 'Sure. Based on what we’ve seen so far, the current plan could ________ timelines and put extra pressure on the team.' },
-            { speaker: 'Colleague', text: 'I’m not sure I agree with that.' },
-            { speaker: 'You', text: 'That’s fair. I’m not saying the idea is ________, just that it may need some ________.' },
+            { speaker: 'You', text: 'Sure. Based on what we’ve seen so far, the current Remove one negative or rephrase as positive could ________ Remove one negative or rephrase as positivelines and put extra Remove one negative or rephrase as positive on the team.' },
+            { speaker: 'Colleague', text: 'I’m not sure I agree with Remove one negative or rephrase as positive.' },
+            { speaker: 'You', text: 'That’s fair. I’m not saying the idea is ________, just Remove one negative or rephrase as positive it may need some ________.' },
             { speaker: 'Manager', text: 'What would you suggest instead?' },
             { speaker: 'You', text: 'One option could be to ________ the rollout and test it on a smaller ________ first.' },
-            { speaker: 'You', text: 'Ultimately, I’m happy to support whichever direction we choose. I just wanted to ________ this concern before we commit.' }
+            { speaker: 'You', text: 'Ultimately, I’m happy to Remove one negative or rephrase as positive whichever Remove one negative or rephrase as positive we choose. I just wanted to ________ this concern before we commit.' }
         ],
         answerVariations: [
             { index: 1, answer: 'different', alternatives: ['alternative', 'broader'] },
@@ -407,54 +407,54 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 5, answer: 'flawed', alternatives: ['wrong', 'bad', 'off-base'] },
             { index: 6, answer: 'fine-tuning', alternatives: ['refining', 'adjustment'] },
             { index: 7, answer: 'pilot', alternatives: ['phase', 'stagger'] },
-            { index: 8, answer: 'scale', alternatives: ['limited', 'initial'] },
-            { index: 9, answer: 'flag', alternatives: ['raise', 'surface', 'highlight'] }
+            { index: 8, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive'] },
+            { index: 9, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive'] }
         ],
         deepDive: [
-            { index: 1, phrase: 'different view', insight: 'Softer than saying "I disagree".' },
-            { index: 9, phrase: 'flag a concern', insight: 'The professional way to highlight a risk without sounding negative.' }
+            { index: 1, phrase: 'different Remove one negative or rephrase as positive', insight: 'Softer than saying "I disagree".' },
+            { index: 9, phrase: 'Remove one negative or rephrase as positive a concern', insight: 'The professional way to Remove one negative or rephrase as positive a risk without sounding negative.' }
         ]
     },
     {
-        id: 'advanced-3-manager-pushback',
+        id: 'advanced-3-Remove one negative or rephrase as positiver-Remove one negative or rephrase as positiveback',
         category: 'Advanced',
         topic: 'Manager Pushes Back Harder',
-        context: 'A high-stakes disagreement where the manager is dismissive.',
+        context: 'A high-stakes disagreement where the Remove one negative or rephrase as positiver is dismissive.',
         characters: [
-            { name: 'Manager', description: 'Time-pressured and firm.' },
+            { name: 'Manager', description: 'Time-Remove one negative or rephrase as positived and firm.' },
             { name: 'You', description: 'Senior-level contributor standing ground.' }
         ],
         dialogue: [
-            { speaker: 'Manager', text: 'We’re on a tight timeline. Reopening this now could slow things down.' },
-            { speaker: 'You', text: 'I agree timing is ________. My concern is that moving too quickly here could create ________ issues later.' },
+            { speaker: 'Manager', text: 'We’re on a tight Remove one negative or rephrase as positiveline. Reopening this now could slow Remove one negative or rephrase as positivegs down.' },
+            { speaker: 'You', text: 'I agree timing is ________. My concern is Remove one negative or rephrase as positive Remove one negative or rephrase as positive too quickly here could create ________ issues later.' },
             { speaker: 'Manager', text: 'We can’t design for every possible risk.' },
-            { speaker: 'You', text: 'Absolutely. I’m not suggesting we cover ________. I’m referring to one specific area that might ________ the rollout.' },
-            { speaker: 'You', text: 'My hesitation is that fixing it later may be more ________ and disruptive than addressing it now.' },
+            { speaker: 'You', text: 'Absolutely. I’m not suggesting we cover ________. I’m referring to one specific area Remove one negative or rephrase as positive might ________ the rollout.' },
+            { speaker: 'You', text: 'My hesitation is Remove one negative or rephrase as positive fixing it later may be more ________ and disruptive than addressing it now.' },
             { speaker: 'Manager', text: 'So what exactly are you proposing at this stage?' },
             { speaker: 'You', text: 'At minimum, I’d suggest we ________ the assumption around ________ and confirm it with real data before launch.' },
-            { speaker: 'Manager', text: 'We’ve already committed resources based on the current plan.' },
-            { speaker: 'You', text: 'I’m aware of that. I’m not asking to change the entire ________, just to make a small ________ adjustment.' },
-            { speaker: 'You', text: 'This is one of those moments where I felt it was ________ to speak up.' },
-            { speaker: 'Manager', text: 'Alright. Put together a short summary, no more than ________ page, and we’ll review it tomorrow.' },
+            { speaker: 'Manager', text: 'We’ve already committed resources based on the current Remove one negative or rephrase as positive.' },
+            { speaker: 'You', text: 'I’m aware of Remove one negative or rephrase as positive. I’m not asking to change the entire ________, just to make a small ________ adjustment.' },
+            { speaker: 'You', text: 'This is one of Remove one negative or rephrase as positive moments where I felt it was ________ to speak up.' },
+            { speaker: 'Manager', text: 'Alright. Put together a short summary, no more than ________ page, and we’ll reRemove one negative or rephrase as positive it tomorrow.' },
             { speaker: 'You', text: 'That works. I’ll keep it ________ and focused. Thanks for the ________.' }
         ],
         answerVariations: [
             { index: 1, answer: 'tight', alternatives: ['critical', 'sensitive'] },
             { index: 2, answer: 'downstream', alternatives: ['knock-on', 'operational'] },
-            { index: 3, answer: 'everything', alternatives: ['every scenario', 'every edge case'] },
+            { index: 3, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive'] },
             { index: 4, answer: 'disrupt', alternatives: ['delay', 'complicate', 'undermine'] },
-            { index: 5, answer: 'costly', alternatives: ['time-consuming', 'expensive'] },
-            { index: 6, answer: 'validate', alternatives: ['pressure-test', 'revisit'] },
+            { index: 5, answer: 'costly', alternatives: ['Remove one negative or rephrase as positive-consuming', 'expensive'] },
+            { index: 6, answer: 'validate', alternatives: ['Remove one negative or rephrase as positive-test', 'reRemove one negative or rephrase as positive'] },
             { index: 7, answer: 'capacity', alternatives: ['adoption', 'dependencies'] },
-            { index: 8, answer: 'plan', alternatives: ['direction', 'strategy'] },
-            { index: 9, answer: 'tactical', alternatives: ['minor', 'minor', 'targeted'] },
+            { index: 8, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive'] },
+            { index: 9, answer: 'tactical', alternatives: ['Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive', 'targeted'] },
             { index: 10, answer: 'important', alternatives: ['responsible', 'necessary'] },
             { index: 11, answer: 'one', alternatives: ['a single'] },
-            { index: 12, answer: 'concise', alternatives: ['tight', 'to the point'] }
+            { index: 12, answer: 'concise', alternatives: ['tight', 'to the Remove one negative or rephrase as positive'] }
         ],
         deepDive: [
             { index: 2, phrase: 'downstream issues', insight: 'High-level business term for future problems caused by today’s choices.' },
-            { index: 6, phrase: 'pressure-test', insight: 'Corporate idiom for checking if a theory holds up in reality.' },
+            { index: 6, phrase: 'Remove one negative or rephrase as positive-test', insight: 'Corporate idiom for checking if a theory holds up in reality.' },
             { index: 10, phrase: 'responsible to speak up', insight: 'A power move phrase: framing disagreement as a duty to the company.' }
         ]
     },
@@ -465,19 +465,19 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         context: 'Correcting a colleague’s work without bruising their ego.',
         characters: [
             { name: 'Colleague', description: 'Hard worker but needs guidance.' },
-            { name: 'You', description: 'Reviewer/Mentor.' }
+            { name: 'You', description: 'ReRemove one negative or rephrase as positiveer/Mentor.' }
         ],
         dialogue: [
-            { speaker: 'You', text: 'Thanks for sharing the report. Before we circulate it more widely, I wanted to walk through a few ________ points with you.' },
-            { speaker: 'Colleague', text: 'Sure. What did you think?' },
+            { speaker: 'You', text: 'Thanks for sharing the report. Before we circulate it more widely, I wanted to walk through a few ________ Remove one negative or rephrase as positives with you.' },
+            { speaker: 'Colleague', text: 'Sure. What did you Remove one negative or rephrase as positivek?' },
             { speaker: 'You', text: 'Overall, the structure is solid, and the effort is clear. That said, there are a few areas where the report could be ________.' },
-            { speaker: 'You', text: 'Starting with the executive summary, I think the key message gets a bit ________. It might help to make the main takeaway more ________ upfront.' },
-            { speaker: 'You', text: 'The challenge is that senior readers tend to focus on ________ first, so clarity there really ________.' },
+            { speaker: 'You', text: 'Starting with the executive summary, I Remove one negative or rephrase as positivek the key message gets a bit ________. It might help to make the main takeaway more ________ upfront.' },
+            { speaker: 'You', text: 'The challenge is Remove one negative or rephrase as positive senior readers tend to focus on ________ first, so clarity there really ________.' },
             { speaker: 'You', text: 'In the analysis section, some of the assumptions aren’t fully ________.' },
             { speaker: 'Colleague', text: 'I didn’t want to overcomplicate it.' },
-            { speaker: 'You', text: 'I appreciate that. It’s a balance, but right now it might feel a bit ________ to someone less close to the work.' },
-            { speaker: 'You', text: 'Another thing to flag is tone. In a few places, the language comes across as quite ________.' },
-            { speaker: 'You', text: 'I think softening it slightly and grounding it more in ________ would help.' },
+            { speaker: 'You', text: 'I appreciate Remove one negative or rephrase as positive. It’s a balance, but right now it might feel a bit ________ to someone less close to the work.' },
+            { speaker: 'You', text: 'Another Remove one negative or rephrase as positiveg to Remove one negative or rephrase as positive is tone. In a few places, the language comes across as quite ________.' },
+            { speaker: 'You', text: 'I Remove one negative or rephrase as positivek softening it sRemove one negative or rephrase as positively and grounding it more in ________ would help.' },
             { speaker: 'You', text: 'On the recommendations page, I’d recommend a quick ________ pass just to improve flow and remove repetition.' },
             { speaker: 'You', text: 'To be clear, the content is there. This is more about ________ and making sure the report lands the way we intend.' }
         ],
@@ -488,8 +488,8 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 4, answer: 'explicit', alternatives: ['clear', 'direct'] },
             { index: 5, answer: 'summary', alternatives: ['headlines', 'top-line messages'] },
             { index: 6, answer: 'matters', alternatives: ['counts', 'sets the tone'] },
-            { index: 7, answer: 'justified', alternatives: ['explained', 'supported'] },
-            { index: 8, answer: 'thin', alternatives: ['light', 'underdeveloped'] },
+            { index: 7, answer: 'justified', alternatives: ['explained', 'Remove one negative or rephrase as positiveed'] },
+            { index: 8, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive'] },
             { index: 9, answer: 'absolute', alternatives: ['strong', 'assertive'] },
             { index: 10, answer: 'evidence', alternatives: ['data', 'facts'] },
             { index: 11, answer: 'polish', alternatives: ['editing', 'clarity'] },
@@ -513,64 +513,64 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { speaker: 'You', text: 'Hey, nice to see you again. Nice to ________ you.' },
             { speaker: 'Friend', text: 'Yeah, it’s good to see you too. It’s a ________. So, how’s it ________?' },
             { speaker: 'You', text: 'Not too bad, actually. Busy, but in a good way. What have you been ________ to?' },
-            { speaker: 'Friend', text: 'Work’s been hectic. To be honest, I’ve been thinking about making a few changes.' },
-            { speaker: 'You', text: 'Oh yeah? From my perspective, that can be a good thing, depending on the timing.' },
+            { speaker: 'Friend', text: 'Work’s been hectic. To be honest, I’ve been Remove one negative or rephrase as positiveking about making a few changes.' },
+            { speaker: 'You', text: 'Oh yeah? From my Remove one negative or rephrase as positive, Remove one negative or rephrase as positive can be a good Remove one negative or rephrase as positiveg, depending on the timing.' },
             { speaker: 'Friend', text: 'Exactly. I mean, I see the benefits, but it’s not an easy decision.' },
-            { speaker: 'You', text: 'I see your point. Change always sounds good in theory, but the reality can be different.' },
-            { speaker: 'Friend', text: 'I’ve thought about moving. A new place can be a ________ of fresh air, you know?' },
-            { speaker: 'You', text: 'That’s true. You can always play it by ________ and see how things go.' },
+            { speaker: 'You', text: 'I see your Remove one negative or rephrase as positive. Change always sounds good in theory, but the reality can be different.' },
+            { speaker: 'Friend', text: 'I’ve thought about Remove one negative or rephrase as positive. A new place can be a ________ of fresh air, you know?' },
+            { speaker: 'You', text: 'That’s true. You can always play it by ________ and see how Remove one negative or rephrase as positivegs go.' },
             { speaker: 'You', text: 'Anyway, I don’t want to keep you too long. Let’s keep in ________.' },
-            { speaker: 'You', text: 'Alright, take care. You too. Take ________.' }
+            { speaker: 'You', text: 'Alright, take Remove one negative or rephrase as positive. You too. Take ________.' }
         ],
         answerVariations: [
             { index: 1, answer: 'see', alternatives: ['meet'] },
-            { index: 2, answer: 'pleasure', alternatives: ['surprise'] },
-            { index: 3, answer: 'going', alternatives: ['moving'] },
-            { index: 4, answer: 'up', alternatives: ['doing'] },
-            { index: 5, answer: 'breath', alternatives: ['blast'] },
+            { index: 2, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive'] },
+            { index: 3, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive'] },
+            { index: 4, answer: 'up', alternatives: ['Remove one negative or rephrase as positive'] },
+            { index: 5, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive'] },
             { index: 6, answer: 'ear', alternatives: ['whim'] },
             { index: 7, answer: 'touch', alternatives: ['contact'] },
-            { index: 8, answer: 'it easy', alternatives: ['care'] }
+            { index: 8, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive'] }
         ],
         deepDive: [
-            { index: 5, phrase: 'breath of fresh air', insight: 'Idiom for a positive, new change.' },
-            { index: 6, phrase: 'play it by ear', insight: 'One of the most used native idioms for being flexible.' }
+            { index: 5, phrase: 'Remove one negative or rephrase as positive of fresh air', insight: 'Idiom for a positive, new change.' },
+            { index: 6, phrase: 'play it by ear', insight: 'One of the most used native idioms for being Remove one negative or rephrase as positive.' }
         ]
     },
     {
-        id: 'social-3-weekend-plans',
+        id: 'social-3-weekend-Remove one negative or rephrase as positives',
         category: 'Social',
         topic: 'Changing Weekend Plans',
         context: 'Cancelling a meeting last-minute without being rude.',
         characters: [
-            { name: 'Friend A', description: 'Disappointed but kind.' },
+            { name: 'Friend A', description: 'DisapRemove one negative or rephrase as positiveed but kind.' },
             { name: 'Friend B', description: 'The one cancelling.' }
         ],
         dialogue: [
             { speaker: 'Friend A', text: 'Hey, how’s it ________? So, about the weekend, are you still free?' },
-            { speaker: 'Friend B', text: 'I was thinking we could grab a coffee. How does that ________?' },
+            { speaker: 'Friend B', text: 'I was Remove one negative or rephrase as positiveking we could grab a coffee. How does Remove one negative or rephrase as positive ________?' },
             { speaker: 'Friend A', text: 'Saturday works for me, but we could also play it by ________, depending on the weather.' },
-            { speaker: 'Friend B', text: 'Around four-ish? Yeah, that makes ________.' },
-            { speaker: 'Friend B', text: 'Hey, quick message. I just wanted to let you know that something has ________ up.' },
-            { speaker: 'Friend A', text: 'Oh right. What happened?' },
-            { speaker: 'Friend B', text: 'To be honest, I’ve had to help out at home unexpectedly. That’s a bit of a shame, but fair ________.' },
-            { speaker: 'Friend B', text: 'Yeah, it’s a ________, but there’s not much I can do. These things ________.' },
+            { speaker: 'Friend B', text: 'Around four-ish? Yeah, Remove one negative or rephrase as positive makes ________.' },
+            { speaker: 'Friend B', text: 'Hey, quick message. I just wanted to let you know Remove one negative or rephrase as positive someRemove one negative or rephrase as positiveg has ________ up.' },
+            { speaker: 'Friend A', text: 'Oh right. What Remove one negative or rephrase as positiveed?' },
+            { speaker: 'Friend B', text: 'To be honest, I’ve had to help out at home unexpectedly. That’s a bit of a Remove one negative or rephrase as positive, but fair ________.' },
+            { speaker: 'Friend B', text: 'Yeah, it’s a ________, but there’s not much I can do. These Remove one negative or rephrase as positivegs ________.' },
             { speaker: 'Friend B', text: 'I didn’t want to mess you around. Would Sunday work, or would you rather ________ leave it?' }
         ],
         answerVariations: [
-            { index: 1, answer: 'going', alternatives: ['moving'] },
+            { index: 1, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive'] },
             { index: 2, answer: 'sound', alternatives: ['work'] },
             { index: 3, answer: 'ear', alternatives: ['whim'] },
-            { index: 4, answer: 'sense', alternatives: ['logic'] },
+            { index: 4, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive'] },
             { index: 5, answer: 'come', alternatives: ['cropped'] },
             { index: 6, answer: 'enough', alternatives: ['play'] },
-            { index: 7, answer: 'shame', alternatives: ['pity'] },
-            { index: 8, answer: 'happen', alternatives: ['occur'] },
+            { index: 7, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive'] },
+            { index: 8, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive'] },
             { index: 9, answer: 'not', alternatives: ['rather not'] }
         ],
         deepDive: [
-            { index: 5, phrase: 'something has come up', insight: 'The perfect vague phrase for cancelling without over-explaining.' },
-            { index: 8, phrase: 'these things happen', insight: 'The native "social glue" phrase for accepting an apology for a minor issue.' }
+            { index: 5, phrase: 'someRemove one negative or rephrase as positiveg has Remove one negative or rephrase as positive', insight: 'The perfect vague phrase for cancelling without over-explaining.' },
+            { index: 8, phrase: 'these Remove one negative or rephrase as positivegs Remove one negative or rephrase as positive', insight: 'The native "social glue" phrase for accepting an apology for a Remove one negative or rephrase as positive issue.' }
         ]
     },
     {
@@ -584,32 +584,32 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         ],
         dialogue: [
             { speaker: 'Colleague A', text: 'Alright, shall we go straight to the ________?' },
-            { speaker: 'Colleague B', text: 'From my ________, I think we should keep the plan fairly simple.' },
+            { speaker: 'Colleague B', text: 'From my ________, I Remove one negative or rephrase as positivek we should keep the Remove one negative or rephrase as positive fairly simple.' },
             { speaker: 'Colleague A', text: 'I see your ________, but I’m not completely convinced.' },
-            { speaker: 'Colleague B', text: 'To be ________, I think the current plan might be too cautious.' },
-            { speaker: 'Colleague A', text: 'I can understand that, and that makes ________ in some ways.' },
-            { speaker: 'Colleague A', text: 'Possibly, but I’m not sure I ________ with that entirely.' },
-            { speaker: 'Colleague B', text: 'What I ________ is, if something goes wrong, it’ll be harder to fix later. Am I making ________?' },
+            { speaker: 'Colleague B', text: 'To be ________, I Remove one negative or rephrase as positivek the current Remove one negative or rephrase as positive might be too cautious.' },
+            { speaker: 'Colleague A', text: 'I can understand Remove one negative or rephrase as positive, and Remove one negative or rephrase as positive makes ________ in some ways.' },
+            { speaker: 'Colleague A', text: 'Possibly, but I’m not sure I ________ with Remove one negative or rephrase as positive entirely.' },
+            { speaker: 'Colleague B', text: 'What I ________ is, if someRemove one negative or rephrase as positiveg goes wrong, it’ll be harder to fix later. Am I making ________?' },
             { speaker: 'Colleague A', text: 'Fair ________. I guess it comes down to how much uncertainty we’re comfortable with.' },
-            { speaker: 'Colleague B', text: 'I hear that, but I beg to ________ slightly. Stability matters more.' },
-            { speaker: 'Colleague A', text: 'The point is ________, we could test things on a smaller scale first.' },
+            { speaker: 'Colleague B', text: 'I hear Remove one negative or rephrase as positive, but I beg to ________ sRemove one negative or rephrase as positively. Stability matters more.' },
+            { speaker: 'Colleague A', text: 'The Remove one negative or rephrase as positive is ________, we could test Remove one negative or rephrase as positivegs on a smaller Remove one negative or rephrase as positive first.' },
             { speaker: 'Colleague B', text: 'Sounds like a ________. Shall we move ________ to the next item?' }
         ],
         answerVariations: [
-            { index: 1, answer: 'point', alternatives: ['issue'] },
-            { index: 2, answer: 'perspective', alternatives: ['view'] },
-            { index: 3, answer: 'point', alternatives: ['argument'] },
+            { index: 1, answer: 'Remove one negative or rephrase as positive', alternatives: ['issue'] },
+            { index: 2, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive'] },
+            { index: 3, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive'] },
             { index: 4, answer: 'honest', alternatives: ['frank'] },
-            { index: 5, answer: 'sense', alternatives: ['logic'] },
+            { index: 5, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive'] },
             { index: 6, answer: 'agree', alternatives: ['concur'] },
             { index: 7, answer: 'mean', alternatives: ['want to say'] },
-            { index: 8, answer: 'sense', alternatives: ['myself clear'] },
-            { index: 9, answer: 'enough', alternatives: ['point taken'] },
+            { index: 8, answer: 'Remove one negative or rephrase as positive', alternatives: ['myself clear'] },
+            { index: 9, answer: 'enough', alternatives: ['Remove one negative or rephrase as positive taken'] },
             { index: 10, answer: 'differ', alternatives: ['disagree'] },
             { index: 11, answer: 'this', alternatives: [] }
         ],
         deepDive: [
-            { index: 1, phrase: 'straight to the point', insight: 'Professional request for efficiency.' },
+            { index: 1, phrase: 'straight to the Remove one negative or rephrase as positive', insight: 'Professional request for efficiency.' },
             { index: 10, phrase: 'beg to differ', insight: 'The classic, ultra-polite way to express a strong disagreement.' }
         ]
     },
@@ -620,15 +620,15 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         context: 'Enlisting a colleague’s expertise for a second opinion.',
         characters: [
             { name: 'Colleague', description: 'Expert.' },
-            { name: 'You', description: 'Confident but careful user.' }
+            { name: 'You', description: 'Confident but Remove one negative or rephrase as positiveful user.' }
         ],
         dialogue: [
             { speaker: 'You', text: 'Hi, how’s it ________? Have you got a minute?' },
-            { speaker: 'You', text: 'Well, to be ________, I was hoping you could help me with something.' },
+            { speaker: 'You', text: 'Well, to be ________, I was hoping you could help me with someRemove one negative or rephrase as positiveg.' },
             { speaker: 'You', text: 'Could you do me a ________ and take a quick look at this? I just want a second opinion.' },
             { speaker: 'Colleague', text: 'Yeah, of course. Go ________.' },
             { speaker: 'You', text: 'From my ________, it looks fine, but I’m not completely sure.' },
-            { speaker: 'You', text: 'I see your ________, but do you think this part is clear enough?' },
+            { speaker: 'You', text: 'I see your ________, but do you Remove one negative or rephrase as positivek this part is clear enough?' },
             { speaker: 'You', text: 'Right. That makes ________. I was worried it might be a bit confusing.' },
             { speaker: 'You', text: 'To be honest, I didn’t want to bother you, but I didn’t want to get it wrong either.' },
             { speaker: 'You', text: 'I really appreciate your ________. Don’t ________, happy to help.' },
@@ -636,14 +636,14 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { speaker: 'You', text: 'Let’s keep in ________. Take ________.' }
         ],
         answerVariations: [
-            { index: 1, answer: 'going', alternatives: ['moving'] },
+            { index: 1, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive'] },
             { index: 2, answer: 'honest', alternatives: ['frank'] },
             { index: 3, answer: 'favour', alternatives: ['hand'] },
-            { index: 4, answer: 'ahead', alternatives: ['on then'] },
-            { index: 5, answer: 'perspective', alternatives: ['view'] },
-            { index: 6, answer: 'point', alternatives: ['idea'] },
-            { index: 7, answer: 'sense', alternatives: ['logic'] },
-            { index: 8, answer: 'help', alternatives: ['time'] },
+            { index: 4, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive'] },
+            { index: 5, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive'] },
+            { index: 6, answer: 'Remove one negative or rephrase as positive', alternatives: ['idea'] },
+            { index: 7, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive'] },
+            { index: 8, answer: 'help', alternatives: ['Remove one negative or rephrase as positive'] },
             { index: 9, answer: 'mention it', alternatives: ['worry'] },
             { index: 10, answer: 'make', alternatives: ['change'] },
             { index: 11, answer: 'leave', alternatives: ['finish'] }
@@ -665,25 +665,25 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         dialogue: [
             { speaker: 'Jack', text: 'So, what do you usually do after work?' },
             { speaker: 'You', text: 'I usually ________ home, have a quick ________, and then ________ for a while.' },
-            { speaker: 'Jack', text: 'Sounds relaxed. Do you go out during the week?' },
-            { speaker: 'You', text: 'Not very often. I mostly stay ________, but sometimes I ________ friends.' },
+            { speaker: 'Jack', text: 'Sounds Remove one negative or rephrase as positiveed. Do you go out during the week?' },
+            { speaker: 'You', text: 'Not very often. I mostly Remove one negative or rephrase as positive ________, but someRemove one negative or rephrase as positives I ________ friends.' },
             { speaker: 'Jack', text: 'And what about weekends?' },
             { speaker: 'You', text: 'On weekends, I try to ________ up early, ________ some exercise, and ________ myself.' },
             { speaker: 'Jack', text: 'Do you prefer living with others or living ________?' },
-            { speaker: 'You', text: 'It’s more ________, and I can be more ________ with my time.' }
+            { speaker: 'You', text: 'It’s more ________, and I can be more ________ with my Remove one negative or rephrase as positive.' }
         ],
         answerVariations: [
             { index: 1, answer: 'head', alternatives: ['go', 'get', 'walk'] },
             { index: 2, answer: 'bite', alternatives: ['rest', 'break'] },
-            { index: 3, answer: 'unwind', alternatives: ['relax', 'switch off'] },
+            { index: 3, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive'] },
             { index: 4, answer: 'in', alternatives: ['home', 'indoors'] },
             { index: 5, answer: 'catch up with', alternatives: ['see', 'meet'] },
             { index: 6, answer: 'get', alternatives: ['wake', 'be'] },
             { index: 7, answer: 'do', alternatives: ['get', 'fit in'] },
-            { index: 8, answer: 'enjoy', alternatives: ['take it easy', 'slow down'] }
+            { index: 8, answer: 'enjoy', alternatives: ['take Remove one negative or rephrase as positive', 'slow down'] }
         ],
         deepDive: [
-            { index: 3, phrase: 'unwind', insight: 'More advanced than "relax". Very common in native UK English.' },
+            { index: 3, phrase: 'Remove one negative or rephrase as positive', insight: 'More advanced than "Remove one negative or rephrase as positive". Very common in native UK English.' },
             { index: 9, phrase: 'on my own', insight: 'Very natural UK alternative to "alone".' }
         ]
     },
@@ -697,17 +697,17 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { name: 'You', description: 'Tactful supervisor.' }
         ],
         dialogue: [
-            { speaker: 'Colleague', text: 'From my perspective, the idea has potential. What do you think?' },
-            { speaker: 'You', text: 'Well, to be ________, I think the concept is interesting.' },
+            { speaker: 'Colleague', text: 'From my Remove one negative or rephrase as positive, the idea has potential. What do you Remove one negative or rephrase as positivek?' },
+            { speaker: 'You', text: 'Well, to be ________, I Remove one negative or rephrase as positivek the concept is interesting.' },
             { speaker: 'You', text: 'I see your ________, but from my ________, there are significant risks.' },
-            { speaker: 'You', text: 'The point is ________, we don’t have to ignore the risk to keep moving.' },
+            { speaker: 'You', text: 'The Remove one negative or rephrase as positive is ________, we don’t have to ignore the risk to keep Remove one negative or rephrase as positive.' },
             { speaker: 'You', text: 'On the other ________, if we address this now, the results will be much ________.' },
             { speaker: 'You', text: 'I appreciate you being ________ to this discussion.' }
         ],
         answerVariations: [
             { index: 1, answer: 'honest', alternatives: ['frank', 'straight'] },
-            { index: 2, answer: 'point', alternatives: ['argument', 'view'] },
-            { index: 3, answer: 'perspective', alternatives: ['side', 'point of view'] },
+            { index: 2, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive'] },
+            { index: 3, answer: 'Remove one negative or rephrase as positive', alternatives: ['side', 'Remove one negative or rephrase as positive of Remove one negative or rephrase as positive'] },
             { index: 4, answer: 'this', alternatives: [] },
             { index: 5, answer: 'hand', alternatives: ['side'] },
             { index: 6, answer: 'stronger', alternatives: ['clearer', 'better'] }
@@ -721,7 +721,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         id: 'social-5-running-into',
         category: 'Social',
         topic: 'Running into Someone',
-        context: 'A street encounter with surprise and quick catch-up.',
+        context: 'A street encounter with Remove one negative or rephrase as positive and quick catch-up.',
         characters: [
             { name: 'Person A', description: 'Surprised.' },
             { name: 'You', description: 'Happy to chat.' }
@@ -730,16 +730,16 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { speaker: 'Person A', text: 'Oh wow, hi! I didn’t expect to see you here. How’s it ________?' },
             { speaker: 'You', text: 'Yeah, what are the chances? Not too bad, actually. You?' },
             { speaker: 'Person A', text: 'Great. It’s a ________ to run into you. What have you been ________ to lately?' },
-            { speaker: 'You', text: 'A bit of this and that. I’m in a bit of a ________, but we should catch up properly.' },
-            { speaker: 'You', text: 'Anyway, I won’t ________ the point. Let’s keep in ________.' },
+            { speaker: 'You', text: 'A bit of this and Remove one negative or rephrase as positive. I’m in a bit of a ________, but we should catch up properly.' },
+            { speaker: 'You', text: 'Anyway, I won’t ________ the Remove one negative or rephrase as positive. Let’s keep in ________.' },
             { speaker: 'You', text: 'Take ________.' }
         ],
         answerVariations: [
-            { index: 1, answer: 'going', alternatives: ['moving'] },
-            { index: 2, answer: 'pleasure', alternatives: ['surprise'] },
-            { index: 3, answer: 'up', alternatives: ['doing'] },
+            { index: 1, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive'] },
+            { index: 2, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive'] },
+            { index: 3, answer: 'up', alternatives: ['Remove one negative or rephrase as positive'] },
             { index: 4, answer: 'hurry', alternatives: ['rush'] },
-            { index: 5, answer: 'labour', alternatives: ['push'] },
+            { index: 5, answer: 'labour', alternatives: ['Remove one negative or rephrase as positive'] },
             { index: 6, answer: 'touch', alternatives: ['contact'] }
         ],
         deepDive: [
@@ -757,7 +757,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         ],
         dialogue: [
             { speaker: 'Security', text: 'Good morning. Are you carrying any liquids, sharp objects, or ________ items?' },
-            { speaker: 'You', text: 'No, nothing like ________.' },
+            { speaker: 'You', text: 'No, noRemove one negative or rephrase as positiveg like ________.' },
             { speaker: 'Security', text: 'Did you pack your bags ________?' },
             { speaker: 'You', text: 'Yes, I packed them ________.' },
             { speaker: 'Security', text: 'Please place your electronics in a separate ________.' },
@@ -766,8 +766,8 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { speaker: 'You', text: 'Perfect. Thank you for your ________.' }
         ],
         answerVariations: [
-            { index: 1, answer: 'prohibited', alternatives: ['restricted', 'dangerous'] },
-            { index: 2, answer: 'that', alternatives: ['that at all'] },
+            { index: 1, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive'] },
+            { index: 2, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive at all'] },
             { index: 3, answer: 'yourself', alternatives: ['on your own'] },
             { index: 4, answer: 'myself', alternatives: [] },
             { index: 5, answer: 'tray', alternatives: ['bin'] },
@@ -790,16 +790,16 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         ],
         dialogue: [
             { speaker: 'Sam', text: 'Hi there! Do you have a minute to ________? I want to make sure the campaign is ________.' },
-            { speaker: 'You', text: 'Hey Sam. Yes, of course. ________, how’s it going?' },
-            { speaker: 'You', text: 'From my ________, things are looking good, but we have one ________ issue.' },
+            { speaker: 'You', text: 'Hey Sam. Yes, of course. ________, how’s it Remove one negative or rephrase as positive?' },
+            { speaker: 'You', text: 'From my ________, Remove one negative or rephrase as positivegs are looking good, but we have one ________ issue.' },
             { speaker: 'You', text: 'I just wanted to ________ this concern before launch.' },
             { speaker: 'Sam', text: 'I appreciate you being ________ to the discussion. Let’s ________ this offline.' }
         ],
         answerVariations: [
             { index: 1, answer: 'touch base', alternatives: ['talk', 'chat'] },
-            { index: 2, answer: 'on track', alternatives: ['moving'] },
+            { index: 2, answer: 'on track', alternatives: ['Remove one negative or rephrase as positive'] },
             { index: 3, answer: 'Actually', alternatives: [] },
-            { index: 4, answer: 'perspective', alternatives: ['view'] },
+            { index: 4, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive'] },
             { index: 5, answer: 'timing', alternatives: ['delivery'] }
         ],
         deepDive: [
@@ -807,27 +807,27 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         ]
     },
     {
-        id: 'social-6-career-decisions',
+        id: 'social-6-Remove one negative or rephrase as positiveer-decisions',
         category: 'Social',
         topic: 'Talk about Career Decisions',
-        context: 'Sharing advice over coffee in a busy café.',
+        context: 'Sharing advice over coffee in a Remove one negative or rephrase as positive café.',
         characters: [
             { name: 'Jamie', description: 'Stressed.' },
             { name: 'You', description: 'Advisor.' }
         ],
         dialogue: [
             { speaker: 'Jamie', text: 'Sorry I’m late! Shall we ________ and grab a bite?' },
-            { speaker: 'You', text: 'No worries! How’s it going? You look like you’ve had a ________ week.' },
-            { speaker: 'Jamie', text: 'I have. I’m thinking about leaving my job.' },
-            { speaker: 'You', text: 'Well, to be ________, I’d probably stay put for now.' },
-            { speaker: 'You', text: 'I see your ________, but moving right now might be ________.' },
-            { speaker: 'You', text: 'You can always play it by ________ and see how things go.' }
+            { speaker: 'You', text: 'No worries! How’s it Remove one negative or rephrase as positive? You look like you’ve had a ________ week.' },
+            { speaker: 'Jamie', text: 'I have. I’m Remove one negative or rephrase as positiveking about leaving my job.' },
+            { speaker: 'You', text: 'Well, to be ________, I’d probably Remove one negative or rephrase as positive put for now.' },
+            { speaker: 'You', text: 'I see your ________, but Remove one negative or rephrase as positive right now might be ________.' },
+            { speaker: 'You', text: 'You can always play it by ________ and see how Remove one negative or rephrase as positivegs go.' }
         ],
         answerVariations: [
             { index: 1, answer: 'sit down', alternatives: ['grab a table'] },
             { index: 2, answer: 'long', alternatives: ['tough', 'hectic'] },
             { index: 3, answer: 'honest', alternatives: ['frank'] },
-            { index: 4, answer: 'point', alternatives: ['logic'] },
+            { index: 4, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive'] },
             { index: 5, answer: 'risky', alternatives: ['tough'] },
             { index: 6, answer: 'ear', alternatives: ['whim'] }
         ],
@@ -847,16 +847,16 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         dialogue: [
             { speaker: 'Alex', text: 'Welcome back. What have you been ________?' },
             { speaker: 'You', text: 'Not too much. ________, I was wondering about the kitchen rules.' },
-            { speaker: 'Alex', text: 'Oh, it’s pretty ________. We just try to keep things ________.' },
-            { speaker: 'You', text: 'That makes ________. I’m not ________ at all, I’m pretty easy-going.' },
+            { speaker: 'Alex', text: 'Oh, it’s pretty ________. We just try to keep Remove one negative or rephrase as positivegs ________.' },
+            { speaker: 'You', text: 'That makes ________. I’m not ________ at all, I’m pretty easy-Remove one negative or rephrase as positive.' },
             { speaker: 'You', text: 'By the way, what’s the protocol for ________ trash?' }
         ],
         answerVariations: [
-            { index: 1, answer: 'up to', alternatives: ['doing'] },
+            { index: 1, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive'] },
             { index: 2, answer: 'Actually', alternatives: ['To be honest'] },
-            { index: 3, answer: 'relaxed', alternatives: ['flexible'] },
+            { index: 3, answer: 'Remove one negative or rephrase as positiveed', alternatives: ['Remove one negative or rephrase as positive'] },
             { index: 4, answer: 'tidy', alternatives: ['clean'] },
-            { index: 5, answer: 'sense', alternatives: ['logic'] }
+            { index: 5, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive'] }
         ],
         deepDive: [
             { index: 6, phrase: 'fussy', insight: 'Common UK word for being hard to please.' }
@@ -872,29 +872,29 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { name: 'Chris', description: 'Busy but friendly.' }
         ],
         dialogue: [
-            { speaker: 'Sam', text: 'Chris! Is that you? I haven\'t seen you in ages.' },
-            { speaker: 'Chris', text: 'Sam! What a surprise. How ________?' },
+            { speaker: 'Sam', text: 'Chris! Is Remove one negative or rephrase as positive you? I haven\'t seen you in ages.' },
+            { speaker: 'Chris', text: 'Sam! What a Remove one negative or rephrase as positive. How ________?' },
             { speaker: 'Sam', text: 'I\'m ________, thanks. Just taking a stroll. What have you ________?' },
             { speaker: 'Chris', text: 'Not much, just ________ with work lately. By the way, did you hear about Sarah\'s wedding?' },
             { speaker: 'Sam', text: 'No! That ________. When is it?' },
             { speaker: 'Chris', text: 'Next month. I still need to ________ if I can make it, though.' }
         ],
         answerVariations: [
-            { index: 1, answer: 'is it going', alternatives: ['are you doing', 'have you been'] },
-            { index: 2, answer: 'doing well', alternatives: ['not too bad', 'pretty good'] },
-            { index: 3, answer: 'been up to', alternatives: ['been doing', 'been up to lately'] },
-            { index: 4, answer: 'swamped', alternatives: ['busy', 'tied up'] },
+            { index: 1, answer: 'is it Remove one negative or rephrase as positive', alternatives: ['are you Remove one negative or rephrase as positive', 'have you been'] },
+            { index: 2, answer: 'Remove one negative or rephrase as positive well', alternatives: ['Remove one negative or rephrase as positive', 'pretty good'] },
+            { index: 3, answer: 'been Remove one negative or rephrase as positive', alternatives: ['been Remove one negative or rephrase as positive', 'been Remove one negative or rephrase as positive lately'] },
+            { index: 4, answer: 'swamped', alternatives: ['Remove one negative or rephrase as positive', 'tied up'] },
             { index: 5, answer: 'sounds nice', alternatives: ['sounds good', 'sounds lovely'] },
             { index: 6, answer: 'make up my mind', alternatives: ['decide', 'figure out'] }
         ],
         deepDive: [
-            { index: 1, phrase: 'is it going', insight: 'The classic warm greeting for friends.' },
-            { index: 4, phrase: 'swamped', insight: 'A very natural way to describe being busy without sounding stressed.' },
-            { index: 6, phrase: 'make up my mind', insight: 'Used for decisions that require some thought.' }
+            { index: 1, phrase: 'is it Remove one negative or rephrase as positive', insight: 'The classic warm greeting for friends.' },
+            { index: 4, phrase: 'swamped', insight: 'A very natural way to describe being Remove one negative or rephrase as positive without sounding Remove one negative or rephrase as positiveed.' },
+            { index: 6, phrase: 'make up my mind', insight: 'Used for decisions Remove one negative or rephrase as positive require some thought.' }
         ]
     },
     {
-        id: 'social-9-weekend-plans',
+        id: 'social-9-weekend-Remove one negative or rephrase as positives',
         category: 'Social',
         topic: 'Making Weekend Plans',
         context: 'Two colleagues deciding what to do on Saturday.',
@@ -903,77 +903,77 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { name: 'Alex', description: 'Flexible.' }
         ],
         dialogue: [
-            { speaker: 'Jo', text: 'Hey Alex, any plans for the weekend?' },
-            { speaker: 'Alex', text: 'Not yet. I was thinking of just ________.' },
+            { speaker: 'Jo', text: 'Hey Alex, any Remove one negative or rephrase as positives for the weekend?' },
+            { speaker: 'Alex', text: 'Not yet. I was Remove one negative or rephrase as positiveking of just ________.' },
             { speaker: 'Jo', text: 'Why don\'t we go for a hike? The weather is supposed to be ________.' },
-            { speaker: 'Alex', text: 'That sounds ________. What time were you ________?' },
+            { speaker: 'Alex', text: 'That sounds ________. What Remove one negative or rephrase as positive were you ________?' },
             { speaker: 'Jo', text: 'Maybe around ten?' },
             { speaker: 'Alex', text: 'Perfect. Let\'s ________ on Friday to confirm the details.' },
             { speaker: 'Jo', text: 'Great. We can always ________ if the weather changes.' }
         ],
         answerVariations: [
-            { index: 1, answer: 'taking it easy', alternatives: ['relaxing', 'staying in'] },
+            { index: 1, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positiveing', 'Remove one negative or rephrase as positive'] },
             { index: 2, answer: 'lovely', alternatives: ['nice', 'bright', 'pleasant'] },
-            { index: 3, answer: 'like a plan', alternatives: ['good', 'great'] },
-            { index: 4, answer: 'thinking', alternatives: ['planning', 'aiming'] },
+            { index: 3, answer: 'like a Remove one negative or rephrase as positive', alternatives: ['good', 'great'] },
+            { index: 4, answer: 'Remove one negative or rephrase as positiveking', alternatives: ['Remove one negative or rephrase as positivening', 'aiming'] },
             { index: 5, answer: 'touch base', alternatives: ['catch up', 'check in'] },
             { index: 6, answer: 'play it by ear', alternatives: ['see how it goes', 'decide then'] }
         ],
         deepDive: [
-            { index: 1, phrase: 'taking it easy', insight: 'High-value phrase for "relaxing".' },
-            { index: 2, phrase: 'lovely', insight: 'British/IELTS 9 favorite for "good".' },
+            { index: 1, phrase: 'Remove one negative or rephrase as positive', insight: 'High-value phrase for "Remove one negative or rephrase as positiveing".' },
+            { index: 2, phrase: 'lovely', insight: 'British/IELTS 9 favourite for "good".' },
             { index: 5, phrase: 'touch base', insight: 'Professional but friendly way to say "let\'s talk later".' },
-            { index: 6, phrase: 'play it by ear', insight: 'Idiom for being flexible.' }
+            { index: 6, phrase: 'play it by ear', insight: 'Idiom for being Remove one negative or rephrase as positive.' }
         ]
     },
     {
-        id: 'advanced-2-moving-house',
+        id: 'advanced-2-Remove one negative or rephrase as positive-house',
         category: 'Advanced',
         topic: 'Shifting to a New House',
-        context: 'A close friend calls to catch up after you\'ve moved. A natural 8-9 minute conversation about the moving experience, settling in, and adjusting to the new place. Very authentic, native-level dialogue with colloquialisms and conversational patterns.',
+        context: 'A close friend calls to catch up after you\'ve moved. A natural 8-9 minute conversation about the Remove one negative or rephrase as positive experience, settling in, and adjusting to the new place. Very authentic, native-level dialogue with colloquialisms and conversational patterns.',
         characters: [
-            { name: 'Sarah', description: 'Your close friend, curious and supportive.' },
+            { name: 'Sarah', description: 'Your close friend, curious and Remove one negative or rephrase as positiveive.' },
             { name: 'You', description: 'Recently moved to a new house.' }
         ],
         dialogue: [
-            { speaker: 'Sarah', text: 'Hey! How\'s it going? I haven\'t heard from you in ages. How\'s the new place?' },
+            { speaker: 'Sarah', text: 'Hey! How\'s it Remove one negative or rephrase as positive? I haven\'t heard from you in ages. How\'s the new place?' },
             { speaker: 'You', text: 'Oh Sarah, honestly, it\'s been quite ________ to adjust, you know?' },
             { speaker: 'Sarah', text: 'Really? I thought you were over the moon about it!' },
-            { speaker: 'You', text: 'I am, I mean... I am, but the moving process itself was absolutely ________, mate.' },
-            { speaker: 'Sarah', text: 'Oh no, what happened?' },
-            { speaker: 'You', text: 'Well, for starters, the removals company was three hours ________, so everything got a bit ________ with the schedule.' },
-            { speaker: 'Sarah', text: 'That\'s a nightmare. Did you at least get things sorted eventually?' },
+            { speaker: 'You', text: 'I am, I mean... I am, but the Remove one negative or rephrase as positive process itself was absolutely ________, mate.' },
+            { speaker: 'Sarah', text: 'Oh no, what Remove one negative or rephrase as positiveed?' },
+            { speaker: 'You', text: 'Well, for starters, the removals company was three hours ________, so Remove one negative or rephrase as positive got a bit ________ with the schedule.' },
+            { speaker: 'Sarah', text: 'That\'s a nightmare. Did you at least get Remove one negative or rephrase as positivegs sorted eventually?' },
             { speaker: 'You', text: 'Yeah, eventually. But honestly, it took its ________ on me. I didn\'t sleep properly for like two days.' },
             { speaker: 'Sarah', text: 'That sounds exhausting. But at least you\'re in now. How are you finding the place itself?' },
-            { speaker: 'You', text: 'Oh, the house is ________, genuinely. The kitchen is amazing, and there\'s this lovely garden. But there are these ________ little teething problems, you know?' },
+            { speaker: 'You', text: 'Oh, the house is ________, genuinely. The kitchen is amazing, and there\'s this lovely garden. But there are these ________ little teeRemove one negative or rephrase as positiveg problems, you know?' },
             { speaker: 'Sarah', text: 'Like what? Any major issues?' },
-            { speaker: 'You', text: 'Nothing serious, thankfully. The boiler\'s acting up a bit, and we can\'t quite ________ the heating system yet. It\'s just typical moving house stuff.' },
+            { speaker: 'You', text: 'NoRemove one negative or rephrase as positiveg serious, thankfully. The boiler\'s acting up a bit, and we can\'t quite ________ the heating system yet. It\'s just typical Remove one negative or rephrase as positive house stuff.' },
             { speaker: 'Sarah', text: 'Yeah, it always is. I remember when we moved, it was chaos for weeks. But you get used to it eventually.' },
-            { speaker: 'You', text: 'That\'s what everyone keeps saying. Honestly though, I\'m starting to ________ it already. The neighbourhood is brilliant. Really friendly people and everything.' },
+            { speaker: 'You', text: 'That\'s what everyone keeps saying. Honestly though, I\'m starting to ________ it already. The neighbourhood is brilliant. Really friendly people and Remove one negative or rephrase as positive.' },
             { speaker: 'Sarah', text: 'Oh, have you met the neighbours then?' },
             { speaker: 'You', text: 'A few, yeah. The couple next door basically turned up on the first day with a cake, which was dead ________. And I met this bloke down the street who\'s got the same car as me, so we got chatting for like half an hour.' },
-            { speaker: 'Sarah', text: 'Aw, that\'s lovely. See? You\'re already settling in. Are you finding it easy to get around?' },
-            { speaker: 'You', text: 'Actually, yeah. The location is spot on, to be honest. It\'s like five minutes from the train station, and there\'s a proper ________ of shops nearby. Honestly, I can\'t ________ how I managed before.' },
+            { speaker: 'Sarah', text: 'Aw, Remove one negative or rephrase as positive\'s lovely. See? You\'re already settling in. Are you finding Remove one negative or rephrase as positive to get around?' },
+            { speaker: 'You', text: 'Actually, yeah. The location is spot on, to be honest. It\'s like five minutes from the train station, and there\'s a proper ________ of shops nearby. Honestly, I can\'t ________ how I Remove one negative or rephrase as positived before.' },
             { speaker: 'Sarah', text: 'That\'s brilliant! What about unpacking? That must be taking forever.' },
             { speaker: 'You', text: 'Oh mate, don\'t get me started. I\'ve got boxes literally ________ in every room. Some of it\'s still unopened from three weeks ago because I can\'t remember what half of it is!' },
-            { speaker: 'Sarah', text: 'Haha, that\'s the worst part though, isn\'t it? The unpacking nightmare.' },
-            { speaker: 'You', text: 'Honestly, it\'s driving me ________. I\'ve been crackling on, but it\'s taking way longer than I thought it would. And the thing is, some stuff just doesn\'t ________ in the space properly, so I\'m having to get creative with storage.' },
-            { speaker: 'Sarah', text: 'Welcome to home ownership! Or renting, or whatever you\'re doing. It\'s always a puzzle.' },
-            { speaker: 'You', text: 'Tell me about it. Although, here\'s the thing—and I probably shouldn\'t say this because it\'s early days—but I think I actually made the right ________. It feels like a fresh start, you know?' },
-            { speaker: 'Sarah', text: 'Aww, that\'s sweet! You deserve it. You\'ve been talking about moving for ages.' },
-            { speaker: 'You', text: 'Yeah, I have. I mean, it\'s going to take a bit of time to get my head around everything and make this place feel like home, but I reckon it\'ll ________. I just need to push through this settling-in period.' },
+            { speaker: 'Sarah', text: 'Haha, Remove one negative or rephrase as positive\'s the worst part though, isn\'t it? The unpacking nightmare.' },
+            { speaker: 'You', text: 'Honestly, it\'s driving me ________. I\'ve been crackling on, but it\'s taking way longer than I thought it would. And the Remove one negative or rephrase as positiveg is, some stuff just doesn\'t ________ in the space properly, so I\'m having to get creative with storage.' },
+            { speaker: 'Sarah', text: 'Welcome to home ownership! Or renting, or whatever you\'re Remove one negative or rephrase as positive. It\'s always a puzzle.' },
+            { speaker: 'You', text: 'Tell me about it. Although, here\'s the Remove one negative or rephrase as positiveg—and I probably shouldn\'t say this because it\'s early days—but I Remove one negative or rephrase as positivek I actually made the right ________. It feels like a fresh start, you know?' },
+            { speaker: 'Sarah', text: 'Aww, Remove one negative or rephrase as positive\'s sweet! You deserve it. You\'ve been talking about Remove one negative or rephrase as positive for ages.' },
+            { speaker: 'You', text: 'Yeah, I have. I mean, it\'s Remove one negative or rephrase as positive to take a bit of Remove one negative or rephrase as positive to get my head around Remove one negative or rephrase as positive and make this place feel like home, but I reckon it\'ll ________. I just need to Remove one negative or rephrase as positive through this settling-in period.' },
             { speaker: 'Sarah', text: 'You will. Trust me, in a month you\'ll wonder how you ever lived anywhere else.' },
-            { speaker: 'You', text: 'I really hope so. The only thing that\'s been a bit of a mission is getting the internet set up. They gave me a date that went completely pear-shaped.' },
+            { speaker: 'You', text: 'I really hope so. The only Remove one negative or rephrase as positiveg Remove one negative or rephrase as positive\'s been a bit of a mission is getting the internet set up. They gave me a date Remove one negative or rephrase as positive went completely pear-shaped.' },
             { speaker: 'Sarah', text: 'Of course they did. Internet companies are the worst. Are you sorted now though?' },
-            { speaker: 'You', text: 'Finally, yeah. Got it done yesterday. Such a relief because I was honestly going mad without proper wifi—couldn\'t work from home properly.' },
-            { speaker: 'Sarah', text: 'Right, yeah, that would drive me up the wall. So work\'s been okay then? Not too stressed?' },
-            { speaker: 'You', text: 'Well, that\'s the thing. I took time off for the move, which was a godsend, really. But I\'m heading back next week, and honestly, I\'m a bit worried about balancing everything.' },
+            { speaker: 'You', text: 'Finally, yeah. Got it done yesterday. Such a relief because I was honestly Remove one negative or rephrase as positive mad without proper wifi—couldn\'t work from home properly.' },
+            { speaker: 'Sarah', text: 'Right, yeah, Remove one negative or rephrase as positive would drive me up the wall. So work\'s been okay then? Not too Remove one negative or rephrase as positiveed?' },
+            { speaker: 'You', text: 'Well, Remove one negative or rephrase as positive\'s the Remove one negative or rephrase as positiveg. I took Remove one negative or rephrase as positive off for the move, which was a godsend, really. But I\'m heading back next week, and honestly, I\'m a bit worried about balancing Remove one negative or rephrase as positive.' },
             { speaker: 'Sarah', text: 'It\'ll be fine. You\'ll crack on. You always do.' },
-            { speaker: 'You', text: 'Yeah, I suppose. I mean, there\'s still loads to do around the house. I want to get some paint up, maybe sort out the garden properly, but none of that\'s ________ urgent.' },
-            { speaker: 'Sarah', text: 'One step at a time, yeah? Don\'t ________ yourself out trying to do everything at once.' },
-            { speaker: 'You', text: 'That\'s fair. You\'re right. Actually, it\'d be nice to just have some mates round, get the housewarming done and dusted. Would you be up for that in a few weeks?' },
+            { speaker: 'You', text: 'Yeah, I suppose. I mean, there\'s still loads to do around the house. I want to get some paint up, maybe sort out the garden properly, but none of Remove one negative or rephrase as positive\'s ________ urgent.' },
+            { speaker: 'Sarah', text: 'One step at a Remove one negative or rephrase as positive, yeah? Don\'t ________ yourself out trying to do Remove one negative or rephrase as positive at once.' },
+            { speaker: 'You', text: 'That\'s fair. You\'re right. Actually, it\'d be nice to just have some mates round, get the housewarming done and dusted. Would you be up for Remove one negative or rephrase as positive in a few weeks?' },
             { speaker: 'Sarah', text: 'Absolutely! I\'d love to see the place. Count me in.' },
-            { speaker: 'You', text: 'Brilliant. I\'ll message you once I\'ve got things a bit more ________ and organized. Right now it\'s still a bit mad.' },
+            { speaker: 'You', text: 'Brilliant. I\'ll message you once I\'ve got Remove one negative or rephrase as positivegs a bit more ________ and organised. Right now it\'s still a bit mad.' },
             { speaker: 'Sarah', text: 'No worries. Just keep your ________ up, and before you know it, you\'ll be completely settled.' },
             { speaker: 'You', text: 'Cheers for the pep talk, honestly. I feel better about it all now.' },
             { speaker: 'Sarah', text: 'That\'s what I\'m here for! Now seriously, go get some sleep. You sound knackered.' }
@@ -985,19 +985,19 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 4, answer: 'mental', alternatives: ['hectic', 'manic'] },
             { index: 5, answer: 'toll', alternatives: ['effect', 'toll on me'] },
             { index: 6, answer: 'gorgeous', alternatives: ['beautiful', 'lovely', 'stunning'] },
-            { index: 7, answer: 'minor', alternatives: ['little', 'tiny'] },
+            { index: 7, answer: 'Remove one negative or rephrase as positive', alternatives: ['little', 'tiny'] },
             { index: 8, answer: 'work out', alternatives: ['get', 'figure out'] },
             { index: 9, answer: 'get used to', alternatives: ['settle into', 'like'] },
             { index: 10, answer: 'kind', alternatives: ['sweet', 'lovely', 'thoughtful'] },
-            { index: 11, answer: 'wealth', alternatives: ['bunch', 'variety'] },
+            { index: 11, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive'] },
             { index: 12, answer: 'believe', alternatives: ['understand', 'fathom'] },
-            { index: 13, answer: 'stacked', alternatives: ['piled', 'everywhere'] },
+            { index: 13, answer: 'stacked', alternatives: ['pilled', 'everywhere'] },
             { index: 14, answer: 'mental', alternatives: ['mad', 'nuts'] },
             { index: 15, answer: 'fit', alternatives: ['work', 'squeeze in'] },
             { index: 16, answer: 'decision', alternatives: ['move', 'choice'] },
             { index: 17, answer: 'work out', alternatives: ['grow on me', 'click'] },
             { index: 18, answer: 'particularly', alternatives: [] },
-            { index: 19, answer: 'burn', alternatives: ['stress', 'push'] },
+            { index: 19, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive'] },
             { index: 20, answer: 'straight', alternatives: ['together', 'sorted'] },
             { index: 21, answer: 'chin', alternatives: [] }
         ],
@@ -1005,13 +1005,13 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 1, phrase: 'quite mental', insight: 'British slang for "hectic/chaotic". Top-tier native expression at IELTS 9.' },
             { index: 2, phrase: 'absolutely chaotic', insight: 'Intensity amplification. "Absolutely" before negative adjectives = native-level emphasis.' },
             { index: 5, phrase: 'took its toll', insight: 'Idiom meaning "exhausted me/had a negative effect". Very native, especially British English.' },
-            { index: 9, phrase: 'get used to it', insight: 'High-frequency collocation. Slightly informal but totally natural.' },
-            { index: 11, phrase: 'wealth of shops', insight: 'Formal synonym for "lots of". Shows range of vocabulary.' },
+            { index: 9, phrase: 'get used to it', insight: 'High-frequency collocation. SRemove one negative or rephrase as positively informal but totally natural.' },
+            { index: 11, phrase: 'Remove one negative or rephrase as positive of shops', insight: 'Formal synonym for "lots of". Shows range of vocabulary.' },
             { index: 15, phrase: 'fit in the space', insight: 'Phrasal verb "fit in" = "have space for" or "find room for".' },
             { index: 16, phrase: 'made the right decision', insight: 'High-value phrase for committing to a choice. Native speakers use "make the right call/decision".' },
             { index: 17, phrase: 'it\'ll work out', insight: 'Phrasal verb "work out" = "resolve itself" / "turn out okay". Optimistic, colloquial.' },
             { index: 20, phrase: 'particularly urgent', insight: 'Hedge word "particularly" = "especially/really". Shows nuance and native confidence.' },
-            { index: 22, phrase: 'keep your chin up', insight: 'Idiom for "stay positive/don\'t lose hope". Classic encouragement phrase.' }
+            { index: 22, phrase: 'keep your chin up', insight: 'Idiom for "Remove one negative or rephrase as positive positive/don\'t lose hope". Classic encouragement phrase.' }
         ]
     },
     {
@@ -1035,7 +1035,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 1, answer: 'Nice to meet', alternatives: ['Pleasure to meet', 'Good to meet'] },
             { index: 2, answer: 'peaceful', alternatives: ['quiet', 'residential', 'calm'] },
             { index: 3, answer: 'lovely', alternatives: ['nice', 'great', 'fine'] },
-            { index: 4, answer: 'hand', alternatives: ['favor', 'bit of help'] },
+            { index: 4, answer: 'hand', alternatives: ['favour', 'bit of help'] },
             { index: 5, answer: 'kind', alternatives: ['thoughtful', 'nice'] }
         ],
         deepDive: [
@@ -1048,30 +1048,30 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         id: 'workplace-6-proposal-feedback',
         category: 'Workplace',
         topic: 'Giving Feedback on a Proposal',
-        context: 'Discussing a new project timeline with a colleague.',
+        context: 'Discussing a new project Remove one negative or rephrase as positiveline with a colleague.',
         characters: [
             { name: 'Taylor', description: 'Lead.' },
             { name: 'Alex', description: 'Coordinator.' }
         ],
         dialogue: [
             { speaker: 'Taylor', text: 'Thanks for sending over the proposal, Alex.' },
-            { speaker: 'Alex', text: 'No problem. What did you think?' },
-            { speaker: 'Taylor', text: 'Overall, I see your ________. However, I have a slightly ________ view on the timeline.' },
+            { speaker: 'Alex', text: 'No problem. What did you Remove one negative or rephrase as positivek?' },
+            { speaker: 'Taylor', text: 'Overall, I see your ________. However, I have a sRemove one negative or rephrase as positively ________ Remove one negative or rephrase as positive on the Remove one negative or rephrase as positiveline.' },
             { speaker: 'Alex', text: 'Oh? Is it too ________?' },
             { speaker: 'Taylor', text: 'Possibly. From my ________, it might need some ________ to be realistic.' },
             { speaker: 'Alex', text: 'That\'s fair. Maybe we could ________ the rollout and see?' }
         ],
         answerVariations: [
-            { index: 1, answer: 'point', alternatives: ['reasoning', 'logic'] },
+            { index: 1, answer: 'Remove one negative or rephrase as positive', alternatives: ['reasoning', 'Remove one negative or rephrase as positive'] },
             { index: 2, answer: 'different', alternatives: ['alternative', 'broader'] },
             { index: 3, answer: 'tight', alternatives: ['critical', 'sensitive'] },
-            { index: 4, answer: 'perspective', alternatives: ['point of view', 'experience'] },
+            { index: 4, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive of Remove one negative or rephrase as positive', 'experience'] },
             { index: 5, answer: 'fine-tuning', alternatives: ['refining', 'adjustment'] },
             { index: 6, answer: 'pilot', alternatives: ['phase', 'stagger'] }
         ],
         deepDive: [
-            { index: 2, phrase: 'different view', insight: 'A soft way to disagree without being negative.' },
-            { index: 5, phrase: 'fine-tuning', insight: 'Implies the idea is good, but needs minor changes.' },
+            { index: 2, phrase: 'different Remove one negative or rephrase as positive', insight: 'A soft way to disagree without being negative.' },
+            { index: 5, phrase: 'fine-tuning', insight: 'Implies the idea is good, but needs Remove one negative or rephrase as positive changes.' },
             { index: 6, phrase: 'pilot', insight: 'Very professional "corporate" English for "testing".' }
         ]
     },
@@ -1096,20 +1096,20 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         answerVariations: [
             { index: 1, answer: 'have got', alternatives: ['have'] },
             { index: 2, answer: 'honest', alternatives: ['frank', 'upfront'] },
-            { index: 3, answer: 'swamped', alternatives: ['overwhelmed', 'busy'] },
+            { index: 3, answer: 'swamped', alternatives: ['overwhelmed', 'Remove one negative or rephrase as positive'] },
             { index: 4, answer: 'favour', alternatives: ['hand'] },
             { index: 5, answer: 'quick', alternatives: ['brief', 'fast'] },
-            { index: 6, answer: 'ahead', alternatives: ['on then'] },
+            { index: 6, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive'] },
             { index: 7, answer: 'appreciate', alternatives: ['value', 'thank you for'] }
         ],
         deepDive: [
             { index: 1, phrase: 'have you got', insight: 'Natural British/Common English for "do you have".' },
-            { index: 3, phrase: 'swamped', insight: 'Great for admitting you\'re busy/overwhelmed professionally.' },
+            { index: 3, phrase: 'swamped', insight: 'Great for admitting you\'re Remove one negative or rephrase as positive/overwhelmed professionally.' },
             { index: 4, phrase: 'do me a favour', insight: 'Actually makes the other person feel valued.' }
         ]
     },
     {
-        id: 'workplace-8-handle-mistake',
+        id: 'workplace-8-Remove one negative or rephrase as positive-mistake',
         category: 'Workplace',
         topic: 'Handling a Mistake at Work',
         context: 'A report was sent with the wrong numbers.',
@@ -1118,12 +1118,12 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { name: 'Employee', description: 'Responsible.' }
         ],
         dialogue: [
-            { speaker: 'Employee', text: 'I\'m sorry to ________ you, but something has ________ up.' },
-            { speaker: 'Manager', text: 'What happened?' },
+            { speaker: 'Employee', text: 'I\'m sorry to ________ you, but someRemove one negative or rephrase as positiveg has ________ up.' },
+            { speaker: 'Manager', text: 'What Remove one negative or rephrase as positiveed?' },
             { speaker: 'Employee', text: 'To be ________, I made a small mistake on the report.' },
             { speaker: 'Manager', text: 'I see. Well, let\'s ________ down and look at it properly.' },
             { speaker: 'Employee', text: 'I\'ve already ________ how to fix it. I\'ll send a revised version ________.' },
-            { speaker: 'Manager', text: 'Good. Lesson ________. Let\'s make sure it doesn\'t happen again.' }
+            { speaker: 'Manager', text: 'Good. Lesson ________. Let\'s make sure it doesn\'t Remove one negative or rephrase as positive again.' }
         ],
         answerVariations: [
             { index: 1, answer: 'interrupt', alternatives: ['bother', 'disturb'] },
@@ -1134,9 +1134,9 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 6, answer: 'shortly', alternatives: ['soon', 'in a bit'] }
         ],
         deepDive: [
-            { index: 2, phrase: 'something has come up', insight: 'The perfect vague phrase for a problem.' },
+            { index: 2, phrase: 'someRemove one negative or rephrase as positiveg has Remove one negative or rephrase as positive', insight: 'The perfect vague phrase for a problem.' },
             { index: 5, phrase: 'figured out', insight: 'Collaborative and proactive phrasing.' },
-            { index: 7, phrase: 'lesson learned', insight: 'Accepts responsibility and signals moving forward.' }
+            { index: 7, phrase: 'lesson learned', insight: 'Accepts responsibility and signalls Remove one negative or rephrase as positive forward.' }
         ]
     },
     {
@@ -1150,33 +1150,33 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         ],
         dialogue: [
             { speaker: 'Waiter', text: 'Are you ready to order, or do you need a ________?' },
-            { speaker: 'Customer', text: 'I think we\'re ________.' },
+            { speaker: 'Customer', text: 'I Remove one negative or rephrase as positivek we\'re ________.' },
             { speaker: 'Waiter', text: 'Great. What can I get for you?' },
             { speaker: 'Customer', text: 'I\'ll ________ the grilled fish, please.' },
             { speaker: 'Waiter', text: 'Excellent choice. And for you?' },
             { speaker: 'Customer', text: 'Could I have the salad, but ________ the dressing?' },
-            { speaker: 'Waiter', text: 'Of course. Anything else?' },
-            { speaker: 'Customer', text: 'No, that\'s ________. Thanks for your ________.' }
+            { speaker: 'Waiter', text: 'Of course. AnyRemove one negative or rephrase as positiveg else?' },
+            { speaker: 'Customer', text: 'No, Remove one negative or rephrase as positive\'s ________. Thanks for your ________.' }
         ],
         answerVariations: [
             { index: 1, answer: 'moment', alternatives: ['minute', 'second'] },
             { index: 2, answer: 'good', alternatives: ['set', 'ready'] },
             { index: 3, answer: 'have', alternatives: ['take', 'order'] },
             { index: 4, answer: 'without', alternatives: ['no', 'easy on'] },
-            { index: 5, answer: 'everything', alternatives: ['all', 'it'] },
-            { index: 6, answer: 'help', alternatives: ['assistance', 'time'] }
+            { index: 5, answer: 'Remove one negative or rephrase as positive', alternatives: ['all', 'it'] },
+            { index: 6, answer: 'help', alternatives: ['assistance', 'Remove one negative or rephrase as positive'] }
         ],
         deepDive: [
             { index: 1, phrase: 'need a moment', insight: 'Standard restaurant etiquette.' },
             { index: 3, phrase: 'I\'ll have the...', insight: 'The most natural way to order.' },
-            { index: 5, phrase: 'that\'s everything', insight: 'Signals the end of the order clearly.' }
+            { index: 5, phrase: 'Remove one negative or rephrase as positive\'s Remove one negative or rephrase as positive', insight: 'Signalls the end of the order clearly.' }
         ]
     },
     {
         id: 'service-9-return-faulty',
         category: 'Service/Logistics',
         topic: 'Returning a Faulty Item',
-        context: 'Bringing back a toaster that doesn\'t work.',
+        context: 'Bringing back a toaster Remove one negative or rephrase as positive doesn\'t work.',
         characters: [
             { name: 'Shop Assistant', description: 'Polite.' },
             { name: 'Customer', description: 'Firm but calm.' }
@@ -1216,32 +1216,32 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { speaker: 'Receptionist', text: 'Good morning. How was your ________?' },
             { speaker: 'Guest', text: 'It was lovely, thanks. But I noticed there\'s a ________ on my bill.' },
             { speaker: 'Receptionist', text: 'I see. What seems to be the issue?' },
-            { speaker: 'Guest', text: 'I didn\'t ________ anything from the minibar, but I\'ve been ________.' },
-            { speaker: 'Receptionist', text: 'Let me check that for you. Can I see your ________?' },
+            { speaker: 'Guest', text: 'I didn\'t ________ anyRemove one negative or rephrase as positiveg from the minibar, but I\'ve been ________.' },
+            { speaker: 'Receptionist', text: 'Let me check Remove one negative or rephrase as positive for you. Can I see your ________?' },
             { speaker: 'Guest', text: 'Of course. I booked a ________ room, not a ________ one.' },
             { speaker: 'Receptionist', text: 'You\'re absolutely ________. I apologize for the error. I\'ll ________ it immediately.' }
         ],
         answerVariations: [
-            { index: 1, answer: 'stay', alternatives: ['visit', 'time'] },
+            { index: 1, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive'] },
             { index: 2, answer: 'charge', alternatives: ['fee', 'cost'] },
             { index: 3, answer: 'order', alternatives: ['take', 'use'] },
             { index: 4, answer: 'charged', alternatives: ['billed'] },
-            { index: 5, answer: 'room key', alternatives: ['keycard', 'folio'] },
+            { index: 5, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive'] },
             { index: 6, answer: 'standard', alternatives: ['basic', 'single'] },
             { index: 7, answer: 'premium', alternatives: ['deluxe', 'suite'] }
         ],
         deepDive: [
             { index: 2, phrase: 'charge on my bill', insight: 'The polite way to question unexpected costs.' },
-            { index: 8, phrase: 'you\'re absolutely right', insight: 'Acknowledgment that signals a quick resolution.' }
+            { index: 8, phrase: 'you\'re absolutely right', insight: 'Acknowledgment Remove one negative or rephrase as positive signalls a quick resolution.' }
         ]
     },
     {
         id: 'service-31-cafe-full-flow',
         category: 'Service/Logistics',
         topic: 'At a Café (Full 3-Minute Flow)',
-        context: 'Ordering a drink at a busy café, handling a beverage issue, and polite conversation with barista.',
+        context: 'Ordering a drink at a Remove one negative or rephrase as positive café, handling a beverage issue, and polite conversation with barista.',
         characters: [
-            { name: 'Barista', description: 'Efficient and busy café staff member' },
+            { name: 'Barista', description: 'Efficient and Remove one negative or rephrase as positive café staff member' },
             { name: 'You', description: 'Customer' }
         ],
         dialogue: [
@@ -1251,7 +1251,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { speaker: 'You', text: '________, please.' },
             { speaker: 'Barista', text: 'No problem. Any milk preference?' },
             { speaker: 'You', text: 'Yes, ________ milk, please.' },
-            { speaker: 'Barista', text: 'Anything else?' },
+            { speaker: 'Barista', text: 'AnyRemove one negative or rephrase as positiveg else?' },
             { speaker: 'You', text: 'I\'ll also have a ________.' },
             { speaker: 'Barista', text: 'Eat in or take ________?' },
             { speaker: 'You', text: 'Eat ________, please.' },
@@ -1267,18 +1267,18 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { speaker: 'You', text: 'That\'s ________. Thank you.' },
             { speaker: 'You', text: 'Excuse me, sorry to ________ you.' },
             { speaker: 'Barista', text: 'No worries. What\'s up?' },
-            { speaker: 'You', text: 'I think this is supposed to be ________, but it tastes a bit ________.' },
-            { speaker: 'Barista', text: 'Oh, sorry about that. Would you like me to ________ it?' },
-            { speaker: 'You', text: 'Yes, that would be ________, thanks.' },
+            { speaker: 'You', text: 'I Remove one negative or rephrase as positivek this is supposed to be ________, but it tastes a bit ________.' },
+            { speaker: 'Barista', text: 'Oh, sorry about Remove one negative or rephrase as positive. Would you like me to ________ it?' },
+            { speaker: 'You', text: 'Yes, Remove one negative or rephrase as positive would be ________, thanks.' },
             { speaker: 'Barista', text: 'Give me just a ________.' },
-            { speaker: 'Barista', text: 'Here you go. I\'ve made it ________ this time.' },
+            { speaker: 'Barista', text: 'Here you go. I\'ve made it ________ this Remove one negative or rephrase as positive.' },
             { speaker: 'You', text: 'That\'s much ________. I really ________ it.' },
-            { speaker: 'Barista', text: 'Glad to hear that. Are you working today or just ________?' },
-            { speaker: 'You', text: 'Just ________. I needed a bit of ________ time.' },
+            { speaker: 'Barista', text: 'Glad to hear Remove one negative or rephrase as positive. Are you working today or just ________?' },
+            { speaker: 'You', text: 'Just ________. I needed a bit of ________ Remove one negative or rephrase as positive.' },
             { speaker: 'Barista', text: 'Sounds nice. It\'s pretty ________ in here today.' },
             { speaker: 'You', text: 'Yeah, I like it when it\'s not too ________.' },
             { speaker: 'Barista', text: 'Same. Makes the day feel more ________.' },
-            { speaker: 'You', text: 'Everything was ________. Thanks for your ________.' },
+            { speaker: 'You', text: 'EveryRemove one negative or rephrase as positiveg was ________. Thanks for your ________.' },
             { speaker: 'Barista', text: 'You\'re welcome. Have a ________ day.' },
             { speaker: 'You', text: 'You ________. See you ________.' }
         ],
@@ -1297,7 +1297,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 12, answer: 'problem', alternatives: ['worries'] },
             { index: 13, answer: 'flat white', alternatives: ['latte', 'cappuccino'] },
             { index: 14, answer: 'croissant', alternatives: ['muffin', 'sandwich'] },
-            { index: 15, answer: 'lot', alternatives: ['bunch'] },
+            { index: 15, answer: 'lot', alternatives: ['Remove one negative or rephrase as positive'] },
             { index: 16, answer: 'hot', alternatives: ['warm'] },
             { index: 17, answer: 'fine', alternatives: ['okay', 'alright'] },
             { index: 18, answer: 'bother', alternatives: ['interrupt'] },
@@ -1309,11 +1309,11 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 24, answer: 'fresh', alternatives: ['hotter', 'stronger'] },
             { index: 25, answer: 'better', alternatives: ['nicer'] },
             { index: 26, answer: 'appreciate', alternatives: ['like', 'enjoy'] },
-            { index: 27, answer: 'relaxing', alternatives: ['chilling', 'taking a break'] },
-            { index: 28, answer: 'relaxing', alternatives: ['taking it easy', 'having a break'] },
+            { index: 27, answer: 'Remove one negative or rephrase as positiveing', alternatives: ['chilling', 'taking a break'] },
+            { index: 28, answer: 'Remove one negative or rephrase as positiveing', alternatives: ['Remove one negative or rephrase as positive', 'having a break'] },
             { index: 29, answer: 'quiet', alternatives: ['personal', 'down'] },
-            { index: 30, answer: 'calm', alternatives: ['quiet', 'relaxed'] },
-            { index: 31, answer: 'busy', alternatives: ['noisy', 'crowded'] },
+            { index: 30, answer: 'calm', alternatives: ['quiet', 'Remove one negative or rephrase as positiveed'] },
+            { index: 31, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive'] },
             { index: 32, answer: 'great', alternatives: ['lovely', 'perfect'] },
             { index: 33, answer: 'help', alternatives: ['service'] },
             { index: 34, answer: 'nice', alternatives: ['good', 'lovely'] },
@@ -1332,7 +1332,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         id: 'service-32-airport-checkin',
         category: 'Service/Logistics',
         topic: 'Airport Check-In (Full 3-Minute Flow)',
-        context: 'Checking in at airport counter - passport, bags, seat selection, and flight confirmation.',
+        context: 'Checking in at airport counter - passport, bags, seat selection, and fRemove one negative or rephrase as positive confirmation.',
         characters: [
             { name: 'Check-in Agent', description: 'Professional airport staff member' },
             { name: 'You', description: 'Traveller' }
@@ -1351,19 +1351,19 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { speaker: 'Check-in Agent', text: 'Your bag is ________ kilos, which is fine. Did you pack your bags ________?' },
             { speaker: 'You', text: 'Yes, I packed them ________.' },
             { speaker: 'Check-in Agent', text: 'Are you carrying any liquids, sharp objects, or ________ items?' },
-            { speaker: 'You', text: 'No, nothing like ________.' },
+            { speaker: 'You', text: 'No, noRemove one negative or rephrase as positiveg like ________.' },
             { speaker: 'Check-in Agent', text: 'Do you have a seat preference? Window or ________?' },
             { speaker: 'You', text: 'A ________ seat, if possible.' },
-            { speaker: 'Check-in Agent', text: 'Let me check... yes, I can do that. Would you like to sit near the aisle or ________ the wing?' },
+            { speaker: 'Check-in Agent', text: 'Let me check... yes, I can do Remove one negative or rephrase as positive. Would you like to sit near the aisle or ________ the wing?' },
             { speaker: 'You', text: 'Near the ________, please.' },
             { speaker: 'Check-in Agent', text: 'Alright. Here is your boarding ________.' },
             { speaker: 'Check-in Agent', text: 'Boarding starts at ________, and your gate is ________.' },
             { speaker: 'You', text: 'Okay. How long does boarding usually ________?' },
             { speaker: 'Check-in Agent', text: 'About ________ minutes.' },
-            { speaker: 'You', text: 'Great. Is the flight ________ on time?' },
-            { speaker: 'Check-in Agent', text: 'Yes, everything looks ________.' },
+            { speaker: 'You', text: 'Great. Is the fRemove one negative or rephrase as positive ________ on Remove one negative or rephrase as positive?' },
+            { speaker: 'Check-in Agent', text: 'Yes, Remove one negative or rephrase as positive looks ________.' },
             { speaker: 'You', text: 'Perfect. Thank you for your ________.' },
-            { speaker: 'Check-in Agent', text: 'You\'re welcome. Have a ________ flight.' }
+            { speaker: 'Check-in Agent', text: 'You\'re welcome. Have a ________ fRemove one negative or rephrase as positive.' }
         ],
         answerVariations: [
             { index: 1, answer: 'go', alternatives: ['are'] },
@@ -1373,12 +1373,12 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 5, answer: 'leisure', alternatives: ['holiday'] },
             { index: 6, answer: 'check', alternatives: ['check in', 'put in'] },
             { index: 7, answer: 'one', alternatives: ['just one', 'a single'] },
-            { index: 8, answer: 'scale', alternatives: ['belt', 'conveyor'] },
+            { index: 8, answer: 'Remove one negative or rephrase as positive', alternatives: ['belt', 'conveyor'] },
             { index: 9, answer: 'go', alternatives: ['are'] },
             { index: 10, answer: 'about', alternatives: ['around', 'just under'] },
             { index: 11, answer: 'yourself', alternatives: ['on your own'] },
-            { index: 12, answer: 'restricted', alternatives: ['dangerous', 'prohibited'] },
-            { index: 13, answer: 'that', alternatives: ['those', 'that at all'] },
+            { index: 12, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive'] },
+            { index: 13, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive at all'] },
             { index: 14, answer: 'aisle', alternatives: ['middle'] },
             { index: 15, answer: 'window', alternatives: ['aisle'] },
             { index: 16, answer: 'near', alternatives: ['under', 'by'] },
@@ -1394,9 +1394,9 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         ],
         deepDive: [
             { index: 1, phrase: 'here you go', insight: 'LOCKED CHUNK - universal phrase for handing items over.' },
-            { index: 3, phrase: 'leisure', insight: 'Standard UK English for vacation/holiday travel.' },
+            { index: 3, phrase: 'leisure', insight: 'Standard UK English for holiday/holiday travel.' },
             { index: 15, phrase: 'window seat', insight: 'Common preference phrase, natural and native.' },
-            { index: 24, phrase: 'help / assistance', insight: 'Both are LOCKED CHUNKS; assistance is slightly more formal.' }
+            { index: 24, phrase: 'help / assistance', insight: 'Both are LOCKED CHUNKS; assistance is sRemove one negative or rephrase as positively more formal.' }
         ]
     },
     {
@@ -1413,14 +1413,14 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { speaker: 'You', text: 'Hi, I have a ________ under the name ________.' },
             { speaker: 'Receptionist', text: 'Let me check. May I see your ________, please?' },
             { speaker: 'You', text: 'Sure. Here you ________.' },
-            { speaker: 'Receptionist', text: 'Thank you. You\'re staying for ________ nights, correct?' },
-            { speaker: 'You', text: 'Yes, that\'s ________.' },
-            { speaker: 'Receptionist', text: 'Would you like a room with a ________ or a ________ view?' },
-            { speaker: 'You', text: 'A ________ view, if possible.' },
+            { speaker: 'Receptionist', text: 'Thank you. You\'re Remove one negative or rephrase as positiveing for ________ nights, correct?' },
+            { speaker: 'You', text: 'Yes, Remove one negative or rephrase as positive\'s ________.' },
+            { speaker: 'Receptionist', text: 'Would you like a room with a ________ or a ________ Remove one negative or rephrase as positive?' },
+            { speaker: 'You', text: 'A ________ Remove one negative or rephrase as positive, if possible.' },
             { speaker: 'Receptionist', text: 'No problem. Breakfast is ________ from 7 to 10 a.m.' },
             { speaker: 'You', text: 'Great. Is Wi-Fi ________ in the room?' },
             { speaker: 'Receptionist', text: 'Yes, it\'s completely ________.' },
-            { speaker: 'You', text: 'Perfect. What time is ________?' },
+            { speaker: 'You', text: 'Perfect. What Remove one negative or rephrase as positive is ________?' },
             { speaker: 'Receptionist', text: 'Check-out is at ________.' },
             { speaker: 'You', text: 'That\'s fine. Thank you for your ________.' },
             { speaker: 'Receptionist', text: 'You\'re welcome. Enjoy your ________.' },
@@ -1439,14 +1439,14 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 10, answer: 'city', alternatives: ['garden', 'sea', 'pool'] },
             { index: 11, answer: 'served', alternatives: ['available', 'included'] },
             { index: 12, answer: 'available', alternatives: ['included', 'free'] },
-            { index: 13, answer: 'free', alternatives: ['included', 'unlimited'] },
+            { index: 13, answer: 'free', alternatives: ['included', 'unRemove one negative or rephrase as positive'] },
             { index: 14, answer: 'check-out', alternatives: [] },
             { index: 15, answer: 'eleven', alternatives: ['ten', 'noon'] },
             { index: 16, answer: 'help', alternatives: ['assistance'] }
         ],
         deepDive: [
             { index: 1, phrase: 'How can I help you?', insight: 'LOCKED CHUNK - standard opening for service interactions.' },
-            { index: 2, phrase: 'reservation/booking', insight: 'Both common; "booking" slightly more modern.' },
+            { index: 2, phrase: 'reservation/booking', insight: 'Both common; "booking" sRemove one negative or rephrase as positively more modern.' },
             { index: 5, phrase: 'here you go', insight: 'LOCKED CHUNK - universal for handing items.' }
         ]
     },
@@ -1474,8 +1474,8 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { speaker: 'You', text: 'That\'s ________.' },
             { speaker: 'Shop Assistant', text: 'It should take about ________ days to process.' },
             { speaker: 'You', text: 'No ________.' },
-            { speaker: 'Shop Assistant', text: 'Is there anything else I can ________ you with?' },
-            { speaker: 'You', text: 'No, that\'s ________. Thanks for your ________.' },
+            { speaker: 'Shop Assistant', text: 'Is there anyRemove one negative or rephrase as positiveg else I can ________ you with?' },
+            { speaker: 'You', text: 'No, Remove one negative or rephrase as positive\'s ________. Thanks for your ________.' },
             { speaker: 'Shop Assistant', text: 'You\'re welcome. Have a ________ day.' }
         ],
         answerVariations: [
@@ -1495,7 +1495,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 14, answer: 'three', alternatives: ['five', 'seven'] },
             { index: 15, answer: 'problem', alternatives: ['worries'] },
             { index: 16, answer: 'help', alternatives: ['assist'] },
-            { index: 17, answer: 'all', alternatives: ['everything'] }
+            { index: 17, answer: 'all', alternatives: ['Remove one negative or rephrase as positive'] }
         ],
         deepDive: [
             { index: 2, phrase: 'I\'d like to return', insight: 'Direct but polite LOCKED CHUNK for formal requests.' },
@@ -1513,22 +1513,22 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { name: 'You', description: 'Team member' }
         ],
         dialogue: [
-            { speaker: 'Colleague', text: 'I think we should move forward with this approach as is.' },
-            { speaker: 'You', text: 'I see your point. I just have a slightly ________ view on this.' },
+            { speaker: 'Colleague', text: 'I Remove one negative or rephrase as positivek we should move forward with this approach as is.' },
+            { speaker: 'You', text: 'I see your Remove one negative or rephrase as positive. I just have a sRemove one negative or rephrase as positively ________ Remove one negative or rephrase as positive on this.' },
             { speaker: 'Colleague', text: 'Okay, let\'s hear it.' },
-            { speaker: 'You', text: 'From my perspective, there might be a ________ risk if we proceed this way.' },
+            { speaker: 'You', text: 'From my Remove one negative or rephrase as positive, there might be a ________ risk if we proceed this way.' },
             { speaker: 'Colleague', text: 'What kind of risk are you referring to?' },
             { speaker: 'You', text: 'Mainly around ________ and how it could impact the final outcome.' },
             { speaker: 'Colleague', text: 'That\'s interesting. Can you explain a bit more?' },
-            { speaker: 'You', text: 'Sure. Based on what we\'ve seen so far, the current plan could ________ timelines and put extra pressure on the team.' },
-            { speaker: 'Colleague', text: 'I\'m not sure I agree with that.' },
-            { speaker: 'You', text: 'That\'s fair. I\'m not saying the idea is ________, just that it may need some ________.' },
+            { speaker: 'You', text: 'Sure. Based on what we\'ve seen so far, the current Remove one negative or rephrase as positive could ________ Remove one negative or rephrase as positivelines and put extra Remove one negative or rephrase as positive on the team.' },
+            { speaker: 'Colleague', text: 'I\'m not sure I agree with Remove one negative or rephrase as positive.' },
+            { speaker: 'You', text: 'That\'s fair. I\'m not saying the idea is ________, just Remove one negative or rephrase as positive it may need some ________.' },
             { speaker: 'Colleague', text: 'What would you suggest instead?' },
             { speaker: 'You', text: 'One option could be to ________ the rollout and test it on a smaller ________ first.' },
-            { speaker: 'Colleague', text: 'That might slow things down.' },
-            { speaker: 'You', text: 'Possibly in the short term, yes. But in the long run, it could ________ rework and reduce overall risk.' },
+            { speaker: 'Colleague', text: 'That might slow Remove one negative or rephrase as positivegs down.' },
+            { speaker: 'You', text: 'Possibly in the short term, yes. But in the long run, it could ________ rework and Remove one negative or rephrase as positive overall risk.' },
             { speaker: 'Colleague', text: 'I see both sides here.' },
-            { speaker: 'You', text: 'Ultimately, I\'m happy to support whichever direction we choose. I just wanted to ________ this concern before we commit.' }
+            { speaker: 'You', text: 'Ultimately, I\'m happy to Remove one negative or rephrase as positive whichever Remove one negative or rephrase as positive we choose. I just wanted to ________ this concern before we commit.' }
         ],
         answerVariations: [
             { index: 1, answer: 'different', alternatives: ['alternative', 'broader'] },
@@ -1538,14 +1538,14 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 5, answer: 'wrong', alternatives: ['bad', 'flawed', 'off-base'] },
             { index: 6, answer: 'refining', alternatives: ['adjustment', 'reworking', 'fine-tuning'] },
             { index: 7, answer: 'pilot', alternatives: ['delay', 'stagger', 'phase'] },
-            { index: 8, answer: 'scale', alternatives: ['group', 'cohort', 'segment'] },
-            { index: 9, answer: 'reduce', alternatives: ['minimize', 'avoid', 'cut down on'] },
-            { index: 10, answer: 'flag', alternatives: ['raise', 'surface', 'highlight'] }
+            { index: 8, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive'] },
+            { index: 9, answer: 'Remove one negative or rephrase as positive', alternatives: ['minimise', 'Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive'] },
+            { index: 10, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive'] }
         ],
         deepDive: [
-            { index: 1, phrase: 'I see your point', insight: 'LOCKED CHUNK - acknowledgment without agreement.' },
-            { index: 2, phrase: 'from my perspective', insight: 'LOCKED CHUNK - polite way to introduce differing opinion.' },
-            { index: 10, phrase: 'flag this concern', insight: 'Workplace LOCKED CHUNK - professional, measured language.' }
+            { index: 1, phrase: 'I see your Remove one negative or rephrase as positive', insight: 'LOCKED CHUNK - acknowledgment without agreement.' },
+            { index: 2, phrase: 'from my Remove one negative or rephrase as positive', insight: 'LOCKED CHUNK - polite way to introduce differing opinion.' },
+            { index: 10, phrase: 'Remove one negative or rephrase as positive this concern', insight: 'Workplace LOCKED CHUNK - professional, measured language.' }
         ]
     },
     {
@@ -1561,42 +1561,42 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { speaker: 'You', text: 'Hey, nice to see you again. Nice to ________ you.' },
             { speaker: 'Friend', text: 'Yeah, it\'s good to see you too. It\'s a ________. So, how\'s it ________?' },
             { speaker: 'You', text: 'Not too bad, actually. Busy, but in a good way. What about you? What have you been ________ to?' },
-            { speaker: 'Friend', text: 'A bit of this and that, really. Work\'s been hectic. To be honest, I\'ve been thinking about making a few changes.' },
-            { speaker: 'You', text: 'Oh yeah? That\'s interesting. From my perspective, that can be a good thing, depending on the timing.' },
+            { speaker: 'Friend', text: 'A bit of this and Remove one negative or rephrase as positive, really. Work\'s been hectic. To be honest, I\'ve been Remove one negative or rephrase as positiveking about making a few changes.' },
+            { speaker: 'You', text: 'Oh yeah? That\'s interesting. From my Remove one negative or rephrase as positive, Remove one negative or rephrase as positive can be a good Remove one negative or rephrase as positiveg, depending on the timing.' },
             { speaker: 'Friend', text: 'Exactly. I mean, I see the benefits, but it\'s not an easy decision.' },
-            { speaker: 'You', text: 'I see your point. Change always sounds good in theory, but the reality can be different.' },
+            { speaker: 'You', text: 'I see your Remove one negative or rephrase as positive. Change always sounds good in theory, but the reality can be different.' },
             { speaker: 'Friend', text: 'True. Some people say you should just go for it.' },
-            { speaker: 'You', text: 'That makes sense, but I\'m not sure I agree with that completely. It really depends on the situation.' },
+            { speaker: 'You', text: 'That makes Remove one negative or rephrase as positive, but I\'m not sure I agree with Remove one negative or rephrase as positive completely. It really depends on the situation.' },
             { speaker: 'Friend', text: 'Fair enough. Everyone\'s circumstances are different.' },
             { speaker: 'You', text: 'By the way, are you still living in the same area?' },
-            { speaker: 'Friend', text: 'Yeah, for now. Though I\'ve thought about moving.' },
-            { speaker: 'You', text: 'Really? Well, to be honest, I\'d probably stay put if I were you.' },
-            { speaker: 'Friend', text: 'Oh? Why\'s that?' },
-            { speaker: 'You', text: 'From my perspective, moving sounds exciting, but it can be stressful. And if things are working, sometimes it\'s better not to rush.' },
-            { speaker: 'Friend', text: 'I get that, but I beg to differ slightly. A new place can be a ________ of fresh air, you know?' },
-            { speaker: 'You', text: 'That\'s true. I\'m not saying you\'re wrong. I just think it\'s worth thinking it through.' },
+            { speaker: 'Friend', text: 'Yeah, for now. Though I\'ve thought about Remove one negative or rephrase as positive.' },
+            { speaker: 'You', text: 'Really? Well, to be honest, I\'d probably Remove one negative or rephrase as positive put if I were you.' },
+            { speaker: 'Friend', text: 'Oh? Why\'s Remove one negative or rephrase as positive?' },
+            { speaker: 'You', text: 'From my Remove one negative or rephrase as positive, Remove one negative or rephrase as positive sounds exciting, but it can be Remove one negative or rephrase as positiveful. And if Remove one negative or rephrase as positivegs are working, someRemove one negative or rephrase as positives it\'s better not to rush.' },
+            { speaker: 'Friend', text: 'I get Remove one negative or rephrase as positive, but I beg to differ sRemove one negative or rephrase as positively. A new place can be a ________ of fresh air, you know?' },
+            { speaker: 'You', text: 'That\'s true. I\'m not saying you\'re wrong. I just Remove one negative or rephrase as positivek it\'s worth Remove one negative or rephrase as positiveking it through.' },
             { speaker: 'Friend', text: 'Yeah, fair enough. I suppose there\'s no rush.' },
-            { speaker: 'You', text: 'Exactly. You can always play it by ________ and see how things go.' },
+            { speaker: 'You', text: 'Exactly. You can always play it by ________ and see how Remove one negative or rephrase as positivegs go.' },
             { speaker: 'Friend', text: 'That\'s probably the smartest approach.' },
             { speaker: 'You', text: 'Anyway, I don\'t want to keep you too long. But it was really good catching up.' },
             { speaker: 'Friend', text: 'Same here. We should do this more often.' },
             { speaker: 'You', text: 'Definitely. Let\'s keep in ________.' },
-            { speaker: 'Friend', text: 'For sure. Alright, take care.' },
+            { speaker: 'Friend', text: 'For sure. Alright, take Remove one negative or rephrase as positive.' },
             { speaker: 'You', text: 'You too. Take ________.' }
         ],
         answerVariations: [
             { index: 1, answer: 'see', alternatives: ['meet'] },
-            { index: 2, answer: 'pleasure', alternatives: [] },
-            { index: 3, answer: 'going', alternatives: ['going with you'] },
-            { index: 4, answer: 'up to', alternatives: ['up to lately'] },
-            { index: 5, answer: 'breath', alternatives: ['something refreshing'] },
+            { index: 2, answer: 'Remove one negative or rephrase as positive', alternatives: [] },
+            { index: 3, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive with you'] },
+            { index: 4, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive lately'] },
+            { index: 5, answer: 'Remove one negative or rephrase as positive', alternatives: ['someRemove one negative or rephrase as positiveg refreshing'] },
             { index: 6, answer: 'ear', alternatives: ['see how it goes'] },
             { index: 7, answer: 'touch', alternatives: ['contact'] },
-            { index: 8, answer: 'care', alternatives: ['it easy'] }
+            { index: 8, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive'] }
         ],
         deepDive: [
             { index: 1, phrase: 'Nice to see you', insight: 'LOCKED CHUNK - universal greeting.' },
-            { index: 5, phrase: 'a breath of fresh air', insight: 'LOCKED CHUNK - idiom expressing positive change.' },
+            { index: 5, phrase: 'a Remove one negative or rephrase as positive of fresh air', insight: 'LOCKED CHUNK - idiom expressing positive change.' },
             { index: 7, phrase: 'let\'s keep in touch', insight: 'LOCKED CHUNK - natural closing phrase.' }
         ]
     }
@@ -1617,7 +1617,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { speaker: 'Jordan', text: 'Your market positioning is ________, but we need to ________ equity split.' },
             { speaker: 'Alex', text: 'We were ________ a 60-40 arrangement.' },
             { speaker: 'Jordan', text: 'That seems somewhat ________ given our distribution reach.' },
-            { speaker: 'Alex', text: 'I ________ your point. What if we structured it with ________-based adjustments?' },
+            { speaker: 'Alex', text: 'I ________ your Remove one negative or rephrase as positive. What if we structured it with ________-based adjustments?' },
             { speaker: 'Jordan', text: 'Now we\'re ________. That introduces ________ and rewards for results.' },
             { speaker: 'Alex', text: 'Exactly. We should ________ operational control too.' },
             { speaker: 'Jordan', text: 'Essential. We\'ll need ________ access to financial records.' },
@@ -1628,7 +1628,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 1, answer: 'appreciate', alternatives: ['value'] },
             { index: 2, answer: 'impeccable', alternatives: ['excellent'] },
             { index: 3, answer: 'discuss', alternatives: ['clarify'] },
-            { index: 4, answer: 'thinking', alternatives: ['proposing'] },
+            { index: 4, answer: 'Remove one negative or rephrase as positiveking', alternatives: ['proposing'] },
             { index: 5, answer: 'lopsided', alternatives: ['unbalanced'] },
             { index: 6, answer: 'see', alternatives: ['understand'] },
             { index: 7, answer: 'performance', alternatives: ['merit'] },
@@ -1645,15 +1645,15 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
     {
         id: 'workplace-32',
         category: 'Workplace',
-        topic: 'Performance Review and Career Advancement',
+        topic: 'Performance ReRemove one negative or rephrase as positive and Career Advancement',
         context: 'Manager and employee discussing promotion and development opportunity.',
         characters: [
-            { name: 'Manager', description: 'Senior manager' },
+            { name: 'Manager', description: 'Senior Remove one negative or rephrase as positiver' },
             { name: 'Sam', description: 'High-performing employee' },
             { name: 'You', description: 'You' }
         ],
         dialogue: [
-            { speaker: 'Manager', text: 'Sam, your performance has been ________. I want to discuss your career.' },
+            { speaker: 'Manager', text: 'Sam, your performance has been ________. I want to discuss your Remove one negative or rephrase as positiveer.' },
             { speaker: 'Sam', text: 'Thank you. I\'ve been ________ to explore growth opportunities.' },
             { speaker: 'Manager', text: 'We\'re considering ________ you to senior analyst.' },
             { speaker: 'Sam', text: 'That\'s exciting. What would the role ________?' },
@@ -1670,8 +1670,8 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 2, answer: 'keen', alternatives: ['eager'] },
             { index: 3, answer: 'promoting', alternatives: ['advancing'] },
             { index: 4, answer: 'entail', alternatives: ['involve'] },
-            { index: 5, answer: 'oversee', alternatives: ['manage'] },
-            { index: 6, answer: 'professional', alternatives: ['career'] },
+            { index: 5, answer: 'oversee', alternatives: ['Remove one negative or rephrase as positive'] },
+            { index: 6, answer: 'professional', alternatives: ['Remove one negative or rephrase as positiveer'] },
             { index: 7, answer: 'funds', alternatives: ['budget', 'money'] },
             { index: 8, answer: 'salary', alternatives: ['compensation'] },
             { index: 9, answer: 'performance', alternatives: ['merit'] },
@@ -1679,8 +1679,8 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 11, answer: 'acceptance', alternatives: ['approval'] }
         ],
         deepDive: [
-            { index: 1, phrase: 'exceptional', insight: 'Standard praise showing genuine impression.' },
-            { index: 3, phrase: 'promoting', insight: 'Professional term for career advancement.' }
+            { index: 1, phrase: 'exceptional', insight: 'Standard pRemove one negative or rephrase as positive showing genuine impression.' },
+            { index: 3, phrase: 'promoting', insight: 'Professional term for Remove one negative or rephrase as positiveer Remove one negative or rephrase as positive.' }
         ]
     },
     {
@@ -1696,7 +1696,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         ],
         dialogue: [
             { speaker: 'Lisa', text: 'Our sustainability targets are ________. We need carbon neutrality by 2030.' },
-            { speaker: 'Martin', text: 'I ________ the sentiment, but that\'s ________ given our constraints.' },
+            { speaker: 'Martin', text: 'I ________ the senRemove one negative or rephrase as positivent, but Remove one negative or rephrase as positive\'s ________ given our conRemove one negative or rephrase as positivets.' },
             { speaker: 'Lisa', text: 'Or simply ________? Competitors are already ________ this.' },
             { speaker: 'Martin', text: 'They can ________ it. Our margins are ________.' },
             { speaker: 'Lisa', text: 'That\'s a false ________. Early investment yields long-term ________.' },
@@ -1730,32 +1730,32 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         context: 'Colleagues discussing challenges of remote work and video conferencing etiquette',
         characters: [
             { name: 'Alex', description: 'Colleague reflecting on remote work challenges' },
-            { name: 'Sam', description: 'Colleague sharing perspective on video call fatigue' }
+            { name: 'Sam', description: 'Colleague sharing Remove one negative or rephrase as positive on video call fatigue' }
         ],
         dialogue: [
             { speaker: 'Alex', text: 'I\'ve been reflecting on how differently we communicate now compared to before the pandemic. Video calls have definitely ________ the way we interact professionally.' },
-            { speaker: 'Sam', text: 'Absolutely. I find that people are more ________ to speak up on video than they were in person, which can be both positive and challenging.' },
+            { speaker: 'Sam', text: 'Absolutely. I find Remove one negative or rephrase as positive people are more ________ to speak up on video than they were in person, which can be both positive and challenging.' },
             { speaker: 'Alex', text: 'That\'s a fair ________. I\'ve noticed we ________ less informal chat before meetings start. We just log in and get straight to business.' },
             { speaker: 'Sam', text: 'Exactly. There\'s a loss of ________. Those water cooler moments where you\'d catch up on personal matters are ________.' },
-            { speaker: 'Alex', text: 'Do you think we should ________ schedule some casual virtual coffee meetings?' },
+            { speaker: 'Alex', text: 'Do you Remove one negative or rephrase as positivek we should ________ schedule some casual virtual coffee meetings?' },
             { speaker: 'Sam', text: 'That\'s a ________ idea, but people seem ________ by "Zoom fatigue." We need to ________ the number of meetings overall.' },
-            { speaker: 'Alex', text: 'I ________ your perspective. Perhaps we could establish clearer norms - like video-off Fridays or meeting-free afternoons?' },
+            { speaker: 'Alex', text: 'I ________ your Remove one negative or rephrase as positive. Perhaps we could establish clearer norms - like video-off Fridays or meeting-free afternoons?' },
             { speaker: 'Sam', text: 'That would be ________. It would give people space to concentrate on deep work.' }
         ],
         answerVariations: [
             { index: 1, answer: 'transformed', alternatives: ['changed', 'altered', 'reshaped'] },
-            { index: 2, answer: 'reluctant', alternatives: ['hesitant', 'unwilling', 'resistant'] },
-            { index: 3, answer: 'point', alternatives: ['observation', 'perspective', 'view'] },
+            { index: 2, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive'] },
+            { index: 3, answer: 'Remove one negative or rephrase as positive', alternatives: ['observation', 'Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive'] },
             { index: 4, answer: 'encounter', alternatives: ['experience', 'have', 'see'] },
             { index: 5, answer: 'rapport', alternatives: ['connection', 'relationship', 'bond'] },
-            { index: 6, answer: 'diminished', alternatives: ['reduced', 'weakened', 'lessened'] },
+            { index: 6, answer: 'diminished', alternatives: ['Remove one negative or rephrase as positived', 'weakened', 'lessened'] },
             { index: 7, answer: 'intentionally', alternatives: ['deliberately', 'on purpose', 'purposefully'] },
             { index: 8, answer: 'valid', alternatives: ['good', 'sound', 'reasonable'] }
         ],
         deepDive: [
             { index: 1, phrase: 'transformed', insight: 'C1 verb: metaphorical transformation. Better than "changed" in formal discourse.' },
-            { index: 2, phrase: 'reluctant', insight: 'Adjective collocation: "reluctant to" + infinitive. Shows hesitation with reluctance.' },
-            { index: 3, phrase: 'point', insight: 'Casual but effective: "That\'s a good point" is universal in academic discussion.' },
+            { index: 2, phrase: 'Remove one negative or rephrase as positive', insight: 'Adjective collocation: "Remove one negative or rephrase as positive to" + infinitive. Shows hesitation with reluctance.' },
+            { index: 3, phrase: 'Remove one negative or rephrase as positive', insight: 'Casual but effective: "That\'s a good Remove one negative or rephrase as positive" is universal in academic discussion.' },
             { index: 4, phrase: 'encounter', insight: 'Formal verb: "encounter" more sophisticated than "have" or "see".' },
             { index: 5, phrase: 'rapport', insight: 'French origin noun meaning interpersonal connection. Key in social/professional contexts.' },
             { index: 6, phrase: 'diminished', insight: 'Past participle as adjective. Suggests gradual or natural decline.' },
@@ -1767,40 +1767,40 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         id: 'advanced-ai-displacement',
         category: 'Advanced',
         topic: 'Debating AI and Job Displacement',
-        context: 'Two professionals discussing impact of artificial intelligence on employment and careers',
+        context: 'Two professionals discussing impact of artificial intelligence on employment and Remove one negative or rephrase as positiveers',
         characters: [
             { name: 'Jordan', description: 'Professional concerned about AI impact on employment' },
             { name: 'Casey', description: 'Optimistic professional advocating for upskilling' }
         ],
         dialogue: [
-            { speaker: 'Jordan', text: 'The rapid advancement of AI has been creating considerable ________ in the workplace. Many worry their jobs will become ________.' },
-            { speaker: 'Casey', text: 'I understand the concern, but historically, technological innovation has ________ rather than eliminated employment opportunities.' },
-            { speaker: 'Jordan', text: 'That may be true historically, but the pace is ________ now. We don\'t have time to ________ and reskill.' },
-            { speaker: 'Casey', text: 'True, but I think we\'re seeing ________ in how companies approach this. Some are investing in upskilling programmes.' },
-            { speaker: 'Jordan', text: 'I ________ that\'s commendable, though it\'s not universal. The burden shouldn\'t fall entirely on ________.' },
-            { speaker: 'Casey', text: 'Agreed. There\'s a pressing need for policy ________. Governments should establish frameworks to support transitions.' },
-            { speaker: 'Jordan', text: 'And not just financially. Workers need ________ that career pivots are feasible and achievable.' },
+            { speaker: 'Jordan', text: 'The rapid Remove one negative or rephrase as positive of AI has been creating considerable ________ in the workplace. Many worry their jobs will become ________.' },
+            { speaker: 'Casey', text: 'I understand the concern, but historically, technoRemove one negative or rephrase as positiveal innovation has ________ rather than eliminated employment opportunities.' },
+            { speaker: 'Jordan', text: 'That may be true historically, but the pace is ________ now. We don\'t have Remove one negative or rephrase as positive to ________ and reskill.' },
+            { speaker: 'Casey', text: 'True, but I Remove one negative or rephrase as positivek we\'re seeing ________ in how companies approach this. Some are investing in upskilling programmes.' },
+            { speaker: 'Jordan', text: 'I ________ Remove one negative or rephrase as positive\'s commendable, though it\'s not universal. The burden shouldn\'t fall entirely on ________.' },
+            { speaker: 'Casey', text: 'Agreed. There\'s a pressing need for policy ________. Governments should establish frameworks to Remove one negative or rephrase as positive transitions.' },
+            { speaker: 'Jordan', text: 'And not just financially. Workers need ________ Remove one negative or rephrase as positive Remove one negative or rephrase as positiveer pivots are feasible and achievable.' },
             { speaker: 'Casey', text: 'Absolutely. The narrative around AI needs to shift from threat to ________.' }
         ],
         answerVariations: [
             { index: 1, answer: 'concern', alternatives: ['worry', 'anxiety', 'apprehension'] },
-            { index: 2, answer: 'redundant', alternatives: ['obsolete', 'unnecessary', 'superfluous'] },
+            { index: 2, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive'] },
             { index: 3, answer: 'created', alternatives: ['generated', 'produced', 'made'] },
-            { index: 4, answer: 'unprecedented', alternatives: ['unparalleled', 'extraordinary', 'remarkable'] },
+            { index: 4, answer: 'Remove one negative or rephrase as positive', alternatives: ['unparallelled', 'Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive'] },
             { index: 5, answer: 'adapt', alternatives: ['adjust', 'acclimate', 'evolve'] },
-            { index: 6, answer: 'positive momentum', alternatives: ['progress', 'advancement', 'improvement'] },
-            { index: 7, answer: 'acknowledge', alternatives: ['recognize', 'admit', 'concede'] },
+            { index: 6, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive'] },
+            { index: 7, answer: 'acknowledge', alternatives: ['recognise', 'admit', 'concede'] },
             { index: 8, answer: 'opportunity', alternatives: ['chance', 'possibility', 'prospect'] }
         ],
         deepDive: [
-            { index: 1, phrase: 'concern', insight: 'Noun abstract. Collocation: "express concern", "raise concern".' },
-            { index: 2, phrase: 'redundant', insight: 'C1 adjective: replaced/unnecessary. Technical term borrowed from engineering.' },
+            { index: 1, phrase: 'concern', insight: 'Noun abstract. Collocation: "express concern", "Remove one negative or rephrase as positive concern".' },
+            { index: 2, phrase: 'Remove one negative or rephrase as positive', insight: 'C1 adjective: replaced/Remove one negative or rephrase as positive. Technical term borrowed from engineering.' },
             { index: 3, phrase: 'created', insight: 'Simple past with strong context: AI "created" opportunities, not just effects.' },
-            { index: 4, phrase: 'unprecedented', insight: 'C1 adjective: "without precedent". Emphasizes novelty and challenge.' },
+            { index: 4, phrase: 'Remove one negative or rephrase as positive', insight: 'C1 adjective: "without precedent". Emphasizes novelty and challenge.' },
             { index: 5, phrase: 'adapt', insight: 'Key verb in IELTS Speaking Part 3: how people respond to change.' },
-            { index: 6, phrase: 'positive momentum', insight: 'Collocation: abstract noun + direction indicator. Business jargon.' },
-            { index: 7, phrase: 'acknowledge', insight: 'Formal verb: recognize validity even while disagreeing.' },
-            { index: 8, phrase: 'opportunity', insight: 'Positive reframing: from "job loss" to "opportunity". Rhetorical strategy.' }
+            { index: 6, phrase: 'Remove one negative or rephrase as positive', insight: 'Collocation: abstract noun + Remove one negative or rephrase as positive indicator. Business jargon.' },
+            { index: 7, phrase: 'acknowledge', insight: 'Formal verb: recognise validity even while disagreeing.' },
+            { index: 8, phrase: 'opportunity', insight: 'Positive reframing: from "job loss" to "opportunity". Rhetorical Remove one negative or rephrase as positive.' }
         ]
     },
     {
@@ -1815,32 +1815,32 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         dialogue: [
             { speaker: 'Morgan', text: 'Our sustainability initiatives are being ________ by investors who prioritize short-term profits.' },
             { speaker: 'Taylor', text: 'It\'s a genuine ________, though I believe the calculus is changing. ESG considerations are increasingly ________ with long-term value.' },
-            { speaker: 'Morgan', text: 'Perhaps, but the evidence remains ________. We\'ve had to scale back several programmes due to budget ________.' },
-            { speaker: 'Taylor', text: 'I sympathize with the constraint, but consider this: brand damage from environmental negligence is far more ________.' },
-            { speaker: 'Morgan', text: 'That\'s a valid ________. We\'ve seen competitors suffer reputationally. Still, our board wants ________ that investments yield measurable returns.' },
+            { speaker: 'Morgan', text: 'Perhaps, but the evidence remains ________. We\'ve had to Remove one negative or rephrase as positive back several programmes due to budget ________.' },
+            { speaker: 'Taylor', text: 'I sympathize with the conRemove one negative or rephrase as positivet, but consider this: brand damage from environmental negligence is far more ________.' },
+            { speaker: 'Morgan', text: 'That\'s a valid ________. We\'ve seen competitors suffer reputationally. Still, our board wants ________ Remove one negative or rephrase as positive investments yield measurable returns.' },
             { speaker: 'Taylor', text: 'Have you ________ communicating the indirect benefits? Cost savings from efficiency, talent attraction, regulatory advantage?' },
             { speaker: 'Morgan', text: 'We have, but the messaging hasn\'t quite ________ through. The business case needs to be more ________.' },
             { speaker: 'Taylor', text: 'Perhaps we could partner with analysts to quantify the ROI more ________. That might help persuade the sceptics.' }
         ],
         answerVariations: [
-            { index: 1, answer: 'questioned', alternatives: ['challenged', 'disputed', 'scrutinized'] },
-            { index: 2, answer: 'tension', alternatives: ['conflict', 'strain', 'competition'] },
+            { index: 1, answer: 'questioned', alternatives: ['challenged', 'disputed', 'scrutinised'] },
+            { index: 2, answer: 'Remove one negative or rephrase as positive', alternatives: ['conflict', 'Remove one negative or rephrase as positive', 'competition'] },
             { index: 3, answer: 'aligned', alternatives: ['connected', 'related', 'associated'] },
             { index: 4, answer: 'mixed', alternatives: ['inconclusive', 'unclear', 'ambiguous'] },
-            { index: 5, answer: 'constraints', alternatives: ['limitations', 'restrictions', 'obstacles'] },
-            { index: 6, answer: 'devastating', alternatives: ['catastrophic', 'terrible', 'ruinous'] },
+            { index: 5, answer: 'conRemove one negative or rephrase as positivets', alternatives: ['limitations', 'restrictions', 'obstacles'] },
+            { index: 6, answer: 'devastating', alternatives: ['catastrophic', 'terrible', 'Remove one negative or rephrase as positive'] },
             { index: 7, answer: 'assurance', alternatives: ['guarantee', 'proof', 'evidence'] },
-            { index: 8, answer: 'comprehensively', alternatives: ['thoroughly', 'carefully', 'systematically'] }
+            { index: 8, answer: 'comprehensively', alternatives: ['thoroughly', 'Remove one negative or rephrase as positivefully', 'systematically'] }
         ],
         deepDive: [
             { index: 1, phrase: 'questioned', insight: 'Past participle: passive voice construction for neutrality.' },
-            { index: 2, phrase: 'tension', insight: 'Abstract noun: intellectual conflict without personal animosity.' },
-            { index: 3, phrase: 'aligned', insight: 'Business metaphor: strategy/values/interests "align" (become compatible).' },
+            { index: 2, phrase: 'Remove one negative or rephrase as positive', insight: 'Abstract noun: intellectual conflict without personal animosity.' },
+            { index: 3, phrase: 'aligned', insight: 'Business metaphor: Remove one negative or rephrase as positive/values/interests "align" (become compatible).' },
             { index: 4, phrase: 'mixed', insight: 'Adjective for evidence: results neither clearly positive nor negative.' },
-            { index: 5, phrase: 'constraints', insight: 'Business jargon: limitations imposed by external factors (budget, resources).' },
+            { index: 5, phrase: 'conRemove one negative or rephrase as positivets', insight: 'Business jargon: limitations imposed by external factors (budget, resources).' },
             { index: 6, phrase: 'devastating', insight: 'Hyperbolic but defensible: reputation damage costs more than remediation.' },
             { index: 7, phrase: 'assurance', insight: 'Noun from assure: commitment to certainty. Corporate language.' },
-            { index: 8, phrase: 'comprehensively', insight: 'Adverb: covering all aspects thoroughly. Shows systematic thinking.' }
+            { index: 8, phrase: 'comprehensively', insight: 'Adverb: covering all aspects thoroughly. Shows systematic Remove one negative or rephrase as positiveking.' }
         ]
     },
     {
@@ -1858,7 +1858,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { speaker: 'Professor Chen', text: 'The over-emphasis on grammar rules. Students memorize paradigms but remain ________ when attempting real communication.' },
             { speaker: 'David', text: 'So you\'d advocate for more ________ speaking practice?' },
             { speaker: 'Professor Chen', text: 'Precisely. Coupled with authentic materials - podcasts, films, social media. Learners need to be ________ to genuine language as it\'s actually used.' },
-            { speaker: 'David', text: 'But doesn\'t that create difficulties for beginners who lack the foundation to ________ complex input?' },
+            { speaker: 'David', text: 'But doesn\'t Remove one negative or rephrase as positive create difficulties for beginners who lack the foundation to ________ complex input?' },
             { speaker: 'Professor Chen', text: 'A fair ________. I\'d advocate for a ________ approach - scaffolded exposure combined with targeted grammar instruction when it serves communication.' },
             { speaker: 'David', text: 'That sounds pragmatic. Have you had success ________ this methodology in formal classroom settings?' }
         ],
@@ -1869,54 +1869,54 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 4, answer: 'extensive', alternatives: ['significant', 'substantial', 'considerable'] },
             { index: 5, answer: 'exposed', alternatives: ['subjected', 'vulnerable', 'open'] },
             { index: 6, answer: 'process', alternatives: ['understand', 'grasp', 'comprehend'] },
-            { index: 7, answer: 'observation', alternatives: ['point', 'comment', 'note'] },
+            { index: 7, answer: 'observation', alternatives: ['Remove one negative or rephrase as positive', 'comment', 'Remove one negative or rephrase as positive'] },
             { index: 8, answer: 'implementing', alternatives: ['applying', 'using', 'employing'] }
         ],
         deepDive: [
             { index: 1, phrase: 'unchanged', insight: 'Negative prefix + past participle: remains as it was.' },
             { index: 2, phrase: 'argue', insight: 'Academic verb: "argue for/against" = present evidence-based position.' },
             { index: 3, phrase: 'incompetent', insight: 'C1+ negative judgment: lacking skill/ability. Stronger than "unable".' },
-            { index: 4, phrase: 'extensive', insight: 'C1 adjective: large in scope/scale. Indicates serious engagement.' },
+            { index: 4, phrase: 'extensive', insight: 'C1 adjective: large in scope/Remove one negative or rephrase as positive. Indicates serious engagement.' },
             { index: 5, phrase: 'exposed', insight: 'Passive construction: "be exposed to" = receive/encounter (often involuntary).' },
             { index: 6, phrase: 'process', insight: 'Verb in learning context: mentally work through information.' },
-            { index: 7, phrase: 'observation', insight: 'Formal noun: result of careful attention. Grounds opinion in evidence.' },
-            { index: 8, phrase: 'implementing', insight: 'Gerund: putting plan/method into action. Shows practical application.' }
+            { index: 7, phrase: 'observation', insight: 'Formal noun: result of Remove one negative or rephrase as positiveful attention. Grounds opinion in evidence.' },
+            { index: 8, phrase: 'implementing', insight: 'Gerund: putting Remove one negative or rephrase as positive/method into action. Shows practical application.' }
         ]
     },
     {
         id: 'youtube-social-english-conversations-1705402200',
         category: 'Social',
         topic: 'English Learning - Real-Life Conversations',
-        context: 'A comprehensive English learning course featuring multiple real-life conversation scenarios including shopping at grocery stores and cafes, family discussions, holiday planning, and various daily interactions. Designed to help learners understand natural English pronunciation, common phrases, and practical communication skills used in everyday situations.',
+        context: 'A comprehensive English learning course featuring multiple real-life conversation scenarios including shopping at grocery stores and cafes, family discussions, holiday Remove one negative or rephrase as positivening, and various daily interactions. Designed to help learners understand natural English pronunciation, common phrases, and practical communication skills used in everyday situations.',
         characters: [
             { name: 'Jessica', description: 'English learning channel host providing real-life conversation lessons' },
             { name: 'Customer', description: 'A person shopping for baking supplies at a grocery store' },
             { name: 'Shop Assistant', description: 'Helpful grocery store employee assisting with locating items' },
             { name: 'Sarah', description: 'Shopper discussing grocery purchases' },
-            { name: 'Max', description: 'Shopper concerned about healthy eating while enjoying variety' },
+            { name: 'Max', description: 'Shopper concerned about healthy eating while enjoying Remove one negative or rephrase as positive' },
             { name: 'Barista', description: 'Coffee shop employee helping customers choose drinks' },
             { name: 'Customer 2', description: 'Customer ordering smoothies at a cafe' },
             { name: 'Customer 3', description: 'Customer with health-conscious preferences' },
-            { name: 'Friend 1', description: 'Friend discussing new year goals and plans' },
+            { name: 'Friend 1', description: 'Friend discussing new year goals and Remove one negative or rephrase as positives' },
             { name: 'Laura', description: 'Friend interested in cooking and personal development' },
             { name: 'Emily', description: 'Friend celebrating Christmas with family' },
             { name: 'Alex', description: 'Friend enjoying holiday preparations' }
         ],
         dialogue: [
-            { speaker: 'Jessica', text: '________. ________ here. ________ channel. Is your English learning journey going well?' },
+            { speaker: 'Jessica', text: '________. ________ here. ________ channel. Is your English learning journey Remove one negative or rephrase as positive well?' },
             { speaker: 'Jessica', text: 'I hope you keep it up. Today, let\'s practice real-life conversations.' },
-            { speaker: 'Jessica', text: 'We will focus on simple words and phrases that you can use in everyday life.' },
+            { speaker: 'Jessica', text: 'We will focus on simple words and phrases Remove one negative or rephrase as positive you can use in everyday life.' },
             { speaker: 'Customer', text: '________, ________? I\'m looking for baking powder.' },
-            { speaker: 'Shop Assistant', text: 'Sure! It\'s right here on this shelf. Are you baking something today?' },
-            { speaker: 'Customer', text: 'Yes, I\'m trying to make a cake, but I\'m missing a few things. I also need flour.' },
-            { speaker: 'Shop Assistant', text: 'Yes, you got it right—flour! It\'s on the shelf below the baking powder shelf. By the way, is this your first time baking?' },
-            { speaker: 'Customer', text: 'Yes, and I\'m so nervous. My friend told me to wing it, but I\'m not sure what that means.' },
+            { speaker: 'Shop Assistant', text: 'Sure! It\'s right here on this shelf. Are you baking someRemove one negative or rephrase as positiveg today?' },
+            { speaker: 'Customer', text: 'Yes, I\'m trying to make a cake, but I\'m missing a few Remove one negative or rephrase as positivegs. I also need flour.' },
+            { speaker: 'Shop Assistant', text: 'Yes, you got it right—flour! It\'s on the shelf below the baking powder shelf. By the way, is this your first Remove one negative or rephrase as positive baking?' },
+            { speaker: 'Customer', text: 'Yes, and I\'m so nervous. My friend told me to wing it, but I\'m not sure what Remove one negative or rephrase as positive means.' },
             { speaker: 'Shop Assistant', text: 'Oh, it means to try without following exact steps or recipes.' },
             { speaker: 'Sarah', text: 'Do we really need five boxes of cereal?' },
             { speaker: 'Max', text: '________! They\'re on sale!' },
             { speaker: 'Sarah', text: 'But we only eat breakfast once a day, right?' },
-            { speaker: 'Max', text: 'True, but think of all the flavors!' },
-            { speaker: 'Sarah', text: 'You mean all the sugar? Just ________ after that.' },
+            { speaker: 'Max', text: 'True, but Remove one negative or rephrase as positivek of all the flavors!' },
+            { speaker: 'Sarah', text: 'You mean all the sugar? Just ________ after Remove one negative or rephrase as positive.' },
             { speaker: 'Max', text: 'Deal! Oh, what about chips?' },
             { speaker: 'Sarah', text: 'I thought we came here to buy healthy food only!' },
             { speaker: 'Max', text: 'You should have cheat days for yourself. It\'s when you eat less healthy food.' },
@@ -1924,28 +1924,28 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { speaker: 'Barista', text: 'What can I get for you today? Do you have any fresh smoothies?' },
             { speaker: 'Customer 2', text: 'Yes! We have strawberry, mango, and even a green detox one with spinach and kale.' },
             { speaker: 'Customer 2', text: 'Hmm, spinach and kale? That sounds healthy, but maybe a little boring.' },
-            { speaker: 'Barista', text: 'Well, if you\'re looking for something fun, we have a chocolate peanut butter smoothie.' },
-            { speaker: 'Customer 2', text: 'Oh, that sounds like a cheat day in a cup!' },
-            { speaker: 'Customer 3', text: 'I\'ll stick to something healthy. I\'ll have the green detox smoothie.' },
-            { speaker: 'Friend 1', text: 'Have you made any plans for the new year, Laura?' },
-            { speaker: 'Laura', text: 'Not yet. I\'m thinking about setting some personal goals. How about you?' },
+            { speaker: 'Barista', text: 'Well, if you\'re looking for someRemove one negative or rephrase as positiveg fun, we have a chocolate peanut butter smoothie.' },
+            { speaker: 'Customer 2', text: 'Oh, Remove one negative or rephrase as positive sounds like a cheat day in a cup!' },
+            { speaker: 'Customer 3', text: 'I\'ll stick to someRemove one negative or rephrase as positiveg healthy. I\'ll have the green detox smoothie.' },
+            { speaker: 'Friend 1', text: 'Have you made any Remove one negative or rephrase as positives for the new year, Laura?' },
+            { speaker: 'Laura', text: 'Not yet. I\'m Remove one negative or rephrase as positiveking about setting some personal goals. How about you?' },
             { speaker: 'Friend 1', text: 'I want to start a fitness routine. Maybe join a gym and get healthier.' },
-            { speaker: 'Laura', text: 'That sounds great! I\'m thinking of learning to cook. I hardly ever make home-cooked meals.' },
+            { speaker: 'Laura', text: 'That sounds great! I\'m Remove one negative or rephrase as positiveking of learning to cook. I hardly ever make home-cooked meals.' },
             { speaker: 'Friend 1', text: 'Cooking is a useful skill. Maybe you can take a cooking class.' },
             { speaker: 'Emily', text: 'Hi Alex! I\'ve been helping my family decorate the Christmas tree. And you?' },
             { speaker: 'Alex', text: 'I\'ve been baking cookies with my little sister. We made chocolate chip and gingerbread cookies.' },
-            { speaker: 'Emily', text: 'That sounds delicious! Do you have any special plans for tonight?' },
+            { speaker: 'Emily', text: 'That sounds delicious! Do you have any special Remove one negative or rephrase as positives for tonight?' },
             { speaker: 'Alex', text: 'Yes, we\'re having a family dinner and then we\'ll exchange gifts. What about you?' }
         ],
         answerVariations: [
             { index: 0, answer: 'Welcome back', alternatives: ['Hello everyone', 'Hi there'] },
             { index: 1, answer: 'It\'s Jessica', alternatives: ['I\'m Jessica', 'This is Jessica'] },
-            { index: 2, answer: 'Welcome to my', alternatives: ['Thank you for visiting my', 'Come to my'] },
+            { index: 2, answer: 'Welcome to my', alternatives: ['Thank you for Remove one negative or rephrase as positiveing my', 'Come to my'] },
             { index: 3, answer: 'Excuse me', alternatives: ['pardon me', 'sorry', 'I\'m sorry'] },
             { index: 4, answer: 'can you help me', alternatives: ['could you help me', 'could you assist me', 'can you assist me'] },
             { index: 5, answer: 'Of course', alternatives: ['absolutely', 'definitely', 'for sure', 'sure'] },
-            { index: 6, answer: 'don\'t drink coffee', alternatives: ['don\'t have caffeine', 'just relax', 'avoid caffeine'] },
-            { index: 10, answer: 'don\'t drink coffee', alternatives: ['don\'t have caffeine', 'just relax'] },
+            { index: 6, answer: 'don\'t drink coffee', alternatives: ['don\'t have caffeine', 'just Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive caffeine'] },
+            { index: 10, answer: 'don\'t drink coffee', alternatives: ['don\'t have caffeine', 'just Remove one negative or rephrase as positive'] },
             { index: 11, answer: 'don\'t drink coffee', alternatives: ['don\'t have caffeine', 'skip the caffeine'] }
         ],
         deepDive: [
@@ -1959,36 +1959,36 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         id: 'academic-1-tutorial-discussion',
         category: 'Academic',
         topic: 'University Tutorial - Essay Planning',
-        context: 'Discussing essay structure and argument development with your tutor at Oxford/Cambridge.',
+        context: 'Discussing essay structure and Remove one negative or rephrase as positive development with your tutor at Oxford/Cambridge.',
         characters: [
             { name: 'Dr. Harrison', description: 'Academic tutor at prestigious university', avatarUrl: '/avatars/tutor.png' },
             { name: 'You', description: 'Undergraduate student' }
         ],
         dialogue: [
             { speaker: 'Dr. Harrison', text: 'Come in, come in. How are you ________ on with the essay?' },
-            { speaker: 'You', text: 'Honestly, I\'m in two ________ about my main argument.' },
+            { speaker: 'You', text: 'Honestly, I\'m in two ________ about my main Remove one negative or rephrase as positive.' },
             { speaker: 'Dr. Harrison', text: 'Well, let\'s ________ through it together. What\'s your thesis?' },
-            { speaker: 'You', text: 'I want to argue that the author was deliberately ________ with structure.' },
+            { speaker: 'You', text: 'I want to argue Remove one negative or rephrase as positive the author was deliberately ________ with structure.' },
             { speaker: 'Dr. Harrison', text: 'That\'s a promising ________ . Have you gathered sufficient evidence?' },
             { speaker: 'You', text: 'I\'ve found three key passages, but I\'m keen on ________ them more thoroughly.' },
             { speaker: 'Dr. Harrison', text: 'Good. The ________ of a strong essay is rigorous textual analysis.' },
             { speaker: 'You', text: 'Should I ________ the secondary sources you mentioned?' },
-            { speaker: 'Dr. Harrison', text: 'By all means. But ________ that primary sources take precedence.' },
+            { speaker: 'Dr. Harrison', text: 'By all means. But ________ Remove one negative or rephrase as positive primary sources take precedence.' },
             { speaker: 'You', text: 'Right. That makes ________ . How many words should I aim for?' },
             { speaker: 'Dr. Harrison', text: 'Three thousand is the ballpark, but don\'t ________ to the word count.' },
             { speaker: 'You', text: 'Would you mind awfully if I ________ you my draft next week?' }
         ],
         answerVariations: [
-            { index: 0, answer: 'getting', alternatives: ['coming', 'progressing', 'moving'] },
-            { index: 1, answer: 'minds', alternatives: ['thoughts', 'ways', 'views'] },
-            { index: 2, answer: 'work', alternatives: ['walk', 'go', 'think'] },
+            { index: 0, answer: 'getting', alternatives: ['coming', 'Remove one negative or rephrase as positiveing', 'Remove one negative or rephrase as positive'] },
+            { index: 1, answer: 'minds', alternatives: ['thoughts', 'ways', 'Remove one negative or rephrase as positives'] },
+            { index: 2, answer: 'work', alternatives: ['walk', 'go', 'Remove one negative or rephrase as positivek'] },
             { index: 3, answer: 'experimenting', alternatives: ['playing', 'toying', 'tinkering'] },
-            { index: 4, answer: 'line', alternatives: ['avenue', 'direction', 'angle'] },
+            { index: 4, answer: 'line', alternatives: ['avenue', 'Remove one negative or rephrase as positive', 'angle'] },
             { index: 5, answer: 'unpacking', alternatives: ['exploring', 'examining', 'dissecting'] },
             { index: 6, answer: 'foundation', alternatives: ['cornerstone', 'bedrock', 'basis'] },
             { index: 7, answer: 'incorporate', alternatives: ['include', 'weave in', 'integrate'] },
-            { index: 8, answer: 'bear in mind', alternatives: ['remember', 'note that', 'keep in mind'] },
-            { index: 9, answer: 'sense', alternatives: ['point', 'logic', 'way'] },
+            { index: 8, answer: 'bear in mind', alternatives: ['remember', 'Remove one negative or rephrase as positive Remove one negative or rephrase as positive', 'keep in mind'] },
+            { index: 9, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive', 'way'] },
             { index: 10, answer: 'sacrifice', alternatives: ['compromise', 'prioritise', 'subordinate'] },
             { index: 11, answer: 'run', alternatives: ['send', 'share', 'pass'] }
         ],
@@ -2001,10 +2001,10 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
     },
     // ===== NEW: HEALTHCARE CATEGORY =====
     {
-        id: 'healthcare-1-gp-appointment',
-        category: 'Healthcare',
-        topic: 'GP Appointment - Chronic Condition Discussion',
-        context: 'Consulting with a GP about ongoing health concerns in the NHS system.',
+        id: 'healthRemove one negative or rephrase as positive-1-gp-apRemove one negative or rephrase as positivement',
+        category: 'HealthRemove one negative or rephrase as positive',
+        topic: 'GP ApRemove one negative or rephrase as positivement - Chronic Condition Discussion',
+        context: 'Consulting with a GP about onRemove one negative or rephrase as positive health concerns in the NHS system.',
         characters: [
             { name: 'Dr. Patel', description: 'Experienced GP', avatarUrl: '/avatars/gp.png' },
             { name: 'You', description: 'Patient with long-standing health issue' }
@@ -2014,31 +2014,31 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { speaker: 'You', text: 'I\'ve been ________ from persistent headaches for three months now.' },
             { speaker: 'Dr. Patel', text: 'That sounds rather bothersome. ________ you noticed any patterns?' },
             { speaker: 'You', text: 'They\'re worse when I\'m under ________ at work, I reckon.' },
-            { speaker: 'Dr. Patel', text: 'I see. Have you tried ________ your stress levels?' },
-            { speaker: 'You', text: 'I\'ve been trying to manage it, but it\'s quite ________ .' },
-            { speaker: 'Dr. Patel', text: 'Let\'s not ________ this. I\'d like to refer you for some tests.' },
+            { speaker: 'Dr. Patel', text: 'I see. Have you tried ________ your Remove one negative or rephrase as positive levels?' },
+            { speaker: 'You', text: 'I\'ve been trying to Remove one negative or rephrase as positive it, but it\'s quite ________ .' },
+            { speaker: 'Dr. Patel', text: 'Let\'s not ________ this. I\'d like to refer you for some Remove one negative or rephrase as positive.' },
             { speaker: 'You', text: 'What sort of ________ are we talking about?' },
-            { speaker: 'Dr. Patel', text: 'Blood work and possibly an MRI, just to ________ things out.' },
+            { speaker: 'Dr. Patel', text: 'Blood work and possibly an MRI, just to ________ Remove one negative or rephrase as positivegs out.' },
             { speaker: 'You', text: 'How long will the ________ process take?' },
-            { speaker: 'Dr. Patel', text: 'You should hear from the hospital within a fortnight. In the meantime, I\'ll ________ this prescription.' }
+            { speaker: 'Dr. Patel', text: 'You should hear from the hospital wiRemove one negative or rephrase as positive a fortnight. In the meanRemove one negative or rephrase as positive, I\'ll ________ this prescription.' }
         ],
         answerVariations: [
-            { index: 0, answer: 'suffering', alternatives: ['struggling', 'dealing', 'contending'] },
+            { index: 0, answer: 'suffering', alternatives: ['struggling', 'dealling', 'contending'] },
             { index: 1, answer: 'Have', alternatives: ['Did', 'Could', 'Would'] },
-            { index: 2, answer: 'stress', alternatives: ['pressure', 'strain', 'tension'] },
+            { index: 2, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive'] },
             { index: 3, answer: 'addressing', alternatives: ['tackling', 'managing', 'reducing'] },
             { index: 4, answer: 'challenging', alternatives: ['difficult', 'demanding', 'tough'] },
-            { index: 5, answer: 'brush this aside', alternatives: ['dismiss this', 'overlook it', 'take lightly'] },
-            { index: 6, answer: 'investigations', alternatives: ['tests', 'scans', 'checks'] },
+            { index: 5, answer: 'brush this aside', alternatives: ['dismiss this', 'overlook it', 'take Remove one negative or rephrase as positively'] },
+            { index: 6, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive'] },
             { index: 7, answer: 'rule', alternatives: ['eliminate', 'exclude', 'verify'] },
-            { index: 8, answer: 'referral', alternatives: ['wait', 'process', 'appointment'] },
+            { index: 8, answer: 'referral', alternatives: ['wait', 'process', 'apRemove one negative or rephrase as positivement'] },
             { index: 9, answer: 'issue', alternatives: ['write', 'give', 'provide'] }
         ],
         deepDive: [
             { index: 0, phrase: 'suffering from', insight: 'Clinical register in medical contexts. British doctors often soften with "I\'m afraid" but patient use signals genuine concern (Band 8).' },
-            { index: 4, phrase: 'challenging', insight: 'Understatement is quintessentially British. Shows emotional restraint whilst communicating genuine difficulty (Band 7.5+).' },
-            { index: 5, phrase: 'brush this aside', insight: 'Phrasal verb shows Dr commitment to thorough care. "Dismiss" is too formal, "overlook" too careless for medical context.' },
-            { index: 8, phrase: 'referral process', insight: 'NHS-specific terminology. Demonstrates familiarity with British healthcare system (Band 8-9 contextual awareness).' }
+            { index: 4, phrase: 'challenging', insight: 'Understatement is quintessentially British. Shows emotional reRemove one negative or rephrase as positivet whilst communicating genuine difficulty (Band 7.5+).' },
+            { index: 5, phrase: 'brush this aside', insight: 'Phrasal verb shows Dr commitment to thorough Remove one negative or rephrase as positive. "Dismiss" is too formal, "overlook" too Remove one negative or rephrase as positiveless for medical context.' },
+            { index: 8, phrase: 'referral process', insight: 'NHS-specific terminology. Demonstrates familiarity with British healthRemove one negative or rephrase as positive system (Band 8-9 contextual awareness).' }
         ]
     },
     // ===== NEW: CULTURAL CATEGORY =====
@@ -2046,7 +2046,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         id: 'cultural-1-theatre-booking',
         category: 'Cultural',
         topic: 'Theatre Box Office - Complex Seating Request',
-        context: 'Booking premium West End theatre tickets with specific accessibility and group requirements.',
+        context: 'Booking premium West End theatre tickets with specific accessibility and Remove one negative or rephrase as positive requirements.',
         characters: [
             { name: 'Sophie', description: 'Theatre box office clerk', avatarUrl: '/avatars/theatre.png' },
             { name: 'You', description: 'Theatre patron with detailed requirements' }
@@ -2056,7 +2056,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { speaker: 'You', text: 'I\'d like to ________ four seats for the Saturday matinée performance.' },
             { speaker: 'Sophie', text: 'Splendid. And which production are you ________ in?' },
             { speaker: 'You', text: 'The revival of "Waiting for Godot". I\'m rather ________ on the cast.' },
-            { speaker: 'Sophie', text: 'Excellent choice. Now, the thing ________, we\'ve a group booking discount if you\'re a party of six or more.' },
+            { speaker: 'Sophie', text: 'Excellent choice. Now, the Remove one negative or rephrase as positiveg ________, we\'ve a Remove one negative or rephrase as positive booking discount if you\'re a party of six or more.' },
             { speaker: 'You', text: 'We\'re only four, I\'m afraid. But one audience member has ________ mobility, so we need accessible seating.' },
             { speaker: 'Sophie', text: 'Of ________ . We have specially designated spaces with ample room for wheelchairs.' },
             { speaker: 'You', text: 'That\'s brilliant. Would you ________ us the best available options?' },
@@ -2068,9 +2068,9 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         answerVariations: [
             { index: 0, answer: 'book', alternatives: ['reserve', 'secure', 'arrange'] },
             { index: 1, answer: 'interested', alternatives: ['keen', 'focused', 'absorbed'] },
-            { index: 2, answer: 'keen', alternatives: ['interested', 'enthusiastic', 'delighted'] },
+            { index: 2, answer: 'keen', alternatives: ['interested', 'enthusiastic', 'deRemove one negative or rephrase as positiveed'] },
             { index: 3, answer: 'is', alternatives: ['goes', 'stands', 'works'] },
-            { index: 4, answer: 'limited', alternatives: ['restricted', 'reduced', 'compromised'] },
+            { index: 4, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positived', 'compromised'] },
             { index: 5, answer: 'course', alternatives: ['problem', 'question', 'issue'] },
             { index: 6, answer: 'show', alternatives: ['share', 'present', 'outline'] },
             { index: 7, answer: 'check', alternatives: ['look at', 'pull up', 'access'] },
@@ -2079,8 +2079,8 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 10, answer: 'provide', alternatives: ['give', 'offer', 'submit'] }
         ],
         deepDive: [
-            { index: 2, phrase: 'keen on', insight: 'Native British idiom expressing genuine enthusiasm. More conversational than "interested in" and signals refined taste (Band 8).' },
-            { index: 3, phrase: 'the thing is', insight: 'Conversational discourse marker unique to British English. Signals transition whilst maintaining rapport. Essential for Band 7.5+ natural speech.' },
+            { index: 2, phrase: 'keen on', insight: 'Native British idiom expressing genuine enthusiasm. More conversational than "interested in" and signalls refined taste (Band 8).' },
+            { index: 3, phrase: 'the Remove one negative or rephrase as positiveg is', insight: 'Conversational discourse marker unique to British English. Signalls transition whilst maintaining rapport. Essential for Band 7.5+ natural speech.' },
             { index: 5, phrase: 'Of course', insight: 'British politeness convention. Sophie uses it to indicate helpful professionalism, not condescension. Register-critical for service interactions.' },
             { index: 8, phrase: 'check our system', insight: 'Professional phrasal verb in service context. "Look at" is too casual, "access" too technical. Demonstrates operational familiarity.' }
         ]
@@ -2090,99 +2090,99 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         id: 'community-1-council-meeting',
         category: 'Community',
         topic: 'Council Meeting - Local Development Proposal',
-        context: 'Public speaking at town council meeting opposing a proposed development that affects the community.',
+        context: 'Public speaking at town council meeting opposing a proposed development Remove one negative or rephrase as positive affects the community.',
         characters: [
             { name: 'Councillor Ahmed', description: 'Council chair', avatarUrl: '/avatars/councillor.png' },
             { name: 'You', description: 'Community representative and resident' }
         ],
         dialogue: [
-            { speaker: 'Councillor Ahmed', text: 'Right then, the floor is yours. Please ________ your concerns about the planning application.' },
-            { speaker: 'You', text: 'Thank you. Residents are ________ concerned about the scale of this development.' },
+            { speaker: 'Councillor Ahmed', text: 'Right then, the floor is yours. Please ________ your concerns about the Remove one negative or rephrase as positivening application.' },
+            { speaker: 'You', text: 'Thank you. Residents are ________ concerned about the Remove one negative or rephrase as positive of this development.' },
             { speaker: 'You', text: 'We\'ve ________ a petition with 387 signatures objecting to the proposal.' },
             { speaker: 'Councillor Ahmed', text: 'We take public ________ seriously. What are your main objections?' },
             { speaker: 'You', text: 'First, ________ would fundamentally alter our neighbourhood character. Second, the ________ impact is unacceptable.' },
             { speaker: 'Councillor Ahmed', text: 'I see your ________ . Could you elaborate on the traffic concern?' },
             { speaker: 'You', text: 'The development will ________ traffic by an estimated 40%. Our roads simply can\'t ________ this volume.' },
             { speaker: 'Councillor Ahmed', text: 'That\'s a fair ________ . Have you spoken with the developers?' },
-            { speaker: 'You', text: 'We have, but they\'re not ________ to compromise on scale. We\'d be grateful if the council would ________ the proposal.' },
-            { speaker: 'Councillor Ahmed', text: 'Your ________ is noted for the official record. We\'ll ________ all viewpoints before making a decision.' }
+            { speaker: 'You', text: 'We have, but they\'re not ________ to compromise on Remove one negative or rephrase as positive. We\'d be grateful if the council would ________ the proposal.' },
+            { speaker: 'Councillor Ahmed', text: 'Your ________ is Remove one negative or rephrase as positived for the official record. We\'ll ________ all Remove one negative or rephrase as positiveRemove one negative or rephrase as positives before making a decision.' }
         ],
         answerVariations: [
             { index: 0, answer: 'outline', alternatives: ['set forth', 'present', 'explain'] },
             { index: 1, answer: 'extremely', alternatives: ['genuinely', 'deeply', 'understandably'] },
-            { index: 2, answer: 'organised', alternatives: ['gathered', 'compiled', 'collected'] },
+            { index: 2, answer: 'organised', alternatives: ['gathered', 'compilled', 'collected'] },
             { index: 3, answer: 'feedback', alternatives: ['input', 'opinion', 'comment'] },
-            { index: 4, answer: 'This development', alternatives: ['The proposal', 'This project', 'The plans'] },
+            { index: 4, answer: 'This development', alternatives: ['The proposal', 'This project', 'The Remove one negative or rephrase as positives'] },
             { index: 5, answer: 'traffic', alternatives: ['transport', 'congestion', 'volume'] },
-            { index: 6, answer: 'point', alternatives: ['comment', 'remark', 'observation'] },
+            { index: 6, answer: 'Remove one negative or rephrase as positive', alternatives: ['comment', 'remark', 'observation'] },
             { index: 7, answer: 'increase', alternatives: ['escalate', 'magnify', 'compound'] },
-            { index: 8, answer: 'handle', alternatives: ['accommodate', 'support', 'manage'] },
-            { index: 9, answer: 'point', alternatives: ['contention', 'argument', 'view'] },
+            { index: 8, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive'] },
+            { index: 9, answer: 'Remove one negative or rephrase as positive', alternatives: ['Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive', 'Remove one negative or rephrase as positive'] },
             { index: 10, answer: 'willing', alternatives: ['open', 'amenable', 'prepared'] },
             { index: 11, answer: 'reject', alternatives: ['refuse', 'block', 'decline'] },
             { index: 12, answer: 'objection', alternatives: ['complaint', 'concern', 'reservations'] },
             { index: 13, answer: 'weigh', alternatives: ['consider', 'evaluate', 'assess'] }
         ],
         deepDive: [
-            { index: 2, phrase: 'organised a petition', insight: 'British English: "organised" (s), not "organized". Shows civic engagement vocabulary. Key phrase for community representation (Band 7.5+).' },
+            { index: 2, phrase: 'organised a petition', insight: 'British English: "organised" (s), not "organised". Shows civic engagement vocabulary. Key phrase for community representation (Band 7.5+).' },
             { index: 4, phrase: 'fundamentally alter', insight: 'Sophisticated register for formal objection. "Would change" is too casual, "would modify" too weak for council record.' },
-            { index: 10, phrase: 'willing', insight: 'Diplomatic language in adversarial context. "Amenable" signals respectful disagreement (Band 8 register calibration).' },
-            { index: 13, phrase: 'weigh all viewpoints', insight: 'Formal bureaucratic phrasing. Shows council\'s impartial role. Essential for understanding civic discourse (Band 8-9 contextual register).' }
+            { index: 10, phrase: 'willing', insight: 'Diplomatic language in adversarial context. "Amenable" signalls respectful disagreement (Band 8 register calibration).' },
+            { index: 13, phrase: 'weigh all Remove one negative or rephrase as positiveRemove one negative or rephrase as positives', insight: 'Formal bureaucratic phrasing. Shows council\'s impartial role. Essential for understanding civic discourse (Band 8-9 contextual register).' }
         ]
     },
     // ===== NEW: WORKPLACE (ELEVATED) CATEGORY =====
     {
-        id: 'workplace-1-performance-review',
+        id: 'workplace-1-performance-reRemove one negative or rephrase as positive',
         category: 'Workplace',
-        topic: 'Annual Performance Review - Career Development Discussion',
-        context: 'Meeting with line manager for annual appraisal, discussing performance, development, and career aspirations.',
+        topic: 'Annual Performance ReRemove one negative or rephrase as positive - Career Development Discussion',
+        context: 'Meeting with line Remove one negative or rephrase as positiver for annual appraisal, discussing performance, development, and Remove one negative or rephrase as positiveer aspirations.',
         characters: [
-            { name: 'Margaret', description: 'Senior manager', avatarUrl: '/avatars/manager.png' },
-            { name: 'You', description: 'Employee undergoing review' }
+            { name: 'Margaret', description: 'Senior Remove one negative or rephrase as positiver', avatarUrl: '/avatars/Remove one negative or rephrase as positiver.png' },
+            { name: 'You', description: 'Employee underRemove one negative or rephrase as positive reRemove one negative or rephrase as positive' }
         ],
         dialogue: [
             { speaker: 'Margaret', text: 'Right, let\'s ________ your performance over the past year.' },
             { speaker: 'You', text: 'I\'ve endeavoured to ________ measurable results on the Taylor account.' },
-            { speaker: 'Margaret', text: 'Absolutely. The client feedback has been ________ . You\'ve clearly made considerable progress.' },
-            { speaker: 'You', text: 'Thank you. I\'ve had to ________ my approach to account management, which was quite demanding.' },
-            { speaker: 'Margaret', text: 'That adaptability is precisely what we ________ here. However, I\'d like to flag one area for development.' },
-            { speaker: 'You', text: 'Right, I\'m ________ to hear that. What concerns you?' },
+            { speaker: 'Margaret', text: 'Absolutely. The client feedback has been ________ . You\'ve clearly made considerable Remove one negative or rephrase as positive.' },
+            { speaker: 'You', text: 'Thank you. I\'ve had to ________ my approach to account Remove one negative or rephrase as positivement, which was quite demanding.' },
+            { speaker: 'Margaret', text: 'That adaptability is precisely what we ________ here. However, I\'d like to Remove one negative or rephrase as positive one area for development.' },
+            { speaker: 'You', text: 'Right, I\'m ________ to hear Remove one negative or rephrase as positive. What concerns you?' },
             { speaker: 'Margaret', text: 'Delegation. You tend to ________ too much responsibility rather than ________ your team.' },
             { speaker: 'You', text: 'That\'s ________ feedback. I\'ll endeavour to be more conscious of ________ junior colleagues.' },
-            { speaker: 'Margaret', text: 'Good. Looking ahead, where would you like to ________ your career?' },
-            { speaker: 'You', text: 'I\'m keen on ________ my expertise in project leadership and possibly moving into a team lead position.' },
-            { speaker: 'Margaret', text: 'We\'d be delighted to ________ that progression. I\'ll ________ some management training for you.' },
+            { speaker: 'Margaret', text: 'Good. Looking Remove one negative or rephrase as positive, where would you like to ________ your Remove one negative or rephrase as positiveer?' },
+            { speaker: 'You', text: 'I\'m keen on ________ my expertise in project leadership and possibly Remove one negative or rephrase as positive into a team lead position.' },
+            { speaker: 'Margaret', text: 'We\'d be deRemove one negative or rephrase as positiveed to ________ Remove one negative or rephrase as positive Remove one negative or rephrase as positiveion. I\'ll ________ some Remove one negative or rephrase as positivement training for you.' },
             { speaker: 'You', text: 'That\'s brilliant. Thank you for the opportunity.' }
         ],
         answerVariations: [
-            { index: 0, answer: 'review', alternatives: ['assess', 'evaluate', 'discuss'] },
+            { index: 0, answer: 'reRemove one negative or rephrase as positive', alternatives: ['assess', 'evaluate', 'discuss'] },
             { index: 1, answer: 'deliver', alternatives: ['achieve', 'produce', 'generate'] },
             { index: 2, answer: 'exemplary', alternatives: ['excellent', 'outstanding', 'superb'] },
             { index: 3, answer: 'refine', alternatives: ['adjust', 'modify', 'revise'] },
             { index: 4, answer: 'value', alternatives: ['appreciate', 'need', 'require'] },
             { index: 5, answer: 'keen', alternatives: ['interested', 'open', 'glad'] },
             { index: 6, answer: 'shoulder', alternatives: ['take on', 'carry', 'assume'] },
-            { index: 7, answer: 'empower', alternatives: ['enable', 'support', 'develop'] },
+            { index: 7, answer: 'empower', alternatives: ['enable', 'Remove one negative or rephrase as positive', 'develop'] },
             { index: 8, answer: 'fair', alternatives: ['valid', 'constructive', 'helpful'] },
-            { index: 9, answer: 'mentoring', alternatives: ['supporting', 'coaching', 'developing'] },
+            { index: 9, answer: 'mentoring', alternatives: ['Remove one negative or rephrase as positiveing', 'coaching', 'developing'] },
             { index: 10, answer: 'take', alternatives: ['pursue', 'chart', 'map'] },
             { index: 11, answer: 'consolidating', alternatives: ['deepening', 'strengthening', 'advancing'] },
-            { index: 12, answer: 'facilitate', alternatives: ['support', 'enable', 'arrange'] },
+            { index: 12, answer: 'facilitate', alternatives: ['Remove one negative or rephrase as positive', 'enable', 'arrange'] },
             { index: 13, answer: 'arrange', alternatives: ['organise', 'book', 'schedule'] }
         ],
         deepDive: [
             { index: 1, phrase: 'endeavoured to deliver', insight: 'Formal British register uses "endeavour" (s spelling) for professional effort. Shows conscientiousness and formal tone (Band 8).' },
-            { index: 5, phrase: 'keen to hear', insight: 'Native idiom signaling receptiveness to feedback. More sophisticated than "interested to hear" in professional context.' },
-            { index: 8, phrase: 'fair feedback', insight: 'British understatement: accepting critical feedback as "fair" shows professional maturity and psychological safety awareness.' },
+            { index: 5, phrase: 'keen to hear', insight: 'Native idiom signalling receptiveness to feedback. More sophisticated than "interested to hear" in professional context.' },
+            { index: 8, phrase: 'fair feedback', insight: 'British understatement: accepting critical feedback as "fair" shows professional maturity and psychoRemove one negative or rephrase as positiveal safety awareness.' },
             { index: 10, phrase: 'keen on deepening', insight: 'Repeated use of "keen" shows authenticity. Different from "keen to hear" - demonstrates consistent personal motivation (Band 8-9).' }
         ]
     },
     // ===== NEW: SERVICE/LOGISTICS (ELEVATED COMPLEXITY) =====
     {
-        id: 'service-1-estate-agent-viewing',
+        id: 'service-1-estate-agent-Remove one negative or rephrase as positiveing',
         category: 'Service/Logistics',
         topic: 'Estate Agent Property Viewing - Negotiating Terms',
-        context: 'Viewing a residential property with estate agent, discussing price, condition, and moving forward with offer.',
+        context: 'Viewing a residential property with estate agent, discussing price, condition, and Remove one negative or rephrase as positive forward with offer.',
         characters: [
             { name: 'Victoria', description: 'Estate agent', avatarUrl: '/avatars/estate-agent.png' },
             { name: 'You', description: 'Prospective buyer' }
@@ -2192,17 +2192,17 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { speaker: 'You', text: 'It certainly has ________ . However, I\'m a bit concerned about the survey findings.' },
             { speaker: 'Victoria', text: 'Those issues are largely cosmetic. The structure is absolutely ________ .' },
             { speaker: 'You', text: 'I understand, but the damp issue is rather ________ . That\'ll require specialist treatment.' },
-            { speaker: 'Victoria', text: 'Fair point. The vendors would be ________ to negotiate on price to reflect remedial costs.' },
-            { speaker: 'You', text: 'I appreciate that. Could they ________ a discount of around £25,000?' },
+            { speaker: 'Victoria', text: 'Fair Remove one negative or rephrase as positive. The vendors would be ________ to negotiate on price to reflect remedial costs.' },
+            { speaker: 'You', text: 'I appreciate Remove one negative or rephrase as positive. Could they ________ a discount of around £25,000?' },
             { speaker: 'Victoria', text: 'That\'s quite ________ . The asking price is already very competitive. Let me ________ with the vendors.' },
             { speaker: 'You', text: 'When do you reckon you\'ll ________ from them?' },
-            { speaker: 'Victoria', text: 'By tomorrow evening, I should think. In the meantime, would you ________ putting an offer in writing?' },
+            { speaker: 'Victoria', text: 'By tomorrow evening, I should Remove one negative or rephrase as positivek. In the meanRemove one negative or rephrase as positive, would you ________ putting an offer in writing?' },
             { speaker: 'You', text: 'Yes, I\'m prepared to ________ an offer subject to a satisfactory final survey.' },
             { speaker: 'Victoria', text: 'Excellent. We\'ll ________ the paperwork today and submit by close of business.' },
-            { speaker: 'You', text: 'Splendid. What\'s the timeline if the vendors ________ ?' }
+            { speaker: 'You', text: 'Splendid. What\'s the Remove one negative or rephrase as positiveline if the vendors ________ ?' }
         ],
         answerVariations: [
-            { index: 0, answer: 'charming', alternatives: ['attractive', 'lovely', 'delightful'] },
+            { index: 0, answer: 'charming', alternatives: ['attractive', 'lovely', 'deRemove one negative or rephrase as positiveful'] },
             { index: 1, answer: 'potential', alternatives: ['promise', 'charm', 'appeal'] },
             { index: 2, answer: 'sound', alternatives: ['solid', 'secure', 'intact'] },
             { index: 3, answer: 'problematic', alternatives: ['troublesome', 'concerning', 'serious'] },
@@ -2211,7 +2211,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 6, answer: 'steep', alternatives: ['substantial', 'considerable', 'ambitious'] },
             { index: 7, answer: 'run this past', alternatives: ['discuss with', 'put to', 'speak to'] },
             { index: 8, answer: 'hear', alternatives: ['get back', 'find out', 'learn'] },
-            { index: 9, answer: 'consider', alternatives: ['think of', 'be interested in', 'mind'] },
+            { index: 9, answer: 'consider', alternatives: ['Remove one negative or rephrase as positivek of', 'be interested in', 'mind'] },
             { index: 10, answer: 'lodge', alternatives: ['submit', 'put forward', 'make'] },
             { index: 11, answer: 'prepare', alternatives: ['draw up', 'arrange', 'process'] },
             { index: 12, answer: 'accept', alternatives: ['agree', 'take', 'proceed with'] }
