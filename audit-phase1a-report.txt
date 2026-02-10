@@ -1,0 +1,44 @@
+
+> fluentstep:-ielts-roleplay-engine@0.0.0 audit
+> tsx cli/auditLanguage.ts --category=Advanced --dry-run --report-only
+
+
+🔍 FluentStep IELTS Linguistic Audit
+
+🔍 Starting Linguistic Audit...
+
+Running: Chunk Compliance...
+  ✓ Chunk Compliance: 339 finding(s)
+Running: UK English Spelling...
+  ✓ UK English Spelling: 20 finding(s)
+Running: UK English Vocabulary...
+  ✓ UK English Vocabulary: 1 finding(s)
+Running: Tonality & Register...
+  ✓ Tonality & Register: 0 finding(s)
+Running: Natural Patterns...
+  ✓ Natural Patterns: 0 finding(s)
+Running: Dialogue Flow...
+  ✓ Dialogue Flow: 154 finding(s)
+Running: Alternatives Quality...
+  ✓ Alternatives Quality: 156 finding(s)
+Running: Deep Dive Quality...
+  ✓ Deep Dive Quality: 26 finding(s)
+Running: Grammar Context...
+  ✓ Grammar Context: 125 finding(s)
+Running: Contextual Substitution...
+  ✓ Contextual Substitution: 331 finding(s)
+Running: Blank-Answer Pairing...
+  ✓ Blank-Answer Pairing: 189 finding(s)
+
+Summary
+========
+✓ Passed: 0
+⚠ Warning: 6
+✗ Failed: 0
+Auto-fixes applied: 0
+Findings requiring approval: 1341
+
+
+✓ Report generated: AUDIT_REPORT.md
+Total suggestions for review: 1341
+
