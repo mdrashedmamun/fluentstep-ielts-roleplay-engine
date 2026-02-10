@@ -176,8 +176,10 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
         reconstructed += parts[i];
         if (i < lineBlanks.length) {
           const blankIdx = lineBlanks[i];
-          const answer = script.answerVariations.find(v => v.index === blankIdx)?.answer || "";
-          reconstructed += revealedBlanks.has(blankIdx) ? answer : "..."; // Slight pause for unrevealed
+          if (blankIdx !== undefined) {
+            const answer = script.answerVariations.find(v => v.index === blankIdx)?.answer || "";
+            reconstructed += revealedBlanks.has(blankIdx) ? answer : "..."; // Slight pause for unrevealed
+          }
         }
       }
       textToSpeak = reconstructed;
@@ -327,7 +329,7 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
                     {char.avatarUrl ? (
                       <img src={char.avatarUrl} alt={char.name} className="w-full h-full object-cover rounded-2xl" />
                     ) : (
-                      char.name[0].toUpperCase()
+                      char?.name?.[0]?.toUpperCase() || "?"
                     )}
                   </div>
                   <span className="text-[9px] font-bold uppercase text-neutral-600 tracking-tight">{char.name}</span>
@@ -343,13 +345,13 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
                       {parts.map((part, pIdx) => (
                         <React.Fragment key={pIdx}>
                           <span className="font-medium">{part}</span>
-                          {pIdx < parts.length - 1 && (
+                          {pIdx < parts.length - 1 && lineBlanks[pIdx] !== undefined && (
                             <InteractiveBlank
                               answer={script.answerVariations.find(v => v.index === lineBlanks[pIdx])?.answer || '??'}
                               alternatives={script.answerVariations.find(v => v.index === lineBlanks[pIdx])?.alternatives || []}
-                              index={lineBlanks[pIdx]}
-                              isRevealed={revealedBlanks.has(lineBlanks[pIdx])}
-                              onReveal={() => handleBlankReveal(lineBlanks[pIdx])}
+                              index={lineBlanks[pIdx]!}
+                              isRevealed={revealedBlanks.has(lineBlanks[pIdx]!)}
+                              onReveal={() => handleBlankReveal(lineBlanks[pIdx]!)}
                             />
                           )}
                         </React.Fragment>

@@ -235,8 +235,8 @@ function parseDialogueFromText(text: string): Array<{ speaker: string; text: str
     }
 
     if (match) {
-      const speaker = match[1].trim();
-      const text = match[2].trim();
+      const speaker = match[1]!.trim();
+      const text = match[2]!.trim();
 
       if (speaker.length > 0 && text.length > 2) {
         dialogue.push({ speaker, text });

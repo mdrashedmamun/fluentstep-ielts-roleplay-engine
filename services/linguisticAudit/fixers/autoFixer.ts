@@ -42,7 +42,7 @@ export function applyAutoFixes(
         continue;
       }
 
-      // Parse location (e.g., "answerVariations[3].answer")
+      // Parse location (e.g., "answerVariations[3]!.answer")
       const match = finding.location.match(/(\w+)\[(\d+)\]\.(\w+)/);
       if (!match) {
         log.push(`⚠️ Could not parse location: ${finding.location}`);
@@ -87,7 +87,7 @@ export function applyAutoFixes(
             });
 
             log.push(
-              `✓ ${scenario.id}[${index}].alternatives: "${oldValue}" → "${finding.suggestedValue}"`
+              `✓ ${scenario.id}[${index}]!.alternatives: "${oldValue}" → "${finding.suggestedValue}"`
             );
           }
         }

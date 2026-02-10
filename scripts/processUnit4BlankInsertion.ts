@@ -408,8 +408,8 @@ export function generateUnit4Scenarios(): Unit4RoleplayScript[] {
       const match = line.match(/^([^:]+):\s*(.*)$/);
       if (match) {
         return {
-          speaker: match[1].trim(),
-          text: match[2].trim()
+          speaker: match[1]!.trim(),
+          text: match[2]!.trim()
         };
       }
       return { speaker: '', text: '' };

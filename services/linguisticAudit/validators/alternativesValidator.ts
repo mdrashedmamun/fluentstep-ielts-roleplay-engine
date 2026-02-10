@@ -22,7 +22,7 @@ export function validateAlternatives(scenario: RoleplayScript): ValidationFindin
     const primaryLength = av.answer.length;
 
     for (let i = 0; i < av.alternatives.length; i++) {
-      const alt = av.alternatives[i];
+      const alt = av.alternatives[i]!;
 
       // Check 1: Tone consistency
       const altTone = analyzeRegister(alt);
@@ -37,7 +37,7 @@ export function validateAlternatives(scenario: RoleplayScript): ValidationFindin
         findings.push({
           validatorName: 'Alternatives Quality',
           scenarioId: scenario.id,
-          location: `answerVariations[${av.index}].alternatives[${i}]`,
+          location: `answerVariations[${av.index}]!.alternatives[${i}]`,
           issue: `Alternative has different tone than primary answer`,
           currentValue: alt,
           context: `Primary: "${av.answer}"`,
@@ -59,7 +59,7 @@ export function validateAlternatives(scenario: RoleplayScript): ValidationFindin
         findings.push({
           validatorName: 'Alternatives Quality',
           scenarioId: scenario.id,
-          location: `answerVariations[${av.index}].alternatives[${i}]`,
+          location: `answerVariations[${av.index}]!.alternatives[${i}]`,
           issue: `Alternative uses non-British spelling`,
           currentValue: alt,
           suggestedValue: alt.replace(issue.word, issue.fixed),
@@ -81,7 +81,7 @@ export function validateAlternatives(scenario: RoleplayScript): ValidationFindin
         findings.push({
           validatorName: 'Alternatives Quality',
           scenarioId: scenario.id,
-          location: `answerVariations[${av.index}].alternatives[${i}]`,
+          location: `answerVariations[${av.index}]!.alternatives[${i}]`,
           issue: `Alternative uses American vocabulary`,
           currentValue: alt,
           suggestedValue: alt.replace(americanism.word, americanism.mapping.british),
@@ -103,7 +103,7 @@ export function validateAlternatives(scenario: RoleplayScript): ValidationFindin
         findings.push({
           validatorName: 'Alternatives Quality',
           scenarioId: scenario.id,
-          location: `answerVariations[${av.index}].alternatives[${i}]`,
+          location: `answerVariations[${av.index}]!.alternatives[${i}]`,
           issue: `Alternative is very different length from primary (may indicate different meaning)`,
           currentValue: alt,
           context: `Primary: "${av.answer}" (${primaryLength} chars) vs Alternative: "${alt}" (${alt.length} chars)`,

@@ -34,7 +34,7 @@ export function validateUKEnglish(scenario: RoleplayScript): ValidationFinding[]
       findings.push({
         validatorName: 'UK English Spelling',
         scenarioId: scenario.id,
-        location: `answerVariations[${av.index}].answer`,
+        location: `answerVariations[${av.index}]!.answer`,
         issue: `British spelling rule: ${issue.rule.name}`,
         currentValue: av.answer,
         suggestedValue: av.answer.replace(issue.word, issue.fixed),
@@ -57,7 +57,7 @@ export function validateUKEnglish(scenario: RoleplayScript): ValidationFinding[]
       findings.push({
         validatorName: 'UK English Vocabulary',
         scenarioId: scenario.id,
-        location: `answerVariations[${av.index}].answer`,
+        location: `answerVariations[${av.index}]!.answer`,
         issue: `American English word should be British: "${americanism.word}" → "${americanism.mapping.british}"`,
         currentValue: av.answer,
         suggestedValue: av.answer.replace(americanism.word, americanism.mapping.british),
@@ -82,10 +82,10 @@ export function validateUKEnglish(scenario: RoleplayScript): ValidationFinding[]
           findings.push({
             validatorName: 'UK English Spelling',
             scenarioId: scenario.id,
-            location: `answerVariations[${av.index}].alternatives[${i}]`,
+            location: `answerVariations[${av.index}]!.alternatives[${i}]`,
             issue: `British spelling rule: ${issue.rule.name}`,
             currentValue: av.alternatives[i],
-            suggestedValue: av.alternatives[i].replace(issue.word, issue.fixed),
+            suggestedValue: av.alternatives[i]!.replace(issue.word, issue.fixed),
             context: `Rule examples: ${issue.rule.examples.join(', ')}`,
             confidence: confidence.score,
             reasoning: `Alternative "${issue.word}" should be "${issue.fixed}"`
@@ -104,10 +104,10 @@ export function validateUKEnglish(scenario: RoleplayScript): ValidationFinding[]
           findings.push({
             validatorName: 'UK English Vocabulary',
             scenarioId: scenario.id,
-            location: `answerVariations[${av.index}].alternatives[${i}]`,
+            location: `answerVariations[${av.index}]!.alternatives[${i}]`,
             issue: `American English in alternative`,
             currentValue: av.alternatives[i],
-            suggestedValue: av.alternatives[i].replace(americanism.word, americanism.mapping.british),
+            suggestedValue: av.alternatives[i]!.replace(americanism.word, americanism.mapping.british),
             context: `Category: ${americanism.mapping.category}`,
             confidence: confidence.score,
             reasoning: `Alternative uses American word "${americanism.word}". Use British: "${americanism.mapping.british}"`
@@ -131,7 +131,7 @@ export function validateUKEnglish(scenario: RoleplayScript): ValidationFinding[]
       findings.push({
         validatorName: 'UK English Spelling',
         scenarioId: scenario.id,
-        location: `deepDive[${scenario.deepDive.indexOf(dd)}].insight`,
+        location: `deepDive[${scenario.deepDive.indexOf(dd)}]!.insight`,
         issue: `British spelling rule: ${issue.rule.name}`,
         currentValue: dd.insight,
         suggestedValue: dd.insight.replace(issue.word, issue.fixed),

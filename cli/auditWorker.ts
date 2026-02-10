@@ -37,10 +37,10 @@ function parseArgs(): {
   for (const arg of args) {
     if (arg.startsWith('--')) {
       const [key, value] = arg.substring(2).split('=');
-      if (key === 'scenarios') {
+      if (key === 'scenarios' && value) {
         result.scenarios = value.split(',');
-      } else {
-        result[key] = value;
+      } else if (key && value) {
+        result[key as keyof typeof result] = value as never;
       }
     }
   }

@@ -54,7 +54,7 @@ function validateAnswerVariation(av: any, scenarioId: string): void {
   if (hasNonLatinScript(av.answer)) {
     errors.push({
       scenario: scenarioId,
-      field: `answerVariations[${av.index}].answer`,
+      field: `answerVariations[${av.index}]!.answer`,
       issue: 'Contains non-Latin characters (e.g., Chinese, emoji)',
       value: av.answer
     });
@@ -65,7 +65,7 @@ function validateAnswerVariation(av: any, scenarioId: string): void {
     if (hasNonLatinScript(alt)) {
       errors.push({
         scenario: scenarioId,
-        field: `answerVariations[${av.index}].alternatives[${i}]`,
+        field: `answerVariations[${av.index}]!.alternatives[${i}]`,
         issue: 'Contains non-Latin characters (e.g., Chinese, emoji)',
         value: alt
       });
@@ -122,7 +122,7 @@ CURATED_ROLEPLAYS.forEach(scenario => {
       if (hasNonLatinScript(dd.phrase)) {
         errors.push({
           scenario: scenario.id,
-          field: `deepDive[${i}].phrase`,
+          field: `deepDive[${i}]!.phrase`,
           issue: 'Contains non-Latin characters',
           value: dd.phrase
         });
@@ -131,7 +131,7 @@ CURATED_ROLEPLAYS.forEach(scenario => {
       if (hasNonLatinScript(dd.insight)) {
         errors.push({
           scenario: scenario.id,
-          field: `deepDive[${i}].insight`,
+          field: `deepDive[${i}]!.insight`,
           issue: 'Contains non-Latin characters',
           value: dd.insight
         });

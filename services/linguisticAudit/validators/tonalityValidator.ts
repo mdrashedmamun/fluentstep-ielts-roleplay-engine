@@ -38,7 +38,7 @@ export function validateTonality(scenario: RoleplayScript): ValidationFinding[] 
         findings.push({
           validatorName: 'Tonality & Register',
           scenarioId: scenario.id,
-          location: `answerVariations[${av.index}].answer`,
+          location: `answerVariations[${av.index}]!.answer`,
           issue: `Tonality mismatch: detected ${toneMatch.detected}, expected ${formatExpected(toneMatch.expected)}`,
           currentValue: av.answer,
           suggestedValue: undefined, // No single suggestion for tone
@@ -66,7 +66,7 @@ export function validateTonality(scenario: RoleplayScript): ValidationFinding[] 
         findings.push({
           validatorName: 'Tonality & Register',
           scenarioId: scenario.id,
-          location: `answerVariations[${av.index}].answer`,
+          location: `answerVariations[${av.index}]!.answer`,
           issue: `Missing British hedging in professional context`,
           currentValue: av.answer,
           alternatives: generateHedgedVersions(av.answer),
@@ -99,7 +99,7 @@ export function validateTonality(scenario: RoleplayScript): ValidationFinding[] 
         findings.push({
           validatorName: 'Tonality & Register',
           scenarioId: scenario.id,
-          location: `answerVariations[${av.index}].alternatives[${i}]`,
+          location: `answerVariations[${av.index}]!.alternatives[${i}]`,
           issue: `Tone inconsistency: alternative has different register than primary`,
           currentValue: av.alternatives[i],
           context: `Primary: "${av.answer}" (${primaryTone}) → Alternative: "${av.alternatives[i]}" (${altTone})`,

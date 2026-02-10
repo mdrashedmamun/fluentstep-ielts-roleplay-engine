@@ -33,8 +33,8 @@ async function generateUnit4Scenarios(): Promise<GeneratedScenario[]> {
         const match = line.match(/^([^:]+):\s*(.+)$/);
         if (!match) return null;
         return {
-          speaker: match[1].trim(),
-          text: match[2].trim(),
+          speaker: match[1]!.trim(),
+          text: match[2]!.trim(),
         };
       }).filter(Boolean) as Array<{ speaker: string; text: string }>;
 

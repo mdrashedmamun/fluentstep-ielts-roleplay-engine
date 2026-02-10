@@ -33,29 +33,29 @@ function extractTitle(text: string): string {
   // Try "Mini-Story X: Title" format
   const miniStoryMatch = text.match(/Mini-Story\s+\d+:\s*([^\n]+)/i);
   if (miniStoryMatch) {
-    return miniStoryMatch[1].trim();
+    return miniStoryMatch[1]!.trim();
   }
 
   // Try "Role-Play: Title" format
   const roleplayMatch = text.match(/(?:^|\n)([\p{Emoji}]*\s*)?Role-?Play:?\s*([^\n]+)/iu);
   if (roleplayMatch) {
-    return roleplayMatch[2].trim();
+    return roleplayMatch[2]!.trim();
   }
 
   // Try Oxford Headway patterns: "Everyday English: Title" or "Listening: Title"
   const headwayMatch = text.match(/(?:Everyday\s+English|Listening|Speaking)[:\s]+\n?([^\n]+)/i);
   if (headwayMatch) {
-    return headwayMatch[1].trim();
+    return headwayMatch[1]!.trim();
   }
 
   // Try emoji + title format
   const emojiTitleMatch = text.match(/[\p{Emoji}]+\s+([^\n]+)/u);
   if (emojiTitleMatch) {
-    return emojiTitleMatch[1].trim();
+    return emojiTitleMatch[1]!.trim();
   }
 
   // Fallback: grab the first line
-  const firstLine = text.split('\n')[0].trim();
+  const firstLine = text.split('\n')[0]!.trim();
   return firstLine.length > 5 ? firstLine : 'Untitled Scenario';
 }
 
@@ -65,7 +65,7 @@ function extractTitle(text: string): string {
 function extractContext(text: string): string {
   const contextMatch = text.match(/Context\s*[:\n]+([^\n]+)/i);
   if (contextMatch) {
-    return contextMatch[1].trim();
+    return contextMatch[1]!.trim();
   }
 
   // Look for description before dialogue
@@ -107,8 +107,8 @@ function parseDialogue(text: string): ParsedDialogue[] {
     }
 
     if (match) {
-      const speaker = match[1].trim();
-      const text = match[2].trim();
+      const speaker = match[1]!.trim();
+      const text = match[2]!.trim();
 
       // Skip non-dialogue lines
       if (speaker.length > 0 && text.length > 2 && !speaker.includes('Tab') && !speaker.match(/\d+\s*⃣/)) {

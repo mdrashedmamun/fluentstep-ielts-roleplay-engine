@@ -94,9 +94,9 @@ function parseArgs(): {
   for (const arg of args) {
     if (arg.startsWith('--')) {
       const [key, value] = arg.substring(2).split('=');
-      if (key === 'phase') {
+      if (key === 'phase' && value) {
         result.phase = parseInt(value, 10);
-      } else if (key === 'scenarios') {
+      } else if (key === 'scenarios' && value) {
         result.scenarios = value.split(',');
       } else if (key === 'dry-run') {
         result.dryRun = true;

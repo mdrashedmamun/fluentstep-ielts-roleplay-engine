@@ -31,7 +31,7 @@ export function validateGrammarContext(scenario: RoleplayScript): ValidationFind
       findings.push({
         validatorName: 'Grammar Context Validator',
         scenarioId: scenario.id,
-        location: `answerVariations[${av.index}].answer`,
+        location: `answerVariations[${av.index}]!.answer`,
         issue: 'Redundancy - same word repeated',
         currentValue: av.answer,
         suggestedValue: redundancy.suggestion,
@@ -54,7 +54,7 @@ export function validateGrammarContext(scenario: RoleplayScript): ValidationFind
       findings.push({
         validatorName: 'Grammar Context Validator',
         scenarioId: scenario.id,
-        location: `answerVariations[${av.index}].answer`,
+        location: `answerVariations[${av.index}]!.answer`,
         issue: 'Double negative - grammatically incorrect',
         currentValue: av.answer,
         suggestedValue: doubleNeg.suggestion,
@@ -78,7 +78,7 @@ export function validateGrammarContext(scenario: RoleplayScript): ValidationFind
         findings.push({
           validatorName: 'Grammar Context Validator',
           scenarioId: scenario.id,
-          location: `answerVariations[${av.index}].answer`,
+          location: `answerVariations[${av.index}]!.answer`,
           issue: 'POS mismatch - adverb/adjective coordination error',
           currentValue: av.answer,
           suggestedValue: posMismatch.suggestion,
@@ -106,7 +106,7 @@ export function validateGrammarContext(scenario: RoleplayScript): ValidationFind
           findings.push({
             validatorName: 'Grammar Context Validator',
             scenarioId: scenario.id,
-            location: `answerVariations[${av.index}].alternatives[${i}]`,
+            location: `answerVariations[${av.index}]!.alternatives[${i}]`,
             issue: 'Redundancy in alternative',
             currentValue: av.alternatives[i],
             suggestedValue: altRedundancy.suggestion,
@@ -128,7 +128,7 @@ export function validateGrammarContext(scenario: RoleplayScript): ValidationFind
           findings.push({
             validatorName: 'Grammar Context Validator',
             scenarioId: scenario.id,
-            location: `answerVariations[${av.index}].alternatives[${i}]`,
+            location: `answerVariations[${av.index}]!.alternatives[${i}]`,
             issue: 'Double negative in alternative',
             currentValue: av.alternatives[i],
             suggestedValue: altDoubleNeg.suggestion,
@@ -150,7 +150,7 @@ export function validateGrammarContext(scenario: RoleplayScript): ValidationFind
           findings.push({
             validatorName: 'Grammar Context Validator',
             scenarioId: scenario.id,
-            location: `answerVariations[${av.index}].alternatives[${i}]`,
+            location: `answerVariations[${av.index}]!.alternatives[${i}]`,
             issue: 'POS mismatch in alternative',
             currentValue: av.alternatives[i],
             suggestedValue: altPosMismatch.suggestion,
@@ -255,7 +255,7 @@ function detectPOSMismatch(text: string, answer: string): { reason: string; sugg
   }
 
   // Get the coordinated word
-  const coordinated = match[2] || text.split(/\s+/).find(w => w !== answer && match[0].includes(w));
+  const coordinated = match[2] || text.split(/\s+/).find(w => w !== answer && match[0]!.includes(w));
 
   if (!coordinated) {
     return null;

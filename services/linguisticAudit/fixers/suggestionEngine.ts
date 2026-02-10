@@ -127,7 +127,7 @@ export function groupSuggestions(
  * Sort suggestions by confidence (highest first) and validator
  */
 export function sortSuggestions(suggestions: UserSuggestion[]): UserSuggestion[] {
-  return [...suggestions].sort((a, b) => {
+  return [...suggestions]!.sort((a, b) => {
     // Higher confidence first
     if (a.confidence !== b.confidence) {
       return b.confidence - a.confidence;

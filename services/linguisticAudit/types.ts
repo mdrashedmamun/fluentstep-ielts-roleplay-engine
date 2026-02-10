@@ -20,7 +20,7 @@ export enum Severity {
 export interface ValidationFinding {
   validatorName: string;
   scenarioId: string;
-  location: string;                // e.g., "answerVariations[3].answer"
+  location: string;                // e.g., "answerVariations[3]!.answer"
   issue: string;                   // Human-readable issue description
   currentValue: string;
   suggestedValue?: string;          // For HIGH/MEDIUM confidence fixes

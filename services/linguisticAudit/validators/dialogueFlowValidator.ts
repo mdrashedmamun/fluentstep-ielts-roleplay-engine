@@ -67,7 +67,7 @@ export function validateDialogueFlow(scenario: RoleplayScript): ValidationFindin
         findings.push({
           validatorName: 'Dialogue Flow',
           scenarioId: scenario.id,
-          location: `answerVariations[${av.index}].answer`,
+          location: `answerVariations[${av.index}]!.answer`,
           issue: `Complaint/problem not acknowledged in next turn`,
           currentValue: av.answer,
           context: `Next line: "${nextLine}"`,

@@ -14,7 +14,7 @@ const mockWorkerOutput1: WorkerOutput = {
     {
       validatorName: 'Grammar Context',
       scenarioId: 'advanced-1',
-      location: 'answerVariations[0].answer',
+      location: 'answerVariations[0]!.answer',
       issue: 'Redundancy',
       currentValue: 'quite quite clear',
       suggestedValue: 'quite clear',
@@ -25,7 +25,7 @@ const mockWorkerOutput1: WorkerOutput = {
     {
       validatorName: 'UK English Spelling',
       scenarioId: 'advanced-2',
-      location: 'dialogue[5].text',
+      location: 'dialogue[5]!.text',
       issue: 'American spelling',
       currentValue: 'color',
       suggestedValue: 'colour',
@@ -46,7 +46,7 @@ const mockWorkerOutput2: WorkerOutput = {
     {
       validatorName: 'Grammar Context',
       scenarioId: 'advanced-1',
-      location: 'answerVariations[0].answer',
+      location: 'answerVariations[0]!.answer',
       issue: 'Redundancy',
       currentValue: 'quite quite clear',
       suggestedValue: 'quite clear',
@@ -57,7 +57,7 @@ const mockWorkerOutput2: WorkerOutput = {
     {
       validatorName: 'Contextual Substitution',
       scenarioId: 'advanced-3',
-      location: 'answerVariations[2].answer',
+      location: 'answerVariations[2]!.answer',
       issue: 'Contextual mismatch',
       currentValue: 'walk',
       suggestedValue: 'stroll',
@@ -78,7 +78,7 @@ const mockWorkerOutput3: WorkerOutput = {
     {
       validatorName: 'Contextual Substitution',
       scenarioId: 'advanced-3',
-      location: 'answerVariations[2].answer',
+      location: 'answerVariations[2]!.answer',
       issue: 'Contextual mismatch',
       currentValue: 'walk',
       suggestedValue: 'wander',

@@ -31,7 +31,7 @@ export function detectUnitBoundaries(
     const unitMatch = page.text.match(/^\s*(?:UNIT\s+|Unit\s+)(\d+)[:\s]+(.{0,50})?/im);
     if (unitMatch) {
       const unitNum = parseInt(unitMatch[1], 10);
-      const title = (unitMatch[2] || '').trim().split('\n')[0].substring(0, 50);
+      const title = (unitMatch[2] || '').trim().split('\n')[0]!.substring(0, 50);
 
       // Avoid duplicates
       if (!unitBoundaries.some(u => u.unitNumber === unitNum)) {
@@ -83,7 +83,7 @@ export function chunkPDFByUnits(
   const unitBoundaries = detectUnitBoundaries(pages);
   const chunks: PDFChunk[] = [];
 
-  let currentChunkStart = pages[0].pageNum;
+  let currentChunkStart = pages[0]!.pageNum;
   let currentChunkPages: typeof pages = [];
   let currentUnit: (typeof unitBoundaries)[0] | null = null;
 
@@ -130,8 +130,8 @@ function createChunk(
   const dialogueRichness = estimateDialogueRichness(extractedText);
 
   return {
-    startPage: pages[0].pageNum,
-    endPage: pages[pages.length - 1].pageNum,
+    startPage: pages[0]!.pageNum,
+    endPage: pages[pages.length - 1]!.pageNum,
     unitNumber: unitInfo?.unitNumber,
     unitTitle: unitInfo?.title,
     estimatedDialogueRichness: dialogueRichness,
@@ -157,5 +157,5 @@ export function filterChunksByRichness(
  * Sort chunks by dialogue richness (highest first)
  */
 export function sortChunksByRichness(chunks: PDFChunk[]): PDFChunk[] {
-  return [...chunks].sort((a, b) => b.estimatedDialogueRichness - a.estimatedDialogueRichness);
+  return [...chunks]!.sort((a, b) => b.estimatedDialogueRichness - a.estimatedDialogueRichness);
 }

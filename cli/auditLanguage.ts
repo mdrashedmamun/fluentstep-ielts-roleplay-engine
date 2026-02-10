@@ -159,6 +159,10 @@ async function interactiveApproval(
 
   while (currentIndex < suggestions.length) {
     const suggestion = suggestions[currentIndex];
+    if (!suggestion) {
+      currentIndex++;
+      continue;
+    }
     const finding = suggestion.finding;
 
     // Display finding
@@ -170,7 +174,7 @@ async function interactiveApproval(
     console.log(`Confidence: ${chalk.yellow(`${Math.round(suggestion.confidence * 100)}%`)}`);
     console.log(`\nCurrent: "${chalk.red(finding.currentValue)}"`);
 
-    if (suggestion.options.length > 0) {
+    if (suggestion.options && suggestion.options.length > 0) {
       console.log(formatOptions(suggestion.options));
     }
 

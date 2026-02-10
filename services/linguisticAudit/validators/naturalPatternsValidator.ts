@@ -26,7 +26,7 @@ export function validateNaturalPatterns(scenario: RoleplayScript): ValidationFin
       findings.push({
         validatorName: 'Natural Patterns',
         scenarioId: scenario.id,
-        location: `answerVariations[${av.index}].answer`,
+        location: `answerVariations[${av.index}]!.answer`,
         issue: issue.pattern.issue,
         currentValue: av.answer,
         alternatives: issue.pattern.suggestions,

@@ -49,7 +49,7 @@ export function detectEverydayEnglish(text: string, pageStart: number): Detected
   EVERYDAY_ENGLISH_PATTERN.lastIndex = 0;
 
   while ((match = EVERYDAY_ENGLISH_PATTERN.exec(text)) !== null) {
-    const title = match[1].trim();
+    const title = match[1]!.trim();
     const dialogueText = match[2];
 
     if (title && dialogueText && dialogueText.trim().length > 30) {
@@ -88,7 +88,7 @@ export function detectListeningTranscripts(text: string, pageStart: number): Det
   LISTENING_PATTERN.lastIndex = 0;
 
   while ((match = LISTENING_PATTERN.exec(text)) !== null) {
-    const title = match[1].trim();
+    const title = match[1]!.trim();
     const dialogueText = match[2];
 
     if (title && dialogueText && dialogueText.trim().length > 30) {
@@ -126,7 +126,7 @@ export function detectSpeakingActivities(text: string, pageStart: number): Detec
   SPEAKING_PATTERN.lastIndex = 0;
 
   while ((match = SPEAKING_PATTERN.exec(text)) !== null) {
-    const title = match[1].trim();
+    const title = match[1]!.trim();
     const dialogueText = match[2];
 
     if (title && dialogueText && dialogueText.trim().length > 30) {
@@ -162,7 +162,7 @@ function extractSpeakers(text: string): string[] {
 
   const matches = text.matchAll(SPEAKER_PATTERN);
   for (const match of matches) {
-    const speaker = match[1].trim();
+    const speaker = match[1]!.trim();
     if (speaker && speaker.length > 0) {
       speakers.add(speaker);
     }
@@ -252,7 +252,7 @@ export function groupDialoguesByType(
   return dialogues.reduce(
     (acc, dialogue) => {
       if (!acc[dialogue.type]) acc[dialogue.type] = [];
-      acc[dialogue.type].push(dialogue);
+      acc[dialogue.type]!.push(dialogue);
       return acc;
     },
     {} as Record<string, DetectedDialogue[]>

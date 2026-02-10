@@ -117,10 +117,10 @@ export const progressService = {
     const progress = this.getProgress();
 
     if (progress.scenarioProgress[scenarioId]) {
-      progress.scenarioProgress[scenarioId].currentStep = step;
-      progress.scenarioProgress[scenarioId].revealedBlanks = blanks;
-      progress.scenarioProgress[scenarioId].timeSpent = timeSpent;
-      progress.scenarioProgress[scenarioId].lastVisitedAt = Date.now();
+      progress.scenarioProgress[scenarioId]!.currentStep = step;
+      progress.scenarioProgress[scenarioId]!.revealedBlanks = blanks;
+      progress.scenarioProgress[scenarioId]!.timeSpent = timeSpent;
+      progress.scenarioProgress[scenarioId]!.lastVisitedAt = Date.now();
       progress.totalTimeSpent = Object.values(progress.scenarioProgress).reduce((sum, sp) => sum + sp.timeSpent, 0);
     }
 

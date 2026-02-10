@@ -24,7 +24,7 @@ export function validateBlankAnswerPairing(scenario: RoleplayScript): Validation
 
   // Check each deepDive
   for (let ddIndex = 0; ddIndex < scenario.deepDive.length; ddIndex++) {
-    const dd = scenario.deepDive[ddIndex];
+    const dd = scenario.deepDive[ddIndex]!;
 
     // Check 1: Does the blank index exist?
     const av = avByIndex.get(dd.index);
@@ -81,7 +81,7 @@ export function validateBlankAnswerPairing(scenario: RoleplayScript): Validation
       uniqueAnswers.add(av.answer.toLowerCase());
 
       for (let i = 0; i < av.alternatives.length; i++) {
-        const altLower = av.alternatives[i].toLowerCase();
+        const altLower = av.alternatives[i]!.toLowerCase();
 
         if (uniqueAnswers.has(altLower)) {
           const confidence = scoreConfidence({
@@ -94,7 +94,7 @@ export function validateBlankAnswerPairing(scenario: RoleplayScript): Validation
           findings.push({
             validatorName: 'Blank-Answer Pairing Validator',
             scenarioId: scenario.id,
-            location: `answerVariations[${av.index}].alternatives[${i}]`,
+            location: `answerVariations[${av.index}]!.alternatives[${i}]`,
             issue: 'Duplicate alternative (same as main answer or another alternative)',
             currentValue: av.alternatives[i],
             suggestedValue: undefined,
@@ -109,7 +109,7 @@ export function validateBlankAnswerPairing(scenario: RoleplayScript): Validation
     }
 
     // Check 4: Verify deepDive index corresponds to dialogue line
-    const dialogueLine = scenario.dialogue[dd.index];
+    const dialogueLine = scenario.dialogue[dd.index]!;
     if (!dialogueLine) {
       const confidence = scoreConfidence({
         issueType: 'data-integrity',
@@ -144,7 +144,7 @@ export function validateBlankAnswerPairing(scenario: RoleplayScript): Validation
       findings.push({
         validatorName: 'Blank-Answer Pairing Validator',
         scenarioId: scenario.id,
-        location: `deepDive[${ddIndex}].category`,
+        location: `deepDive[${ddIndex}]!.category`,
         issue: 'Invalid deep dive category',
         currentValue: dd.category,
         suggestedValue: validCategories[0],
@@ -166,7 +166,7 @@ export function validateBlankAnswerPairing(scenario: RoleplayScript): Validation
       findings.push({
         validatorName: 'Blank-Answer Pairing Validator',
         scenarioId: scenario.id,
-        location: `deepDive[${ddIndex}].insight`,
+        location: `deepDive[${ddIndex}]!.insight`,
         issue: 'DeepDive insight is empty',
         currentValue: dd.insight,
         suggestedValue: undefined,
@@ -183,9 +183,9 @@ export function validateBlankAnswerPairing(scenario: RoleplayScript): Validation
       for (let i = 0; i < allAnswers.length; i++) {
         for (let j = i + 1; j < allAnswers.length; j++) {
           // Calculate similarity (very simple: shared starting letters)
-          if (allAnswers[i].substring(0, 3) === allAnswers[j].substring(0, 3)) {
+          if (allAnswers[i]!.substring(0, 3) === allAnswers[j]!.substring(0, 3)) {
             // Only flag if they're too similar (same root)
-            if (allAnswers[i].toLowerCase() === allAnswers[j].toLowerCase()) {
+            if (allAnswers[i]!.toLowerCase() === allAnswers[j]!.toLowerCase()) {
               const confidence = scoreConfidence({
                 issueType: 'low-diversity',
                 affectedText: allAnswers[j],
@@ -196,7 +196,7 @@ export function validateBlankAnswerPairing(scenario: RoleplayScript): Validation
               findings.push({
                 validatorName: 'Blank-Answer Pairing Validator',
                 scenarioId: scenario.id,
-                location: `answerVariations[${av.index}].alternatives[${j - 1}]`,
+                location: `answerVariations[${av.index}]!.alternatives[${j - 1}]`,
                 issue: 'Alternatives lack sufficient diversity',
                 currentValue: allAnswers[j],
                 suggestedValue: undefined,

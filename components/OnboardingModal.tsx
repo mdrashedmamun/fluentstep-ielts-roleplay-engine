@@ -65,7 +65,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({ isOpen, onClos
 
   if (!isOpen) return null;
 
-  const currentStep = steps[step];
+  const currentStep = steps[step]!;
   const stepPercent = ((step + 1) / steps.length) * 100;
 
   return (

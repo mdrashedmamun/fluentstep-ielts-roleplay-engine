@@ -106,8 +106,8 @@ if (samplesWithIssues.length > 0) {
   samplesWithIssues.forEach(r => {
     if (r.details && r.details[0]) {
       console.log(`\n  ${r.scenario} - ${r.validator}`);
-      console.log(`    Issue: ${r.details[0].issue}`);
-      console.log(`    Value: "${r.details[0].currentValue}"`);
+      console.log(`    Issue: ${r.details[0]!.issue}`);
+      console.log(`    Value: "${r.details[0]!.currentValue}"`);
     }
   });
 }

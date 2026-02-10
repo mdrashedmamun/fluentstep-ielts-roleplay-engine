@@ -16,7 +16,7 @@ export function validateDeepDive(scenario: RoleplayScript): ValidationFinding[] 
   }
 
   for (let i = 0; i < scenario.deepDive.length; i++) {
-    const dd = scenario.deepDive[i];
+    const dd = scenario.deepDive[i]!;
     const answerVariation = scenario.answerVariations.find(av => av.index === dd.index);
 
     if (!answerVariation) {
@@ -48,7 +48,7 @@ export function validateDeepDive(scenario: RoleplayScript): ValidationFinding[] 
       findings.push({
         validatorName: 'Deep Dive Quality',
         scenarioId: scenario.id,
-        location: `deepDive[${i}].insight`,
+        location: `deepDive[${i}]!.insight`,
         issue: `Insight reads like definition instead of usage pattern`,
         currentValue: dd.insight,
         context: `Phrase: "${dd.phrase}"`,
@@ -70,7 +70,7 @@ export function validateDeepDive(scenario: RoleplayScript): ValidationFinding[] 
       findings.push({
         validatorName: 'Deep Dive Quality',
         scenarioId: scenario.id,
-        location: `deepDive[${i}].insight`,
+        location: `deepDive[${i}]!.insight`,
         issue: `Insight uses non-British spelling`,
         currentValue: dd.insight,
         suggestedValue: dd.insight.replace(issue.word, issue.fixed),
@@ -106,7 +106,7 @@ export function validateDeepDive(scenario: RoleplayScript): ValidationFinding[] 
       findings.push({
         validatorName: 'Deep Dive Quality',
         scenarioId: scenario.id,
-        location: `deepDive[${i}].phrase`,
+        location: `deepDive[${i}]!.phrase`,
         issue: `Phrase doesn't relate to answer variations at this index`,
         currentValue: dd.phrase,
         context: `Primary answer: "${answerAtIndex}" | Alternatives: ${alternativesText || 'none'}`,
@@ -127,7 +127,7 @@ export function validateDeepDive(scenario: RoleplayScript): ValidationFinding[] 
       findings.push({
         validatorName: 'Deep Dive Quality',
         scenarioId: scenario.id,
-        location: `deepDive[${i}].insight`,
+        location: `deepDive[${i}]!.insight`,
         issue: `Insight is too brief to provide meaningful learning`,
         currentValue: dd.insight,
         context: `Currently: "${dd.insight}" (${dd.insight.length} chars)`,

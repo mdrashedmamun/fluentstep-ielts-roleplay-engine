@@ -38,12 +38,15 @@ function calculateWaypointPositions(scenarios: RoleplayScript[]): WaypointPositi
 
   const organicPoints = generateOrganicPath(scenarios.length, viewBoxWidth, viewBoxHeight);
 
-  return scenarios.map((scenario, index) => ({
-    id: scenario.id,
-    x: organicPoints[index].x,
-    y: organicPoints[index].y,
-    scenario
-  }));
+  return scenarios.map((scenario, index) => {
+    const point = organicPoints[index];
+    return {
+      id: scenario.id,
+      x: point?.x ?? 500,
+      y: point?.y ?? 700,
+      scenario
+    };
+  });
 }
 
 const JourneyMap: React.FC<JourneyMapProps> = ({
@@ -188,9 +191,9 @@ const JourneyMap: React.FC<JourneyMapProps> = ({
           />
 
           {/* Hiker avatar at current progress */}
-          {completedScenarios.size > 0 && (
+          {completedScenarios.size > 0 && waypointPositions.length > 0 && (
             <HikerAvatar
-              position={waypointPositions[Math.min(completedScenarios.size - 1, waypointPositions.length - 1)]}
+              position={waypointPositions[Math.min(completedScenarios.size - 1, waypointPositions.length - 1)] || { x: 500, y: 700 }}
               completionPercentage={completionPercentage}
               initials="YO"
             />

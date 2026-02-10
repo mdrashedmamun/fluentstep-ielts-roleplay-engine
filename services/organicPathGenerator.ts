@@ -65,9 +65,9 @@ export function generateOrganicPath(
  */
 export function generateSmoothPathD(points: PathPoint[]): string {
   if (points.length === 0) return '';
-  if (points.length === 1) return `M ${points[0].x} ${points[0].y}`;
+  if (points.length === 1) return `M ${points[0]!.x} ${points[0]!.y}`;
 
-  let pathD = `M ${points[0].x} ${points[0].y}`;
+  let pathD = `M ${points[0]!.x} ${points[0]!.y}`;
 
   for (let i = 0; i < points.length - 1; i++) {
     // Get control points using Catmull-Rom spline

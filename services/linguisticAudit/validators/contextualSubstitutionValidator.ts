@@ -29,7 +29,7 @@ export function validateContextualSubstitution(scenario: RoleplayScript): Valida
       findings.push({
         validatorName: 'Contextual Substitution Validator',
         scenarioId: scenario.id,
-        location: `answerVariations[${av.index}].answer`,
+        location: `answerVariations[${av.index}]!.answer`,
         issue: 'Main answer does not fit context',
         currentValue: av.answer,
         suggestedValue: undefined,
@@ -41,7 +41,7 @@ export function validateContextualSubstitution(scenario: RoleplayScript): Valida
 
     // Now check all alternatives
     for (let i = 0; i < av.alternatives.length; i++) {
-      const alt = av.alternatives[i];
+      const alt = av.alternatives[i]!;
       const substituted = dialogueLine.replace('________', alt);
 
       // Check if alternative creates valid sentence structure
@@ -58,7 +58,7 @@ export function validateContextualSubstitution(scenario: RoleplayScript): Valida
         findings.push({
           validatorName: 'Contextual Substitution Validator',
           scenarioId: scenario.id,
-          location: `answerVariations[${av.index}].alternatives[${i}]`,
+          location: `answerVariations[${av.index}]!.alternatives[${i}]`,
           issue: 'Alternative does not fit context',
           currentValue: alt,
           suggestedValue: undefined,
@@ -81,7 +81,7 @@ export function validateContextualSubstitution(scenario: RoleplayScript): Valida
         findings.push({
           validatorName: 'Contextual Substitution Validator',
           scenarioId: scenario.id,
-          location: `answerVariations[${av.index}].alternatives[${i}]`,
+          location: `answerVariations[${av.index}]!.alternatives[${i}]`,
           issue: 'Alternative does not maintain meaning',
           currentValue: alt,
           suggestedValue: undefined,
@@ -109,7 +109,7 @@ function validateSentenceStructure(sentence: string): { valid: boolean; reason: 
     if (stopWords.has(words[i])) continue;
 
     for (let j = i + 1; j <= Math.min(i + 2, words.length - 1); j++) {
-      if (words[i] === words[j] && words[i].length > 2) {
+      if (words[i] === words[j] && words[i]!.length > 2) {
         return {
           valid: false,
           reason: `Duplicate word "${words[i]}" creates redundancy`

@@ -231,7 +231,7 @@ function extractCandidates(
     const wordMatches = text.matchAll(/\b(\w+(?:\s+\w+){1,4})\b/g);
 
     for (const match of wordMatches) {
-      const phrase = match[0].trim();
+      const phrase = match[0]!.trim();
       const lower = phrase.toLowerCase();
 
       // Skip if already scored
@@ -307,7 +307,7 @@ function generateAlternatives(
   const lower = answer.toLowerCase();
 
   if (synonymMap[lower]) {
-    alternatives.push(...synonymMap[lower].slice(0, 2));
+    alternatives.push(...synonymMap[lower]!.slice(0, 2));
   } else if (bucket === 'BUCKET_A') {
     // For BUCKET_A items without mapped synonyms, suggest related vocabulary
     alternatives.push(...generateRelatedTerms(answer));
@@ -524,7 +524,7 @@ function insertBlankMarkers(
   const result = JSON.parse(JSON.stringify(dialogue));
 
   // Sort blanks by line and position (reverse order to maintain positions)
-  const sorted = [...selectedBlanks].sort(
+  const sorted = [...selectedBlanks]!.sort(
     (a, b) =>
       b.dialogueIndex - a.dialogueIndex || b.position - a.position
   );

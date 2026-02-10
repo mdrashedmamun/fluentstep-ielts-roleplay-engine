@@ -48,7 +48,7 @@ export function validateChunkCompliance(scenario: RoleplayScript): ValidationFin
       findings.push({
         validatorName: 'Chunk Compliance',
         scenarioId: scenario.id,
-        location: `answerVariations[${answerVar.index}].answer`,
+        location: `answerVariations[${answerVar.index}]!.answer`,
         issue: `Novel vocabulary (not in LOCKED CHUNKS). Compliance: ${complianceReport.complianceScore}%`,
         currentValue: novelAnswer,
         suggestedValue: suggestions[0],

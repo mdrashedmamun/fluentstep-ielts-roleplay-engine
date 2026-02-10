@@ -156,7 +156,7 @@ function extractCandidatePhrases(
 
     let charPos = 0;
     for (let i = 0; i < phrases.length; i++) {
-      const phrase = phrases[i].trim();
+      const phrase = phrases[i]!.trim();
       const startPos = charPos;
       const endPos = startPos + phrase.length;
 
@@ -184,7 +184,7 @@ function extractCandidatePhrases(
     // Extract multi-word expressions (2-4 words)
     const wordMatches = text.matchAll(/\b(\w+(?:\s+\w+){1,3})\b/g);
     for (const match of wordMatches) {
-      const phrase = match[0].trim();
+      const phrase = match[0]!.trim();
       if (phrase.length > 3) {
         const { score, bucket } = scorePhraseForBlank(phrase, bucketA, bucketB);
         if (score > 5) {
@@ -236,7 +236,7 @@ export function insertBlanksIntelligently(
   const bucketBBlanks = candidates.filter(c => c.bucket === 'B').slice(0, Math.ceil(targetBlanks * 0.3));
   const novelBlanks = candidates.filter(c => c.bucket === 'NOVEL').slice(0, targetBlanks - bucketABlanks.length - bucketBBlanks.length);
 
-  const selectedBlanks = [...bucketABlanks, ...bucketBBlanks, ...novelBlanks].slice(0, targetBlanks);
+  const selectedBlanks = [...bucketABlanks, ...bucketBBlanks, ...novelBlanks]!.slice(0, targetBlanks);
 
   // Sort selected blanks by position in dialogue (to maintain order)
   selectedBlanks.sort((a, b) => {
@@ -260,14 +260,14 @@ export function insertBlanksIntelligently(
     blankPhrases.add(key);
 
     const lineIndex = blank.lineIndex;
-    const originalText = modifiedDialogue[lineIndex].text;
+    const originalText = modifiedDialogue[lineIndex]!.text;
 
     // Replace the phrase with a blank marker (escaped for use in strings)
     const replacement = '________';
     const newText = originalText.replace(new RegExp(`\\b${escapeRegex(blank.phrase)}\\b`, 'i'), replacement);
 
     if (newText !== originalText) {
-      modifiedDialogue[lineIndex].text = newText;
+      modifiedDialogue[lineIndex]!.text = newText;
 
       // Create answer entry
       answers.push({

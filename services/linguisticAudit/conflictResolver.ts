@@ -49,15 +49,15 @@ export function resolveConflicts(
     if (alternatives.length === 0) continue;
 
     // Sort by confidence (descending)
-    const sorted = [...alternatives].sort((a, b) => b.confidence - a.confidence);
+    const sorted = [...alternatives]!.sort((a, b) => b.confidence - a.confidence);
 
     let winner = sorted[0];
     let method: 'confidence' | 'priority' | 'earliest' = 'confidence';
 
     // Check for confidence tie
-    if (sorted[0].confidence === sorted[1]?.confidence) {
+    if (sorted[0]!.confidence === sorted[1]?.confidence) {
       // Tie: use validator priority
-      const byPriority = [...alternatives].sort((a, b) => {
+      const byPriority = [...alternatives]!.sort((a, b) => {
         const priorityDiff =
           getValidatorPriority(a.suggestedValue) -
           getValidatorPriority(b.suggestedValue);

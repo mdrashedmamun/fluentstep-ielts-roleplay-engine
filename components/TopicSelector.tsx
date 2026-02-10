@@ -178,7 +178,7 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect }) => {
                             : 'bg-gradient-to-br from-accent-400 to-accent-500 ring-teal-100 -ml-3'
                         }`}
                       >
-                        {char.name[0].toUpperCase()}
+                        {char?.name?.[0]?.toUpperCase() || "?"}
                       </div>
                     ))}
                   </div>
