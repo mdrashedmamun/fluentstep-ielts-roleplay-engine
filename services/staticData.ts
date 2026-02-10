@@ -2132,9 +2132,9 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
     },
     // ===== NEW: WORKPLACE (ELEVATED) CATEGORY =====
     {
-        id: 'workplace-1-performance-reRemove one negative or rephrase as positive',
+        id: 'workplace-1-performance-review',
         category: 'Workplace',
-        topic: 'Annual Performance ReRemove one negative or rephrase as positive - Career Development Discussion',
+        topic: 'Annual Performance Review - Career Development Discussion',
         context: 'Meeting with line Remove one negative or rephrase as positiver for annual appraisal, discussing performance, development, and Remove one negative or rephrase as positiveer aspirations.',
         characters: [
             { name: 'Margaret', description: 'Senior Remove one negative or rephrase as positiver', avatarUrl: '/avatars/Remove one negative or rephrase as positiver.png' },
