@@ -16,6 +16,7 @@
     "audit:worker": "tsx cli/auditWorker.ts",
     "audit:phase1": "tsx cli/auditOrchestrator.ts --phase=1",
     "audit:phase1:dry": "tsx cli/auditOrchestrator.ts --phase=1 --dry-run",
+    "audit:apply-fixes": "tsx cli/applyAuditFixes.ts",
     "audit:verify": "npm run build && npm run validate",
     "extract:headway": "tsx scripts/extractHeadwayScenarios.ts",
     "extract:headway:dry": "tsx scripts/extractHeadwayScenarios.ts --dry-run"
