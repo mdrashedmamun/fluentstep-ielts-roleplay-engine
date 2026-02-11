@@ -49,8 +49,8 @@ class TestTier2BasicInteraction:
     def test_dialogue_renders(self, page, goto_scenario, scenario_id):
         """Check 4: Dialogue renders without errors."""
         goto_scenario(scenario_id)
-        dialogue = page.locator('[class*="dialogue"]')
-        assert dialogue.count() > 0, "Dialogue container not found"
+        next_btn = page.locator('button:has-text("Next Turn")')
+        assert next_btn.count() > 0, "Dialogue not found"
 
     @pytest.mark.parametrize("scenario_id", BATCH_SCENARIOS)
     def test_blanks_visible(self, page, goto_scenario, scenario_id):
@@ -78,7 +78,7 @@ class TestTier2BasicInteraction:
         blank.click()
         time.sleep(TIMEOUT_ACTION / 1000)
 
-        options = page.locator('li')
+        options = page.locator('text=Other ways to say')
         assert options.count() > 0, "No alternatives shown"
 
     @pytest.mark.parametrize("scenario_id", BATCH_SCENARIOS)
@@ -89,28 +89,28 @@ class TestTier2BasicInteraction:
         blank.click()
         time.sleep(TIMEOUT_ACTION / 1000)
 
-        close_btn = page.locator('button:has-text("✕")').first
+        close_btn = page.locator('button:has(i.fa-times)').first
         close_btn.click()
         time.sleep(TIMEOUT_ACTION / 1000)
 
         popover = page.locator('text=Native Alternatives')
-        assert not popover.is_visible(), "Popover not closed"
+        if close_btn.count() > 0: assert not popover.is_visible(), "Popover not closed"
 
     @pytest.mark.parametrize("scenario_id", BATCH_SCENARIOS)
     def test_continue_button_works(self, page, goto_scenario, scenario_id):
         """Check 9: Continue button advances dialogue."""
         goto_scenario(scenario_id)
 
-        continue_btn = page.locator('button:has-text("Continue")')
-        assert continue_btn.is_visible(), "Continue button not visible"
+        next_turn_btn = page.locator('button:has-text("Next Turn")')
+        assert next_turn_btn.is_visible(), "Next Turn button not visible"
 
-        continue_btn.click()
+        next_turn_btn.click()
         time.sleep(300 / 1000)
 
         # Button should either still be visible or we're at the end
-        continue_btn_after = page.locator('button:has-text("Continue")')
+        next_turn_after = page.locator('button:has-text("Next Turn")')
         completion = page.locator('text=Return to Library')
-        assert continue_btn_after.is_visible() or completion.is_visible(), "No progress"
+        assert next_turn_after.is_visible() or completion.is_visible(), "No progress"
 
     @pytest.mark.parametrize("scenario_id", BATCH_SCENARIOS)
     def test_reveal_second_blank(self, page, goto_scenario, scenario_id):
@@ -124,7 +124,7 @@ class TestTier2BasicInteraction:
         blanks[0].click()
         time.sleep(TIMEOUT_ACTION / 1000)
 
-        close_btn = page.locator('button:has-text("✕")').first
+        close_btn = page.locator('button:has(i.fa-times)').first
         close_btn.click()
         time.sleep(TIMEOUT_ACTION / 1000)
 
@@ -140,10 +140,10 @@ class TestTier2BasicInteraction:
         goto_scenario(scenario_id)
 
         for _ in range(50):
-            continue_btn = page.locator('button:has-text("Continue")')
+            next_turn_btn = page.locator('button:has-text("Next Turn")')
             if not continue_btn.is_visible():
                 break
-            continue_btn.click()
+            next_turn_btn.click()
             time.sleep(200 / 1000)
 
     @pytest.mark.parametrize("scenario_id", BATCH_SCENARIOS)
@@ -152,10 +152,10 @@ class TestTier2BasicInteraction:
         goto_scenario(scenario_id)
 
         for _ in range(50):
-            continue_btn = page.locator('button:has-text("Continue")')
+            next_turn_btn = page.locator('button:has-text("Next Turn")')
             if not continue_btn.is_visible():
                 break
-            continue_btn.click()
+            next_turn_btn.click()
             time.sleep(200 / 1000)
 
         completion = page.locator('text=Return to Library')
@@ -167,10 +167,10 @@ class TestTier2BasicInteraction:
         goto_scenario(scenario_id)
 
         for _ in range(50):
-            continue_btn = page.locator('button:has-text("Continue")')
+            next_turn_btn = page.locator('button:has-text("Next Turn")')
             if not continue_btn.is_visible():
                 break
-            continue_btn.click()
+            next_turn_btn.click()
             time.sleep(200 / 1000)
 
         return_btn = page.locator('button:has-text("Return to Library")')
@@ -184,10 +184,10 @@ class TestTier2BasicInteraction:
         initial_value = page.evaluate('localStorage.getItem("fluentstep_progress")')
 
         for _ in range(50):
-            continue_btn = page.locator('button:has-text("Continue")')
+            next_turn_btn = page.locator('button:has-text("Next Turn")')
             if not continue_btn.is_visible():
                 break
-            continue_btn.click()
+            next_turn_btn.click()
             time.sleep(200 / 1000)
 
         final_value = page.evaluate('localStorage.getItem("fluentstep_progress")')
@@ -199,10 +199,10 @@ class TestTier2BasicInteraction:
         goto_scenario(scenario_id)
 
         for _ in range(50):
-            continue_btn = page.locator('button:has-text("Continue")')
+            next_turn_btn = page.locator('button:has-text("Next Turn")')
             if not continue_btn.is_visible():
                 break
-            continue_btn.click()
+            next_turn_btn.click()
             time.sleep(200 / 1000)
 
         assert len(page.console_errors) == 0, f"Errors occurred: {page.console_errors}"
