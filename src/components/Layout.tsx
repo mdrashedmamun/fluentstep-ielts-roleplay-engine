@@ -1,21 +1,90 @@
 
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import SearchBar from './SearchBar';
+import MuteToggle from './MuteToggle';
+import { audioService } from '../services/audioService';
+import { urlService } from '../services/urlService';
+import { useKeyboard } from '../hooks/useKeyboard';
+import { FilterState } from '../types/ux-enhancements';
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const [isMuted, setIsMuted] = useState(audioService.isMuted());
+  const [searchValue, setSearchValue] = useState(searchParams.get('search') || '');
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
+
+  // Handle mute toggle
+  const handleMuteToggle = () => {
+    const newMuteState = audioService.toggleMute();
+    setIsMuted(newMuteState);
+  };
+
+  // Handle search change
+  const handleSearchChange = (value: string) => {
+    setSearchValue(value);
+    // Update URL with new search query (debounced by urlService)
+    const filters: FilterState = {
+      difficulty: (searchParams.get('difficulty')?.split(',') || []) as ('B2' | 'C1')[],
+      duration: (searchParams.get('duration')?.split(',') || []) as ('short' | 'medium' | 'long')[],
+      status: (searchParams.get('status')?.split(',') || []) as ('not_started' | 'in_progress' | 'completed')[]
+    };
+    const sort = searchParams.get('sort') as any || 'recommended';
+    urlService.updateURLWithFilters(filters, value, sort);
+  };
+
+  // Handle search clear
+  const handleSearchClear = () => {
+    setSearchValue('');
+    urlService.clearURLFilters();
+  };
+
+  // Handle search focus from keyboard shortcut
+  const handleSearchFocus = () => {
+    if (searchInputRef.current) {
+      searchInputRef.current.focus();
+      // Select all text for better UX
+      searchInputRef.current.select();
+    }
+  };
+
+  // Setup keyboard shortcuts
+  useKeyboard({
+    onSearch: handleSearchFocus
+  });
+
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
       <header className="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <a href="/" className="flex items-center gap-2 cursor-pointer group hover:opacity-75 transition-opacity">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+          <a href="/" className="flex items-center gap-2 cursor-pointer group hover:opacity-75 transition-opacity flex-shrink-0">
             <div className="w-9 h-9 bg-primary-600 rounded-xl flex items-center justify-center text-white font-bold shadow-md shadow-primary-200 group-hover:scale-105 transition-transform">FS</div>
-            <span className="font-black text-slate-900 text-xl tracking-tight">FluentStep</span>
+            <span className="font-black text-slate-900 text-xl tracking-tight hidden sm:inline">FluentStep</span>
           </a>
 
-          <div className="flex items-center gap-3">
+          {/* Search Bar - centered in header */}
+          <div className="flex-1 max-w-md">
+            <SearchBar
+              value={searchValue}
+              onChange={handleSearchChange}
+              onClear={handleSearchClear}
+              placeholder="Search scenarios..."
+              inputRef={searchInputRef}
+            />
+          </div>
+
+          <div className="flex items-center gap-3 flex-shrink-0">
+            {/* Mute Toggle */}
+            <MuteToggle
+              isMuted={isMuted}
+              onToggle={handleMuteToggle}
+            />
+
             <button
               title="Keyboard Shortcuts (Press ?)"
               onClick={() => {}}

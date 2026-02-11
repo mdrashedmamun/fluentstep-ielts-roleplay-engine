@@ -14,13 +14,28 @@ interface Shortcut {
 
 const shortcuts: Shortcut[] = [
   {
+    key: 'Cmd/Ctrl + K',
+    description: 'Focus search bar',
+    context: 'Library view'
+  },
+  {
+    key: '/',
+    description: 'Focus search bar (GitHub style)',
+    context: 'Library view'
+  },
+  {
     key: 'Space / Enter',
     description: 'Advance to next dialogue turn',
     context: 'During roleplay'
   },
   {
+    key: 'Arrow Left / Right',
+    description: 'Navigate to previous/next scenario',
+    context: 'During roleplay'
+  },
+  {
     key: 'Escape',
-    description: 'Close popup or return to library',
+    description: 'Close popup or clear search',
     context: 'Anywhere'
   },
   {

@@ -1,10 +1,13 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 interface KeyboardCallbacks {
   onNext?: () => void;
   onBack?: () => void;
   onEscape?: () => void;
   onHelp?: () => void;
+  onSearch?: () => void;
+  onNavigatePrevious?: () => void;
+  onNavigateNext?: () => void;
 }
 
 /**
@@ -14,20 +17,25 @@ interface KeyboardCallbacks {
  * - Space/Enter: Next turn or advance dialogue
  * - Escape: Close popups, return to library
  * - Cmd/Ctrl + B: Go back to library
+ * - Cmd/Ctrl + K or /: Focus search bar
+ * - Arrow Left: Previous scenario (in scenario view)
+ * - Arrow Right: Next scenario (in scenario view)
  * - ?: Show help/keyboard shortcuts
  */
 export function useKeyboard(callbacks: KeyboardCallbacks): void {
+  const lastActionTimeRef = useRef<number>(0);
+  const DEBOUNCE_MS = 100;
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
+      const isInputFocused = target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement;
 
-      // Skip if focused on input/textarea
-      if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) {
-        return;
-      }
+      // Check if modal/dialog is open
+      const isModalOpen = document.querySelector('[role="dialog"]') !== null;
 
-      // Space or Enter - advance
-      if ((e.key === ' ' || e.key === 'Enter') && !e.ctrlKey && !e.metaKey) {
+      // Space or Enter - advance (skip if input focused)
+      if ((e.key === ' ' || e.key === 'Enter') && !e.ctrlKey && !e.metaKey && !isInputFocused) {
         e.preventDefault();
         callbacks.onNext?.();
         return;
@@ -40,15 +48,49 @@ export function useKeyboard(callbacks: KeyboardCallbacks): void {
         return;
       }
 
-      // Cmd/Ctrl + B - back
-      if ((e.metaKey || e.ctrlKey) && e.key === 'b') {
+      // Cmd/Ctrl + B - back (skip if input focused)
+      if ((e.metaKey || e.ctrlKey) && e.key === 'b' && !isInputFocused) {
         e.preventDefault();
         callbacks.onBack?.();
         return;
       }
 
-      // ? - help (not with modifiers)
-      if (e.key === '?' && !e.metaKey && !e.ctrlKey && !e.shiftKey) {
+      // Cmd/Ctrl + K - search focus
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k' && !isModalOpen) {
+        e.preventDefault();
+        callbacks.onSearch?.();
+        return;
+      }
+
+      // / - search focus (GitHub style, skip if input focused)
+      if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.shiftKey && !isInputFocused && !isModalOpen) {
+        e.preventDefault();
+        callbacks.onSearch?.();
+        return;
+      }
+
+      // Arrow keys for navigation (skip if input focused, only in scenario view)
+      if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && !isInputFocused && !isModalOpen) {
+        // Check if we're in scenario view
+        const isInScenario = window.location.pathname.includes('/scenario/');
+        if (isInScenario) {
+          // Apply debounce to prevent rapid repeated triggers
+          const now = Date.now();
+          if (now - lastActionTimeRef.current > DEBOUNCE_MS) {
+            lastActionTimeRef.current = now;
+            e.preventDefault();
+            if (e.key === 'ArrowLeft') {
+              callbacks.onNavigatePrevious?.();
+            } else {
+              callbacks.onNavigateNext?.();
+            }
+          }
+        }
+        return;
+      }
+
+      // ? - help (not with modifiers, skip if input focused)
+      if (e.key === '?' && !e.metaKey && !e.ctrlKey && !e.shiftKey && !isInputFocused) {
         e.preventDefault();
         callbacks.onHelp?.();
       }

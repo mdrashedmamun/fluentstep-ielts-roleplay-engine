@@ -1,9 +1,14 @@
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useFloating, flip, shift, offset } from '@floating-ui/react';
-import { RoleplayScript } from '../services/staticData';
+import { RoleplayScript, CURATED_ROLEPLAYS } from '../services/staticData';
 import { progressService } from '../services/progressService';
+import { audioService } from '../services/audioService';
+import { navigationService } from '../services/navigationService';
 import { useKeyboard } from '../hooks/useKeyboard';
+import NavigationButtons from './NavigationButtons';
+import CelebrationOverlay from './CelebrationOverlay';
+import { AchievementType } from '../types/ux-enhancements';
 
 
 
@@ -144,8 +149,23 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
   const [showDeepDive, setShowDeepDive] = useState(false);
   const [activeSpeechIdx, setActiveSpeechIdx] = useState<number | null>(null);
   const [startTime] = useState(Date.now());
+  const [userProgress, setUserProgress] = useState(progressService.getProgress());
+  const [celebration, setCelebration] = useState<{
+    isVisible: boolean;
+    achievement: {
+      type: AchievementType;
+      message: string;
+      soundId?: 'completion' | 'celebration';
+    };
+  }>({
+    isVisible: false,
+    achievement: { type: 'scenario_complete', message: '' }
+  });
 
   const totalSteps = script.dialogue.length;
+
+  // Track previous completion percentage for milestone detection
+  const previousCompletionRef = useRef(0);
 
   // Initialize progress tracking on mount
   useEffect(() => {
@@ -197,8 +217,69 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
     if (currentStep < totalSteps - 1) {
       setCurrentStep(prev => prev + 1);
     } else {
+      // Mark scenario as completed and trigger celebration
       progressService.markScenarioCompleted(script.id);
-      setShowDeepDive(true);
+      setUserProgress(progressService.getProgress());
+
+      // Show completion celebration
+      setCelebration({
+        isVisible: true,
+        achievement: {
+          type: 'scenario_complete',
+          message: 'You mastered this conversation!',
+          soundId: 'completion'
+        }
+      });
+
+      // Auto-show deep dive after celebration
+      setTimeout(() => {
+        setShowDeepDive(true);
+      }, 1500);
+
+      // Check for milestones
+      const updatedProgress = progressService.getProgress();
+      const completionPercentage = (updatedProgress.completedScenarios.length / CURATED_ROLEPLAYS.length) * 100;
+      const previousCompletion = previousCompletionRef.current;
+
+      if (completionPercentage >= 50 && previousCompletion < 50) {
+        // 50% milestone
+        setTimeout(() => {
+          setCelebration({
+            isVisible: true,
+            achievement: {
+              type: 'milestone_50',
+              message: 'You\'re halfway to mastery!',
+              soundId: 'celebration'
+            }
+          });
+        }, 3500);
+      } else if (completionPercentage >= 75 && previousCompletion < 75) {
+        // 75% milestone
+        setTimeout(() => {
+          setCelebration({
+            isVisible: true,
+            achievement: {
+              type: 'milestone_75',
+              message: 'Almost there! Keep it up!',
+              soundId: 'celebration'
+            }
+          });
+        }, 3500);
+      } else if (completionPercentage === 100) {
+        // 100% milestone
+        setTimeout(() => {
+          setCelebration({
+            isVisible: true,
+            achievement: {
+              type: 'milestone_100',
+              message: 'You\'ve mastered all scenarios!',
+              soundId: 'celebration'
+            }
+          });
+        }, 3500);
+      }
+
+      previousCompletionRef.current = completionPercentage;
     }
   };
 
@@ -247,6 +328,28 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
     });
   }, [script.answerVariations]);
 
+  // Handler for navigation buttons
+  const handleNavigate = useCallback((scenarioId: string) => {
+    // Navigate using window location for full page reload/state reset
+    window.location.href = `/scenario/${scenarioId}`;
+  }, []);
+
+  // Handler for arrow key navigation - previous scenario
+  const handleNavigatePrevious = useCallback(() => {
+    const prevId = navigationService.getPreviousScenario(script.id, CURATED_ROLEPLAYS);
+    if (prevId) {
+      handleNavigate(prevId);
+    }
+  }, [script.id, handleNavigate]);
+
+  // Handler for arrow key navigation - next scenario
+  const handleNavigateNext = useCallback(() => {
+    const nextId = navigationService.getNextScenario(script.id, CURATED_ROLEPLAYS, userProgress);
+    if (nextId) {
+      handleNavigate(nextId);
+    }
+  }, [script.id, userProgress, handleNavigate]);
+
   // Keyboard navigation
   useKeyboard({
     onNext: handleNext,
@@ -255,7 +358,9 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
         setShowDeepDive(false);
       }
     },
-    onBack: handleReset
+    onBack: handleReset,
+    onNavigatePrevious: handleNavigatePrevious,
+    onNavigateNext: handleNavigateNext
   });
 
   // Auto-scroll to bottom of dialogue
@@ -269,21 +374,30 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
   return (
     <div className="max-w-4xl mx-auto h-[85vh] flex flex-col gap-6 animate-world-entry">
       {/* Header - Warm Gradient */}
-      <div className="flex justify-between items-center bg-gradient-to-r from-orange-50 via-white to-teal-50 backdrop-blur-md p-4 rounded-3xl border-2 border-orange-100 shadow-sm">
+      <div className="flex justify-between items-center bg-gradient-to-r from-orange-50 via-white to-teal-50 backdrop-blur-md p-4 rounded-3xl border-2 border-orange-100 shadow-sm gap-4">
         <button
           onClick={handleReset}
-          className="group px-5 py-2.5 text-neutral-600 hover:text-primary-600 flex items-center gap-3 font-bold transition-all"
+          className="group px-5 py-2.5 text-neutral-600 hover:text-primary-600 flex items-center gap-3 font-bold transition-all flex-shrink-0"
           title="Back to Library (Cmd/Ctrl + B)"
         >
           <i className="fas fa-chevron-left text-sm group-hover:-translate-x-1 transition-transform"></i>
           Back to Library
         </button>
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center flex-1">
           <span className="text-[10px] font-bold text-primary-600 uppercase tracking-wider">{script.category}</span>
           <h2 className="text-lg font-black text-neutral-800 tracking-tight font-display">{script.topic}</h2>
         </div>
-        <div className="w-[120px] flex justify-end">
-          <div className="px-4 py-1.5 bg-gradient-to-r from-primary-100 to-accent-100 text-primary-700 rounded-full text-[10px] font-bold">
+        <div className="flex items-center gap-4 flex-shrink-0">
+          {/* Navigation Buttons */}
+          <NavigationButtons
+            currentScenarioId={script.id}
+            allScenarios={CURATED_ROLEPLAYS}
+            onNavigate={handleNavigate}
+            isLoading={false}
+          />
+
+          {/* Progress Counter */}
+          <div className="px-4 py-1.5 bg-gradient-to-r from-primary-100 to-accent-100 text-primary-700 rounded-full text-[10px] font-bold whitespace-nowrap">
             {currentStep + 1} / {totalSteps}
           </div>
         </div>
@@ -433,6 +547,13 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
           </div>
         </div>
       )}
+
+      {/* Celebration Overlay */}
+      <CelebrationOverlay
+        isVisible={celebration.isVisible}
+        achievement={celebration.achievement}
+        onDismiss={() => setCelebration({ ...celebration, isVisible: false })}
+      />
     </div>
   );
 };

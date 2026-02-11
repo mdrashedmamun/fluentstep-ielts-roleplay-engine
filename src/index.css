@@ -218,3 +218,31 @@ body {
     background: rgba(0, 0, 0, 0.9) !important;
   }
 }
+
+/* Focus styles for accessibility */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
+
+/* Smooth scroll behavior */
+@supports (scroll-behavior: smooth) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Smooth transitions when motion is allowed */
+@media (prefers-reduced-motion: no-preference) {
+  .motion-safe\:duration-200 {
+    transition-duration: 200ms;
+  }
+
+  .motion-safe\:duration-300 {
+    transition-duration: 300ms;
+  }
+}
