@@ -114,7 +114,9 @@ export function sortByRecommended(
     }
 
     // Tiebreaker: alphabetical by topic
-    return a.topic.localeCompare(b.topic);
+    const topicA = (a.topic || '').toLowerCase();
+    const topicB = (b.topic || '').toLowerCase();
+    return topicA.localeCompare(topicB);
   });
 
   return copy;

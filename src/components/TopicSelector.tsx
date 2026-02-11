@@ -30,19 +30,35 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect }) => {
   const [completionPercentage, setCompletionPercentage] = useState(0);
   const [completedScenarios, setCompletedScenarios] = useState<Set<string>>(new Set());
   const [useJourneyMap, setUseJourneyMap] = useState(false);
-  const [userProgress, setUserProgress] = useState(progressService.getProgress());
+  const [userProgress, setUserProgress] = useState(() => {
+    try {
+      return progressService.getProgress();
+    } catch (e) {
+      console.error('Error getting progress:', e);
+      return { completedScenarios: [], scenarioProgress: {}, lastVisited: null, totalTimeSpent: 0 };
+    }
+  });
 
   // Initialize filters from URL
   const [filters, setFilters] = useState<FilterState>(() => {
-    const difficultyParam = searchParams.get('difficulty');
-    const durationParam = searchParams.get('duration');
-    const statusParam = searchParams.get('status');
+    try {
+      const difficultyParam = searchParams.get('difficulty');
+      const durationParam = searchParams.get('duration');
+      const statusParam = searchParams.get('status');
 
-    return {
-      difficulty: difficultyParam ? difficultyParam.split(',') : [],
-      duration: durationParam ? durationParam.split(',') : [],
-      status: statusParam ? statusParam.split(',') : []
-    };
+      return {
+        difficulty: (difficultyParam ? difficultyParam.split(',') : []) || [],
+        duration: (durationParam ? durationParam.split(',') : []) || [],
+        status: (statusParam ? statusParam.split(',') : []) || []
+      };
+    } catch (e) {
+      console.error('Error initializing filters:', e);
+      return {
+        difficulty: [],
+        duration: [],
+        status: []
+      };
+    }
   });
 
   const [sort, setSort] = useState<SortOption>(() => {
@@ -82,21 +98,37 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect }) => {
 
   // Filtering pipeline
   const filteredAndSortedScenarios = useMemo(() => {
-    // 1. Apply search
-    let results = searchQuery
-      ? searchService.search(searchQuery, CURATED_ROLEPLAYS)
-      : CURATED_ROLEPLAYS;
+    try {
+      // 1. Apply search
+      let results = searchQuery
+        ? searchService.search(searchQuery, CURATED_ROLEPLAYS)
+        : CURATED_ROLEPLAYS;
 
-    // 2. Apply filters
-    results = filterService.applyFilters(results, filters, userProgress);
+      // Ensure results is valid array
+      if (!results || !Array.isArray(results)) {
+        return CURATED_ROLEPLAYS;
+      }
 
-    // 3. Apply sorting
-    results = sortingService.sortScenarios(results, sort, userProgress);
+      // 2. Apply filters
+      results = filterService.applyFilters(results, filters, userProgress);
+      if (!results || !Array.isArray(results)) {
+        return CURATED_ROLEPLAYS;
+      }
 
-    return results;
+      // 3. Apply sorting
+      results = sortingService.sortScenarios(results, sort, userProgress);
+      if (!results || !Array.isArray(results)) {
+        return CURATED_ROLEPLAYS;
+      }
+
+      return results;
+    } catch (error) {
+      console.error('Error in filtering pipeline:', error);
+      return CURATED_ROLEPLAYS;
+    }
   }, [searchQuery, filters, sort, userProgress]);
 
-  const filteredScripts = filteredAndSortedScenarios.filter(s => s.category === activeCategory);
+  const filteredScripts = (filteredAndSortedScenarios || []).filter(s => s && s.category === activeCategory);
 
   // Handler for filter changes
   const handleFilterChange = (newFilters: FilterState) => {
@@ -275,7 +307,7 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect }) => {
           </div>
 
           {/* Results Counter */}
-          {(searchQuery || filters.difficulty.length > 0 || filters.duration.length > 0 || filters.status.length > 0) && (
+          {(searchQuery || (filters?.difficulty?.length || 0) > 0 || (filters?.duration?.length || 0) > 0 || (filters?.status?.length || 0) > 0) && (
             <div className="text-center text-sm font-medium text-neutral-600">
               Showing <span className="text-primary-600 font-bold">{filteredAndSortedScenarios.length}</span> of <span className="text-neutral-700 font-bold">{CURATED_ROLEPLAYS.length}</span> scenarios
             </div>
@@ -345,7 +377,7 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect }) => {
                 <div className="relative z-10 h-full flex flex-col">
                   {/* Character Avatars - Larger, with rings */}
                   <div className="mb-5 flex items-center gap-3">
-                    {script.characters.slice(0, 2).map((char, i) => (
+                    {(script.characters || []).slice(0, 2).map((char, i) => (
                       <div
                         key={i}
                         className={`w-16 h-16 rounded-full flex items-center justify-center font-bold text-white text-lg font-display shadow-md ring-3 ${
@@ -373,7 +405,7 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect }) => {
                   <div className="pt-4 border-t border-neutral-100 mt-4 flex items-center justify-between">
                     <div className="flex items-center gap-3 text-xs text-neutral-600 font-medium">
                       <span>⏱️ 5-8 min</span>
-                      <span>💬 {script.dialogue.length} phrases</span>
+                      <span>💬 {(script.dialogue || []).length} phrases</span>
                     </div>
                     <div className="text-primary-600 font-semibold text-xs uppercase tracking-wider flex items-center gap-2 group-hover:translate-x-1 transition-transform">
                       {isCompleted ? 'Review' : 'Start'}

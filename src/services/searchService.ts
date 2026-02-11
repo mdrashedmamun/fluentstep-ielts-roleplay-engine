@@ -179,7 +179,7 @@ export function search(query: string, scenarios: RoleplayScript[]): RoleplayScri
   }
 
   if (!query || query.trim().length === 0) {
-    return scenarios;
+    return scenarios.filter(s => s && typeof s === 'object');
   }
 
   // Normalize query to lowercase, split into words, and stem each word
@@ -187,14 +187,17 @@ export function search(query: string, scenarios: RoleplayScript[]): RoleplayScri
     .toLowerCase()
     .trim()
     .split(/\s+/)
-    .filter(word => word.length > 0)
+    .filter(word => word && word.length > 0)
     .map(word => stemWord(word));
 
   if (queryWords.length === 0) {
-    return scenarios;
+    return scenarios.filter(s => s && typeof s === 'object');
   }
 
   return scenarios.filter((scenario) => {
+    // Ensure scenario is valid
+    if (!scenario || typeof scenario !== 'object') return false;
+
     const searchableText = `${scenario.topic || ''} ${scenario.context || ''}`.toLowerCase();
 
     // Extract words from searchable text and stem them

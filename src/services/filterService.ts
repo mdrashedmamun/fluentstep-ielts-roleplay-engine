@@ -158,12 +158,16 @@ export function applyFilters(
   }
 
   if (!filters) {
-    return scenarios;
+    return scenarios.filter(s => s && typeof s === 'object');
   }
 
   return scenarios.filter((scenario) => {
+    // Ensure scenario is valid
+    if (!scenario || typeof scenario !== 'object') return false;
+    if (!scenario.id) return false;
+
     // Check difficulty filter
-    if (filters.difficulty && filters.difficulty.length > 0) {
+    if (filters.difficulty && Array.isArray(filters.difficulty) && filters.difficulty.length > 0) {
       const scenarioDifficulty = getDifficulty(scenario);
       // Only filter if difficulty is B2 or C1 (ignore 'unknown' in filter matching)
       if (scenarioDifficulty !== 'unknown' && !filters.difficulty.includes(scenarioDifficulty)) {
@@ -172,7 +176,7 @@ export function applyFilters(
     }
 
     // Check duration filter
-    if (filters.duration && filters.duration.length > 0) {
+    if (filters.duration && Array.isArray(filters.duration) && filters.duration.length > 0) {
       const scenarioDuration = getDuration(scenario);
       if (!filters.duration.includes(scenarioDuration)) {
         return false;
@@ -180,7 +184,7 @@ export function applyFilters(
     }
 
     // Check status filter
-    if (filters.status && filters.status.length > 0) {
+    if (filters.status && Array.isArray(filters.status) && filters.status.length > 0) {
       const scenarioStatus = getScenarioStatus(scenario.id, progress);
       if (!filters.status.includes(scenarioStatus)) {
         return false;

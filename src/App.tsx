@@ -7,6 +7,7 @@ import TopicSelector from './components/TopicSelector';
 import RoleplayViewer from './components/RoleplayViewer';
 import { OnboardingModal } from './components/OnboardingModal';
 import { KeyboardShortcutsModal } from './components/KeyboardShortcutsModal';
+import ErrorBoundary from './components/ErrorBoundary';
 import { useKeyboard } from './hooks/useKeyboard';
 import { CURATED_ROLEPLAYS, RoleplayScript } from './services/staticData';
 
@@ -91,25 +92,27 @@ const App: React.FC = () => {
 
   return (
     <BrowserRouter>
-      <Layout>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-in fade-in duration-200 motion-safe:duration-300">
-          <Routes>
-            <Route path="/" element={<TopicSelectorPage onSelect={(id) => window.location.href = `/scenario/${id}`} />} />
-            <Route path="/scenario/:scenarioId" element={<ScenarioPage onReset={handleReset} />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </div>
+      <ErrorBoundary>
+        <Layout>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-in fade-in duration-200 motion-safe:duration-300">
+            <Routes>
+              <Route path="/" element={<TopicSelectorPage onSelect={(id) => window.location.href = `/scenario/${id}`} />} />
+              <Route path="/scenario/:scenarioId" element={<ScenarioPage onReset={handleReset} />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </div>
 
-        {/* Modals */}
-        <OnboardingModal
-          isOpen={showOnboarding}
-          onClose={() => setShowOnboarding(false)}
-        />
-        <KeyboardShortcutsModal
-          isOpen={showKeyboardShortcuts}
-          onClose={() => setShowKeyboardShortcuts(false)}
-        />
-      </Layout>
+          {/* Modals */}
+          <OnboardingModal
+            isOpen={showOnboarding}
+            onClose={() => setShowOnboarding(false)}
+          />
+          <KeyboardShortcutsModal
+            isOpen={showKeyboardShortcuts}
+            onClose={() => setShowKeyboardShortcuts(false)}
+          />
+        </Layout>
+      </ErrorBoundary>
     </BrowserRouter>
   );
 };
