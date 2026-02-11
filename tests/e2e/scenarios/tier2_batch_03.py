@@ -141,7 +141,7 @@ class TestTier2BasicInteraction:
 
         for _ in range(50):
             next_turn_btn = page.locator('button:has-text("Next Turn")')
-            if not continue_btn.is_visible():
+            if not next_turn_btn.is_visible():
                 break
             next_turn_btn.click()
             time.sleep(200 / 1000)
@@ -153,7 +153,7 @@ class TestTier2BasicInteraction:
 
         for _ in range(50):
             next_turn_btn = page.locator('button:has-text("Next Turn")')
-            if not continue_btn.is_visible():
+            if not next_turn_btn.is_visible():
                 break
             next_turn_btn.click()
             time.sleep(200 / 1000)
@@ -168,7 +168,7 @@ class TestTier2BasicInteraction:
 
         for _ in range(50):
             next_turn_btn = page.locator('button:has-text("Next Turn")')
-            if not continue_btn.is_visible():
+            if not next_turn_btn.is_visible():
                 break
             next_turn_btn.click()
             time.sleep(200 / 1000)
@@ -185,7 +185,7 @@ class TestTier2BasicInteraction:
 
         for _ in range(50):
             next_turn_btn = page.locator('button:has-text("Next Turn")')
-            if not continue_btn.is_visible():
+            if not next_turn_btn.is_visible():
                 break
             next_turn_btn.click()
             time.sleep(200 / 1000)
@@ -200,7 +200,7 @@ class TestTier2BasicInteraction:
 
         for _ in range(50):
             next_turn_btn = page.locator('button:has-text("Next Turn")')
-            if not continue_btn.is_visible():
+            if not next_turn_btn.is_visible():
                 break
             next_turn_btn.click()
             time.sleep(200 / 1000)
