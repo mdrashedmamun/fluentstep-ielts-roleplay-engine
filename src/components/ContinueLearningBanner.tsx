@@ -32,12 +32,12 @@ const ContinueLearningBanner: React.FC<ContinueLearningBannerProps> = ({
   if (
     !scenario ||
     isDismissed ||
-    !progress.inProgressScenarios.includes(scenarioId)
+    !(progress.inProgressScenarios || []).includes(scenarioId)
   ) {
     return null;
   }
 
-  const scenarioProgress = progress.scenarios[scenarioId];
+  const scenarioProgress = (progress.scenarios || {})[scenarioId];
   const progressPercentage = scenarioProgress
     ? Math.round((scenarioProgress.completedPhrases / scenarioProgress.totalPhrases) * 100)
     : 0;
