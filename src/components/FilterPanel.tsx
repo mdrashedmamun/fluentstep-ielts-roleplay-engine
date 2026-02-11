@@ -56,7 +56,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
   };
 
   const toggleFilter = (category: keyof FilterState, value: string) => {
-    const currentValues = filters[category] as string[];
+    const currentValues = (filters[category] || []) as string[];
     const newValues = currentValues.includes(value)
       ? currentValues.filter(v => v !== value)
       : [...currentValues, value];
@@ -99,7 +99,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
     options: Array<{ value: string; label: string; icon: string }>;
   }) => {
     const isExpanded = expandedSections.has(section);
-    const selectedValues = filters[section] as string[];
+    const selectedValues = (filters[section] || []) as string[];
 
     return (
       <div className="border-b border-neutral-200 last:border-b-0">
