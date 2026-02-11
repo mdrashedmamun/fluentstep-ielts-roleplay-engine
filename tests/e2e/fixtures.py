@@ -70,9 +70,9 @@ def goto_scenario(page: Page):
 
     def _goto(scenario_id: str):
         """Navigate to scenario and reach the interactive turn."""
-        # First, go to homepage
-        page.goto(f"{BASE_URL}/")
-        page.wait_for_load_state('networkidle')
+        # First, go to homepage (with extended timeout for slower connections)
+        page.goto(f"{BASE_URL}/", timeout=15000)
+        page.wait_for_load_state('networkidle', timeout=15000)
 
         # Skip the homepage onboarding if it appears
         skip_btns = page.locator('button:has-text("Skip for now")').all()
@@ -80,9 +80,9 @@ def goto_scenario(page: Page):
             skip_btns[0].click()
             page.wait_for_load_state('networkidle')
 
-        # Navigate to the scenario
+        # Navigate to the scenario (with extended timeout)
         url = f"{BASE_URL}/scenario/{scenario_id}"
-        page.goto(url, wait_until='commit')
+        page.goto(url, wait_until='commit', timeout=15000)
 
         # Wait for the scenario onboarding/tutorial to appear
         page.wait_for_selector('button:has-text("Skip for now"), button:has-text("Next Turn")', timeout=TIMEOUT_LOAD)
