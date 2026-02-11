@@ -29,10 +29,14 @@
   "dependencies": {
     "@floating-ui/react": "^0.27.17",
     "@google/genai": "^1.39.0",
+    "@types/canvas-confetti": "^1.9.0",
+    "@types/react-router-dom": "^5.3.3",
+    "canvas-confetti": "^1.9.4",
     "groq-sdk": "^0.37.0",
     "pdf-parse": "^2.4.5",
     "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+    "react-dom": "^19.2.4",
+    "react-router-dom": "^7.13.0"
   },
   "devDependencies": {
     "@types/node": "^22.19.10",

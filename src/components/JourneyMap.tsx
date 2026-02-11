@@ -19,6 +19,7 @@ interface JourneyMapProps {
   scenarios: RoleplayScript[];
   completedScenarios: Set<string>;
   onSelect: (scriptId: string) => void;
+  filteredScenarioIds?: string[];
 }
 
 interface WaypointPosition {
@@ -52,9 +53,19 @@ function calculateWaypointPositions(scenarios: RoleplayScript[]): WaypointPositi
 const JourneyMap: React.FC<JourneyMapProps> = ({
   scenarios,
   completedScenarios,
-  onSelect
+  onSelect,
+  filteredScenarioIds
 }) => {
   const [hoveredScenarioId, setHoveredScenarioId] = useState<string | null>(null);
+
+  // Determine if a scenario is filtered (matches current filters)
+  const isScenarioFiltered = (scenarioId: string) => {
+    // If no filters applied, all scenarios are considered filtered
+    if (!filteredScenarioIds) {
+      return true;
+    }
+    return filteredScenarioIds.includes(scenarioId);
+  };
 
   const waypointPositions = useMemo(
     () => calculateWaypointPositions(scenarios),
@@ -206,9 +217,10 @@ const JourneyMap: React.FC<JourneyMapProps> = ({
             const isNextRecommended = !isCompleted &&
               Array.from(completedScenarios).length < scenarios.length &&
               Array.from(completedScenarios).length === Array.from(waypointPositions).findIndex(p => p.id === pos.id);
+            const isFiltered = isScenarioFiltered(pos.id);
 
             return (
-              <g key={pos.id}>
+              <g key={pos.id} style={{ opacity: isFiltered ? 1 : 0.3, transition: 'opacity 0.3s ease' }}>
                 {/* Waypoint circle with hover glow */}
                 <circle
                   cx={pos.x}
@@ -218,12 +230,13 @@ const JourneyMap: React.FC<JourneyMapProps> = ({
                   opacity={isHovered ? 1 : 0.9}
                   style={{
                     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    cursor: 'pointer',
-                    filter: isHovered ? 'url(#waypointGlow)' : 'none'
+                    cursor: isFiltered ? 'pointer' : 'default',
+                    filter: isHovered ? 'url(#waypointGlow)' : (isFiltered ? 'none' : 'grayscale(1)'),
+                    pointerEvents: isFiltered ? 'auto' : 'none'
                   }}
-                  onClick={() => handleWaypointClick(pos.id)}
-                  onMouseEnter={() => handleWaypointHover(pos.id)}
-                  onMouseLeave={() => handleWaypointHover(null)}
+                  onClick={() => isFiltered && handleWaypointClick(pos.id)}
+                  onMouseEnter={() => isFiltered && handleWaypointHover(pos.id)}
+                  onMouseLeave={() => isFiltered && handleWaypointHover(null)}
                 />
 
                 {/* Pulse ring for next recommended scenario */}

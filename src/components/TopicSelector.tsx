@@ -1,11 +1,21 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { CURATED_ROLEPLAYS } from '../services/staticData';
 import { Button } from '../design-system/components/Button';
 import { Badge } from '../design-system/components/Badge';
 import { progressService } from '../services/progressService';
+import { searchService } from '../services/searchService';
+import { filterService } from '../services/filterService';
+import { sortingService } from '../services/sortingService';
+import { urlService } from '../services/urlService';
 import JourneyMap from './JourneyMap';
 import HeroVideo from './HeroVideo';
+import ContinueLearningBanner from './ContinueLearningBanner';
+import FilterPanel from './FilterPanel';
+import SortingControls from './SortingControls';
+import SurpriseMeButton from './SurpriseMeButton';
+import { FilterState, SortOption } from '../types/ux-enhancements';
 
 interface TopicSelectorProps {
   onSelect: (scriptId: string) => void;
@@ -14,18 +24,94 @@ interface TopicSelectorProps {
 const CATEGORIES = ['Social', 'Workplace', 'Service/Logistics', 'Advanced'] as const;
 
 const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect }) => {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState<typeof CATEGORIES[number]>('Social');
   const [completionPercentage, setCompletionPercentage] = useState(0);
   const [completedScenarios, setCompletedScenarios] = useState<Set<string>>(new Set());
   const [useJourneyMap, setUseJourneyMap] = useState(false);
+  const [userProgress, setUserProgress] = useState(progressService.getProgress());
+
+  // Initialize filters from URL
+  const [filters, setFilters] = useState<FilterState>(() => {
+    const difficultyParam = searchParams.get('difficulty');
+    const durationParam = searchParams.get('duration');
+    const statusParam = searchParams.get('status');
+
+    return {
+      difficulty: difficultyParam ? difficultyParam.split(',') : [],
+      duration: durationParam ? durationParam.split(',') : [],
+      status: statusParam ? statusParam.split(',') : []
+    };
+  });
+
+  const [sort, setSort] = useState<SortOption>(() => {
+    const sortParam = searchParams.get('sort');
+    return (sortParam as SortOption) || 'recommended';
+  });
+
+  const [searchQuery] = useState(() => searchParams.get('search') || '');
 
   useEffect(() => {
     const progress = progressService.getProgress();
+    setUserProgress(progress);
     setCompletedScenarios(new Set(progress.completedScenarios));
     setCompletionPercentage(progressService.getCompletionPercentage(CURATED_ROLEPLAYS.length));
   }, []);
 
-  const filteredScripts = CURATED_ROLEPLAYS.filter(s => s.category === activeCategory);
+  // Filtering pipeline
+  const filteredAndSortedScenarios = useMemo(() => {
+    // 1. Apply search
+    let results = searchQuery
+      ? searchService.search(searchQuery, CURATED_ROLEPLAYS)
+      : CURATED_ROLEPLAYS;
+
+    // 2. Apply filters
+    results = filterService.applyFilters(results, filters, userProgress);
+
+    // 3. Apply sorting
+    results = sortingService.sortScenarios(results, sort, userProgress);
+
+    return results;
+  }, [searchQuery, filters, sort, userProgress]);
+
+  const filteredScripts = filteredAndSortedScenarios.filter(s => s.category === activeCategory);
+
+  // Handler for filter changes
+  const handleFilterChange = (newFilters: FilterState) => {
+    setFilters(newFilters);
+    urlService.updateURLWithFilters(newFilters, searchQuery, sort);
+  };
+
+  // Handler for reset filters
+  const handleResetFilters = () => {
+    setFilters({ difficulty: [], duration: [], status: [] });
+    urlService.clearURLFilters();
+  };
+
+  // Handler for sort changes
+  const handleSortChange = (newSort: SortOption) => {
+    setSort(newSort);
+    urlService.updateURLWithFilters(filters, searchQuery, newSort);
+  };
+
+  // Handler for continue banner dismiss
+  const handleBannerDismiss = () => {
+    // Banner manages its own state
+  };
+
+  // Handler for continue banner continue
+  const handleBannerContinue = (scenarioId: string) => {
+    onSelect(scenarioId);
+  };
+
+  // Handler for surprise me
+  const handleSurpriseMe = (scenarioId: string) => {
+    onSelect(scenarioId);
+  };
+
+  // Get last visited scenario for continue banner
+  const lastVisitedScenario = userProgress.lastVisited;
 
   // If using journey map, show full interactive map
   if (useJourneyMap) {
@@ -48,6 +134,7 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect }) => {
           scenarios={CURATED_ROLEPLAYS}
           completedScenarios={completedScenarios}
           onSelect={onSelect}
+          filteredScenarioIds={filteredAndSortedScenarios.map(s => s.id)}
         />
       </div>
     );
@@ -119,6 +206,74 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect }) => {
         >
           <i className="fas fa-mountain"></i> Journey Map View
         </button>
+        </div>
+
+        {/* Continue Learning Banner */}
+        {lastVisitedScenario && (
+          <ContinueLearningBanner
+            scenarioId={lastVisitedScenario}
+            progress={userProgress}
+            onContinue={handleBannerContinue}
+            onDismiss={handleBannerDismiss}
+          />
+        )}
+
+        {/* Filter and Sort Section */}
+        <div className="space-y-6 max-w-6xl mx-auto">
+          {/* Filter and Sort Controls */}
+          <div className="flex flex-col lg:flex-row gap-6 items-start lg:items-center">
+            {/* Filter Panel */}
+            <div className="flex-1 w-full">
+              <FilterPanel
+                filters={filters}
+                onChange={handleFilterChange}
+                onReset={handleResetFilters}
+                scenarioCounts={{
+                  total: CURATED_ROLEPLAYS.length,
+                  filtered: filteredAndSortedScenarios.length
+                }}
+              />
+            </div>
+
+            {/* Sorting Controls */}
+            <div className="flex-1 w-full">
+              <SortingControls
+                currentSort={sort}
+                onChange={handleSortChange}
+              />
+            </div>
+
+            {/* Surprise Me Button */}
+            <div className="w-full lg:w-auto">
+              <SurpriseMeButton
+                scenarios={filteredAndSortedScenarios}
+                completedIds={Array.from(completedScenarios)}
+                onSelect={handleSurpriseMe}
+              />
+            </div>
+          </div>
+
+          {/* Results Counter */}
+          {(searchQuery || filters.difficulty.length > 0 || filters.duration.length > 0 || filters.status.length > 0) && (
+            <div className="text-center text-sm font-medium text-neutral-600">
+              Showing <span className="text-primary-600 font-bold">{filteredAndSortedScenarios.length}</span> of <span className="text-neutral-700 font-bold">{CURATED_ROLEPLAYS.length}</span> scenarios
+            </div>
+          )}
+
+          {/* No Results Message */}
+          {filteredAndSortedScenarios.length === 0 && (
+            <div className="text-center py-12 space-y-4">
+              <i className="fas fa-magnifying-glass text-5xl text-neutral-300"></i>
+              <p className="text-lg font-semibold text-neutral-600">No scenarios match your filters</p>
+              <p className="text-sm text-neutral-500">Try adjusting your search or filter criteria</p>
+              <button
+                onClick={handleResetFilters}
+                className="px-6 py-2 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition-colors"
+              >
+                Reset Filters
+              </button>
+            </div>
+          )}
         </div>
 
       {/* Category Tabs - Underline Style */}
