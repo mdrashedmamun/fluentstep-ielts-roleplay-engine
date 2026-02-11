@@ -159,6 +159,7 @@ class TestTier2BasicInteraction:
             next_turn_btn.click()
             time.sleep(200 / 1000)
 
+        time.sleep(2000 / 1000)  # Wait for celebration and modal to appear
         completion = page.locator('text=Return to Library')
         completion.wait_for(timeout=5000)
         assert completion.is_visible(), "Completion modal not visible"
@@ -175,6 +176,7 @@ class TestTier2BasicInteraction:
             next_turn_btn.click()
             time.sleep(200 / 1000)
 
+        time.sleep(2000 / 1000)  # Wait for celebration and modal to appear
         return_btn = page.locator('button:has-text("Return to Library")')
         return_btn.wait_for(timeout=5000)
         assert return_btn.is_visible(), "Return to Library button not visible"
@@ -193,6 +195,7 @@ class TestTier2BasicInteraction:
             next_turn_btn.click()
             time.sleep(200 / 1000)
 
+        time.sleep(2000 / 1000)  # Wait for celebration
         final_value = page.evaluate('localStorage.getItem("fluentstep_progress")')
         assert final_value is not None, "Progress not saved to localStorage"
 
