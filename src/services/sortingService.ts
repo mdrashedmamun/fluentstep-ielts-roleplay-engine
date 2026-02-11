@@ -281,5 +281,7 @@ export const sortingService = {
   sortByDuration,
   applySorting,
   getSortLabel,
-  getAllSortOptions
+  getAllSortOptions,
+  // Alias for UI components that expect sortScenarios
+  sortScenarios: applySorting
 };
