@@ -28,6 +28,9 @@
     "qa-test": "tsx scripts/testQAAgent.ts",
     "qa-test:comprehensive": "tsx scripts/testQAComprehensive.ts",
     "export:scenarios": "tsx scripts/exportScenariosToMarkdown.ts",
+    "generate:pattern-summaries": "tsx scripts/exportGeneratedSummaries.ts",
+    "validate:enrichments": "tsx scripts/validateEnrichments.ts",
+    "import:enrichments": "tsx scripts/importEnrichedScenarios.ts",
     "test:e2e": "python3 tests/e2e/orchestrator.py",
     "test:e2e:tier1": "python3 -m pytest tests/e2e/scenarios/tier1_with_feedback.py -v",
     "test:e2e:single": "python3 -m pytest tests/e2e/scenarios/tier1_with_feedback.py -k",
@@ -48,7 +51,8 @@
     "pdf-parse": "^2.4.5",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "react-router-dom": "^7.13.0"
+    "react-router-dom": "^7.13.0",
+    "yaml": "^2.3.4"
   },
   "devDependencies": {
     "@types/node": "^22.19.10",

@@ -32,3 +32,6 @@ temp/*
 
 # Browser automation
 .playwright-mcp/
+
+# Exports (large generated files)
+exports/

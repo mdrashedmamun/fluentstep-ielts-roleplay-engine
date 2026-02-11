@@ -23,6 +23,25 @@ export interface ChunkFeedback {
     }>;                       // Exactly 2
 }
 
+export interface CategoryBreakdown {
+    category: ChunkCategory;                    // Openers, Softening, etc.
+    count: number;                              // Must match examples.length
+    examples: string[];                         // Chunk text references
+    insight: string;                            // 30-100 chars, pattern-focused
+}
+
+export interface KeyPattern {
+    pattern: string;                            // 10-50 chars, pattern name
+    explanation: string;                        // 50-150 chars, shows WHY it works
+    chunks: string[];                           // References to chunk text
+}
+
+export interface PatternSummary {
+    categoryBreakdown: CategoryBreakdown[];      // 2-6 items
+    overallInsight: string;                     // 100-300 chars, learning outcome
+    keyPatterns: KeyPattern[];                  // 2-4 cross-chunk patterns
+}
+
 export interface RoleplayScript {
     id: string;
     category: 'Social' | 'Workplace' | 'Service/Logistics' | 'Advanced' | 'Academic' | 'Healthcare' | 'Cultural' | 'Community';
@@ -48,6 +67,7 @@ export interface RoleplayScript {
         insight: string;
     }[];
     chunkFeedback?: ChunkFeedback[];
+    patternSummary?: PatternSummary;             // NEW - Optional consolidated pattern insights
     backgroundUrl?: string;
 }
 
@@ -2405,7 +2425,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { speaker: 'Dr. Patel', text: 'That sounds rather bothersome. ________ you noticed any patterns?' },
             { speaker: 'You', text: 'They\'re worse when I\'m under ________ at work, I reckon.' },
             { speaker: 'Dr. Patel', text: 'I see. Have you tried ________ your stress levels?' },
-            { speaker: 'You', text: 'I\'ve been trying to manage it, but it\'s quite ________ .' },
+            { speaker: 'You', text: 'I\'ve been trying to manage it, but it\'s quite ________.' },
             { speaker: 'Dr. Patel', text: 'Let\'s not ________ this. I\'d like to refer you for some tests.' },
             { speaker: 'You', text: 'What sort of ________ are we talking about?' },
             { speaker: 'Dr. Patel', text: 'Blood work and possibly an MRI, just to ________ things out.' },
@@ -2414,20 +2434,20 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         ],
         answerVariations: [
             { index: 1, answer: 'suffering', alternatives: ['struggling', 'dealing', 'contending'] },
-            { index: 2, answer: 'Have', alternatives: ['Did', 'Could', 'Would'] },
+            { index: 2, answer: 'Have', alternatives: [] },
             { index: 3, answer: 'stress', alternatives: ['pressure', 'strain', 'tension'] },
             { index: 4, answer: 'addressing', alternatives: ['tackling', 'managing', 'reducing'] },
             { index: 5, answer: 'challenging', alternatives: ['difficult', 'demanding', 'tough'] },
-            { index: 6, answer: 'brush this aside', alternatives: ['dismiss this', 'overlook it', 'take lightly'] },
+            { index: 6, answer: 'brush aside', alternatives: ['dismiss', 'overlook', 'ignore'] },
             { index: 7, answer: 'investigations', alternatives: ['tests', 'scans', 'checks'] },
-            { index: 8, answer: 'rule', alternatives: ['eliminate', 'exclude', 'verify'] },
+            { index: 8, answer: 'rule', alternatives: [] },
             { index: 9, answer: 'referral', alternatives: ['wait', 'process', 'appointment'] },
             { index: 10, answer: 'issue', alternatives: ['write', 'give', 'provide'] }
         ],
         deepDive: [
             { index: 1, phrase: 'suffering from', insight: 'Clinical register in medical contexts. British doctors often soften with "I\'m afraid" but patient use signals genuine concern (Band 8).' },
             { index: 5, phrase: 'challenging', insight: 'Understatement is quintessentially British. Shows emotional restraint whilst communicating genuine difficulty (Band 7.5+).' },
-            { index: 6, phrase: 'brush this aside', insight: 'Phrasal verb shows Dr commitment to thorough care. "Dismiss" is too formal, "overlook" too careless for medical context.' },
+            { index: 6, phrase: 'brush aside', insight: 'Phrasal verb shows Dr commitment to thorough care. "Dismiss" is too formal, "overlook" too careless for medical context.' },
             { index: 9, phrase: 'referral process', insight: 'NHS-specific terminology. Demonstrates familiarity with British healthcare system (Band 8-9 contextual awareness).' }
         ]
     },
