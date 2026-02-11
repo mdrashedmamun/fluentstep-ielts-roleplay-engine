@@ -1,0 +1,239 @@
+"""
+Tier 2 E2E Tests: Basic validation for scenarios without chunkFeedback.
+
+Template file - copy and customize for each batch.
+Each batch contains 4-5 scenarios with 15-check basic validation.
+
+RENAME: tier2_batch_XX.py (where XX is 01-10)
+CUSTOMIZE: Update BATCH_SCENARIOS list with 4-5 scenario IDs
+"""
+
+import pytest
+import time
+from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from config import BASE_URL, TIMEOUT_LOAD, TIMEOUT_ELEMENT, TIMEOUT_ACTION
+from utils.assertions import assert_no_console_errors
+from fixtures import page, browser, timer, goto_scenario
+
+
+# CUSTOMIZE THIS FOR EACH BATCH
+BATCH_SCENARIOS = [
+    "service-2-airport",
+    "service-3-hotel-full",
+    "service-4-return-no-receipt",
+    "service-5-security",
+    "service-8-restaurant-order",
+]
+
+
+class TestTier2BasicInteraction:
+    """Tier 2 Basic Interaction Tests (15 checks per scenario)"""
+
+    @pytest.mark.parametrize("scenario_id", BATCH_SCENARIOS)
+    def test_page_loads(self, page, goto_scenario, scenario_id):
+        """Check 1: Page loads successfully."""
+        start = time.time()
+        try:
+            goto_scenario(scenario_id)
+            load_time = (time.time() - start) * 1000
+            assert load_time < 5000, f"Load time {load_time}ms exceeds 5000ms"
+        except Exception as e:
+            pytest.fail(f"Failed to load {scenario_id}: {e}")
+
+    @pytest.mark.parametrize("scenario_id", BATCH_SCENARIOS)
+    def test_no_console_errors(self, page, goto_scenario, scenario_id):
+        """Check 2: No console errors on load."""
+        goto_scenario(scenario_id)
+        time.sleep(0.5)
+        assert len(page.console_errors) == 0, f"Console errors: {page.console_errors}"
+
+    @pytest.mark.parametrize("scenario_id", BATCH_SCENARIOS)
+    def test_title_correct(self, page, goto_scenario, scenario_id):
+        """Check 3: Page title is correct."""
+        goto_scenario(scenario_id)
+        assert page.title() == "FluentStep: IELTS Roleplay Engine"
+
+    @pytest.mark.parametrize("scenario_id", BATCH_SCENARIOS)
+    def test_dialogue_renders(self, page, goto_scenario, scenario_id):
+        """Check 4: Dialogue renders without errors."""
+        goto_scenario(scenario_id)
+        dialogue = page.locator('[class*="dialogue"]')
+        assert dialogue.count() > 0, "Dialogue container not found"
+
+    @pytest.mark.parametrize("scenario_id", BATCH_SCENARIOS)
+    def test_blanks_visible(self, page, goto_scenario, scenario_id):
+        """Check 5: At least one blank is visible."""
+        goto_scenario(scenario_id)
+        blanks = page.locator('button:has-text("Tap to discover")').all()
+        assert len(blanks) > 0, "No blanks found"
+
+    @pytest.mark.parametrize("scenario_id", BATCH_SCENARIOS)
+    def test_reveal_blank(self, page, goto_scenario, scenario_id):
+        """Check 6: Revealing a blank shows alternatives."""
+        goto_scenario(scenario_id)
+        blank = page.locator('button:has-text("Tap to discover")').first
+        blank.click()
+        time.sleep(TIMEOUT_ACTION / 1000)
+
+        popover = page.locator('text=Native Alternatives')
+        assert popover.is_visible(), "Popover not visible after reveal"
+
+    @pytest.mark.parametrize("scenario_id", BATCH_SCENARIOS)
+    def test_popover_has_options(self, page, goto_scenario, scenario_id):
+        """Check 7: Popover shows multiple alternatives."""
+        goto_scenario(scenario_id)
+        blank = page.locator('button:has-text("Tap to discover")').first
+        blank.click()
+        time.sleep(TIMEOUT_ACTION / 1000)
+
+        options = page.locator('li')
+        assert options.count() > 0, "No alternatives shown"
+
+    @pytest.mark.parametrize("scenario_id", BATCH_SCENARIOS)
+    def test_close_popover(self, page, goto_scenario, scenario_id):
+        """Check 8: Closing popover works."""
+        goto_scenario(scenario_id)
+        blank = page.locator('button:has-text("Tap to discover")').first
+        blank.click()
+        time.sleep(TIMEOUT_ACTION / 1000)
+
+        close_btn = page.locator('button:has-text("✕")').first
+        close_btn.click()
+        time.sleep(TIMEOUT_ACTION / 1000)
+
+        popover = page.locator('text=Native Alternatives')
+        assert not popover.is_visible(), "Popover not closed"
+
+    @pytest.mark.parametrize("scenario_id", BATCH_SCENARIOS)
+    def test_continue_button_works(self, page, goto_scenario, scenario_id):
+        """Check 9: Continue button advances dialogue."""
+        goto_scenario(scenario_id)
+
+        continue_btn = page.locator('button:has-text("Continue")')
+        assert continue_btn.is_visible(), "Continue button not visible"
+
+        # Get current progress
+        progress_before = page.locator('[role="progressbar"]')
+        value_before = progress_before.get_attribute('aria-valuenow') or "0"
+
+        continue_btn.click()
+        time.sleep(300 / 1000)
+
+        # Progress should increase or button should disappear (if at end)
+        continue_btn_after = page.locator('button:has-text("Continue")')
+        if continue_btn_after.is_visible():
+            progress_after = page.locator('[role="progressbar"]')
+            value_after = progress_after.get_attribute('aria-valuenow') or "0"
+            assert value_after >= value_before, "Progress did not advance"
+
+    @pytest.mark.parametrize("scenario_id", BATCH_SCENARIOS)
+    def test_reveal_second_blank(self, page, goto_scenario, scenario_id):
+        """Check 10: Can reveal multiple blanks independently."""
+        goto_scenario(scenario_id)
+
+        blanks = page.locator('button:has-text("Tap to discover")').all()
+        if len(blanks) < 2:
+            pytest.skip(f"Scenario has only {len(blanks)} blank(s)")
+
+        # Reveal first blank
+        blanks[0].click()
+        time.sleep(TIMEOUT_ACTION / 1000)
+
+        close_btn = page.locator('button:has-text("✕")').first
+        close_btn.click()
+        time.sleep(TIMEOUT_ACTION / 1000)
+
+        # Reveal second blank
+        blanks[1].click()
+        time.sleep(TIMEOUT_ACTION / 1000)
+
+        popover = page.locator('text=Native Alternatives')
+        assert popover.is_visible(), "Second blank not revealed"
+
+    @pytest.mark.parametrize("scenario_id", BATCH_SCENARIOS)
+    def test_navigate_to_end(self, page, goto_scenario, scenario_id):
+        """Check 11: Can navigate to end of scenario."""
+        goto_scenario(scenario_id)
+
+        for _ in range(50):
+            continue_btn = page.locator('button:has-text("Continue")')
+            if not continue_btn.is_visible():
+                break
+            continue_btn.click()
+            time.sleep(200 / 1000)
+        else:
+            pytest.skip("Did not reach end within 50 clicks")
+
+    @pytest.mark.parametrize("scenario_id", BATCH_SCENARIOS)
+    def test_completion_modal_appears(self, page, goto_scenario, scenario_id):
+        """Check 12: Completion modal appears at end."""
+        goto_scenario(scenario_id)
+
+        for _ in range(50):
+            continue_btn = page.locator('button:has-text("Continue")')
+            if not continue_btn.is_visible():
+                break
+            continue_btn.click()
+            time.sleep(200 / 1000)
+
+        completion = page.locator('text=Return to Library')
+        assert completion.is_visible(), "Completion modal not visible"
+
+    @pytest.mark.parametrize("scenario_id", BATCH_SCENARIOS)
+    def test_return_to_library_works(self, page, goto_scenario, scenario_id):
+        """Check 13: Return to Library button works."""
+        goto_scenario(scenario_id)
+
+        for _ in range(50):
+            continue_btn = page.locator('button:has-text("Continue")')
+            if not continue_btn.is_visible():
+                break
+            continue_btn.click()
+            time.sleep(200 / 1000)
+
+        return_btn = page.locator('button:has-text("Return to Library")')
+        assert return_btn.is_visible(), "Return to Library button not visible"
+
+    @pytest.mark.parametrize("scenario_id", BATCH_SCENARIOS)
+    def test_progress_saved(self, page, goto_scenario, scenario_id):
+        """Check 14: Scenario progress is saved."""
+        goto_scenario(scenario_id)
+
+        # Get initial localStorage
+        initial_value = page.evaluate('localStorage.getItem("fluentstep_progress")')
+
+        # Complete scenario
+        for _ in range(50):
+            continue_btn = page.locator('button:has-text("Continue")')
+            if not continue_btn.is_visible():
+                break
+            continue_btn.click()
+            time.sleep(200 / 1000)
+
+        # Check localStorage was updated
+        final_value = page.evaluate('localStorage.getItem("fluentstep_progress")')
+        assert final_value is not None, "Progress not saved to localStorage"
+        assert final_value != initial_value, "Progress not updated"
+
+    @pytest.mark.parametrize("scenario_id", BATCH_SCENARIOS)
+    def test_no_final_errors(self, page, goto_scenario, scenario_id):
+        """Check 15: No console errors during full scenario."""
+        goto_scenario(scenario_id)
+
+        # Run full scenario
+        for _ in range(50):
+            continue_btn = page.locator('button:has-text("Continue")')
+            if not continue_btn.is_visible():
+                break
+            continue_btn.click()
+            time.sleep(200 / 1000)
+
+        # Check for errors
+        assert len(page.console_errors) == 0, f"Errors occurred: {page.console_errors}"
+
+
+if __name__ == "__main__":
+    pytest.main([__file__, "-v", "--tb=short"])

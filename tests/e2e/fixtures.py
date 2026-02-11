@@ -69,15 +69,39 @@ def goto_scenario(page: Page):
     """Helper fixture to navigate to a scenario."""
 
     def _goto(scenario_id: str):
-        """Navigate directly to scenario page."""
-        # Navigate directly to scenario page
+        """Navigate to scenario and reach the interactive turn."""
+        # First, go to homepage
+        page.goto(f"{BASE_URL}/")
+        page.wait_for_load_state('networkidle')
+
+        # Skip the homepage onboarding if it appears
+        skip_btns = page.locator('button:has-text("Skip for now")').all()
+        if len(skip_btns) > 0:
+            skip_btns[0].click()
+            page.wait_for_load_state('networkidle')
+
+        # Navigate to the scenario
         url = f"{BASE_URL}/scenario/{scenario_id}"
-        # Use 'commit' to wait for navigation to start, don't wait for full load
         page.goto(url, wait_until='commit')
 
-        # Wait for roleplay content to load (look for Next Turn button or Complete Mastery button)
-        # This is the most reliable indicator that the page is ready
-        page.wait_for_selector('button:has-text("Next Turn"), button:has-text("Complete Mastery")', timeout=TIMEOUT_LOAD)
+        # Wait for the scenario onboarding/tutorial to appear
+        page.wait_for_selector('button:has-text("Skip for now"), button:has-text("Next Turn")', timeout=TIMEOUT_LOAD)
+
+        # Close the scenario onboarding/tutorial if it appears
+        skip_btns = page.locator('button:has-text("Skip for now")').all()
+        if len(skip_btns) > 0:
+            # Skip the last one (scenario-specific, not homepage)
+            skip_btns[-1].click()
+            page.wait_for_load_state('networkidle')
+
+        # Click Next Turn to reach the interactive user turn with blanks
+        next_turn = page.locator('button:has-text("Next Turn")')
+        if next_turn.is_visible():
+            next_turn.click()
+            page.wait_for_load_state('networkidle')
+
+        # Wait for blanks to appear
+        page.wait_for_selector('button:has-text("Tap to discover")', timeout=TIMEOUT_LOAD)
 
         return page
 
