@@ -391,13 +391,6 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
     if (el) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
   }, [currentStep]);
 
-  // Close all popovers when feedback modal opens to prevent visual overlap
-  useEffect(() => {
-    if (showDeepDive) {
-      setRevealedBlanks(new Set());
-    }
-  }, [showDeepDive]);
-
   let blankGlobalCounter = 0;
 
   return (
