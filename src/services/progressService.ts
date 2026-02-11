@@ -96,6 +96,10 @@ export const progressService = {
    */
   markScenarioCompleted(scenarioId: string): void {
     const progress = this.getProgress();
+    if (!progress || !progress.completedScenarios) {
+      return;
+    }
+
     const scenarioProgress = progress.scenarioProgress[scenarioId];
 
     if (scenarioProgress) {

@@ -34,15 +34,22 @@ export function getDifficulty(scenario: RoleplayScript): 'B2' | 'C1' | 'unknown'
   const b2Keywords = ['b2', 'B2'];
 
   // Check all deepDive insights for difficulty indicators
-  const allInsights = scenario.deepDive.map((item) => item.insight || '').join(' ');
+  const allInsights = (scenario.deepDive || [])
+    .map((item) => (item && item.insight) || '')
+    .filter(Boolean)
+    .join(' ');
+
+  if (!allInsights) {
+    return 'unknown';
+  }
 
   // Check for C1 indicators first (more specific)
-  if (c1Keywords.some((keyword) => allInsights.includes(keyword))) {
+  if (c1Keywords.some((keyword) => allInsights && allInsights.includes && allInsights.includes(keyword))) {
     return 'C1';
   }
 
   // Check for B2 indicators
-  if (b2Keywords.some((keyword) => allInsights.includes(keyword))) {
+  if (b2Keywords.some((keyword) => allInsights && allInsights.includes && allInsights.includes(keyword))) {
     return 'B2';
   }
 

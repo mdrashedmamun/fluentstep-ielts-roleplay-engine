@@ -195,17 +195,20 @@ export function search(query: string, scenarios: RoleplayScript[]): RoleplayScri
   }
 
   return scenarios.filter((scenario) => {
-    const searchableText = `${scenario.topic} ${scenario.context}`.toLowerCase();
+    const searchableText = `${scenario.topic || ''} ${scenario.context || ''}`.toLowerCase();
 
     // Extract words from searchable text and stem them
     const searchableWords = searchableText
       .split(/[\s\-,.:;!?()]+/)
-      .filter(word => word.length > 0)
+      .filter(word => word && word.length > 0)
       .map(word => stemWord(word));
 
     // All query word stems must match at least one searchable word stem
     return queryWords.every((queryStem) =>
-      searchableWords.some((searchStem) => searchStem === queryStem || searchStem.includes(queryStem))
+      searchableWords.some((searchStem) => {
+        if (!searchStem || typeof searchStem !== 'string') return false;
+        return searchStem === queryStem || (searchStem.includes && searchStem.includes(queryStem));
+      })
     );
   });
 }

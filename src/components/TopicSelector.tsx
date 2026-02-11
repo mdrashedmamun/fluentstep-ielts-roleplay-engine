@@ -76,7 +76,7 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect }) => {
   useEffect(() => {
     const progress = progressService.getProgress();
     setUserProgress(progress);
-    setCompletedScenarios(new Set(progress.completedScenarios));
+    setCompletedScenarios(new Set(progress?.completedScenarios || []));
     setCompletionPercentage(progressService.getCompletionPercentage(CURATED_ROLEPLAYS.length));
   }, []);
 
@@ -132,7 +132,7 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect }) => {
   };
 
   // Get last visited scenario for continue banner
-  const lastVisitedScenario = userProgress.lastVisited;
+  const lastVisitedScenario = userProgress?.lastVisited;
 
   // If using journey map, show full interactive map
   if (useJourneyMap) {
