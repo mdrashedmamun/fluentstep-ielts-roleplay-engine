@@ -9,6 +9,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "validate": "tsx scripts/validateScenarios.ts",
+    "validate:feedback": "tsx scripts/validateChunkFeedback.ts",
     "audit": "tsx cli/auditLanguage.ts",
     "audit:report": "tsx cli/auditLanguage.ts --report-only",
     "audit:dry-run": "tsx cli/auditLanguage.ts --dry-run",

@@ -842,6 +842,37 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         deepDive: [
             { index: 1, phrase: 'straight to the point', insight: 'Professional request for efficiency.' },
             { index: 10, phrase: 'beg to differ', insight: 'The classic, ultra-polite way to express a strong disagreement.' }
+        ],
+        chunkFeedback: [
+            {
+                blankIndex: 9,
+                chunk: 'enough',
+                category: 'Disagreement',
+                coreFunction: 'Acknowledges opponent\'s point while preparing counter-argument or pivot.',
+                situations: [
+                    { context: 'Work disagreement', example: 'Fair enough, but have we considered the budget?' },
+                    { context: 'Negotiation concession', example: 'Fair enough, let\'s try your approach first.' },
+                    { context: 'Debate acknowledgment', example: 'Fair enough, though I still have concerns.' }
+                ],
+                nativeUsageNotes: [
+                    'Always "fair enough" (never "enough fair" or "fairly enough")',
+                    'Signals agreement WITHOUT full commitment',
+                    'Creates bridge to next point while maintaining respect',
+                    'Common in professional disagreements to soften stance'
+                ],
+                nonNativeContrast: [
+                    {
+                        nonNative: 'Okay, you are correct.',
+                        native: 'Fair enough.',
+                        explanation: 'Native version is shorter and maintains equal status, avoiding submission.'
+                    },
+                    {
+                        nonNative: 'I agree with your point completely.',
+                        native: 'Fair enough, but let me add...',
+                        explanation: 'Native version shows partial agreement while preserving space to disagree.'
+                    }
+                ]
+            }
         ]
     },
     {

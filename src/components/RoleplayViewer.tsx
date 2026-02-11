@@ -184,6 +184,27 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
     );
   }, [currentStep, revealedBlanks, script.id, startTime]);
 
+  // Validate chunkFeedback blankIndex values on component mount
+  useEffect(() => {
+    if (script.chunkFeedback && script.chunkFeedback.length > 0) {
+      const maxBlankIndex = script.answerVariations.length;
+      const invalidFeedback = script.chunkFeedback.filter(
+        f => f.blankIndex < 1 || f.blankIndex > maxBlankIndex
+      );
+
+      if (invalidFeedback.length > 0) {
+        console.error(
+          `[ChunkFeedback Validation] Invalid blankIndex in scenario "${script.id}":`,
+          invalidFeedback.map(f => ({
+            blankIndex: f.blankIndex,
+            chunk: f.chunk,
+            maxAllowed: maxBlankIndex
+          }))
+        );
+      }
+    }
+  }, [script]);
+
   const handleListen = (lineText: string, lineBlanks: number[], idx: number) => {
     setActiveSpeechIdx(idx);
 
@@ -369,6 +390,13 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
     const el = document.getElementById('dialogue-container');
     if (el) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
   }, [currentStep]);
+
+  // Close all popovers when feedback modal opens to prevent visual overlap
+  useEffect(() => {
+    if (showDeepDive) {
+      setRevealedBlanks(new Set());
+    }
+  }, [showDeepDive]);
 
   let blankGlobalCounter = 0;
 

@@ -63,16 +63,16 @@ const FeedbackCard: React.FC<FeedbackCardProps> = ({ feedback, isExpanded: initi
           <div>
             <h4 className="text-xs font-bold text-primary-700 uppercase tracking-wider mb-3">3 Real-Life Situations</h4>
             <div className="space-y-3">
-              {feedback.situations.map((situation, idx) => (
+              {(feedback.situations || []).map((situation, idx) => (
                 <div key={idx} className="bg-gradient-to-r from-primary-50 to-accent-50 p-4 rounded-xl border border-primary-100">
                   <p className="text-xs font-semibold text-primary-600 uppercase tracking-wider mb-1">
-                    {situation.context}
+                    {situation?.context || 'Context'}
                   </p>
                   <p className="text-neutral-700 italic">
                     <span className="font-bold text-primary-700">"{feedback.chunk}"</span>
-                    {situation.example.includes(feedback.chunk)
-                      ? ` ${situation.example.replace(feedback.chunk, '').trim()}`
-                      : ` - ${situation.example}`
+                    {situation?.example?.includes(feedback.chunk)
+                      ? ` ${(situation?.example || '').replace(feedback.chunk, '').trim()}`
+                      : ` - ${situation?.example || ''}`
                     }
                   </p>
                 </div>
@@ -84,10 +84,10 @@ const FeedbackCard: React.FC<FeedbackCardProps> = ({ feedback, isExpanded: initi
           <div>
             <h4 className="text-xs font-bold text-primary-700 uppercase tracking-wider mb-2">Native Usage Notes</h4>
             <ul className="space-y-2">
-              {feedback.nativeUsageNotes.map((note, idx) => (
-                <li key={idx} className="flex gap-3 text-neutral-700">
+              {(feedback.nativeUsageNotes || []).map((note, idx) => (
+                <li key={idx} className="flex gap-3 text-neutral-700 line-clamp-2">
                   <span className="text-primary-500 font-bold flex-shrink-0">✓</span>
-                  <span>{note}</span>
+                  <span>{note || ''}</span>
                 </li>
               ))}
             </ul>
@@ -97,12 +97,12 @@ const FeedbackCard: React.FC<FeedbackCardProps> = ({ feedback, isExpanded: initi
           <div>
             <h4 className="text-xs font-bold text-primary-700 uppercase tracking-wider mb-3">Non-Native vs Native</h4>
             <div className="space-y-3">
-              {feedback.nonNativeContrast.map((contrast, idx) => (
+              {(feedback.nonNativeContrast || []).map((contrast, idx) => (
                 <div key={idx} className="space-y-2 p-4 bg-neutral-50 rounded-xl border border-neutral-200">
                   {/* Non-Native */}
                   <div className="flex gap-3">
                     <span className="text-red-500 font-bold text-lg flex-shrink-0">✗</span>
-                    <p className="text-neutral-600 italic">{contrast.nonNative}</p>
+                    <p className="text-neutral-600 italic line-clamp-2">{contrast?.nonNative || ''}</p>
                   </div>
 
                   {/* Arrow */}
@@ -115,12 +115,12 @@ const FeedbackCard: React.FC<FeedbackCardProps> = ({ feedback, isExpanded: initi
                   {/* Native */}
                   <div className="flex gap-3">
                     <span className="text-green-500 font-bold text-lg flex-shrink-0">✓</span>
-                    <p className="text-neutral-700 font-semibold">{contrast.native}</p>
+                    <p className="text-neutral-700 font-semibold line-clamp-2">{contrast?.native || ''}</p>
                   </div>
 
                   {/* Explanation */}
-                  <p className="text-xs text-neutral-600 mt-2 pt-2 border-t border-neutral-200">
-                    <span className="font-semibold">Why:</span> {contrast.explanation}
+                  <p className="text-xs text-neutral-600 mt-2 pt-2 border-t border-neutral-200 line-clamp-3">
+                    <span className="font-semibold">Why:</span> {contrast?.explanation || ''}
                   </p>
                 </div>
               ))}
