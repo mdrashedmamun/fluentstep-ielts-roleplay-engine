@@ -27,10 +27,15 @@ import { filterService } from './filterService';
  * @internal
  */
 function calculateRecommendationScore(
-  scenario: RoleplayScript,
+  scenario: RoleplayScript | null | undefined,
   progress: UserProgress | null | undefined,
   allScenarios: RoleplayScript[]
 ): number {
+  // Validate scenario
+  if (!scenario || typeof scenario !== 'object' || !scenario.id) {
+    return 0;
+  }
+
   let score = 0;
 
   if (!progress) {
@@ -38,8 +43,27 @@ function calculateRecommendationScore(
     return 20;
   }
 
-  const status = filterService.getScenarioStatus(scenario.id, progress);
-  const difficulty = filterService.getDifficulty(scenario);
+  try {
+    const status = filterService.getScenarioStatus(scenario.id, progress);
+    const difficulty = filterService.getDifficulty(scenario);
+
+    // Rest of function wrapped in try-catch
+    const innerScore = calculateInnerScore(scenario, status, difficulty, progress, allScenarios);
+    return score + innerScore;
+  } catch (e) {
+    console.error('Error calculating score for scenario:', scenario.id, e);
+    return 20;
+  }
+}
+
+function calculateInnerScore(
+  scenario: RoleplayScript,
+  status: 'not_started' | 'in_progress' | 'completed',
+  difficulty: 'B2' | 'C1' | 'unknown',
+  progress: UserProgress,
+  allScenarios: RoleplayScript[]
+): number {
+  let score = 0;
 
   // High priority: in progress (continue where you left off)
   if (status === 'in_progress') {

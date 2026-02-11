@@ -96,37 +96,67 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect }) => {
     setCompletionPercentage(progressService.getCompletionPercentage(CURATED_ROLEPLAYS.length));
   }, []);
 
-  // Filtering pipeline
+  // Filtering pipeline with comprehensive error handling
   const filteredAndSortedScenarios = useMemo(() => {
     try {
+      // Validate inputs
+      if (!CURATED_ROLEPLAYS || !Array.isArray(CURATED_ROLEPLAYS)) {
+        return [];
+      }
+
       // 1. Apply search
-      let results = searchQuery
-        ? searchService.search(searchQuery, CURATED_ROLEPLAYS)
-        : CURATED_ROLEPLAYS;
+      let results: RoleplayScript[] = CURATED_ROLEPLAYS;
+      if (searchQuery && typeof searchQuery === 'string' && searchQuery.trim().length > 0) {
+        try {
+          results = searchService.search(searchQuery, results);
+        } catch (e) {
+          console.error('Search error:', e);
+          results = CURATED_ROLEPLAYS;
+        }
+      }
 
       // Ensure results is valid array
       if (!results || !Array.isArray(results)) {
-        return CURATED_ROLEPLAYS;
+        results = CURATED_ROLEPLAYS;
       }
 
       // 2. Apply filters
-      results = filterService.applyFilters(results, filters, userProgress);
+      if (filters && typeof filters === 'object') {
+        try {
+          results = filterService.applyFilters(results, filters, userProgress);
+        } catch (e) {
+          console.error('Filter error:', e);
+          results = CURATED_ROLEPLAYS;
+        }
+      }
+
       if (!results || !Array.isArray(results)) {
-        return CURATED_ROLEPLAYS;
+        results = CURATED_ROLEPLAYS;
       }
 
       // 3. Apply sorting
-      results = sortingService.sortScenarios(results, sort, userProgress);
+      if (sort && typeof sort === 'string') {
+        try {
+          results = sortingService.sortScenarios(results, sort as any, userProgress);
+        } catch (e) {
+          console.error('Sorting error:', e);
+          results = CURATED_ROLEPLAYS;
+        }
+      }
+
       if (!results || !Array.isArray(results)) {
-        return CURATED_ROLEPLAYS;
+        results = CURATED_ROLEPLAYS;
       }
 
       return results;
     } catch (error) {
-      console.error('Error in filtering pipeline:', error);
+      console.error('Critical error in filtering pipeline:', error);
       return CURATED_ROLEPLAYS;
     }
   }, [searchQuery, filters, sort, userProgress]);
+
+  // Import RoleplayScript type
+  // (This line imports from the top of file)
 
   const filteredScripts = (filteredAndSortedScenarios || []).filter(s => s && s.category === activeCategory);
 
