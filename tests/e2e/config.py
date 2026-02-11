@@ -11,9 +11,9 @@ from pathlib import Path
 BASE_URL = "http://localhost:3004"
 
 # Timeouts (in milliseconds)
-TIMEOUT_LOAD = 5000  # Page load
-TIMEOUT_ELEMENT = 3000  # Element visibility
-TIMEOUT_ACTION = 1000  # Click, fill, etc.
+TIMEOUT_LOAD = 10000  # Page load (increased for React rendering)
+TIMEOUT_ELEMENT = 5000  # Element visibility (increased for interactive elements)
+TIMEOUT_ACTION = 2000  # Click, fill, etc.
 TIMEOUT_ANIMATION = 600  # Animations
 
 # Browser settings

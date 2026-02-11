@@ -72,9 +72,11 @@ def goto_scenario(page: Page):
         """Navigate directly to scenario page."""
         # Navigate directly to scenario page
         url = f"{BASE_URL}/scenario/{scenario_id}"
-        page.goto(url, wait_until='domcontentloaded')
+        # Use 'commit' to wait for navigation to start, don't wait for full load
+        page.goto(url, wait_until='commit')
 
-        # Wait for roleplay content to load (look for Next Turn button or Continue Mastery button)
+        # Wait for roleplay content to load (look for Next Turn button or Complete Mastery button)
+        # This is the most reliable indicator that the page is ready
         page.wait_for_selector('button:has-text("Next Turn"), button:has-text("Complete Mastery")', timeout=TIMEOUT_LOAD)
 
         return page
