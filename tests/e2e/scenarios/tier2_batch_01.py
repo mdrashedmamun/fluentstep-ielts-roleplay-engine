@@ -110,6 +110,7 @@ class TestTier2BasicInteraction:
         # Button should either still be visible or we're at the end
         next_turn_after = page.locator('button:has-text("Next Turn")')
         completion = page.locator('text=Return to Library')
+        completion.wait_for(timeout=5000)
         assert next_turn_after.is_visible() or completion.is_visible(), "No progress"
 
     @pytest.mark.parametrize("scenario_id", BATCH_SCENARIOS)
@@ -159,6 +160,7 @@ class TestTier2BasicInteraction:
             time.sleep(200 / 1000)
 
         completion = page.locator('text=Return to Library')
+        completion.wait_for(timeout=5000)
         assert completion.is_visible(), "Completion modal not visible"
 
     @pytest.mark.parametrize("scenario_id", BATCH_SCENARIOS)
@@ -174,6 +176,7 @@ class TestTier2BasicInteraction:
             time.sleep(200 / 1000)
 
         return_btn = page.locator('button:has-text("Return to Library")')
+        return_btn.wait_for(timeout=5000)
         assert return_btn.is_visible(), "Return to Library button not visible"
 
     @pytest.mark.parametrize("scenario_id", BATCH_SCENARIOS)
