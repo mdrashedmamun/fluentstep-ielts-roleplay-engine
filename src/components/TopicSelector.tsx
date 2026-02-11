@@ -50,7 +50,28 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect }) => {
     return (sortParam as SortOption) || 'recommended';
   });
 
-  const [searchQuery] = useState(() => searchParams.get('search') || '');
+  // Update filters and sort when URL params change
+  useEffect(() => {
+    const difficultyParam = searchParams.get('difficulty');
+    const durationParam = searchParams.get('duration');
+    const statusParam = searchParams.get('status');
+
+    setFilters({
+      difficulty: difficultyParam ? difficultyParam.split(',') : [],
+      duration: durationParam ? durationParam.split(',') : [],
+      status: statusParam ? statusParam.split(',') : []
+    });
+
+    const sortParam = searchParams.get('sort');
+    setSort((sortParam as SortOption) || 'recommended');
+  }, [searchParams]);
+
+  const [searchQuery, setSearchQuery] = useState(() => searchParams.get('search') || '');
+
+  // Update searchQuery when URL search param changes
+  useEffect(() => {
+    setSearchQuery(searchParams.get('search') || '');
+  }, [searchParams]);
 
   useEffect(() => {
     const progress = progressService.getProgress();
