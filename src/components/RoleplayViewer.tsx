@@ -8,6 +8,7 @@ import { navigationService } from '../services/navigationService';
 import { useKeyboard } from '../hooks/useKeyboard';
 import NavigationButtons from './NavigationButtons';
 import CelebrationOverlay from './CelebrationOverlay';
+import FeedbackCard from './FeedbackCard';
 import { AchievementType } from '../types/ux-enhancements';
 
 
@@ -505,34 +506,46 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
         </div>
       </div>
 
-      {/* Deep Dive Overlay / Section - Celebration */}
+      {/* Feedback Overlay - Personalized Chunk Feedback */}
       {showDeepDive && (
         <div className="fixed inset-0 z-50 bg-neutral-950/20 backdrop-blur-xl p-8 flex items-center justify-center animate-in fade-in duration-500">
           <div className="bg-white max-w-2xl w-full max-h-[90vh] rounded-3xl shadow-2xl overflow-hidden flex flex-col animate-in zoom-in-95 duration-500">
             {/* Warm gradient header */}
             <div className="p-8 bg-gradient-to-r from-primary-50 to-accent-50 border-b-2 border-primary-100 flex justify-between items-center">
               <div>
-                <span className="text-xs font-bold text-primary-700 uppercase tracking-wider">Key Insights</span>
-                <h3 className="text-2xl font-black text-neutral-800 font-display">Your Language Discoveries</h3>
+                <span className="text-xs font-bold text-primary-700 uppercase tracking-wider">Pattern Recognition</span>
+                <h3 className="text-2xl font-black text-neutral-800 font-display">Chunk Feedback</h3>
               </div>
               <button onClick={() => setShowDeepDive(false)} className="w-10 h-10 rounded-full bg-white border-2 border-neutral-200 flex items-center justify-center text-neutral-400 hover:text-neutral-600 hover:border-primary-300 transition-all">
                 <i className="fas fa-times"></i>
               </button>
             </div>
 
-            {/* Insights list */}
+            {/* Feedback list */}
             <div className="flex-grow overflow-y-auto p-8 space-y-4">
-              {script.deepDive.map((dive) => (
-                <div key={dive.index} className="flex gap-4 p-5 bg-gradient-to-r from-primary-50/50 to-accent-50/50 rounded-2xl border-2 border-primary-100/50 hover:border-primary-200 transition-colors">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-white flex items-center justify-center font-bold flex-shrink-0 shadow-md">
-                    {dive.index}
-                  </div>
-                  <div className="space-y-2">
-                    <p className="font-bold text-neutral-800 text-base">"{dive.phrase}"</p>
-                    <p className="text-neutral-600 leading-relaxed text-sm">{dive.insight}</p>
-                  </div>
-                </div>
-              ))}
+              {(() => {
+                const filteredFeedback = (script.chunkFeedback || []).filter(
+                  feedback => revealedBlanks.has(feedback.blankIndex)
+                );
+
+                if (filteredFeedback.length === 0) {
+                  return (
+                    <div className="flex flex-col items-center justify-center py-12 text-neutral-600">
+                      <div className="text-4xl mb-4">✨</div>
+                      <p className="font-semibold text-lg">Reveal more blanks to unlock chunk feedback</p>
+                      <p className="text-sm mt-2 text-neutral-500">Each chunk you reveal opens personalized insights</p>
+                    </div>
+                  );
+                }
+
+                return filteredFeedback.map((feedback) => (
+                  <FeedbackCard
+                    key={feedback.blankIndex}
+                    feedback={feedback}
+                    isExpanded={false}
+                  />
+                ));
+              })()}
             </div>
 
             {/* Footer with warm gradient */}

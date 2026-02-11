@@ -1,3 +1,27 @@
+export type ChunkCategory =
+    | 'Openers'        // Conversation starters, greetings
+    | 'Softening'      // Hedging, politeness markers
+    | 'Disagreement'   // Polite disagreement, challenging
+    | 'Repair'         // Clarification, fixing misunderstandings
+    | 'Exit'           // Closing, ending conversations
+    | 'Idioms';        // Fixed expressions, collocations
+
+export interface ChunkFeedback {
+    blankIndex: number;
+    chunk: string;
+    category: ChunkCategory;
+    coreFunction: string;     // ≤20 words - explains social function
+    situations: Array<{
+        context: string;
+        example: string;      // ≤15 words
+    }>;                       // Exactly 3
+    nativeUsageNotes: string[]; // 3-5 pragmatic notes
+    nonNativeContrast: Array<{
+        nonNative: string;
+        native: string;
+        explanation: string;  // ≤20 words
+    }>;                       // Exactly 2
+}
 
 export interface RoleplayScript {
     id: string;
@@ -18,11 +42,12 @@ export interface RoleplayScript {
         answer: string;
         alternatives: string[];
     }[];
-    deepDive: {
+    deepDive?: {
         index: number;
         phrase: string;
         insight: string;
     }[];
+    chunkFeedback?: ChunkFeedback[];
     backgroundUrl?: string;
 }
 
@@ -66,6 +91,92 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 1, phrase: 'meet', insight: 'Standard greeting. Responses often include "too".' },
             { index: 6, phrase: 'quite a while', insight: 'Vagueness signals native-like comfort with the language.' },
             { index: 8, phrase: 'friendly', insight: 'Default positive adjective, never wrong.' }
+        ],
+        chunkFeedback: [
+            {
+                blankIndex: 1,
+                chunk: 'meet',
+                category: 'Openers',
+                coreFunction: 'Acknowledges first meeting; creates warm, social foundation for conversation.',
+                situations: [
+                    { context: 'Introduction at social event', example: 'Nice to meet you. I\'m Alex.' },
+                    { context: 'New colleague greeting', example: 'It\'s great to meet you. Welcome to the team.' },
+                    { context: 'Friend introducing contact', example: 'This is Sam. Sam, nice to meet you.' }
+                ],
+                nativeUsageNotes: [
+                    'Always "meet" not "know" for first meetings',
+                    'Use "too" in response: "Nice to meet you too"',
+                    'Works in formal and casual contexts equally'
+                ],
+                nonNativeContrast: [
+                    {
+                        nonNative: 'I\'m happy to meet you.',
+                        native: 'Nice to meet you.',
+                        explanation: 'Native version is shorter, warmer; avoids "happy" which signals awkwardness.'
+                    },
+                    {
+                        nonNative: 'I\'m pleased to encounter you.',
+                        native: 'Nice to meet you.',
+                        explanation: 'Native version is casual; formal version sounds unnatural and distant.'
+                    }
+                ]
+            },
+            {
+                blankIndex: 3,
+                chunk: 'keep track',
+                category: 'Idioms',
+                coreFunction: 'Means monitor progress or stay updated; practical collocation for management contexts.',
+                situations: [
+                    { context: 'Project management', example: 'I\'ll keep track of the budget throughout the project.' },
+                    { context: 'Staying informed', example: 'It\'s hard to keep track of all the emails.' },
+                    { context: 'Monitoring progress', example: 'We need to keep track of deadlines carefully.' }
+                ],
+                nativeUsageNotes: [
+                    'Collocation: always "keep track of" (not "keep track on")',
+                    'Common in work/academic contexts',
+                    'Implies active monitoring, not passive awareness'
+                ],
+                nonNativeContrast: [
+                    {
+                        nonNative: 'It\'s very difficult to track it.',
+                        native: 'It\'s hard to keep track of it.',
+                        explanation: 'Native version uses natural collocation; direct translation sounds robotic.'
+                    },
+                    {
+                        nonNative: 'I will manage the follow-up.',
+                        native: 'I\'ll keep track of the next steps.',
+                        explanation: 'Native version is more specific and conversational.'
+                    }
+                ]
+            },
+            {
+                blankIndex: 8,
+                chunk: 'friendly',
+                category: 'Softening',
+                coreFunction: 'Describes warmth and approachability; creates positive impression without overclaiming.',
+                situations: [
+                    { context: 'Describing new environment', example: 'The people here are very friendly and welcoming.' },
+                    { context: 'Appreciating interaction', example: 'That was a friendly conversation; I felt comfortable.' },
+                    { context: 'Community description', example: 'It\'s a friendly neighborhood where everyone helps.' }
+                ],
+                nativeUsageNotes: [
+                    'Default positive descriptor for people and places',
+                    'Safer than "nice" because more specific about warmth',
+                    'Works equally in formal and casual contexts'
+                ],
+                nonNativeContrast: [
+                    {
+                        nonNative: 'The people are very good.',
+                        native: 'The people are very friendly.',
+                        explanation: 'Native version is precise; "good" is too vague and abstract.'
+                    },
+                    {
+                        nonNative: 'Everyone is very nice to me.',
+                        native: 'Everyone is very friendly.',
+                        explanation: 'Native version describes atmosphere; non-native focuses on personal treatment.'
+                    }
+                ]
+            }
         ]
     },
     {
@@ -127,9 +238,67 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 21, answer: 'appreciate', alternatives: ['enjoy', 'like'] }
         ],
         deepDive: [
-            { index: 11, phrase: 'There you go', insight: 'Fixed phrase for handing something over. Don’t overthink it.' },
+            { index: 11, phrase: 'There you go', insight: "Fixed phrase for handing something over. Don't overthink it." },
             { index: 14, phrase: 'sorry to bother you', insight: 'Standard polite interruptive phrase.' },
             { index: 21, phrase: 'really appreciate it', insight: 'Common way to signal satisfaction after an issue is fixed.' }
+        ],
+        chunkFeedback: [
+            {
+                blankIndex: 14,
+                chunk: 'bother',
+                category: 'Repair',
+                coreFunction: 'Softens interruption by expressing concern about inconvenience; preserves listener comfort.',
+                situations: [
+                    { context: 'Interrupting someone', example: 'Excuse me, sorry to bother you, but I have a question.' },
+                    { context: 'Asking for help', example: 'I hate to bother you, but could you help?' },
+                    { context: 'Seeking attention', example: 'Sorry to bother you while you\'re busy.' }
+                ],
+                nativeUsageNotes: [
+                    'Always "bother" not "disturb" in casual English',
+                    'Used with "sorry" to show genuine concern',
+                    'Makes request feel less demanding'
+                ],
+                nonNativeContrast: [
+                    {
+                        nonNative: 'Excuse me, I need to speak with you.',
+                        native: 'Sorry to bother you, but could I ask something?',
+                        explanation: 'Native version is considerate; direct request can feel abrupt or impolite.'
+                    },
+                    {
+                        nonNative: 'I have a question for you.',
+                        native: 'Sorry to bother you, do you have a minute?',
+                        explanation: 'Native version acknowledges listener\'s time; non-native assumes availability.'
+                    }
+                ]
+            },
+            {
+                blankIndex: 21,
+                chunk: 'appreciate',
+                category: 'Exit',
+                coreFunction: 'Expresses genuine gratitude more warmly than "thank you"; strengthens relationship.',
+                situations: [
+                    { context: 'After someone helps', example: 'Thank you so much. I really appreciate it.' },
+                    { context: 'Valuing effort', example: 'I appreciate that you took time to help.' },
+                    { context: 'Acknowledging support', example: 'I really appreciate your patience with this.' }
+                ],
+                nativeUsageNotes: [
+                    'More sincere than "thank" in emotional contexts',
+                    'Works with "really" to intensify gratitude',
+                    'Common after problems are solved or effort is expended'
+                ],
+                nonNativeContrast: [
+                    {
+                        nonNative: 'I thank you for this.',
+                        native: 'I really appreciate it.',
+                        explanation: 'Native version feels natural and warm; formal version sounds translated.'
+                    },
+                    {
+                        nonNative: 'It is good that you helped.',
+                        native: 'I truly appreciate your help.',
+                        explanation: 'Native version is personal; non-native is impersonal observation.'
+                    }
+                ]
+            }
         ]
     },
     {
@@ -414,6 +583,64 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         deepDive: [
             { index: 1, phrase: 'different view', insight: 'Softer than saying "I disagree".' },
             { index: 9, phrase: 'flag a concern', insight: 'The professional way to highlight a risk without sounding negative.' }
+        ],
+        chunkFeedback: [
+            {
+                blankIndex: 1,
+                chunk: 'different',
+                category: 'Disagreement',
+                coreFunction: 'Signals perspective shift gently; invites discussion rather than confrontation.',
+                situations: [
+                    { context: 'Offering alternative view in meeting', example: 'I see your point. I just have a slightly different view.' },
+                    { context: 'Respectful challenge', example: 'That\'s fair, but I have a different take on this.' },
+                    { context: 'Adding nuance', example: 'I understand, and I have a somewhat different perspective.' }
+                ],
+                nativeUsageNotes: [
+                    'Much softer than "I disagree" or "You\'re wrong"',
+                    'Phrases like "slightly different" or "somewhat different" reduce confrontation',
+                    'Creates collaborative tone despite disagreement'
+                ],
+                nonNativeContrast: [
+                    {
+                        nonNative: 'I do not agree with you.',
+                        native: 'I see your point. I just have a different view.',
+                        explanation: 'Native version validates listener first; non-native is direct rejection.'
+                    },
+                    {
+                        nonNative: 'That is wrong.',
+                        native: 'I have a somewhat different perspective on this.',
+                        explanation: 'Native version is collaborative; non-native is dismissive and harsh.'
+                    }
+                ]
+            },
+            {
+                blankIndex: 9,
+                chunk: 'flag',
+                category: 'Repair',
+                coreFunction: 'Professionally highlights risk or concern without sounding negative or obstructive.',
+                situations: [
+                    { context: 'Raising concern in meeting', example: 'I just wanted to flag this concern before we commit.' },
+                    { context: 'Drawing attention to issue', example: 'Can I flag something that might be worth considering?' },
+                    { context: 'Signaling potential problem', example: 'I\'d like to flag a potential issue with this approach.' }
+                ],
+                nativeUsageNotes: [
+                    'Business idiom: "flag" = bring attention to something',
+                    'More constructive than "complain" or "criticize"',
+                    'Shows you\'re trying to help solve problems, not create them'
+                ],
+                nonNativeContrast: [
+                    {
+                        nonNative: 'I have a problem with this plan.',
+                        native: 'I\'d like to flag a concern with this approach.',
+                        explanation: 'Native version frames as collaborative help; non-native sounds oppositional.'
+                    },
+                    {
+                        nonNative: 'This might not work.',
+                        native: 'I\'d like to flag this as something worth discussing.',
+                        explanation: 'Native version invites dialogue; non-native is abrupt prediction of failure.'
+                    }
+                ]
+            }
         ]
     },
     {
@@ -2043,6 +2270,92 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 6, phrase: 'foundation', insight: 'Metaphorical use shows sophisticated academic vocabulary. Alternative "bedrock" achieves same effect in geology/construction contexts.' },
             { index: 8, phrase: 'bear in mind', insight: 'Essential British academic phrase. Softer than "remember" and registers as experienced researcher maintaining nuance.' },
             { index: 11, phrase: 'run...draft', insight: 'Phrasal verb "run by" = submit for feedback. Casual enough for student-tutor dynamic whilst maintaining professionalism.' }
+        ],
+        chunkFeedback: [
+            {
+                blankIndex: 2,
+                chunk: 'in two minds',
+                category: 'Softening',
+                coreFunction: 'Expresses genuine uncertainty; signals thoughtful deliberation without committing to position.',
+                situations: [
+                    { context: 'Expressing academic doubt', example: 'I\'m in two minds about my main argument.' },
+                    { context: 'Essay planning', example: 'I was in two minds whether to use qualitative or quantitative methods.' },
+                    { context: 'Research direction', example: 'I\'m in two minds about which theoretical framework to use.' }
+                ],
+                nativeUsageNotes: [
+                    'British idiom; Americans use "split on" or "torn"',
+                    'Shows active deliberation, not indecision',
+                    'Band 8+ marker for nuanced academic thinking'
+                ],
+                nonNativeContrast: [
+                    {
+                        nonNative: 'I am not sure which is better.',
+                        native: 'I\'m in two minds about which approach is stronger.',
+                        explanation: 'Native version shows active thinking; non-native sounds passive.'
+                    },
+                    {
+                        nonNative: 'I have two different opinions.',
+                        native: 'I\'m in two minds about this thesis.',
+                        explanation: 'Native version uses precise idiom; non-native is awkward.'
+                    }
+                ]
+            },
+            {
+                blankIndex: 9,
+                chunk: 'bear in mind',
+                category: 'Exit',
+                coreFunction: 'Reminds listener of important context; softens directive by suggesting rather than commanding.',
+                situations: [
+                    { context: 'Academic guidance', example: 'Bear in mind that primary sources take precedence.' },
+                    { context: 'Research reminder', example: 'Do bear in mind the word count limit.' },
+                    { context: 'Nuanced suggestion', example: 'As you review this, bear in mind the deadline.' }
+                ],
+                nativeUsageNotes: [
+                    'British academic formality marker',
+                    'More formal than "keep in mind"',
+                    'Softens instructions without losing authority'
+                ],
+                nonNativeContrast: [
+                    {
+                        nonNative: 'Remember that primary sources are important.',
+                        native: 'Bear in mind that primary sources take precedence.',
+                        explanation: 'Native version uses sophisticated idiom; sounds like experienced scholar.'
+                    },
+                    {
+                        nonNative: 'You must use primary sources.',
+                        native: 'Do bear in mind the centrality of primary sources.',
+                        explanation: 'Native version is respectful suggestion; command form is impolite.'
+                    }
+                ]
+            },
+            {
+                blankIndex: 6,
+                chunk: 'unpacking',
+                category: 'Idioms',
+                coreFunction: 'Means analyzing in detail; academic metaphor for breaking down complex ideas systematically.',
+                situations: [
+                    { context: 'Essay analysis', example: 'I\'m keen on unpacking these passages more thoroughly.' },
+                    { context: 'Literary discussion', example: 'We need to unpack what the author means here.' },
+                    { context: 'Argument development', example: 'Let\'s unpack your main thesis further.' }
+                ],
+                nativeUsageNotes: [
+                    'Academic collocation for detailed textual analysis',
+                    'More specific than "analyzing" or "examining"',
+                    'Common in university tutorials and seminars'
+                ],
+                nonNativeContrast: [
+                    {
+                        nonNative: 'I need to look at these passages.',
+                        native: 'I\'m keen on unpacking these passages more thoroughly.',
+                        explanation: 'Native version shows academic engagement; non-native is vague.'
+                    },
+                    {
+                        nonNative: 'I understand the text now.',
+                        native: 'I need to unpack this argument further.',
+                        explanation: 'Native version shows deeper analytical work; non-native implies surface reading.'
+                    }
+                ]
+            }
         ]
     },
     // ===== NEW: HEALTHCARE CATEGORY =====
@@ -2354,6 +2667,92 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
             { index: 21, phrase: 'propose a timeline', insight: 'Professional negotiation language. Shows initiative and collaboration rather than complaint. Moves from problem-reporting to solution-building.' },
             { index: 32, phrase: 'appreciate your commitment', insight: 'Diplomatic phrasing that acknowledges goodwill. Maintains positive relationship while remaining firm on expectations.' },
             { index: 36, phrase: 'establish a timeline', insight: 'More formal than "set a date". Demonstrates professional communication in formal contexts. Essential for B2+ property negotiations.' }
+        ],
+        chunkFeedback: [
+            {
+                blankIndex: 2,
+                chunk: 'bother',
+                category: 'Repair',
+                coreFunction: 'Softens interruption by expressing concern; maintains rapport before raising issues.',
+                situations: [
+                    { context: 'Interrupting someone important', example: 'I\'m sorry to bother you, but I have concerns to discuss.' },
+                    { context: 'Making a request', example: 'Sorry to bother you, but when can you call back?' },
+                    { context: 'Needing immediate attention', example: 'I hate to bother you, but it\'s quite urgent.' }
+                ],
+                nativeUsageNotes: [
+                    'Standard politeness marker for interruptions',
+                    'Shows respect and awareness of other person\'s time',
+                    'Makes requests feel less demanding'
+                ],
+                nonNativeContrast: [
+                    {
+                        nonNative: 'I need to talk to you.',
+                        native: 'I\'m sorry to bother you, but I need to discuss something.',
+                        explanation: 'Native version is considerate; direct approach can sound rude.'
+                    },
+                    {
+                        nonNative: 'You must call me immediately.',
+                        native: 'Sorry to bother you, but could you call me when you\'re free?',
+                        explanation: 'Native version is respectful; command form is impolite.'
+                    }
+                ]
+            },
+            {
+                blankIndex: 21,
+                chunk: 'propose a timeline',
+                category: 'Disagreement',
+                coreFunction: 'Offers solution collaboratively; shifts from complaining to problem-solving mode.',
+                situations: [
+                    { context: 'Negotiating repairs', example: 'I\'d like to propose a timeline for getting these fixed.' },
+                    { context: 'Project discussion', example: 'Can we propose a timeline for the next phase?' },
+                    { context: 'Service issues', example: 'I\'d like to propose a timeline for resolution.' }
+                ],
+                nativeUsageNotes: [
+                    'Professional negotiation phrase',
+                    'Shows initiative and collaboration',
+                    'Moves conversation from problems to solutions'
+                ],
+                nonNativeContrast: [
+                    {
+                        nonNative: 'You must fix this in 5 days.',
+                        native: 'Could we propose a timeline? Within 5 days would be ideal.',
+                        explanation: 'Native version is collaborative; demand form is confrontational.'
+                    },
+                    {
+                        nonNative: 'When will you fix it?',
+                        native: 'I\'d like to propose a timeline for this repair.',
+                        explanation: 'Native version is solution-focused; question alone sounds impatient.'
+                    }
+                ]
+            },
+            {
+                blankIndex: 32,
+                chunk: 'appreciate',
+                category: 'Softening',
+                coreFunction: 'Acknowledges efforts warmly; maintains positive relationship while being firm.',
+                situations: [
+                    { context: 'After someone agrees to help', example: 'I appreciate your commitment to resolve this.' },
+                    { context: 'Thanking for understanding', example: 'I appreciate that you understand the urgency.' },
+                    { context: 'Valuing cooperation', example: 'I really appreciate your willingness to help.' }
+                ],
+                nativeUsageNotes: [
+                    'More genuine than "thank you" in diplomatic contexts',
+                    'Builds goodwill without losing firmness',
+                    'Shows emotional intelligence in difficult situations'
+                ],
+                nonNativeContrast: [
+                    {
+                        nonNative: 'I thank you for helping.',
+                        native: 'I appreciate your commitment to this.',
+                        explanation: 'Native version is warmer and more sincere.'
+                    },
+                    {
+                        nonNative: 'It is good that you will help.',
+                        native: 'I appreciate your willingness to help with this.',
+                        explanation: 'Native version is personal and grateful; non-native is impersonal.'
+                    }
+                ]
+            }
         ]
     }
 ];
