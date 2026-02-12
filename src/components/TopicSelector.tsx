@@ -21,7 +21,7 @@ interface TopicSelectorProps {
   onSelect: (scriptId: string) => void;
 }
 
-const CATEGORIES = ['Social', 'Workplace', 'Service/Logistics', 'Advanced'] as const;
+const CATEGORIES = ['Social', 'Workplace', 'Service/Logistics', 'Advanced', 'Healthcare', 'Community'] as const;
 
 const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect }) => {
   const [searchParams] = useSearchParams();

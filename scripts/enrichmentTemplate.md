@@ -79,6 +79,36 @@ patternSummary:
 
 **Word Count**: 30-100 characters for each insight
 
+### customLabel (OPTIONAL - Domain-Specific Scenarios Only)
+**Purpose**: For specialized domains like Healthcare, Community, Legal - use custom display labels instead of standard category names
+
+**When to Use**:
+- When the scenario requires domain-specific terminology
+- Standard category name would confuse learners
+- Pattern still maps to one of the 6 standard categories
+
+**Structure**: String value for `customLabel` field
+
+**Example** (Healthcare):
+```yaml
+categoryBreakdown:
+  - category: "Repair"          # Standard type (determines color/icon)
+    customLabel: "Clear symptom reporting"  # Domain-specific display label
+    count: 8
+    examples: [...]
+    insight: "..."
+```
+
+**Restrictions**:
+- **category** MUST be one of 6 standard types (enforced)
+- **customLabel** is optional, display-only
+- Prevents non-standard categories that break styling
+
+**Pre-Built Mappings** (already migrated):
+- Healthcare scenarios map custom labels to standard categories
+- Community scenarios map civic terminology to standard categories
+- These prevent crashes and maintain visual consistency
+
 ---
 
 ### overallInsight (REQUIRED)

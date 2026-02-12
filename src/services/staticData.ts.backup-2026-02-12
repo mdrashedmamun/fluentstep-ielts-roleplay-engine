@@ -9735,8 +9735,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
     "patternSummary": {
       "categoryBreakdown": [
         {
-          "category": "Repair",
-    "customLabel": "Clear symptom reporting",
+          "category": "Clear symptom reporting",
           "count": 8,
           "exampleChunkIds": [
             "hc1_ch_suffering_from",
@@ -9751,8 +9750,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
           "insight": "You practise giving a clean timeline, describing variation, and adding honest details in a natural UK tone without over-explaining."
         },
         {
-          "category": "Idioms",
-    "customLabel": "Triggers and practical changes",
+          "category": "Triggers and practical changes",
           "count": 5,
           "exampleChunkIds": [
             "hc1_ch_under_stress",
@@ -9764,8 +9762,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
           "insight": "You learn to connect stress, sleep, and screens to symptoms, and talk about practical tracking and small lifestyle steps."
         },
         {
-          "category": "Exit",
-    "customLabel": "Next steps and NHS language",
+          "category": "Next steps and NHS language",
           "count": 6,
           "exampleChunkIds": [
             "hc1_ch_not_brush_aside",
@@ -11185,8 +11182,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
     "patternSummary": {
       "categoryBreakdown": [
         {
-          "category": "Openers",
-    "customLabel": "Formal opening and establishing credibility",
+          "category": "Formal opening and establishing credibility",
           "count": 5,
           "exampleChunkIds": [
             "com1_ch_outline",
@@ -11198,8 +11194,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
           "insight": "You learn how to open a formal objection professionally: thank the council for the chance to speak (opportunity), structure your presentation (outline), calibrate emotional language to formal register (extremely), and provide tangible evidence of support (organised a petition). When the chair acknowledges this with 'impressive', you understand they recognise your credibility as a representative, not just a complainant."
         },
         {
-          "category": "Repair",
-    "customLabel": "Council procedural and acknowledgment language",
+          "category": "Council procedural and acknowledgment language",
           "count": 5,
           "exampleChunkIds": [
             "com1_ch_feedback",
@@ -11211,8 +11206,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
           "insight": "You practise recognising how councils signal they are listening and following due process. Terms like 'feedback', 'point' (used twice in different contexts), 'weigh', 'aim', and 'notified' are bureaucratic phrases that show impartiality and official procedure. Understanding when councils are genuinely considering versus just being polite helps you calibrate follow-up actions and manage expectations about timelines."
         },
         {
-          "category": "Idioms",
-    "customLabel": "Planning impact vocabulary",
+          "category": "Planning impact vocabulary",
           "count": 8,
           "exampleChunkIds": [
             "com1_ch_this_development",
@@ -11227,8 +11221,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
           "insight": "You learn precise planning terminology for articulating harm: name the proposal clearly (this development), use formal size language (scale not size), identify specific impacts (traffic, disruption), explain infrastructure failure (cope with, handle), and quantify changes (increase by 40%). 'Drag on' adds emotional weight to factual construction timelines, showing impact on quality of life, not just numbers."
         },
         {
-          "category": "Disagreement",
-    "customLabel": "Consultation and negotiation vocabulary",
+          "category": "Consultation and negotiation vocabulary",
           "count": 7,
           "exampleChunkIds": [
             "com1_ch_raised",
@@ -11242,8 +11235,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
           "insight": "You practise the language of failed negotiation: how to formally report that you followed proper process (raised concerns, submitted objections), explain why it failed (dismissed, not willing to compromise), evaluate inadequate concessions (offered minor changes that don't address core issues), and acknowledge feelings diplomatically (frustration, not anger). This shows councils you tried dialogue before asking for their intervention."
         },
         {
-          "category": "Exit",
-    "customLabel": "Formal requests and closing",
+          "category": "Formal requests and closing",
           "count": 8,
           "exampleChunkIds": [
             "com1_ch_reject",

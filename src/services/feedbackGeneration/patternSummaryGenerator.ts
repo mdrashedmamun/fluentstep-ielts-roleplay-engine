@@ -7,6 +7,25 @@ import { generateChunkId } from './chunkIdGenerator';
  * Template-based approach = fast, zero-cost, deterministic generation
  */
 
+/**
+ * Domain-specific custom labels for specialized categories
+ * Maps scenario ID → category → custom display label
+ */
+const DOMAIN_SPECIFIC_LABELS: Record<string, Record<string, string>> = {
+  'healthcare-1-gp-appointment': {
+    'Repair': 'Clear symptom reporting',
+    'Idioms': 'Triggers and practical changes',
+    'Exit': 'Next steps and NHS language'
+  },
+  'community-1-council-meeting': {
+    'Openers': 'Formal opening and establishing credibility',
+    'Repair': 'Council procedural and acknowledgment language',
+    'Idioms': 'Planning impact vocabulary',
+    'Disagreement': 'Consultation and negotiation vocabulary',
+    'Exit': 'Formal requests and closing'
+  },
+};
+
 // Category-specific insight templates (rule-based, no AI)
 const CATEGORY_INSIGHT_TEMPLATES: Record<ChunkCategory, string[]> = {
   'Openers': [
@@ -172,8 +191,12 @@ function buildCategoryBreakdown(scenario: RoleplayScript): CategoryBreakdown[] {
         }
       }
 
+      // NEW: Add custom label if available for domain-specific scenarios
+      const customLabel = DOMAIN_SPECIFIC_LABELS[scenario.id]?.[category as ChunkCategory];
+
       breakdown.push({
         category: category as ChunkCategory,
+        customLabel,                                             // NEW - Optional display override
         count: data.count,
         exampleChunkIds,                                        // NEW - stable IDs
         examples: data.examples,                                // deprecated, kept for backward compat

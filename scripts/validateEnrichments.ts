@@ -337,6 +337,29 @@ function validateNativeNonNativePatterns(scenarioId: string, yaml: string): stri
   return errors;
 }
 
+/**
+ * NEW: Validate category types are standard ChunkCategory values
+ */
+function validateCategoryTypes(scenarioId: string, yaml: string): string[] {
+  const errors: string[] = [];
+
+  // Extract all category values from categoryBreakdown
+  const categoryMatches = yaml.matchAll(/category:\s*["']([^"']+)["']/g);
+
+  for (const match of categoryMatches) {
+    const category = match[1];
+    if (!VALID_CHUNK_CATEGORIES.includes(category as ChunkCategory)) {
+      errors.push(
+        `${scenarioId}: Invalid category "${category}". ` +
+        `Must be one of: ${VALID_CHUNK_CATEGORIES.join(', ')}. ` +
+        `Use customLabel field for domain-specific labels.`
+      );
+    }
+  }
+
+  return errors;
+}
+
 async function main() {
   const filename = parseArgs();
   const filePath = path.join(process.cwd(), 'exports', filename);
@@ -411,6 +434,10 @@ async function main() {
 
     const termErrors = checkGrammarTerminology(block.scenarioId, block.yaml);
     result.warnings.push(...termErrors);
+
+    // NEW: Validate category types
+    const categoryTypeErrors = validateCategoryTypes(block.scenarioId, block.yaml);
+    result.errors.push(...categoryTypeErrors);
 
     // NEW: Validate chunkIds
     const chunkIdErrors = validateChunkIds(block.scenarioId, block.yaml);
