@@ -76,6 +76,13 @@
         "model": "opus",
         "tools": ["Read", "Write", "Bash"],
         "context": "default"
+      },
+      {
+        "name": "scenario-creator",
+        "description": "Interactive guided scenario creation with automatic validation and error-free data generation",
+        "model": "sonnet",
+        "tools": ["Read", "Write", "Bash", "AskUserQuestion"],
+        "context": "fork"
       }
     ]
   },

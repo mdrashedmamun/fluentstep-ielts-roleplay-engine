@@ -1,6 +1,36 @@
 # FluentStep Specialized Subagents
 
-This directory contains 5 specialized subagents that form the content extraction pipeline for FluentStep IELTS Roleplay Engine.
+This directory contains multiple specialized subagents:
+
+- **Scenario Creator Agent** (NEW) - Interactive guided scenario creation with automatic validation
+- **Content Extraction Pipeline** (5 agents) - PDF extraction, blank insertion, validation, transformation
+
+## Quick Start: Create a New Scenario
+
+**For Non-Technical Users:**
+```bash
+# In Claude Code, simply type:
+"create a new scenario"
+
+# The Scenario Creator Agent will guide you through:
+# 1. Select category (Social, Workplace, Healthcare, etc.)
+# 2. Describe the context (e.g., "Performance review")
+# 3. Number of dialogue turns (8-20)
+# 4. Difficulty level (B1-C2)
+
+# The agent then automatically:
+# • Generates natural dialogue
+# • Creates blanks and feedback
+# • Runs validation
+# • Merges to staticData.ts
+# • Verifies build succeeds
+```
+
+**For Experienced Users:**
+```bash
+npm run create:scenario
+# Shows detailed instructions and next steps
+```
 
 ## Architecture Overview
 
@@ -124,6 +154,43 @@ This directory contains 5 specialized subagents that form the content extraction
 - ✓ Consistent character names
 - ✓ Indices match answer variations
 - ✓ Substantive deep dive insights
+
+---
+
+## Alternative: Scenario Creator Agent (Direct Creation)
+
+**File:** `scenario-creator/SKILL.md`
+
+For users who want to create scenarios directly without PDFs, the **Scenario Creator Agent** provides an interactive wizard:
+
+### Features:
+- ✅ **Interactive Dialogue Wizard** - Answer 4 simple questions (category, topic, turns, difficulty)
+- ✅ **Automatic Dialogue Generation** - Creates natural UK English dialogue from templates
+- ✅ **Complete Data Structure** - Generates blanks, answers, feedback, patterns, questions
+- ✅ **Automatic Validation** - Structural, content, and TypeScript checks
+- ✅ **Plain English Error Messages** - No technical jargon, clear fixes
+- ✅ **Auto-Fix Common Issues** - Blank count mismatches, word limits, formatting
+- ✅ **Seamless Integration** - Merges to staticData.ts, runs build, shows test URL
+
+### Usage:
+```bash
+# Simple (Recommended)
+# In Claude Code, type: "create a new scenario"
+
+# Or run helper script
+npm run create:scenario
+```
+
+### When to Use:
+- ✅ Creating new original scenarios (no PDF)
+- ✅ Quick prototyping and testing
+- ✅ Non-technical users who prefer guided wizard
+- ✅ When PDF extraction is overkill
+
+### When to Use PDF Pipeline Instead:
+- ✅ Extracting existing published materials (textbooks)
+- ✅ Bulk migration from existing sources
+- ✅ Content from PDFs with established dialogue
 
 ---
 

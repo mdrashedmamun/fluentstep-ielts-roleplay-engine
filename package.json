@@ -39,6 +39,7 @@
     "generate:package": "tsx scripts/generatePackage.ts",
     "review:package": "tsx scripts/reviewPackage.ts",
     "create:package": "tsx scripts/createPackage.ts",
+    "create:scenario": "tsx scripts/createScenarioHelper.ts",
     "test:e2e": "python3 tests/e2e/orchestrator.py",
     "test:e2e:tier1": "python3 -m pytest tests/e2e/scenarios/tier1_with_feedback.py -v",
     "test:e2e:single": "python3 -m pytest tests/e2e/scenarios/tier1_with_feedback.py -k",
