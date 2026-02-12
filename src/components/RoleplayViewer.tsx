@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useFloating, flip, shift, offset } from '@floating-ui/react';
-import { RoleplayScript, CURATED_ROLEPLAYS } from '../services/staticData';
+import { RoleplayScript, CURATED_ROLEPLAYS, ChunkFeedback, ChunkFeedbackV2 } from '../services/staticData';
 import { progressService } from '../services/progressService';
 import { audioService } from '../services/audioService';
 import { navigationService } from '../services/navigationService';
@@ -607,8 +607,20 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
             <div className="bg-gradient-to-r from-primary-50 to-accent-50 border-b-2 border-primary-100">
               <div className="p-8 flex justify-between items-center">
                 <div>
-                  <span className="text-xs font-bold text-primary-700 uppercase tracking-wider">Pattern Recognition</span>
-                  <h3 className="text-2xl font-black text-neutral-800 font-display">Learning Insights</h3>
+                  {(() => {
+                    // TWEAK 3: Derive completion from userProgress
+                    const isCompleted = userProgress?.completedScenarios?.includes(script.id) || false;
+                    return (
+                      <>
+                        <span className="text-xs font-bold text-primary-700 uppercase tracking-wider">
+                          {isCompleted ? '🎉 Mastery Unlocked' : 'Pattern Recognition'}
+                        </span>
+                        <h3 className="text-2xl font-black text-neutral-800 font-display">
+                          {isCompleted ? 'Your Results' : 'Learning Insights'}
+                        </h3>
+                      </>
+                    );
+                  })()}
                 </div>
                 <button onClick={() => setShowDeepDive(false)} className="w-10 h-10 rounded-full bg-white border-2 border-neutral-200 flex items-center justify-center text-neutral-400 hover:text-neutral-600 hover:border-primary-300 transition-all">
                   <i className="fas fa-times"></i>
@@ -648,23 +660,61 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
                 // Chunk Feedback Tab
                 <div className="p-8 space-y-4">
                   {(() => {
-                    const filteredFeedback = (script.chunkFeedback || []).filter(
-                      feedback => revealedBlanks.has(feedback.blankIndex)
-                    );
+                    // TWEAK 3: Derive completion from userProgress (reactive)
+                    const isCompleted = userProgress?.completedScenarios?.includes(script.id) || false;
 
-                    if (filteredFeedback.length === 0) {
-                      return (
-                        <div className="flex flex-col items-center justify-center py-12 text-neutral-600">
-                          <div className="text-4xl mb-4">✨</div>
-                          <p className="font-semibold text-lg">Reveal more blanks to unlock chunk feedback</p>
-                          <p className="text-sm mt-2 text-neutral-500">Each chunk you reveal opens personalized insights</p>
-                        </div>
-                      );
+                    let filteredFeedback: (ChunkFeedback | ChunkFeedbackV2)[] = [];
+
+                    // TWEAK 4: Always use blanksInOrder if it exists (even for V1)
+                    if (script.blanksInOrder && script.blanksInOrder.length > 0) {
+                      // TWEAK 2: Build lookup maps once (O(1) lookups instead of O(n²))
+                      const v2Map = new Map((script.chunkFeedbackV2 || []).map(f => [f.chunkId, f]));
+                      const v1Map = new Map((script.chunkFeedback || []).map(f => [f.chunkId, f]));
+
+                      script.blanksInOrder.forEach((mapping, index) => {
+                        // Show if completed OR this index is revealed
+                        if (isCompleted || revealedBlanks.has(index)) {
+                          // TWEAK 1: Prefer V2, only fallback to V1 if V2 missing (no duplication)
+                          const feedback = v2Map.get(mapping.chunkId) || v1Map.get(mapping.chunkId);
+                          if (feedback) {
+                            filteredFeedback.push(feedback);
+                          }
+                        }
+                      });
+                    } else {
+                      // Legacy V1 scenarios without blanksInOrder (fallback to blankIndex)
+                      const v1Feedback = script.chunkFeedback || [];
+                      filteredFeedback = v1Feedback.filter(feedback => {
+                        return isCompleted || revealedBlanks.has(feedback.blankIndex);
+                      });
                     }
 
-                    return filteredFeedback.map((feedback) => (
+                    // Empty state handling
+                    if (filteredFeedback.length === 0) {
+                      if (!isCompleted) {
+                        return (
+                          <div className="flex flex-col items-center justify-center py-12 text-neutral-600">
+                            <div className="text-4xl mb-4">✨</div>
+                            <p className="font-semibold text-lg">Reveal more blanks to unlock chunk feedback</p>
+                            <p className="text-sm mt-2 text-neutral-500">Each chunk you reveal opens personalized insights</p>
+                          </div>
+                        );
+                      } else {
+                        // Completed but no feedback data
+                        return (
+                          <div className="flex flex-col items-center justify-center py-12 text-neutral-600">
+                            <div className="text-4xl mb-4">📝</div>
+                            <p className="font-semibold text-lg">No chunk feedback available</p>
+                            <p className="text-sm mt-2 text-neutral-500">This scenario doesn't have detailed feedback yet</p>
+                          </div>
+                        );
+                      }
+                    }
+
+                    // Render feedback cards
+                    return filteredFeedback.map((feedback, idx) => (
                       <FeedbackCard
-                        key={feedback.blankIndex}
+                        key={'chunkId' in feedback ? feedback.chunkId : `${(feedback as ChunkFeedback).blankIndex}`}
                         feedback={feedback}
                         isExpanded={false}
                       />
@@ -673,9 +723,40 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
                 </div>
               ) : (
                 // Pattern Summary Tab
-                <div className="p-8">
+                <div className="p-8 space-y-8">
                   {script.patternSummary ? (
-                    <PatternSummaryView summary={script.patternSummary} scenario={script} />
+                    <>
+                      <PatternSummaryView summary={script.patternSummary} scenario={script} />
+
+                      {/* Active Recall CTA - Only show after completion */}
+                      {(() => {
+                        const isCompleted = userProgress?.completedScenarios?.includes(script.id) || false;
+                        return isCompleted && script.activeRecall && script.activeRecall.length > 0 ? (
+                          <div className="p-6 bg-gradient-to-r from-orange-50 to-orange-100 rounded-xl border-2 border-orange-200">
+                            <div className="flex items-start gap-4">
+                              <div className="text-3xl">🧠</div>
+                              <div className="flex-grow">
+                                <h3 className="text-lg font-bold text-neutral-800 mb-2">
+                                  Test Your Knowledge
+                                </h3>
+                                <p className="text-sm text-neutral-600 mb-4">
+                                  Reinforce what you learned with {script.activeRecall.length} active recall questions
+                                </p>
+                                <button
+                                  onClick={() => {
+                                    // TODO: Implement Active Recall flow navigation
+                                    console.log('Active Recall not yet implemented');
+                                  }}
+                                  className="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition-colors active:scale-95"
+                                >
+                                  Start Active Recall →
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        ) : null;
+                      })()}
+                    </>
                   ) : (
                     <div className="flex flex-col items-center justify-center py-12 text-neutral-600">
                       <div className="text-4xl mb-4">📊</div>
