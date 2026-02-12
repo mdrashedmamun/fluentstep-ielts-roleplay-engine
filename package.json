@@ -75,6 +75,7 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
     "pdfjs-dist": "^5.4.624",
+    "playwright": "^1.58.2",
     "postcss": "^8.4.0",
     "tailwindcss": "^3.4.0",
     "tsx": "^4.7.0",

@@ -228,10 +228,70 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
     achievement: { type: 'scenario_complete', message: '' }
   });
 
+  // Active Recall Quiz State
+  const [showActiveRecall, setShowActiveRecall] = useState(false);
+  const [activeRecallState, setActiveRecallState] = useState<{
+    currentQuestionIndex: number;
+    answers: Record<string, string[]>;  // questionId -> selected chunkIds
+    startTime: number;
+    results: {
+      correct: string[];    // question IDs
+      incorrect: string[];  // question IDs
+    } | null;
+  }>({
+    currentQuestionIndex: 0,
+    answers: {},
+    startTime: Date.now(),
+    results: null
+  });
+
   const totalSteps = script.dialogue.length;
 
   // Track previous completion percentage for milestone detection
   const previousCompletionRef = useRef(0);
+
+  // FIX 1: Build unified chunk map (V2 preferred, V1 fallback)
+  const allChunks = useMemo(() => {
+    if (script.chunkFeedbackV2 && script.chunkFeedbackV2.length > 0) {
+      return script.chunkFeedbackV2.map(c => ({
+        chunkId: c.chunkId,
+        native: c.native,
+        meaning: c.learner.meaning
+      }));
+    } else if (script.chunkFeedback && script.chunkFeedback.length > 0) {
+      return script.chunkFeedback.map(c => ({
+        chunkId: c.chunkId || `${script.id}-b${c.blankIndex}`,
+        native: c.chunk,
+        meaning: c.coreFunction
+      }));
+    }
+    return [];
+  }, [script]);
+
+  // FIX 5: Precompute O(1) lookup map
+  const chunkMap = useMemo(() => {
+    return new Map(allChunks.map(c => [c.chunkId, c]));
+  }, [allChunks]);
+
+  // FIX 2: Generate relevant options (8-12 per question)
+  const getQuestionOptions = useCallback((questionId: string): string[] => {
+    const question = script.activeRecall?.find(q => q.id === questionId);
+    if (!question) return [];
+
+    // Start with correct answers
+    const options = [...question.targetChunkIds];
+
+    // Add 6-10 random distractors (excluding correct answers)
+    const distractors = allChunks
+      .filter(c => !question.targetChunkIds.includes(c.chunkId))
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 10);
+
+    distractors.forEach(d => options.push(d.chunkId));
+
+    // Final shuffle and limit to 8-12 total
+    return options.sort(() => Math.random() - 0.5).slice(0, 12);
+  }, [script.activeRecall, allChunks]);
 
   // Initialize progress tracking on mount
   useEffect(() => {
@@ -437,6 +497,100 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
     }
   }, [script.id, userProgress, handleNavigate]);
 
+  // Active Recall Quiz Handlers
+  const checkAnswer = useCallback((questionId: string, selectedChunkIds: string[]): boolean => {
+    const question = script.activeRecall?.find(q => q.id === questionId);
+    if (!question) return false;
+
+    // Must match length (for multi-blank questions)
+    if (selectedChunkIds.length !== question.targetChunkIds.length) return false;
+
+    // All targets must be selected (order doesn't matter)
+    return question.targetChunkIds.every(id => selectedChunkIds.includes(id));
+  }, [script.activeRecall]);
+
+  const calculateResults = useCallback(() => {
+    const correct: string[] = [];
+    const incorrect: string[] = [];
+
+    script.activeRecall?.forEach(question => {
+      const userAnswer = activeRecallState.answers[question.id] || [];
+      if (checkAnswer(question.id, userAnswer)) {
+        correct.push(question.id);
+      } else {
+        incorrect.push(question.id);
+      }
+    });
+
+    setActiveRecallState(prev => ({
+      ...prev,
+      results: { correct, incorrect }
+    }));
+  }, [script.activeRecall, activeRecallState.answers, checkAnswer]);
+
+  const handleChunkSelect = useCallback((chunkId: string) => {
+    const currentQuestion = script.activeRecall?.[activeRecallState.currentQuestionIndex];
+    if (!currentQuestion) return;
+
+    const selectedChunks = activeRecallState.answers[currentQuestion.id] || [];
+    const maxSelections = currentQuestion.targetChunkIds.length;
+
+    // If already selected, deselect
+    if (selectedChunks.includes(chunkId)) {
+      setActiveRecallState(prev => ({
+        ...prev,
+        answers: {
+          ...prev.answers,
+          [currentQuestion.id]: selectedChunks.filter(id => id !== chunkId)
+        }
+      }));
+      return;
+    }
+
+    // Multi-select (for multi-blank questions)
+    if (maxSelections > 1) {
+      if (selectedChunks.length < maxSelections) {
+        setActiveRecallState(prev => ({
+          ...prev,
+          answers: {
+            ...prev.answers,
+            [currentQuestion.id]: [...selectedChunks, chunkId]
+          }
+        }));
+      }
+    } else {
+      // Single select - replace
+      setActiveRecallState(prev => ({
+        ...prev,
+        answers: {
+          ...prev.answers,
+          [currentQuestion.id]: [chunkId]
+        }
+      }));
+    }
+  }, [script.activeRecall, activeRecallState]);
+
+  const handleQuestionSubmit = useCallback(() => {
+    const currentQuestion = script.activeRecall?.[activeRecallState.currentQuestionIndex];
+    if (!currentQuestion) return;
+
+    const userAnswer = activeRecallState.answers[currentQuestion.id] || [];
+
+    if (userAnswer.length === 0) {
+      // Show validation: "Please select an answer"
+      return;
+    }
+
+    if (activeRecallState.currentQuestionIndex === (script.activeRecall?.length || 0) - 1) {
+      calculateResults();
+    } else {
+      setActiveRecallState(prev => ({
+        ...prev,
+        currentQuestionIndex: prev.currentQuestionIndex + 1
+      }));
+    }
+  }, [script.activeRecall, activeRecallState, calculateResults]);
+
   // Keyboard navigation
   useKeyboard({
     onNext: handleNext,
@@ -455,6 +609,27 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
     const el = document.getElementById('dialogue-container');
     if (el) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
   }, [currentStep]);
+
+  // Phase 5: Save Active Recall results to progress service
+  useEffect(() => {
+    if (activeRecallState.results) {
+      const progress = progressService.getProgress();
+      const scenarioProgress = progress.scenarioProgress[script.id];
+
+      if (scenarioProgress) {
+        const attempts = scenarioProgress.activeRecallAttempts || [];
+        attempts.push({
+          attemptedAt: Date.now(),
+          score: activeRecallState.results.correct.length,
+          totalQuestions: script.activeRecall!.length,
+          timeSpentSeconds: Math.floor((Date.now() - activeRecallState.startTime) / 1000)
+        });
+
+        scenarioProgress.activeRecallAttempts = attempts;
+        progressService.saveProgress(progress);
+      }
+    }
+  }, [activeRecallState.results, script.id, activeRecallState.startTime]);
 
   let blankGlobalCounter = -1;
 
@@ -744,8 +919,14 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
                                 </p>
                                 <button
                                   onClick={() => {
-                                    // TODO: Implement Active Recall flow navigation
-                                    console.log('Active Recall not yet implemented');
+                                    // FIX 1: Unified chunk validation (V2 or V1)
+                                    const hasChunks = (script.chunkFeedbackV2 && script.chunkFeedbackV2.length > 0) ||
+                                                      (script.chunkFeedback && script.chunkFeedback.length > 0);
+                                    if (!hasChunks) {
+                                      console.error('Active Recall requires chunk feedback data (V1 or V2)');
+                                      return;
+                                    }
+                                    setShowActiveRecall(true);
                                   }}
                                   className="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition-colors active:scale-95"
                                 >
@@ -775,6 +956,285 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
                 className="w-full py-4 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all active:scale-95"
               >
                 🏆 Return to Library
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Active Recall Modal */}
+      {showActiveRecall && script.activeRecall && (
+        <div className="fixed inset-0 z-50 bg-neutral-950/20 backdrop-blur-xl p-8 flex items-center justify-center animate-in fade-in duration-500">
+          <div className="bg-white max-w-2xl w-full max-h-[90vh] rounded-3xl shadow-2xl overflow-hidden flex flex-col animate-in zoom-in-95 duration-500">
+            {/* Header with progress bar */}
+            <div className="bg-gradient-to-r from-orange-50 to-orange-100 border-b-2 border-orange-100 p-8">
+              <div className="flex justify-between items-center mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center">
+                    <i className="fas fa-brain text-white text-lg"></i>
+                  </div>
+                  <div>
+                    <span className="text-xs font-bold text-orange-700 uppercase tracking-wider">
+                      Active Recall Test
+                    </span>
+                    <h3 className="text-2xl font-black text-neutral-800">
+                      Question {activeRecallState.currentQuestionIndex + 1} of {script.activeRecall.length}
+                    </h3>
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    if (!activeRecallState.results && Object.keys(activeRecallState.answers).length > 0) {
+                      const confirmed = window.confirm('Are you sure you want to exit? Your progress will be lost.');
+                      if (!confirmed) return;
+                    }
+                    setShowActiveRecall(false);
+                    setActiveRecallState({
+                      currentQuestionIndex: 0,
+                      answers: {},
+                      startTime: Date.now(),
+                      results: null
+                    });
+                  }}
+                  className="w-10 h-10 rounded-full bg-white border-2 border-neutral-200 flex items-center justify-center text-neutral-400 hover:text-neutral-600 hover:border-orange-300 transition-all"
+                >
+                  <i className="fas fa-times"></i>
+                </button>
+              </div>
+
+              {/* Progress Bar */}
+              <div className="flex gap-1">
+                {script.activeRecall.map((_, i) => (
+                  <div key={i} className={`h-1.5 flex-1 rounded-full transition-all ${
+                    i < activeRecallState.currentQuestionIndex ? 'bg-success-500' :
+                    i === activeRecallState.currentQuestionIndex ? 'bg-orange-500' :
+                    'bg-neutral-300'
+                  }`} />
+                ))}
+              </div>
+            </div>
+
+            {/* Content area - questions or results */}
+            <div className="flex-grow overflow-y-auto p-8">
+              {!activeRecallState.results ? (
+                // Question View
+                (() => {
+                  const currentQuestion = script.activeRecall?.[activeRecallState.currentQuestionIndex];
+                  if (!currentQuestion) return null;
+
+                  const questionOptions = getQuestionOptions(currentQuestion.id);
+                  const selectedChunks = activeRecallState.answers[currentQuestion.id] || [];
+                  const hasAnswer = selectedChunks.length > 0;
+
+                  return (
+                    <div className="space-y-6">
+                      {/* Question Prompt */}
+                      <div className="p-4 bg-orange-50 rounded-xl border-2 border-orange-200">
+                        <p className="text-lg font-semibold text-neutral-800">
+                          {currentQuestion.prompt}
+                        </p>
+
+                        {/* FIX 4: Selection Counter with "any order" guidance */}
+                        {currentQuestion.targetChunkIds.length > 1 && (
+                          <p className="text-sm text-neutral-600 mt-2">
+                            Select {currentQuestion.targetChunkIds.length} chunks (any order)
+                            — {selectedChunks.length}/{currentQuestion.targetChunkIds.length} selected
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Chunk Options */}
+                      <div className="space-y-3">
+                        <p className="text-sm font-semibold text-neutral-700 uppercase tracking-wider">
+                          Select Answer:
+                        </p>
+                        {questionOptions.map(chunkId => {
+                          const chunk = chunkMap.get(chunkId);
+                          if (!chunk) return null;
+
+                          const isSelected = selectedChunks.includes(chunkId);
+
+                          return (
+                            <button
+                              key={chunkId}
+                              onClick={() => handleChunkSelect(chunkId)}
+                              className={`w-full p-4 rounded-xl border-2 text-left transition-all ${
+                                isSelected
+                                  ? 'border-orange-500 bg-orange-50 ring-2 ring-orange-200'
+                                  : 'border-neutral-200 hover:border-orange-300 hover:bg-neutral-50'
+                              }`}
+                            >
+                              <p className="font-bold text-neutral-800">{chunk.native}</p>
+                              <p className="text-sm text-neutral-600 mt-1">{chunk.meaning}</p>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })()
+              ) : (
+                // Results View
+                (() => {
+                  const getPerformanceMessage = (score: number, total: number): string => {
+                    const percentage = (score / total) * 100;
+                    if (percentage === 100) return "Perfect! You've mastered these patterns.";
+                    if (percentage >= 80) return "Excellent work! You're building strong pattern recognition.";
+                    if (percentage >= 60) return "Good progress! Review the mistakes to reinforce learning.";
+                    return "Keep practicing! These patterns will become natural with repetition.";
+                  };
+
+                  return (
+                    <div className="space-y-6">
+                      {/* FIX 7: Score Summary without emojis, with icons instead */}
+                      <div className="text-center space-y-4 pb-6 border-b-2 border-neutral-200">
+                        <div className={`w-20 h-20 mx-auto rounded-full flex items-center justify-center ${
+                          activeRecallState.results.correct.length === script.activeRecall!.length
+                            ? 'bg-success-100 text-success-700'
+                            : activeRecallState.results.correct.length >= script.activeRecall!.length * 0.7
+                            ? 'bg-primary-100 text-primary-700'
+                            : 'bg-orange-100 text-orange-700'
+                        }`}>
+                          <i className={`fas ${
+                            activeRecallState.results.correct.length === script.activeRecall!.length
+                              ? 'fa-trophy'
+                              : activeRecallState.results.correct.length >= script.activeRecall!.length * 0.7
+                              ? 'fa-star'
+                              : 'fa-chart-line'
+                          } text-4xl`}></i>
+                        </div>
+                        <h3 className="text-3xl font-black text-neutral-800">
+                          {activeRecallState.results.correct.length} / {script.activeRecall!.length} Correct
+                        </h3>
+                        <p className="text-xl text-neutral-600">
+                          {Math.round((activeRecallState.results.correct.length / script.activeRecall!.length) * 100)}% Accuracy
+                        </p>
+                        <p className="text-sm text-neutral-500">
+                          {getPerformanceMessage(
+                            activeRecallState.results.correct.length,
+                            script.activeRecall!.length
+                          )}
+                        </p>
+                      </div>
+
+                      {/* Question Review */}
+                      <div className="space-y-3">
+                        <h4 className="font-bold text-neutral-700">Review Your Answers:</h4>
+                        {script.activeRecall!.map((question, idx) => {
+                          const isCorrect = activeRecallState.results!.correct.includes(question.id);
+                          const userAnswer = activeRecallState.answers[question.id] || [];
+
+                          return (
+                            <div key={question.id} className={`p-4 rounded-xl border-2 ${
+                              isCorrect ? 'border-success-500 bg-success-50' : 'border-red-500 bg-red-50'
+                            }`}>
+                              <div className="flex items-start gap-3">
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                                  isCorrect ? 'bg-success-500' : 'bg-red-500'
+                                }`}>
+                                  <i className={`fas ${isCorrect ? 'fa-check' : 'fa-times'} text-white text-sm`}></i>
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <p className="font-semibold text-neutral-800 mb-2 break-words">
+                                    Q{idx + 1}: {question.prompt}
+                                  </p>
+                                  <div className="text-sm space-y-1">
+                                    <div>
+                                      <span className="font-semibold text-neutral-700">Your answer: </span>
+                                      <span className="text-neutral-600">
+                                        {/* FIX 5: Use chunkMap instead of .find() */}
+                                        {userAnswer.map(chunkId => chunkMap.get(chunkId)?.native).filter(Boolean).join(', ') || '(not answered)'}
+                                      </span>
+                                    </div>
+                                    {!isCorrect && (
+                                      <div>
+                                        <span className="font-semibold text-success-700">Correct answer: </span>
+                                        <span className="text-success-600">
+                                          {/* FIX 5: Use chunkMap instead of .find() */}
+                                          {question.targetChunkIds.map(chunkId => chunkMap.get(chunkId)?.native).filter(Boolean).join(', ')}
+                                        </span>
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex gap-3 pt-4">
+                        <button
+                          onClick={() => {
+                            setActiveRecallState({
+                              currentQuestionIndex: 0,
+                              answers: {},
+                              startTime: Date.now(),
+                              results: null
+                            });
+                          }}
+                          className="flex-1 py-3 border-2 border-orange-500 text-orange-700 font-semibold rounded-lg hover:bg-orange-50 transition-colors"
+                        >
+                          Retry Quiz
+                        </button>
+                        <button
+                          onClick={() => {
+                            setShowActiveRecall(false);
+                            setActiveRecallState({
+                              currentQuestionIndex: 0,
+                              answers: {},
+                              startTime: Date.now(),
+                              results: null
+                            });
+                          }}
+                          className="flex-1 py-3 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-600 transition-colors"
+                        >
+                          Close
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })()
+              )}
+            </div>
+
+            {/* Footer with navigation */}
+            <div className="p-6 border-t border-neutral-200 flex gap-3">
+              <button
+                onClick={() => {
+                  setActiveRecallState(prev => ({
+                    ...prev,
+                    currentQuestionIndex: Math.max(0, prev.currentQuestionIndex - 1)
+                  }));
+                }}
+                disabled={activeRecallState.currentQuestionIndex === 0 || !!activeRecallState.results}
+                className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+                  activeRecallState.currentQuestionIndex === 0 || activeRecallState.results
+                    ? 'bg-neutral-200 text-neutral-400 cursor-not-allowed'
+                    : 'bg-neutral-100 hover:bg-neutral-200 text-neutral-700'
+                }`}
+              >
+                ← Back
+              </button>
+              <button
+                onClick={handleQuestionSubmit}
+                disabled={(() => {
+                  const currentQuestion = script.activeRecall?.[activeRecallState.currentQuestionIndex];
+                  const hasAnswer = (activeRecallState.answers[currentQuestion?.id || '']?.length || 0) > 0;
+                  return !hasAnswer || !!activeRecallState.results;
+                })()}
+                className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all ${
+                  (() => {
+                    const currentQuestion = script.activeRecall?.[activeRecallState.currentQuestionIndex];
+                    const hasAnswer = (activeRecallState.answers[currentQuestion?.id || '']?.length || 0) > 0;
+                    return hasAnswer && !activeRecallState.results
+                      ? 'bg-orange-500 hover:bg-orange-600 text-white'
+                      : 'bg-neutral-300 text-neutral-500 cursor-not-allowed';
+                  })()
+                }`}
+              >
+                {activeRecallState.currentQuestionIndex === (script.activeRecall?.length || 0) - 1 ? 'Submit Quiz' : 'Next Question'} →
               </button>
             </div>
           </div>

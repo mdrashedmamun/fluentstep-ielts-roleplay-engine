@@ -11,6 +11,13 @@ export interface ScenarioProgress {
   completedAt?: number;
   timeSpent: number; // seconds
   lastVisitedAt: number;
+  // FIX 6: Active Recall tracking (optional, backward compatible)
+  activeRecallAttempts?: Array<{
+    attemptedAt: number;
+    score: number;
+    totalQuestions: number;
+    timeSpentSeconds: number;
+  }>;
 }
 
 export interface UserProgress {
