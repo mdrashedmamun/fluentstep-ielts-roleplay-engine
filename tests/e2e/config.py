@@ -8,13 +8,15 @@ import os
 from pathlib import Path
 
 # Base URL (adjust if dev server runs on different port)
-BASE_URL = "http://localhost:3004"
+# Use live Vercel deployment for production testing
+BASE_URL = "https://fluentstep-ielts-roleplay-engine.vercel.app"
 
 # Timeouts (in milliseconds)
-TIMEOUT_LOAD = 10000  # Page load (increased for React rendering)
-TIMEOUT_ELEMENT = 5000  # Element visibility (increased for interactive elements)
-TIMEOUT_ACTION = 2000  # Click, fill, etc.
-TIMEOUT_ANIMATION = 600  # Animations
+# Increased for live Vercel deployment (network latency)
+TIMEOUT_LOAD = 20000  # Page load (increased for React rendering + network)
+TIMEOUT_ELEMENT = 10000  # Element visibility (increased for interactive elements)
+TIMEOUT_ACTION = 5000  # Click, fill, etc.
+TIMEOUT_ANIMATION = 1000  # Animations
 
 # Browser settings
 BROWSER = "chromium"

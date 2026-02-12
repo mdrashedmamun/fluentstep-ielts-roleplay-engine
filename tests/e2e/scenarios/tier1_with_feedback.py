@@ -87,8 +87,8 @@ class TestTier1LoadingAndContent:
         goto_scenario(scenario_id)
         load_time = (time.time() - start) * 1000
 
-        # Allow up to 10 seconds for scenario load (includes navigation, dialog closes, and blank loading)
-        assert load_time < 10000, f"Load time {load_time}ms exceeds 10000ms"
+        # Allow up to 30 seconds for scenario load on live Vercel (includes navigation, dialog closes, network latency, and blank loading)
+        assert load_time < 30000, f"Load time {load_time}ms exceeds 30000ms"
         assert page.title() == "FluentStep: IELTS Roleplay Engine"
 
     @pytest.mark.parametrize("scenario_id", TIER1_SCENARIOS.keys())
