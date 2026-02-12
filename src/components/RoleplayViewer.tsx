@@ -19,13 +19,51 @@ interface RoleplayViewerProps {
   onReset: () => void;
 }
 
+/**
+ * Validate that a blank can only be filled with its assigned answer
+ * Returns true if the answer is valid for this blank
+ */
+function validateBlankAnswerMatch(
+  blankIndex: number,
+  answerText: string,
+  script: RoleplayScript
+): boolean {
+  // Get expected chunkId for this blank
+  const blankMapping = script.blanksInOrder?.[blankIndex];
+  if (!blankMapping) return true; // No blanksInOrder, skip validation
+
+  const expectedChunkId = blankMapping.chunkId;
+  if (!expectedChunkId) return true; // No chunkId requirement, skip validation
+
+  // Get the answer for this blank
+  const answerData = script.answerVariations.find(v => v.index === blankIndex);
+  if (!answerData) return false; // No answer found
+
+  // Check if the answer text matches
+  const isMatch = answerData.answer === answerText ||
+                  answerData.alternatives?.includes(answerText);
+
+  if (!isMatch) {
+    console.warn(
+      `⚠️ Blank ${blankIndex} validation failed: "${answerText}" is not valid for ${expectedChunkId}`
+    );
+  }
+
+  return isMatch;
+}
+
 const InteractiveBlank: React.FC<{
   answer: string;
   alternatives: string[];
   index: number;
   isRevealed: boolean;
   onReveal: () => void;
-}> = ({ answer, alternatives, index, isRevealed, onReveal }) => {
+  expectedChunkId?: string;
+  actualChunkId?: string;
+}> = ({ answer, alternatives, index, isRevealed, onReveal, expectedChunkId, actualChunkId }) => {
+  // Validate chunkId match
+  const isValidChunk = !expectedChunkId || !actualChunkId || expectedChunkId === actualChunkId;
+  const chunkMismatch = expectedChunkId && actualChunkId && expectedChunkId !== actualChunkId;
   const isClosingRef = useRef(false);
   const [referenceElement, setReferenceElement] = useState<HTMLButtonElement | null>(null);
   const [floatingElement, setFloatingElement] = useState<HTMLDivElement | null>(null);
@@ -61,12 +99,19 @@ const InteractiveBlank: React.FC<{
       <button
         ref={setReferenceElement}
         onClick={onReveal}
-        className={`px-4 py-1.5 transition-all duration-300 rounded-xl font-bold border-2 flex items-center gap-2 justify-center ${isRevealed
-          ? 'border-primary-500 bg-gradient-to-r from-primary-50 to-accent-50 text-primary-700 shadow-md ring-4 ring-primary-500/20 scale-105 z-20 min-w-fit'
-          : 'border-dashed border-primary-300 bg-gradient-to-r from-orange-100/50 to-teal-100/50 text-neutral-600 hover:border-primary-400 hover:text-primary-600 hover:bg-gradient-to-r hover:from-orange-100 hover:to-teal-100 z-0 min-w-[140px]'
-          }`}
+        className={`px-4 py-1.5 transition-all duration-300 rounded-xl font-bold border-2 flex items-center gap-2 justify-center ${
+          chunkMismatch
+            ? 'border-red-400 bg-gradient-to-r from-red-50 to-orange-50 text-red-700 shadow-md ring-4 ring-red-500/20 scale-105 z-20 min-w-fit'
+            : isRevealed
+              ? 'border-primary-500 bg-gradient-to-r from-primary-50 to-accent-50 text-primary-700 shadow-md ring-4 ring-primary-500/20 scale-105 z-20 min-w-fit'
+              : 'border-dashed border-primary-300 bg-gradient-to-r from-orange-100/50 to-teal-100/50 text-neutral-600 hover:border-primary-400 hover:text-primary-600 hover:bg-gradient-to-r hover:from-orange-100 hover:to-teal-100 z-0 min-w-[140px]'
+        }`}
+        title={chunkMismatch ? `⚠️ This blank expects a different answer (${expectedChunkId})` : undefined}
       >
-        {!isRevealed && (
+        {chunkMismatch && (
+          <span className="text-xs text-red-600 font-bold">⚠️</span>
+        )}
+        {!isRevealed && !chunkMismatch && (
           <span className="text-[10px] text-primary-500 font-bold uppercase tracking-tighter">✨ Tap to discover</span>
         )}
         <span className="tracking-tight whitespace-nowrap font-semibold">
@@ -74,6 +119,8 @@ const InteractiveBlank: React.FC<{
         </span>
         {isRevealed ? (
           <i className="fas fa-times text-[10px] text-neutral-400 hover:text-neutral-600 ml-1"></i>
+        ) : chunkMismatch ? (
+          <i className="fas fa-exclamation-triangle text-[10px] text-red-500"></i>
         ) : (
           <i className="fas fa-sparkles text-[10px] text-primary-400 group-hover:text-primary-500 animate-pulse"></i>
         )}
@@ -107,10 +154,26 @@ const InteractiveBlank: React.FC<{
 
             {/* Content */}
             <div className="p-5 space-y-4">
+              {/* Validation warning if chunk mismatch */}
+              {chunkMismatch && (
+                <div className="bg-red-50 border-l-4 border-red-500 p-3 rounded text-sm text-red-700">
+                  <p className="font-semibold">⚠️ Blank Mismatch</p>
+                  <p className="text-xs mt-1">This blank expects: <code className="bg-red-100 px-1 rounded">{expectedChunkId}</code></p>
+                </div>
+              )}
+
               {/* Main answer in highlight */}
-              <div className="bg-gradient-to-r from-primary-50 to-accent-50 p-4 rounded-xl border border-primary-100">
-                <p className="text-sm text-neutral-500 uppercase tracking-wider font-semibold mb-1">Answer</p>
-                <p className="text-lg font-bold text-primary-700">{answer}</p>
+              <div className={`p-4 rounded-xl border ${
+                chunkMismatch
+                  ? 'bg-red-50 border-red-200'
+                  : 'bg-gradient-to-r from-primary-50 to-accent-50 border-primary-100'
+              }`}>
+                <p className={`text-sm uppercase tracking-wider font-semibold mb-1 ${
+                  chunkMismatch ? 'text-red-600' : 'text-neutral-500'
+                }`}>Answer</p>
+                <p className={`text-lg font-bold ${
+                  chunkMismatch ? 'text-red-700' : 'text-primary-700'
+                }`}>{answer}</p>
               </div>
 
               {/* Alternatives */}
@@ -393,7 +456,7 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
     if (el) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
   }, [currentStep]);
 
-  let blankGlobalCounter = 0;
+  let blankGlobalCounter = -1;
 
   return (
     <div className="max-w-4xl mx-auto h-[85vh] flex flex-col gap-6 animate-world-entry">
@@ -483,15 +546,22 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
                       {parts.map((part, pIdx) => (
                         <React.Fragment key={pIdx}>
                           <span className="font-medium">{part}</span>
-                          {pIdx < parts.length - 1 && lineBlanks[pIdx] !== undefined && (
-                            <InteractiveBlank
-                              answer={script.answerVariations.find(v => v.index === lineBlanks[pIdx])?.answer || '??'}
-                              alternatives={script.answerVariations.find(v => v.index === lineBlanks[pIdx])?.alternatives || []}
-                              index={lineBlanks[pIdx]!}
-                              isRevealed={revealedBlanks.has(lineBlanks[pIdx]!)}
-                              onReveal={() => handleBlankReveal(lineBlanks[pIdx]!)}
-                            />
-                          )}
+                          {pIdx < parts.length - 1 && lineBlanks[pIdx] !== undefined && (() => {
+                            const blankIdx = lineBlanks[pIdx]!;
+                            const answerData = script.answerVariations.find(v => v.index === blankIdx);
+                            const blankMapping = script.blanksInOrder?.[blankIdx];
+                            const expectedChunkId = blankMapping?.chunkId;
+                            return (
+                              <InteractiveBlank
+                                answer={answerData?.answer || '??'}
+                                alternatives={answerData?.alternatives || []}
+                                index={blankIdx}
+                                isRevealed={revealedBlanks.has(blankIdx)}
+                                onReveal={() => handleBlankReveal(blankIdx)}
+                                expectedChunkId={expectedChunkId}
+                              />
+                            );
+                          })()}
                         </React.Fragment>
                       ))}
                     </div>
