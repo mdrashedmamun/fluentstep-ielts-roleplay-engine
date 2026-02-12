@@ -6,6 +6,7 @@ import { progressService } from '../services/progressService';
 import { audioService } from '../services/audioService';
 import { navigationService } from '../services/navigationService';
 import { useKeyboard } from '../hooks/useKeyboard';
+import { getBlanksSource, getChunkFeedbackSource, getBlankCount } from '../utils/safePatterns';
 import NavigationButtons from './NavigationButtons';
 import CelebrationOverlay from './CelebrationOverlay';
 import FeedbackCard from './FeedbackCard';

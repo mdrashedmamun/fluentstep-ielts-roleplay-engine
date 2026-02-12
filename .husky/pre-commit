@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# Pre-commit hook: Run critical validation
+# Blocks commits with critical data errors
+# Allows warnings (code review items)
+
+echo "🔍 Running critical validation..."
+
+npm run validate:critical
+
+if [ $? -ne 0 ]; then
+  echo "❌ Pre-commit failed. Fix critical errors before committing."
+  exit 1
+fi
+
+echo "✅ Pre-commit passed"
+exit 0

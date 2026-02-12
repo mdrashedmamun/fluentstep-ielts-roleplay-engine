@@ -7,7 +7,7 @@ export type ChunkCategory =
     | 'Idioms';        // Fixed expressions, collocations
 
 export interface ChunkFeedback {
-    chunkId: string;          // NEW - Deterministic ID: "{scenarioId}-b{blankIndex}" (e.g., "social-1-flatmate-b1")
+    chunkId?: string;         // Optional - Deterministic ID: "{scenarioId}-b{blankIndex}" (e.g., "social-1-flatmate-b1")
     blankIndex: number;
     chunk: string;
     category: ChunkCategory;
@@ -25,8 +25,10 @@ export interface ChunkFeedback {
 }
 
 export interface CategoryBreakdown {
-    category: ChunkCategory;                    // Openers, Softening, etc.
-    customLabel?: string;                       // NEW - Optional display override for domain-specific labels
+    categoryKey?: ChunkCategory;                // Machine key for styling (stable enum: Openers, Softening, etc.)
+    category?: ChunkCategory;                   // Legacy field - either categoryKey or category must be present
+    categoryLabel?: string;                     // Human-readable label for display (new style)
+    customLabel?: string;                       // Deprecated - use categoryLabel instead (kept for backward compat)
     count: number;                              // Must match exampleChunkIds.length
     exampleChunkIds: string[];                  // NEW - Stable chunk IDs (e.g., ["social-1-flatmate-b1", "social-1-flatmate-b3"])
     /** @deprecated Use exampleChunkIds instead - text-based references break when content changes */
@@ -11042,6 +11044,21 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
           "We appreciate your time today.",
           "I appreciate the council's careful consideration."
         ]
+      },
+      {
+        "chunkId": "com1_ch_fair_point",
+        "native": "point",
+        "learner": {
+          "meaning": "A valid argument or relevant observation.",
+          "useWhen": "When a council acknowledges a concern you've raised is reasonable or well-founded.",
+          "commonWrong": "That's a fair concern.",
+          "fix": "That's a fair point.",
+          "whyOdd": "'Concern' is your worry; 'point' refers to your argument itself. 'That's a fair point' is the diplomatic way to validate someone's reasoning in formal settings."
+        },
+        "examples": [
+          "I take that point.",
+          "That's a very fair point indeed."
+        ]
       }
     ],
     "blanksInOrder": [
@@ -11107,7 +11124,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
       },
       {
         "blankId": "com1_b16",
-        "chunkId": "com1_ch_point"
+        "chunkId": "com1_ch_fair_point"
       },
       {
         "blankId": "com1_b17",

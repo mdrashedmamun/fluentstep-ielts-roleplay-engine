@@ -67,8 +67,13 @@ const PatternSummaryView: React.FC<PatternSummaryViewProps> = ({ summary, scenar
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {summary.categoryBreakdown.map((breakdown, idx) => {
-            const colors = CATEGORY_COLORS[breakdown.category as ChunkCategory] || CATEGORY_COLORS['Idioms'];
-            const icon = CATEGORY_ICONS[breakdown.category as ChunkCategory] || '💡';
+            // Use categoryKey for styling (machine key, always a standard enum)
+            // Fall back to deprecated category field for backward compatibility
+            const styleKey = (breakdown.categoryKey || breakdown.category || 'Idioms') as ChunkCategory;
+            const colors = CATEGORY_COLORS[styleKey] || CATEGORY_COLORS['Idioms'];
+            const icon = CATEGORY_ICONS[styleKey] || '💡';
+            // Display label: prefer new categoryLabel, fall back to old customLabel, then styleKey
+            const displayLabel = breakdown.categoryLabel || breakdown.customLabel || styleKey;
             // NEW: Prefer exampleChunkIds over examples (with fallback)
             const displayChunks = resolveChunksForDisplay(breakdown.exampleChunkIds) || breakdown.examples || [];
 
@@ -82,7 +87,7 @@ const PatternSummaryView: React.FC<PatternSummaryViewProps> = ({ summary, scenar
                   <div className="flex-1">
                     <div className="flex items-center justify-between mb-1">
                       <h4 className={`font-semibold ${colors.text}`}>
-                        {breakdown.customLabel || breakdown.category}
+                        {displayLabel}
                       </h4>
                       <span className="text-xs font-medium px-2 py-1 rounded bg-white/60">
                         {breakdown.count} chunk{breakdown.count !== 1 ? 's' : ''}
