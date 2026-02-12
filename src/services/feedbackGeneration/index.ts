@@ -7,6 +7,16 @@ export { selectHighValueChunks } from './chunkSelector';
 export { generateChunkFeedback, generateFallbackFeedback, generateFeedbackForChunks } from './feedbackGenerator';
 export { validateChunkFeedback, autoFixChunkFeedback, validateAllFeedback } from './feedbackValidator';
 export type { ValidationResult } from './feedbackValidator';
+export {
+  generateChunkId,
+  parseChunkId,
+  isValidChunkIdFormat,
+  resolveChunkId,
+  resolveChunkIds,
+  chunkIdExists,
+  generateChunkIdsForScenario,
+  createChunkIdDebugComment,
+} from './chunkIdGenerator';
 
 import { RoleplayScript, ChunkFeedback } from '../staticData';
 import { selectHighValueChunks } from './chunkSelector';

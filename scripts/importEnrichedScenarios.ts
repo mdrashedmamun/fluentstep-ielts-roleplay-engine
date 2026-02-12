@@ -160,7 +160,14 @@ function parseBreakdownItem(lines: string[], startIndex: number): { item: any; n
     } else if (line.includes('count:')) {
       const match = line.match(/count:\s*(\d+)/);
       item.count = match ? parseInt(match[1], 10) : 0;
+    } else if (line.includes('exampleChunkIds:')) {
+      // NEW: Parse chunkIds instead of examples
+      const match = line.match(/exampleChunkIds:\s*\[(.*)\]/);
+      if (match) {
+        item.exampleChunkIds = match[1].split(',').map(e => e.trim().replace(/["']/g, ''));
+      }
     } else if (line.includes('examples:')) {
+      // DEPRECATED: Keep for backward compat, parse if present
       const match = line.match(/examples:\s*\[(.*)\]/);
       if (match) {
         item.examples = match[1].split(',').map(e => e.trim().replace(/["']/g, ''));
@@ -168,6 +175,18 @@ function parseBreakdownItem(lines: string[], startIndex: number): { item: any; n
     } else if (line.includes('insight:')) {
       const match = line.match(/insight:\s*"(.*)"/);
       item.insight = match?.[1];
+    } else if (line.includes('nativePatterns:')) {
+      // NEW: Optional native patterns
+      const match = line.match(/nativePatterns:\s*\[(.*)\]/);
+      if (match) {
+        item.nativePatterns = match[1].split(',').map(e => e.trim().replace(/["']/g, ''));
+      }
+    } else if (line.includes('commonMistakes:')) {
+      // NEW: Optional common mistakes
+      const match = line.match(/commonMistakes:\s*\[(.*)\]/);
+      if (match) {
+        item.commonMistakes = match[1].split(',').map(e => e.trim().replace(/["']/g, ''));
+      }
     }
 
     i++;
@@ -196,10 +215,29 @@ function parsePatternItem(lines: string[], startIndex: number): { item: any; nex
     } else if (line.includes('explanation:')) {
       const match = line.match(/explanation:\s*"(.*)"/);
       item.explanation = match?.[1];
+    } else if (line.includes('chunkIds:')) {
+      // NEW: Parse chunkIds instead of chunks
+      const match = line.match(/chunkIds:\s*\[(.*)\]/);
+      if (match) {
+        item.chunkIds = match[1].split(',').map(c => c.trim().replace(/["']/g, ''));
+      }
     } else if (line.includes('chunks:')) {
+      // DEPRECATED: Keep for backward compat, parse if present
       const match = line.match(/chunks:\s*\[(.*)\]/);
       if (match) {
         item.chunks = match[1].split(',').map(c => c.trim().replace(/["']/g, ''));
+      }
+    } else if (line.includes('nativePatterns:')) {
+      // NEW: Optional native patterns
+      const match = line.match(/nativePatterns:\s*\[(.*)\]/);
+      if (match) {
+        item.nativePatterns = match[1].split(',').map(e => e.trim().replace(/["']/g, ''));
+      }
+    } else if (line.includes('commonMistakes:')) {
+      // NEW: Optional common mistakes
+      const match = line.match(/commonMistakes:\s*\[(.*)\]/);
+      if (match) {
+        item.commonMistakes = match[1].split(',').map(e => e.trim().replace(/["']/g, ''));
       }
     }
 

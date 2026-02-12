@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { CURATED_ROLEPLAYS, ChunkCategory } from '../src/services/staticData';
+import { isValidChunkIdFormat, chunkIdExists } from '../src/services/feedbackGeneration/chunkIdGenerator';
 
 /**
  * Validate enriched markdown files before import
@@ -267,6 +268,75 @@ function checkGrammarTerminology(scenarioId: string, yaml: string): string[] {
   return errors;
 }
 
+/**
+ * NEW: Validate chunkId format and existence
+ */
+function validateChunkIds(scenarioId: string, yaml: string): string[] {
+  const errors: string[] = [];
+
+  // Find scenario in database
+  const scenario = CURATED_ROLEPLAYS.find(s => s.id === scenarioId);
+  if (!scenario) {
+    errors.push(`${scenarioId}: Scenario not found in database`);
+    return errors;
+  }
+
+  // Extract all chunkIds from exampleChunkIds and chunkIds fields
+  const chunkIdMatches = yaml.matchAll(/chunkIds?:\s*\[(.*?)\]/gs);
+  const chunkIds: string[] = [];
+
+  for (const match of chunkIdMatches) {
+    const idList = match[1];
+    const ids = idList.match(/["']([^"']+)["']/g) || [];
+    for (const id of ids) {
+      const cleanId = id.replace(/["']/g, '');
+      chunkIds.push(cleanId);
+    }
+  }
+
+  // Validate each chunkId
+  for (const chunkId of chunkIds) {
+    // Check format
+    if (!isValidChunkIdFormat(chunkId)) {
+      errors.push(`${scenarioId}: Invalid chunkId format: "${chunkId}" (expected: "{scenarioId}-b{number}")`);
+      continue;
+    }
+
+    // Check existence
+    if (!chunkIdExists(chunkId, scenario)) {
+      errors.push(`${scenarioId}: ChunkId "${chunkId}" does not exist in scenario`);
+    }
+  }
+
+  return errors;
+}
+
+/**
+ * NEW: Validate native/non-native pattern equality
+ */
+function validateNativeNonNativePatterns(scenarioId: string, yaml: string): string[] {
+  const errors: string[] = [];
+
+  // Extract nativePatterns and commonMistakes arrays
+  const nativeMatch = yaml.match(/nativePatterns:\s*\[(.*?)\]/s);
+  const commonMatch = yaml.match(/commonMistakes:\s*\[(.*?)\]/s);
+
+  if (nativeMatch && commonMatch) {
+    const nativeList = (nativeMatch[1].match(/["']([^"']+)["']/g) || []).length;
+    const commonList = (commonMatch[1].match(/["']([^"']+)["']/g) || []).length;
+
+    if (nativeList !== commonList) {
+      errors.push(
+        `${scenarioId}: nativePatterns (${nativeList}) and commonMistakes (${commonList}) must have equal length`
+      );
+    }
+  } else if (nativeMatch || commonMatch) {
+    errors.push(`${scenarioId}: If nativePatterns is present, commonMistakes must also be present (and vice versa)`);
+  }
+
+  return errors;
+}
+
 async function main() {
   const filename = parseArgs();
   const filePath = path.join(process.cwd(), 'exports', filename);
@@ -341,6 +411,14 @@ async function main() {
 
     const termErrors = checkGrammarTerminology(block.scenarioId, block.yaml);
     result.warnings.push(...termErrors);
+
+    // NEW: Validate chunkIds
+    const chunkIdErrors = validateChunkIds(block.scenarioId, block.yaml);
+    result.errors.push(...chunkIdErrors);
+
+    // NEW: Validate native/non-native patterns
+    const patternErrors = validateNativeNonNativePatterns(block.scenarioId, block.yaml);
+    result.errors.push(...patternErrors);
   }
 
   if (result.errors.length === 0 && result.warnings.length === 0) {

@@ -85,8 +85,23 @@ function formatYaml(summary: any, indent: string = ''): string {
   for (const item of summary.categoryBreakdown) {
     yaml += `${indent}  - category: "${item.category}"\n`;
     yaml += `${indent}    count: ${item.count}\n`;
-    yaml += `${indent}    examples: [${item.examples.map((e: string) => `"${e}"`).join(', ')}]\n`;
+    // NEW: Export exampleChunkIds with debug comment mapping to chunk text
+    if (item.exampleChunkIds && item.exampleChunkIds.length > 0) {
+      yaml += `${indent}    exampleChunkIds: [${item.exampleChunkIds.map((id: string) => `"${id}"`).join(', ')}]\n`;
+    }
+    // DEPRECATED: Keep examples for backward compat (auto-populated during import)
+    if (item.examples && item.examples.length > 0) {
+      yaml += `${indent}    # Chunks: [${item.examples.map((e: string) => `"${e}"`).join(', ')}]\n`;
+    }
     yaml += `${indent}    insight: "${item.insight}"\n`;
+    // NEW: Optional native patterns
+    if (item.nativePatterns && item.nativePatterns.length > 0) {
+      yaml += `${indent}    nativePatterns: [${item.nativePatterns.map((p: string) => `"${p}"`).join(', ')}]\n`;
+    }
+    // NEW: Optional common mistakes
+    if (item.commonMistakes && item.commonMistakes.length > 0) {
+      yaml += `${indent}    commonMistakes: [${item.commonMistakes.map((m: string) => `"${m}"`).join(', ')}]\n`;
+    }
   }
 
   // overallInsight
@@ -97,7 +112,22 @@ function formatYaml(summary: any, indent: string = ''): string {
   for (const pattern of summary.keyPatterns) {
     yaml += `${indent}  - pattern: "${pattern.pattern}"\n`;
     yaml += `${indent}    explanation: "${pattern.explanation}"\n`;
-    yaml += `${indent}    chunks: [${pattern.chunks.map((c: string) => `"${c}"`).join(', ')}]\n`;
+    // NEW: Export chunkIds with debug comment mapping to chunk text
+    if (pattern.chunkIds && pattern.chunkIds.length > 0) {
+      yaml += `${indent}    chunkIds: [${pattern.chunkIds.map((id: string) => `"${id}"`).join(', ')}]\n`;
+    }
+    // DEPRECATED: Keep chunks for backward compat (auto-populated during import)
+    if (pattern.chunks && pattern.chunks.length > 0) {
+      yaml += `${indent}    # Chunks: [${pattern.chunks.map((c: string) => `"${c}"`).join(', ')}]\n`;
+    }
+    // NEW: Optional native patterns
+    if (pattern.nativePatterns && pattern.nativePatterns.length > 0) {
+      yaml += `${indent}    nativePatterns: [${pattern.nativePatterns.map((p: string) => `"${p}"`).join(', ')}]\n`;
+    }
+    // NEW: Optional common mistakes
+    if (pattern.commonMistakes && pattern.commonMistakes.length > 0) {
+      yaml += `${indent}    commonMistakes: [${pattern.commonMistakes.map((m: string) => `"${m}"`).join(', ')}]\n`;
+    }
   }
 
   return yaml;

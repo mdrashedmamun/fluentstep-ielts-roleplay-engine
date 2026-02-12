@@ -1,8 +1,10 @@
 import React from 'react';
-import { PatternSummary, ChunkCategory } from '../services/staticData';
+import { PatternSummary, ChunkCategory, RoleplayScript } from '../services/staticData';
+import { resolveChunkIds } from '../services/feedbackGeneration/chunkIdGenerator';
 
 interface PatternSummaryViewProps {
   summary: PatternSummary;
+  scenario?: RoleplayScript;  // NEW - Optional scenario for resolving chunkIds
 }
 
 // Category colors and icons (consistent with FeedbackCard)
@@ -27,8 +29,9 @@ const CATEGORY_ICONS: Record<ChunkCategory, string> = {
 /**
  * Display consolidated pattern insights from a scenario's chunkFeedback
  * Shows category breakdown, learning outcome, and cross-chunk patterns
+ * NEW: Resolves chunkIds and displays native/non-native contrast if available
  */
-const PatternSummaryView: React.FC<PatternSummaryViewProps> = ({ summary }) => {
+const PatternSummaryView: React.FC<PatternSummaryViewProps> = ({ summary, scenario }) => {
   if (!summary) {
     return (
       <div className="p-4 text-center text-gray-500">
@@ -36,6 +39,12 @@ const PatternSummaryView: React.FC<PatternSummaryViewProps> = ({ summary }) => {
       </div>
     );
   }
+
+  // Helper to resolve chunkIds to text
+  const resolveChunksForDisplay = (chunkIds?: string[]): string[] => {
+    if (!chunkIds || !scenario) return [];
+    return resolveChunkIds(chunkIds, scenario);
+  };
 
   return (
     <div className="space-y-6 p-4">
@@ -60,6 +69,8 @@ const PatternSummaryView: React.FC<PatternSummaryViewProps> = ({ summary }) => {
           {summary.categoryBreakdown.map((breakdown, idx) => {
             const colors = CATEGORY_COLORS[breakdown.category];
             const icon = CATEGORY_ICONS[breakdown.category];
+            // NEW: Prefer exampleChunkIds over examples (with fallback)
+            const displayChunks = resolveChunksForDisplay(breakdown.exampleChunkIds) || breakdown.examples || [];
 
             return (
               <div
@@ -80,16 +91,33 @@ const PatternSummaryView: React.FC<PatternSummaryViewProps> = ({ summary }) => {
                     <p className="text-xs text-gray-600 mb-2 line-clamp-2">
                       {breakdown.insight}
                     </p>
-                    <div className="flex flex-wrap gap-1">
-                      {breakdown.examples.map((example, i) => (
+                    <div className="flex flex-wrap gap-1 mb-2">
+                      {displayChunks.map((chunk, i) => (
                         <span
                           key={i}
                           className="text-xs bg-white/80 px-2 py-1 rounded border border-gray-200"
                         >
-                          "{example}"
+                          "{chunk}"
                         </span>
                       ))}
                     </div>
+                    {/* NEW: Display native/non-native contrast if available */}
+                    {breakdown.nativePatterns && breakdown.commonMistakes && (
+                      <div className="mt-2 pt-2 border-t border-gray-300 space-y-1">
+                        {breakdown.nativePatterns.map((native, i) => (
+                          <div key={i} className="grid grid-cols-2 gap-1 text-xs">
+                            <div className="bg-red-100/60 border border-red-300 rounded px-1.5 py-0.5">
+                              <span className="text-red-700 font-medium">✗</span>
+                              <span className="text-red-700 ml-0.5 line-clamp-1">{breakdown.commonMistakes![i]}</span>
+                            </div>
+                            <div className="bg-green-100/60 border border-green-300 rounded px-1.5 py-0.5">
+                              <span className="text-green-700 font-medium">✓</span>
+                              <span className="text-green-700 ml-0.5 line-clamp-1">{native}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -106,37 +134,59 @@ const PatternSummaryView: React.FC<PatternSummaryViewProps> = ({ summary }) => {
             <span>Cross-Chunk Patterns</span>
           </h3>
           <div className="space-y-3">
-            {summary.keyPatterns.map((pattern, idx) => (
-              <div
-                key={idx}
-                className="bg-gray-50 border border-gray-200 rounded-lg p-3 hover:bg-gray-100 transition-colors"
-              >
-                <div className="flex items-start gap-3">
-                  <span className="text-lg flex-shrink-0">🔍</span>
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-gray-900 mb-1">
-                      {pattern.pattern}
-                    </h4>
-                    <p className="text-sm text-gray-700 mb-2 line-clamp-3">
-                      {pattern.explanation}
-                    </p>
-                    {pattern.chunks.length > 0 && (
-                      <div className="flex flex-wrap gap-1 pt-2 border-t border-gray-200">
-                        <span className="text-xs text-gray-500 font-medium">Related chunks:</span>
-                        {pattern.chunks.map((chunk, i) => (
-                          <span
-                            key={i}
-                            className="text-xs bg-white px-2 py-1 rounded border border-gray-300"
-                          >
-                            "{chunk}"
-                          </span>
-                        ))}
-                      </div>
-                    )}
+            {summary.keyPatterns.map((pattern, idx) => {
+              // NEW: Prefer chunkIds over chunks (with fallback)
+              const displayChunks = resolveChunksForDisplay(pattern.chunkIds) || pattern.chunks || [];
+
+              return (
+                <div
+                  key={idx}
+                  className="bg-gray-50 border border-gray-200 rounded-lg p-3 hover:bg-gray-100 transition-colors"
+                >
+                  <div className="flex items-start gap-3">
+                    <span className="text-lg flex-shrink-0">🔍</span>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-gray-900 mb-1">
+                        {pattern.pattern}
+                      </h4>
+                      <p className="text-sm text-gray-700 mb-2 line-clamp-3">
+                        {pattern.explanation}
+                      </p>
+                      {displayChunks.length > 0 && (
+                        <div className="flex flex-wrap gap-1 pt-2 border-t border-gray-200">
+                          <span className="text-xs text-gray-500 font-medium">Related chunks:</span>
+                          {displayChunks.map((chunk, i) => (
+                            <span
+                              key={i}
+                              className="text-xs bg-white px-2 py-1 rounded border border-gray-300"
+                            >
+                              "{chunk}"
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                      {/* NEW: Display native/non-native contrast if available */}
+                      {pattern.nativePatterns && pattern.commonMistakes && (
+                        <div className="mt-2 pt-2 border-t border-gray-200 space-y-1">
+                          {pattern.nativePatterns.map((native, i) => (
+                            <div key={i} className="grid grid-cols-2 gap-1 text-xs">
+                              <div className="bg-red-50 border border-red-200 rounded px-1.5 py-0.5">
+                                <span className="text-red-700 font-medium">✗</span>
+                                <span className="text-red-700 ml-0.5 line-clamp-1">{pattern.commonMistakes![i]}</span>
+                              </div>
+                              <div className="bg-green-50 border border-green-200 rounded px-1.5 py-0.5">
+                                <span className="text-green-700 font-medium">✓</span>
+                                <span className="text-green-700 ml-0.5 line-clamp-1">{native}</span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}

@@ -7,6 +7,7 @@ export type ChunkCategory =
     | 'Idioms';        // Fixed expressions, collocations
 
 export interface ChunkFeedback {
+    chunkId: string;          // NEW - Deterministic ID: "{scenarioId}-b{blankIndex}" (e.g., "social-1-flatmate-b1")
     blankIndex: number;
     chunk: string;
     category: ChunkCategory;
@@ -25,15 +26,23 @@ export interface ChunkFeedback {
 
 export interface CategoryBreakdown {
     category: ChunkCategory;                    // Openers, Softening, etc.
-    count: number;                              // Must match examples.length
-    examples: string[];                         // Chunk text references
+    count: number;                              // Must match exampleChunkIds.length
+    exampleChunkIds: string[];                  // NEW - Stable chunk IDs (e.g., ["social-1-flatmate-b1", "social-1-flatmate-b3"])
+    /** @deprecated Use exampleChunkIds instead - text-based references break when content changes */
+    examples?: string[];                        // Chunk text references (populated for backward compat)
     insight: string;                            // 30-100 chars, pattern-focused
+    nativePatterns?: string[];                  // NEW - Optional native speaker patterns (extracted from nonNativeContrast)
+    commonMistakes?: string[];                  // NEW - Optional non-native patterns (extracted from nonNativeContrast)
 }
 
 export interface KeyPattern {
     pattern: string;                            // 10-50 chars, pattern name
     explanation: string;                        // 50-150 chars, shows WHY it works
-    chunks: string[];                           // References to chunk text
+    chunkIds: string[];                         // NEW - Stable chunk IDs (e.g., ["social-1-flatmate-b1", "academic-1-tutorial-discussion-b5"])
+    /** @deprecated Use chunkIds instead - text-based references break when content changes */
+    chunks?: string[];                          // References to chunk text (populated for backward compat)
+    nativePatterns?: string[];                  // NEW - Optional native speaker patterns
+    commonMistakes?: string[];                  // NEW - Optional non-native patterns
 }
 
 export interface PatternSummary {
@@ -114,6 +123,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         ],
         chunkFeedback: [
             {
+                chunkId: 'social-1-flatmate-b1',
                 blankIndex: 1,
                 chunk: 'meet',
                 category: 'Openers',
@@ -264,6 +274,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         ],
         chunkFeedback: [
             {
+                chunkId: 'service-1-cafe-b14',
                 blankIndex: 14,
                 chunk: 'bother',
                 category: 'Repair',
@@ -606,6 +617,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         ],
         chunkFeedback: [
             {
+                chunkId: 'workplace-1-disagreement-b1',
                 blankIndex: 1,
                 chunk: 'different',
                 category: 'Disagreement',
@@ -865,6 +877,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         ],
         chunkFeedback: [
             {
+                chunkId: 'workplace-3-disagreement-polite-b9',
                 blankIndex: 9,
                 chunk: 'enough',
                 category: 'Disagreement',
@@ -2324,6 +2337,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         ],
         chunkFeedback: [
             {
+                chunkId: 'academic-1-tutorial-discussion-b2',
                 blankIndex: 2,
                 chunk: 'in two minds',
                 category: 'Softening',
@@ -2721,6 +2735,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         ],
         chunkFeedback: [
             {
+                chunkId: 'service-35-landlord-repairs-b2',
                 blankIndex: 2,
                 chunk: 'bother',
                 category: 'Repair',

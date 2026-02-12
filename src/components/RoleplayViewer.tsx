@@ -605,7 +605,7 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
                 // Pattern Summary Tab
                 <div className="p-8">
                   {script.patternSummary ? (
-                    <PatternSummaryView summary={script.patternSummary} />
+                    <PatternSummaryView summary={script.patternSummary} scenario={script} />
                   ) : (
                     <div className="flex flex-col items-center justify-center py-12 text-neutral-600">
                       <div className="text-4xl mb-4">📊</div>

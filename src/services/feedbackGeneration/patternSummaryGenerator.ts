@@ -1,5 +1,6 @@
 import { RoleplayScript, PatternSummary, CategoryBreakdown, KeyPattern, ChunkCategory } from '../staticData';
 import { analyzeScenarioPatterns, getCategoryBreakdownStats } from './patternAnalyzer';
+import { generateChunkId } from './chunkIdGenerator';
 
 /**
  * Pattern Summary Generator: Creates consolidated pattern insights using templates
@@ -138,17 +139,47 @@ function buildCategoryBreakdown(scenario: RoleplayScript): CategoryBreakdown[] {
   const stats = getCategoryBreakdownStats(scenario);
   const breakdown: CategoryBreakdown[] = [];
 
+  // Build a map of categories to feedback items for extracting chunkIds and native/non-native
+  const categoryToFeedback = new Map<ChunkCategory, typeof scenario.chunkFeedback>();
+  if (scenario.chunkFeedback) {
+    for (const feedback of scenario.chunkFeedback) {
+      if (!categoryToFeedback.has(feedback.category)) {
+        categoryToFeedback.set(feedback.category, []);
+      }
+      categoryToFeedback.get(feedback.category)!.push(feedback);
+    }
+  }
+
   for (const [category, data] of Object.entries(stats)) {
     if (data) {
       // Select a template insight for this category
       const insights = CATEGORY_INSIGHT_TEMPLATES[category as ChunkCategory];
       const insight = insights[Math.floor(Math.random() * insights.length)];
 
+      // NEW: Generate chunkIds from feedback items
+      const feedbackItems = categoryToFeedback.get(category as ChunkCategory) || [];
+      const exampleChunkIds = feedbackItems.map(f => generateChunkId(scenario.id, f.blankIndex));
+
+      // NEW: Extract native/non-native patterns from nonNativeContrast
+      const nativePatterns: string[] = [];
+      const commonMistakes: string[] = [];
+
+      for (const feedback of feedbackItems) {
+        if (feedback.nonNativeContrast && feedback.nonNativeContrast.length > 0) {
+          const first = feedback.nonNativeContrast[0];
+          nativePatterns.push(first.native);
+          commonMistakes.push(first.nonNative);
+        }
+      }
+
       breakdown.push({
         category: category as ChunkCategory,
         count: data.count,
-        examples: data.examples,
+        exampleChunkIds,                                        // NEW - stable IDs
+        examples: data.examples,                                // deprecated, kept for backward compat
         insight,
+        nativePatterns: nativePatterns.length > 0 ? nativePatterns : undefined,    // NEW - optional
+        commonMistakes: commonMistakes.length > 0 ? commonMistakes : undefined,    // NEW - optional
       });
     }
   }
@@ -194,19 +225,47 @@ function buildOverallInsight(scenario: RoleplayScript, breakdown: CategoryBreakd
  */
 function buildKeyPatterns(scenario: RoleplayScript, breakdown: CategoryBreakdown[]): KeyPattern[] {
   const categories = breakdown.map(b => b.category);
-  const allChunks = breakdown.flatMap(b => b.examples);
+
+  // NEW: Build chunkIds and native/non-native from exampleChunkIds
+  const allChunkIds = breakdown.flatMap(b => b.exampleChunkIds);
+  const allChunks = breakdown.flatMap(b => b.examples || []);  // deprecated, kept for backward compat
+
   const keyPatterns: KeyPattern[] = [];
 
   // Apply connection rules to detect cross-chunk patterns
   for (const rule of PATTERN_CONNECTION_RULES) {
     if (rule.condition(categories)) {
-      // Find relevant chunks for this pattern
+      // Find relevant chunks for this pattern (take up to 3)
+      const relevantChunkIds = allChunkIds.slice(0, Math.min(3, allChunkIds.length));
       const relevantChunks = allChunks.slice(0, Math.min(3, allChunks.length));
+
+      // NEW: Extract native/non-native patterns from relevant chunks
+      const nativePatterns: string[] = [];
+      const commonMistakes: string[] = [];
+
+      if (scenario.chunkFeedback) {
+        for (const chunkId of relevantChunkIds) {
+          // Find feedback item matching this chunkId
+          const feedback = scenario.chunkFeedback.find(f => {
+            const fChunkId = generateChunkId(scenario.id, f.blankIndex);
+            return fChunkId === chunkId;
+          });
+
+          if (feedback?.nonNativeContrast && feedback.nonNativeContrast.length > 0) {
+            const first = feedback.nonNativeContrast[0];
+            nativePatterns.push(first.native);
+            commonMistakes.push(first.nonNative);
+          }
+        }
+      }
 
       keyPatterns.push({
         pattern: rule.pattern,
         explanation: rule.explanation,
-        chunks: relevantChunks,
+        chunkIds: relevantChunkIds,                                        // NEW - stable IDs
+        chunks: relevantChunks,                                            // deprecated, kept for backward compat
+        nativePatterns: nativePatterns.length > 0 ? nativePatterns : undefined,    // NEW - optional
+        commonMistakes: commonMistakes.length > 0 ? commonMistakes : undefined,    // NEW - optional
       });
     }
   }
