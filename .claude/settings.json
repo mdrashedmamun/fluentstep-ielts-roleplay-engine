@@ -84,6 +84,41 @@
         "model": "opus",
         "tools": ["Read", "Write", "Bash"],
         "context": "default"
+      },
+      {
+        "name": "content-gen-agent",
+        "description": "Create and enhance scenario content: dialogue, blanks, feedback, patterns, active recall",
+        "model": "sonnet",
+        "tools": ["Read", "Write", "Bash", "Grep", "Glob"],
+        "context": "fork"
+      },
+      {
+        "name": "data-services-agent",
+        "description": "Guardian of staticData.ts: validate, merge, enforce schema integrity",
+        "model": "sonnet",
+        "tools": ["Read", "Write", "Bash", "Grep"],
+        "context": "fork"
+      },
+      {
+        "name": "frontend-ui-agent",
+        "description": "React components, user experience, UI interactions, and performance optimization",
+        "model": "sonnet",
+        "tools": ["Read", "Write", "Bash", "Grep", "Glob"],
+        "context": "fork"
+      },
+      {
+        "name": "testing-agent",
+        "description": "Maintain E2E test suite (97.2%+ pass rate) and quality validation",
+        "model": "haiku",
+        "tools": ["Read", "Bash", "Grep"],
+        "context": "fork"
+      },
+      {
+        "name": "orchestrator-dev",
+        "description": "Team coordinator for development tasks: task creation, quality gates, approvals",
+        "model": "opus",
+        "tools": ["Read", "Write", "Bash", "Grep", "Glob"],
+        "context": "default"
       }
     ]
   },
