@@ -35,3 +35,43 @@ temp/*
 
 # Exports (large generated files)
 exports/
+
+# Screenshots (test evidence in docs/screenshots/archive/)
+*.png
+*.jpg
+*.jpeg
+*.gif
+!public/**/*.png
+!public/**/*.jpg
+!docs/screenshots/archive/*.png
+
+# Temporary test files
+test-output.log
+console-errors.txt
+browser-console-*.log
+test-browser-*.log
+DEPLOYMENT_COMPLETE.txt
+
+# Backup files
+*.backup
+*.backup-*
+*BACKUP*
+*.bak
+*.old
+
+# Additional OS pollution
+Thumbs.db
+
+# IDE pollution
+.idea/
+*.swp
+*.swo
+*~
+
+# Browser automation artifacts
+playwright-report/
+test-results/
+
+# Python test artifacts
+__pycache__/
+*.pyc

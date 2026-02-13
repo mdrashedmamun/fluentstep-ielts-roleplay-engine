@@ -2,6 +2,7 @@
   "projectName": "FluentStep IELTS Roleplay Engine",
   "description": "Content extraction pipeline for educational dialogue scenarios",
   "phase": "Phase 7: Reusable Extraction Infrastructure",
+  "documentation": "See .claude/README.md for full architecture, quality gates, and pipeline details",
 
   "agents": {
     "enabled": true,
@@ -9,80 +10,80 @@
     "subagents": [
       {
         "name": "pdf-extractor",
-        "description": "Extract dialogue from any educational PDF source",
+        "description": "Extract dialogue from educational PDF sources",
         "model": "sonnet",
         "tools": ["Read", "Bash", "Write", "Grep"],
         "context": "fork"
       },
       {
         "name": "blank-inserter",
-        "description": "Convert dialogue to fill-in-the-blank with LOCKED_CHUNKS scoring",
+        "description": "Convert dialogue to fill-in-the-blank format",
         "model": "sonnet",
         "tools": ["Read", "Write"],
         "context": "fork"
       },
       {
         "name": "content-validator",
-        "description": "Run all 7 linguistic validators + auto-fix strategy",
+        "description": "Run 7 linguistic validators with auto-fix",
         "model": "haiku",
         "tools": ["Read", "Bash"],
         "context": "fork"
       },
       {
         "name": "scenario-transformer",
-        "description": "Convert validated dialogue to production RoleplayScript code",
+        "description": "Convert validated dialogue to RoleplayScript code",
         "model": "sonnet",
         "tools": ["Read", "Write"],
         "context": "fork"
       },
       {
         "name": "orchestrator-qa",
-        "description": "Coordinate extraction pipeline + enforce quality gates + manage approvals",
+        "description": "Coordinate extraction pipeline + enforce quality gates",
         "model": "opus",
         "tools": ["Read", "Bash", "Write", "Grep", "Glob"],
         "context": "default"
       },
       {
+        "name": "scenario-creator",
+        "description": "Interactive scenario creation with automatic validation",
+        "model": "sonnet",
+        "tools": ["Read", "Write", "Bash", "AskUserQuestion"],
+        "context": "fork"
+      },
+      {
         "name": "learning-architect",
-        "description": "Define learning outcomes + success criteria (Cambridge methodology)",
+        "description": "Define learning outcomes (Cambridge methodology)",
         "model": "sonnet",
         "tools": ["Read", "Write"],
         "context": "fork"
       },
       {
         "name": "task-designer",
-        "description": "Design roleplay tasks with communicative tension + pragmatic functions",
+        "description": "Design roleplay tasks with communicative tension",
         "model": "sonnet",
         "tools": ["Read", "Write"],
         "context": "fork"
       },
       {
         "name": "chunk-curator",
-        "description": "Validate core repertoire using corpus linguistics (BNC Spoken, COCA)",
+        "description": "Validate core repertoire using corpus linguistics",
         "model": "haiku",
         "tools": ["Read", "Write", "Bash"],
         "context": "fork"
       },
       {
         "name": "system-builder",
-        "description": "Implement scaffolding logic + blank placement + adaptive progression",
+        "description": "Implement scaffolding logic + blank placement",
         "model": "sonnet",
         "tools": ["Read", "Write"],
         "context": "fork"
       },
       {
         "name": "design-orchestrator",
-        "description": "Coordinate all 4 Cambridge design agents + validation + approvals",
+        "description": "Coordinate all Cambridge design agents",
         "model": "opus",
         "tools": ["Read", "Write", "Bash"],
         "context": "default"
-      },
-      {
-        "name": "scenario-creator",
-        "description": "Interactive guided scenario creation with automatic validation and error-free data generation",
-        "model": "sonnet",
-        "tools": ["Read", "Write", "Bash", "AskUserQuestion"],
-        "context": "fork"
       }
     ]
   },
@@ -93,17 +94,17 @@
     "reusableSkills": [
       {
         "name": "extract-dialogue",
-        "description": "Extract structured dialogue from educational PDFs or text",
+        "description": "Extract structured dialogue from PDFs or text",
         "usage": "/extract-dialogue [file-path] [options]"
       },
       {
         "name": "validate-scenario",
-        "description": "Run all 7 linguistic validators on dialogue content",
+        "description": "Run all 7 linguistic validators on dialogue",
         "usage": "/validate-scenario [scenario-file] [options]"
       },
       {
         "name": "transform-content",
-        "description": "Convert validated dialogue to RoleplayScript TypeScript format",
+        "description": "Convert validated dialogue to RoleplayScript format",
         "usage": "/transform-content [input-file] [options]"
       }
     ]
@@ -112,321 +113,25 @@
   "hooks": {
     "enabled": true,
     "directory": ".claude/hooks",
-
+    "documentation": "See .claude/README.md#hooks--automation for full hook configuration",
     "PostToolUse": [
       {
         "name": "validate-output",
-        "description": "Auto-validate data integrity after Write operations to critical files",
         "matcher": "Write",
-        "triggers": [
-          "staticData.ts",
-          "answerVariations",
-          "deepDiveInsights",
-          "services/*.ts",
-          "scripts/extract*.ts"
-        ],
-        "hooks": [
-          {
-            "type": "command",
-            "command": "./.claude/hooks/validate-output.sh",
-            "blockOnFailure": true,
-            "timeout": 60
-          }
-        ]
+        "triggers": ["staticData.ts", "services/*.ts"],
+        "command": "./.claude/hooks/validate-output.sh",
+        "blockOnFailure": true,
+        "timeout": 60
       }
     ],
-
     "SessionStart": [
       {
         "name": "session-context",
-        "description": "Display project context and status at session start",
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "./.claude/hooks/session-start.sh",
-            "blockOnFailure": false,
-            "timeout": 10
-          }
-        ]
+        "command": "./.claude/hooks/session-start.sh",
+        "blockOnFailure": false,
+        "timeout": 10
       }
     ]
-  },
-
-  "qualityGates": [
-    {
-      "stage": "Extraction",
-      "metric": "Confidence",
-      "target": "≥70%",
-      "description": "Only accept dialogue with 70%+ pattern confidence"
-    },
-    {
-      "stage": "Extraction",
-      "metric": "Dialogue Turns",
-      "target": "≥8",
-      "description": "Minimum 8 turns per dialogue (viable for practice)"
-    },
-    {
-      "stage": "Blank Insertion",
-      "metric": "BUCKET_A Compliance",
-      "target": "≥75-80%",
-      "description": "Ensure high-value vocabulary is targeted (contextual)"
-    },
-    {
-      "stage": "Validation",
-      "metric": "Overall Confidence",
-      "target": "≥85%",
-      "description": "All 7 validators passing with combined confidence ≥85%"
-    },
-    {
-      "stage": "Transformation",
-      "metric": "TypeScript Valid",
-      "target": "100%",
-      "description": "Generated code must be syntactically valid"
-    }
-  ],
-
-  "validators": {
-    "enabled": true,
-    "count": 7,
-    "list": [
-      {
-        "name": "chunk-compliance",
-        "description": "Verify LOCKED_CHUNKS compliance (BUCKET_A/B distribution)"
-      },
-      {
-        "name": "uk-spelling",
-        "description": "Enforce British English spelling (-ise, -our, -re, double-L)"
-      },
-      {
-        "name": "uk-vocabulary",
-        "description": "Ensure British terminology (lift, flat, queue, etc.)"
-      },
-      {
-        "name": "tonality",
-        "description": "Check formal/casual consistency throughout dialogue"
-      },
-      {
-        "name": "natural-patterns",
-        "description": "Detect awkward, textbook-like phrasing"
-      },
-      {
-        "name": "dialogue-flow",
-        "description": "Verify logical flow and speaker consistency"
-      },
-      {
-        "name": "alternatives-quality",
-        "description": "Ensure alternatives are genuine variations, not synonyms"
-      }
-    ]
-  },
-
-  "confidenceThresholds": {
-    "high": {
-      "range": "≥95%",
-      "action": "auto-apply",
-      "description": "Automatically apply fixes without approval"
-    },
-    "medium": {
-      "range": "70-94%",
-      "action": "flag-for-review",
-      "description": "Flag findings for human approval"
-    },
-    "low": {
-      "range": "<70%",
-      "action": "report-only",
-      "description": "Report findings without suggesting fixes"
-    }
-  },
-
-  "performanceTargets": {
-    "humanIntervention": "≤20%",
-    "bundleSize": {
-      "javascript": "<350 KB (gzipped)",
-      "css": "<45 KB (gzipped)"
-    },
-    "buildTime": "<2 minutes",
-    "validationTime": "<30 seconds per scenario",
-    "dataIntegrity": "100% zero errors"
-  },
-
-  "pipeline": {
-    "stages": 10,
-    "qualityGates": 5,
-    "steps": [
-      {
-        "step": 1,
-        "name": "Intake & Scoping",
-        "agent": "orchestrator-qa",
-        "action": "Estimate scope, get approval"
-      },
-      {
-        "step": 2,
-        "name": "PDF Extraction",
-        "agent": "pdf-extractor",
-        "action": "Extract dialogue from PDF"
-      },
-      {
-        "step": 3,
-        "name": "Blank Insertion",
-        "agent": "blank-inserter",
-        "action": "Insert blanks with pedagogical scoring"
-      },
-      {
-        "step": 4,
-        "name": "Content Validation",
-        "agent": "content-validator",
-        "action": "Run 7 validators, apply HIGH confidence fixes"
-      },
-      {
-        "step": 5,
-        "name": "Fix Loop",
-        "agent": "orchestrator-qa",
-        "action": "Address MEDIUM/LOW findings if needed"
-      },
-      {
-        "step": 6,
-        "name": "Scenario Transformation",
-        "agent": "scenario-transformer",
-        "action": "Generate RoleplayScript code"
-      },
-      {
-        "step": 7,
-        "name": "Human Final Approval",
-        "agent": "orchestrator-qa",
-        "action": "Get explicit approval before merge"
-      },
-      {
-        "step": 8,
-        "name": "Data Integration",
-        "agent": "orchestrator-qa",
-        "action": "Merge to staticData.ts"
-      },
-      {
-        "step": 9,
-        "name": "Build Verification",
-        "agent": "orchestrator-qa",
-        "action": "Run npm run build, verify bundle size"
-      },
-      {
-        "step": 10,
-        "name": "Final QA Report",
-        "agent": "orchestrator-qa",
-        "action": "Generate metrics and completion report"
-      }
-    ]
-  },
-
-  "supportedSources": [
-    {
-      "source": "New Headway Advanced",
-      "format": "Oxford",
-      "status": "✓ Tested",
-      "patterns": ["Person A:", "Person B:"]
-    },
-    {
-      "source": "Cambridge IELTS",
-      "format": "Generic",
-      "status": "⏳ Ready",
-      "patterns": ["Examiner:", "Candidate:"]
-    },
-    {
-      "source": "Oxford English File",
-      "format": "Generic",
-      "status": "⏳ Ready",
-      "patterns": ["Speaker 1:", "Speaker 2:"]
-    },
-    {
-      "source": "Custom PDFs",
-      "format": "Auto-detect",
-      "status": "⏳ Ready",
-      "patterns": ["Any consistent speaker format"]
-    },
-    {
-      "source": "AI-Generated",
-      "format": "Structured JSON",
-      "status": "⏳ Ready",
-      "patterns": ["dialogue array with speaker, text"]
-    }
-  ],
-
-  "scalingRoadmap": {
-    "phase7": {
-      "target": "50-60 scenarios",
-      "timeframe": "Feb 2026",
-      "focus": "Infrastructure + smoke test"
-    },
-    "phase8": {
-      "target": "Extract 10-20 Headway scenarios",
-      "timeframe": "Feb-Mar 2026",
-      "focus": "Extraction sprint with quality gates"
-    },
-    "phase9": {
-      "target": "Ship production build",
-      "timeframe": "Mar 2026",
-      "focus": "Final validation + deployment"
-    },
-    "future": {
-      "target": "100+ scenarios from multiple sources",
-      "timeframe": "Q2-Q3 2026",
-      "focus": "Cambridge, Oxford, AI-generated, team collaboration"
-    }
-  },
-
-  "documentation": {
-    "files": [
-      {
-        "path": ".claude/agents/README.md",
-        "lines": 1200,
-        "description": "Master architecture + integration guide"
-      },
-      {
-        "path": ".claude/agents/pdf-extractor/SKILL.md",
-        "lines": 350,
-        "description": "PDF extraction agent specification"
-      },
-      {
-        "path": ".claude/agents/blank-inserter/SKILL.md",
-        "lines": 380,
-        "description": "Blank insertion agent specification"
-      },
-      {
-        "path": ".claude/agents/content-validator/SKILL.md",
-        "lines": 450,
-        "description": "Content validation agent specification"
-      },
-      {
-        "path": ".claude/agents/scenario-transformer/SKILL.md",
-        "lines": 400,
-        "description": "Scenario transformation agent specification"
-      },
-      {
-        "path": ".claude/agents/orchestrator-qa/SKILL.md",
-        "lines": 500,
-        "description": "Orchestrator-QA agent specification"
-      },
-      {
-        "path": "~/.claude/skills/extract-dialogue/SKILL.md",
-        "lines": 400,
-        "description": "Extract dialogue skill documentation"
-      },
-      {
-        "path": "~/.claude/skills/validate-scenario/SKILL.md",
-        "lines": 450,
-        "description": "Validate scenario skill documentation"
-      },
-      {
-        "path": "~/.claude/skills/transform-content/SKILL.md",
-        "lines": 420,
-        "description": "Transform content skill documentation"
-      },
-      {
-        "path": "PHASE_7_INFRASTRUCTURE_SUMMARY.md",
-        "lines": 700,
-        "description": "Phase 7 implementation summary"
-      }
-    ],
-    "totalLines": 5450
   },
 
   "npm-scripts": {
@@ -440,5 +145,8 @@
     "architect": "Claude Code - Phase 7 Implementation",
     "operationalOwner": "Orchestrator-QA Agent",
     "humanApprover": "Project Team Lead"
-  }
+  },
+
+  "lastUpdated": "2026-02-14",
+  "version": "7.0-slim"
 }
