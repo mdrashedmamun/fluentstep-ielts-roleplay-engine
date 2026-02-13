@@ -3729,16 +3729,16 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
   {
     "id": "social-7-house-rules",
     "category": "Social",
-    "topic": "London Shared House Rules",
-    "context": "A friendly talk about chores and boundaries.",
+    "topic": "Settling Into a London Shared House",
+    "context": "A friendly conversation with your new flatmate about house rules, responsibilities, and expectations. The goal is to understand norms around shared spaces, waste disposal, and noise levels, while confirming you're an easy-going person who respects boundaries.",
     "characters": [
       {
         "name": "Alex",
-        "description": "Flatmate."
+        "description": "Flatmate—helpful and reassuring about house norms."
       },
       {
         "name": "You",
-        "description": "Newcomer."
+        "description": "Newcomer to the shared house."
       }
     ],
     "dialogue": [
@@ -3752,55 +3752,88 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
       },
       {
         "speaker": "Alex",
-        "text": "Oh, it’s pretty ________. We just try to keep things ________."
+        "text": "Oh, it's pretty ________. We just try to keep things ________."
       },
       {
         "speaker": "You",
-        "text": "That makes ________. I’m not ________ at all, I’m pretty easy-going."
+        "text": "That makes ________. I'm not ________ at all, I'm pretty easy-going."
       },
       {
         "speaker": "You",
-        "text": "By the way, what’s the protocol for ________ trash?"
+        "text": "By the way, what's the protocol for ________ trash?"
+      },
+      {
+        "speaker": "Alex",
+        "text": "Oh, sure. The bins go out on Thursday mornings. We ________ taking turns putting them out."
+      },
+      {
+        "speaker": "You",
+        "text": "________ we recycle cans and bottles?"
+      },
+      {
+        "speaker": "Alex",
+        "text": "Yeah. There's a bin storage area round the back. Just keep waste and recycling ________."
+      },
+      {
+        "speaker": "You",
+        "text": "That's helpful. Hey, I'm also curious about noise hours. Do you have any ________ about guests in the evenings?"
+      },
+      {
+        "speaker": "Alex",
+        "text": "We're pretty ________. Most of us finish up around 10 or 11, so if you're planning something ________, just give us a heads up beforehand."
+      },
+      {
+        "speaker": "You",
+        "text": "Fair ________. I appreciate that—I'll let you know if I'm planning anything."
+      },
+      {
+        "speaker": "Alex",
+        "text": "Brilliant. We also have a shared WhatsApp group for any urgent messages."
       }
     ],
     "answerVariations": [
       {
-        "index": 1,
+        "index": 0,
         "answer": "up to",
         "alternatives": [
-          "doing"
+          "doing",
+          "been up to"
+        ]
+      },
+      {
+        "index": 1,
+        "answer": "Actually",
+        "alternatives": [
+          "To be honest",
+          "Well"
         ]
       },
       {
         "index": 2,
-        "answer": "Actually",
+        "answer": "relaxed",
         "alternatives": [
-          "To be honest"
+          "flexible",
+          "laid-back"
         ]
       },
       {
         "index": 3,
-        "answer": "relaxed",
+        "answer": "tidy",
         "alternatives": [
-          "flexible"
+          "clean",
+          "neat"
         ]
       },
       {
         "index": 4,
-        "answer": "tidy",
+        "answer": "sense",
         "alternatives": [
-          "clean"
+          "logic",
+          "point"
         ]
       },
       {
         "index": 5,
-        "answer": "sense",
-        "alternatives": [
-          "logic"
-        ]
-      },
-      {
-        "index": 6,
         "answer": "fussy",
         "alternatives": [
           "picky",
@@ -3808,19 +3841,459 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         ]
       },
       {
-        "index": 7,
+        "index": 6,
         "answer": "disposing of",
         "alternatives": [
           "taking out",
           "throwing out"
         ]
+      },
+      {
+        "index": 7,
+        "answer": "take",
+        "alternatives": [
+          "rotate",
+          "share"
+        ]
+      },
+      {
+        "index": 8,
+        "answer": "Should",
+        "alternatives": [
+          "Do",
+          "Are"
+        ]
+      },
+      {
+        "index": 9,
+        "answer": "separate",
+        "alternatives": [
+          "kept apart",
+          "divided"
+        ]
+      },
+      {
+        "index": 10,
+        "answer": "ground rules",
+        "alternatives": [
+          "guidelines",
+          "expectations"
+        ]
+      },
+      {
+        "index": 11,
+        "answer": "laid-back",
+        "alternatives": [
+          "relaxed",
+          "easy-going"
+        ]
+      },
+      {
+        "index": 12,
+        "answer": "noisy",
+        "alternatives": [
+          "loud",
+          "rowdy"
+        ]
+      },
+      {
+        "index": 13,
+        "answer": "enough",
+        "alternatives": [
+          "sure",
+          "cool"
+        ]
       }
     ],
-    "deepDive": [
+    "chunkFeedbackV2": [
       {
-        "index": 6,
-        "phrase": "fussy",
-        "insight": "Common UK word for being hard to please."
+        "chunkId": "social-7-house-rules-b0",
+        "native": "up to",
+        "learner": {
+          "meaning": "A casual way to ask what someone has been doing recently.",
+          "useWhen": "When you run into a friend or flatmate and want to catch up.",
+          "commonWrong": "What have you done?",
+          "fix": "What have you been up to?",
+          "whyOdd": "'Done' sounds too formal; 'up to' is the everyday phrase for current activity."
+        },
+        "examples": [
+          "What have you been up to since we last spoke?"
+        ]
+      },
+      {
+        "chunkId": "social-7-house-rules-b1",
+        "native": "Actually",
+        "learner": {
+          "meaning": "A soft way to shift topics or introduce a new idea.",
+          "useWhen": "When you want to move from small talk to something you're curious about.",
+          "commonWrong": "But, I was wondering...",
+          "fix": "Actually, I was wondering...",
+          "whyOdd": "Softer than 'but'; it signals a gentle topic change without sounding abrupt."
+        },
+        "examples": [
+          "That sounds good, actually."
+        ]
+      },
+      {
+        "chunkId": "social-7-house-rules-b2",
+        "native": "relaxed",
+        "learner": {
+          "meaning": "Not strict or demanding about rules.",
+          "useWhen": "When describing casual, easy-going norms in a shared space.",
+          "commonWrong": "We are not strict.",
+          "fix": "It's pretty relaxed.",
+          "whyOdd": "Direct negation sounds stiff; 'relaxed' is the natural, positive description."
+        },
+        "examples": [
+          "The dress code is pretty relaxed."
+        ]
+      },
+      {
+        "chunkId": "social-7-house-rules-b3",
+        "native": "tidy",
+        "learner": {
+          "meaning": "Clean and organized.",
+          "useWhen": "When describing expectations for shared spaces.",
+          "commonWrong": "keep things organized",
+          "fix": "keep things tidy",
+          "whyOdd": "'Organized' can mean structured; 'tidy' specifically means neat and clean."
+        },
+        "examples": [
+          "The bathroom is nice and tidy."
+        ]
+      },
+      {
+        "chunkId": "social-7-house-rules-b4",
+        "native": "makes sense",
+        "learner": {
+          "meaning": "Shows that you understand and agree with what was just said.",
+          "useWhen": "When someone explains a rule or idea and you want to confirm understanding.",
+          "commonWrong": "I understand.",
+          "fix": "That makes sense.",
+          "whyOdd": "'I understand' sounds stiff; 'makes sense' is friendly and natural."
+        },
+        "examples": [
+          "We recycle, so there's a bin every Friday. That makes sense."
+        ]
+      },
+      {
+        "chunkId": "social-7-house-rules-b5",
+        "native": "fussy",
+        "learner": {
+          "meaning": "Hard to please; caring about small details in a way that might annoy others.",
+          "useWhen": "When you want to reassure someone that you're easy-going about small things.",
+          "commonWrong": "I'm not particular.",
+          "fix": "I'm not fussy.",
+          "whyOdd": "'Particular' is formal; 'fussy' is a common UK word for being picky."
+        },
+        "examples": [
+          "Don't worry—I'm not fussy about exactly when the kitchen gets cleaned."
+        ]
+      },
+      {
+        "chunkId": "social-7-house-rules-b6",
+        "native": "disposing of",
+        "learner": {
+          "meaning": "Getting rid of something, especially waste or trash.",
+          "useWhen": "When asking about formal or official procedures for waste.",
+          "commonWrong": "throwing trash",
+          "fix": "disposing of trash",
+          "whyOdd": "'Throwing' is informal; 'disposing of' is the proper, polite form."
+        },
+        "examples": [
+          "What's the protocol for disposing of recycling?"
+        ]
+      },
+      {
+        "chunkId": "social-7-house-rules-b7",
+        "native": "take",
+        "learner": {
+          "meaning": "Share responsibility in a rotating pattern.",
+          "useWhen": "When talking about fairness and shared duties in a group.",
+          "commonWrong": "we rotate turns putting them out",
+          "fix": "we take turns putting them out",
+          "whyOdd": "'Rotate turns' is clumsy; 'take turns' is the standard phrase."
+        },
+        "examples": [
+          "We take turns cooking on weekends."
+        ]
+      },
+      {
+        "chunkId": "social-7-house-rules-b8",
+        "native": "Should",
+        "learner": {
+          "meaning": "A soft way to ask a permission or confirmation question.",
+          "useWhen": "When you're politely checking what's OK to do.",
+          "commonWrong": "Do we recycle?",
+          "fix": "Should we recycle?",
+          "whyOdd": "'Should' signals 'is it OK?'; 'Do' is just asking about fact."
+        },
+        "examples": [
+          "Should I bring my own tea bags?"
+        ]
+      },
+      {
+        "chunkId": "social-7-house-rules-b9",
+        "native": "separate",
+        "learner": {
+          "meaning": "Keep two things apart or distinct.",
+          "useWhen": "When giving instructions on how to organize waste.",
+          "commonWrong": "keep waste and recycling different",
+          "fix": "keep waste and recycling separate",
+          "whyOdd": "'Different' is vague; 'separate' clearly means they should not mix."
+        },
+        "examples": [
+          "Please keep the clean and dirty dishes separate."
+        ]
+      },
+      {
+        "chunkId": "social-7-house-rules-b10",
+        "native": "ground rules",
+        "learner": {
+          "meaning": "Basic expectations or guidelines that everyone should follow.",
+          "useWhen": "When asking about what's expected in a shared space.",
+          "commonWrong": "any rules",
+          "fix": "any ground rules",
+          "whyOdd": "'Ground rules' is more formal and sounds like you're asking about established norms."
+        },
+        "examples": [
+          "Are there any ground rules about shower times?"
+        ]
+      },
+      {
+        "chunkId": "social-7-house-rules-b11",
+        "native": "laid-back",
+        "learner": {
+          "meaning": "Relaxed and not strict; casual about rules.",
+          "useWhen": "When describing people or an atmosphere that is easy-going.",
+          "commonWrong": "we are relaxed",
+          "fix": "We're pretty laid-back.",
+          "whyOdd": "'Laid-back' is a common phrase to describe attitude; 'relaxed' is less natural in this context."
+        },
+        "examples": [
+          "The whole vibe here is laid-back."
+        ]
+      },
+      {
+        "chunkId": "social-7-house-rules-b12",
+        "native": "noisy",
+        "learner": {
+          "meaning": "Making a lot of sound; loud.",
+          "useWhen": "When describing loud or rambunctious activity.",
+          "commonWrong": "loud",
+          "fix": "noisy",
+          "whyOdd": "'Noisy' often implies raucousness or disruption; 'loud' is more neutral."
+        },
+        "examples": [
+          "It's OK if you're noisy after 10pm as long as you give a heads up."
+        ]
+      },
+      {
+        "chunkId": "social-7-house-rules-b13",
+        "native": "enough",
+        "learner": {
+          "meaning": "Used in the phrase 'fair enough,' meaning 'I accept that as reasonable.'",
+          "useWhen": "When you hear a suggestion or explanation and think it's sensible.",
+          "commonWrong": "That's fair.",
+          "fix": "Fair enough.",
+          "whyOdd": "'Fair enough' is a complete, conversational expression; 'That's fair' is more formal."
+        },
+        "examples": [
+          "You have to give us a heads up first? Fair enough!"
+        ]
+      }
+    ],
+    "blanksInOrder": [
+      {
+        "blankId": "social-7-house-rules-b0",
+        "chunkId": "social-7-house-rules-b0"
+      },
+      {
+        "blankId": "social-7-house-rules-b1",
+        "chunkId": "social-7-house-rules-b1"
+      },
+      {
+        "blankId": "social-7-house-rules-b2",
+        "chunkId": "social-7-house-rules-b2"
+      },
+      {
+        "blankId": "social-7-house-rules-b3",
+        "chunkId": "social-7-house-rules-b3"
+      },
+      {
+        "blankId": "social-7-house-rules-b4",
+        "chunkId": "social-7-house-rules-b4"
+      },
+      {
+        "blankId": "social-7-house-rules-b5",
+        "chunkId": "social-7-house-rules-b5"
+      },
+      {
+        "blankId": "social-7-house-rules-b6",
+        "chunkId": "social-7-house-rules-b6"
+      },
+      {
+        "blankId": "social-7-house-rules-b7",
+        "chunkId": "social-7-house-rules-b7"
+      },
+      {
+        "blankId": "social-7-house-rules-b8",
+        "chunkId": "social-7-house-rules-b8"
+      },
+      {
+        "blankId": "social-7-house-rules-b9",
+        "chunkId": "social-7-house-rules-b9"
+      },
+      {
+        "blankId": "social-7-house-rules-b10",
+        "chunkId": "social-7-house-rules-b10"
+      },
+      {
+        "blankId": "social-7-house-rules-b11",
+        "chunkId": "social-7-house-rules-b11"
+      },
+      {
+        "blankId": "social-7-house-rules-b12",
+        "chunkId": "social-7-house-rules-b12"
+      },
+      {
+        "blankId": "social-7-house-rules-b13",
+        "chunkId": "social-7-house-rules-b13"
+      }
+    ],
+    "patternSummary": {
+      "categoryBreakdown": [
+        {
+          "category": "Openers",
+          "customLabel": "Greeting and topic-shifting",
+          "count": 4,
+          "exampleChunkIds": [
+            "social-7-house-rules-b0",
+            "social-7-house-rules-b1",
+            "social-7-house-rules-b6",
+            "social-7-house-rules-b10"
+          ],
+          "insight": "Flatmate conversations often start with casual check-ins and soft topic shifts. 'What have you been up to?' opens the chat; 'Actually' smoothly moves from small talk to practical questions."
+        },
+        {
+          "category": "Softening",
+          "customLabel": "Diplomatic and reassuring language",
+          "count": 6,
+          "exampleChunkIds": [
+            "social-7-house-rules-b2",
+            "social-7-house-rules-b3",
+            "social-7-house-rules-b5",
+            "social-7-house-rules-b8",
+            "social-7-house-rules-b11",
+            "social-7-house-rules-b13"
+          ],
+          "insight": "Natives soften expectations and norms: 'pretty relaxed' avoids sounding strict; 'laid-back' shows attitude; 'fair enough' signals acceptance. These cushion what might otherwise sound blunt or demanding."
+        },
+        {
+          "category": "Idioms",
+          "customLabel": "Functional and practical phrases",
+          "count": 2,
+          "exampleChunkIds": [
+            "social-7-house-rules-b4",
+            "social-7-house-rules-b7"
+          ],
+          "insight": "Practical conversations rely on fixed phrases like 'makes sense' (for agreement) and 'take turns' (for shared responsibility). These show you can track agreements and contribute fairly."
+        },
+        {
+          "category": "Exit",
+          "customLabel": "Clarity and distinction",
+          "count": 2,
+          "exampleChunkIds": [
+            "social-7-house-rules-b9",
+            "social-7-house-rules-b12"
+          ],
+          "insight": "Clear instructions and descriptions matter: 'separate' (not 'different') shows you understand boundaries; 'noisy' (not just 'loud') gives specificity about what's actually problematic."
+        }
+      ],
+      "overallInsight": "This scenario teaches boundary negotiation in a UK shared house. The native pattern is: open casually, ask politely about norms, show you're easy-going, confirm expectations, and close on friendly terms. Key cultural note: British flatmates expect soft directness—you state what you need without being demanding, and you confirm rules with warm reassurance ('laid-back,' 'fair enough'). Dodging the conversation makes people suspicious; engaging respectfully builds trust.",
+      "keyPatterns": [
+        {
+          "pattern": "Soft confirmation before new topics",
+          "explanation": "Instead of launching straight into rules, natives check first. 'What have you been up to?' opens warmly, then 'Actually, I was wondering...' signals the shift. This politeness opens doors rather than demanding information.",
+          "chunkIds": [
+            "social-7-house-rules-b0",
+            "social-7-house-rules-b1"
+          ]
+        },
+        {
+          "pattern": "Describe norms with softening language, not hard rules",
+          "explanation": "When flatmates explain expectations, they soften them: 'pretty relaxed,' 'laid-back,' 'fair enough.' This makes rules sound collaborative, not authoritarian. Natives rarely say 'you must'; they show the culture and invite you in.",
+          "chunkIds": [
+            "social-7-house-rules-b2",
+            "social-7-house-rules-b11",
+            "social-7-house-rules-b13"
+          ]
+        },
+        {
+          "pattern": "Reassure early about your flexibility",
+          "explanation": "Saying 'I'm not fussy' or 'I'm easy-going' pre-emptively removes tension. It signals you're not someone who will create drama over small things, which builds goodwill and makes flatmates more willing to compromise when you do have a real concern.",
+          "chunkIds": [
+            "social-7-house-rules-b5"
+          ]
+        }
+      ]
+    },
+    "activeRecall": [
+      {
+        "id": "social-7-ar-1",
+        "prompt": "Choose the chunk a native uses to ask a flatmate what they've been doing recently.",
+        "targetChunkIds": [
+          "social-7-house-rules-b0"
+        ]
+      },
+      {
+        "id": "social-7-ar-2",
+        "prompt": "Choose the chunk that softly shifts the topic from small talk to a practical question.",
+        "targetChunkIds": [
+          "social-7-house-rules-b1"
+        ]
+      },
+      {
+        "id": "social-7-ar-3",
+        "prompt": "Fill the gap: 'It's pretty ________; we're not too strict about rules.'",
+        "targetChunkIds": [
+          "social-7-house-rules-b2"
+        ]
+      },
+      {
+        "id": "social-7-ar-4",
+        "prompt": "Choose the chunk that means 'we share responsibility by rotating who does it.'",
+        "targetChunkIds": [
+          "social-7-house-rules-b7"
+        ]
+      },
+      {
+        "id": "social-7-ar-5",
+        "prompt": "Fill the gap: 'Are there any ________ about noise hours?'",
+        "targetChunkIds": [
+          "social-7-house-rules-b10"
+        ]
+      },
+      {
+        "id": "social-7-ar-6",
+        "prompt": "Choose the chunk that means 'not demanding about small details.'",
+        "targetChunkIds": [
+          "social-7-house-rules-b5"
+        ]
+      },
+      {
+        "id": "social-7-ar-7",
+        "prompt": "Choose the chunk that shows you accept someone's explanation as reasonable.",
+        "targetChunkIds": [
+          "social-7-house-rules-b13"
+        ]
+      },
+      {
+        "id": "social-7-ar-8",
+        "prompt": "Fill the gap: 'We're pretty ________; most of us finish up around 10 or 11.'",
+        "targetChunkIds": [
+          "social-7-house-rules-b11"
+        ]
       }
     ]
   },
