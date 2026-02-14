@@ -13226,6 +13226,41 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
           "index": 39,
           "answer": "Do it",
           "alternatives": ["Go for it", "Try it", "Make the leap"]
+        },
+      {
+          "index": 40,
+          "answer": "You've got",
+          "alternatives": ["That's", "We've got", "Here's"]
+        },
+      {
+          "index": 41,
+          "answer": "think about",
+          "alternatives": ["go through", "discuss", "talk through"]
+        },
+      {
+          "index": 42,
+          "answer": "By the way",
+          "alternatives": ["Sorry for", "I'm sorry", "One thing though"]
+        },
+      {
+          "index": 43,
+          "answer": "looking",
+          "alternatives": ["hiring", "seeking", "advertising"]
+        },
+      {
+          "index": 44,
+          "answer": "ask",
+          "alternatives": ["check", "inquire", "find out"]
+        },
+      {
+          "index": 45,
+          "answer": "Just",
+          "alternatives": ["Go", "Come on", "Hey"]
+        },
+      {
+          "index": 46,
+          "answer": "You've",
+          "alternatives": ["I've", "We've", "That"]
         }
     ]
   }
