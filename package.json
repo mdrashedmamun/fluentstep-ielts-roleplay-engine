@@ -12,6 +12,7 @@
     "validate:critical": "tsx scripts/validateCritical.ts",
     "validate:perfect": "tsx scripts/validatePerfectScenarios.ts",
     "validate:feedback": "tsx scripts/validateChunkFeedback.ts",
+    "validate:alternatives": "tsx scripts/validateAnswerAlternatives.ts",
     "pre-commit": "npm run validate:critical",
     "audit": "tsx cli/auditLanguage.ts",
     "audit:report": "tsx cli/auditLanguage.ts --report-only",

@@ -109,15 +109,27 @@ npm run test:e2e:coverage
 - ✅ Feedback quality review (by human or QA agent)
 - ✅ Performance metrics within targets
 - ✅ No duplicate scenarios across database
+- ✅ Answer alternatives quality (Validator 7)
 
-**Command**:
+**Commands**:
 ```bash
 npm run qa-test
+npm run validate:alternatives
 ```
 
-**Pass Criteria**: QA agent sign-off
+**Pass Criteria**: QA agent sign-off + Answer alternatives validation passing
 
 **Owner**: orchestrator-qa agent
+
+**Answer Quality Checklist** (Validator 7):
+- [ ] All answer variations create grammatically correct sentences when substituted
+- [ ] No part-of-speech mismatches (noun answer, adjective alternative, etc.)
+- [ ] Register/formality consistency (no formal words in casual dialogue)
+- [ ] No textbook/academic phrases ("pertaining", "relating") in conversational contexts
+- [ ] Emotional tone matches dialogue context (sad context ≠ "amazing")
+- [ ] No sentence fragments or incomplete thoughts
+- [ ] No redundant duplicate words when substituted
+- [ ] Alternatives maintain semantic meaning of main answer
 
 ---
 

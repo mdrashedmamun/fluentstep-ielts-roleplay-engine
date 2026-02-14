@@ -130,21 +130,60 @@ timeout: 120s
 ```
 
 #### Validator 7: Answer Alternatives Quality
-**Check:** Ensure alternatives are not mere synonyms, but actual valid variations
-- Quality: Alternatives fit the same context, different phrasing
-- Avoid: Generic synonyms ("happy" → "joyful" → "pleased" - all same)
-- Good: Context-specific alternatives ("can't wait" → "looking forward to" → "excited about")
+**Check:** Ensure alternatives work grammatically when substituted and maintain meaning
+- Grammar: All alternatives create valid sentences when plugged into dialogue
+- Semantics: Alternatives maintain consistent part-of-speech and meaning
+- Register: Formality level matches main answer and dialogue context
+- Context: Emotional tone, register, and semantic fit match the scenario
+
+**Contextual Substitution Testing:**
+1. **Grammar Check**: For each alternative, substitute into dialogue and verify:
+   - No duplicate words within 2 words (e.g., "I'm the new flatmate" has no double "I'm")
+   - No double negatives
+   - Minimum 3 words in sentence (no fragments)
+   - Maximum 30 words (reasonable length)
+
+2. **Semantic Fit Check**: Verify part-of-speech consistency:
+   - If main answer is adjective (e.g., "sad"), all alternatives must be adjectives
+   - If main answer is verb (e.g., "run"), all alternatives must be verbs
+   - If main answer is noun (e.g., "thing"), all alternatives must be nouns
+
+3. **Register Alignment**: Check formality consistency:
+   - Main answer formality vs alternative (allow ±0.5 on 0-1 scale)
+   - Flag formal words ("pertaining", "leverage") in casual contexts
+   - Flag slang in formal/professional contexts
+
+4. **Tone Matching**: Ensure emotional tone fits context:
+   - Sad context ≠ "amazing", "incredible", "stunning" (positive tone mismatch)
+   - Apologetic context ≠ "fair enough", "that's right" (concession vs confirmation)
+   - Happy context ≠ "unfortunate", "regretable" (tone mismatch)
+
+**Known Issues to Catch:**
+- "What's much going on?" → Ungrammatical phrasing
+- "It's tell me how..." → Wrong word class (verb as adjective)
+- "It's amazing" in regret context → Emotional tone mismatch
+- "That makes sense is quite sad" → Double predicate (two verbs)
+- "Fair enough I did!" → Wrong speech act (concession vs confirmation)
 
 **Confidence Scoring:**
-- True alternative (different phrasing, same context): 85% confidence, accept
+- Clear structural error (e.g., ungrammatical when substituted): 95% confidence, auto-flag
+- Semantic/POS mismatch: 90% confidence, auto-flag
+- Register mismatch: 85% confidence, auto-flag
+- Tone mismatch in emotional context: 80% confidence, flag for review
 - Weak synonym (dictionary-grade, not contextual): 65% confidence, flag to improve
-- Duplicate or near-duplicate: 95% confidence, auto-remove
 
 **Output:**
 ```
-✓ PASS: "looking forward to" → "eager to", "excited about" (all valid alternatives)
-⚠️  WEAK: "brilliant" → "great" → "good" (all vague synonyms, consider: "excellent" or "outstanding")
-✗ FAIL: "fantastic" with alternative "wonderful" (nearly identical, needs true variation)
+✓ PASS: All 6 alternatives create grammatical sentences with consistent meaning
+⚠️  STRUCTURE: Blank b1: "What's much going on?" is ungrammatical (95% confidence)
+⚠️  SEMANTIC: Blank b7: "tell me" is verb, context requires adjective (90% confidence)
+⚠️  TONE: Blank b6: "It's amazing" mismatches sad regret context (80% confidence)
+✗ FAIL: 3+ structural errors prevent proper deployment
+```
+
+**npm Command:**
+```bash
+npm run validate:alternatives    # Full system-wide check
 ```
 
 ### 2. Confidence Thresholds & Auto-Fix Logic
