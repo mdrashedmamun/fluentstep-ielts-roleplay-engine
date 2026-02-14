@@ -12968,5 +12968,14 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         ]
       }
     ]
+  },
+  {
+    "id": "bbc-learning-6-dreams",
+    "category": "Social",
+    "topic": "Dreams & Life Regrets",
+    "context": "Two friends discuss childhood dreams, life regrets, and personal aspirations.",
+    "characters": [{"name": "Alex", "description": "Friend reflecting on life choices."}, {"name": "Sam", "description": "Friend sharing stories and insights."}],
+    "dialogue": [{"speaker": "Alex", "text": "Hey Sam! ________ you been up to?"}, {"speaker": "Sam", "text": "I know, right? ________ much going on?"}],
+    "answerVariations": [{"index": 0, "answer": "What have", "alternatives": ["What have you been"]}, {"index": 1, "answer": "What's", "alternatives": ["How's"]}]
   }
 ];
