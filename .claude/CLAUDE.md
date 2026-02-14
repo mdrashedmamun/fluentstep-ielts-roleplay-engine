@@ -11,10 +11,11 @@
 
 ### For Claude Sessions
 1. **Team Coordination**: Read [SHARED_CONTEXT.md](./SHARED_CONTEXT.md) (how agents work together)
-2. **Quality Gates**: See [rules/QUALITY_GATES.md](./rules/QUALITY_GATES.md) (build → validate → test → QA)
-3. **Core Rules**: See [rules/CORE_RULES.md](./rules/CORE_RULES.md) (language, chunks, pedagogy)
-4. **Agent Specs**: See [agents/README.md](./agents/README.md) (all agent responsibilities)
-5. **Data Safety**: See [rules/DATA_INTEGRITY.md](./rules/DATA_INTEGRITY.md) (defensive patterns, O(1) lookups)
+2. **Workflow Strategy**: See [rules/WORKFLOW_RULES.md](./rules/WORKFLOW_RULES.md) (single-scenario focus, prevent scope creep)
+3. **Quality Gates**: See [rules/QUALITY_GATES.md](./rules/QUALITY_GATES.md) (build → validate → test → QA)
+4. **Core Rules**: See [rules/CORE_RULES.md](./rules/CORE_RULES.md) (language, chunks, pedagogy)
+5. **Agent Specs**: See [agents/README.md](./agents/README.md) (all agent responsibilities)
+6. **Data Safety**: See [rules/DATA_INTEGRITY.md](./rules/DATA_INTEGRITY.md) (defensive patterns, O(1) lookups)
 
 ### For Humans
 - **Project Overview**: See [README.md](./README.md)
@@ -70,7 +71,7 @@ in-progress/      ready-for-review/      approved/        archived/
 | `SHARED_CONTEXT.md` | Multi-agent team coordination | ✅ Yes |
 | `settings.json` | Agent registry (11 active agents) | ✅ Yes |
 | `settings.local.json` | Personal overrides (543 KB) | ❌ No (.gitignore) |
-| `rules/` | Modular rule files (4 topic areas) | ✅ Yes |
+| `rules/` | Modular rule files (5 topic areas) | ✅ Yes |
 | `agents/` | Agent specifications (ROLE.md files) | ✅ Yes |
 | `skills/` | Reusable skill definitions | ✅ Yes |
 | `hooks/` | Git hooks for validation | ✅ Yes |
@@ -110,6 +111,14 @@ Code safety and performance guardrails
 - File locking for staticData.ts (prevent race conditions)
 - Type safety and input validation
 - Performance complexity rules
+
+### [rules/WORKFLOW_RULES.md](./rules/WORKFLOW_RULES.md)
+Development strategy and scope management
+- Single-scenario focus principle (prove one before scaling)
+- Targeted validation scope (when to run full suite vs single scenario)
+- Batch work approval process (5+ scenarios requires template proof)
+- Scope creep prevention and incremental development
+- Definition of done for scenarios
 
 ### [rules/README.md](./rules/README.md)
 Index and quick reference for all rules
@@ -188,7 +197,7 @@ Export scenario to Markdown for human review
 | Active Agents | 11 (was 16) | ✅ Cambridge archived |
 | Agent Context | ~150 KB (was 246 KB) | ✅ 39% reduction |
 | Session Utilization | ~62-65% (was 81%) | ✅ +16-19% working context |
-| Rules Organization | 4 topic files | ✅ Modular |
+| Rules Organization | 5 topic files | ✅ Modular |
 | Best Practices Alignment | 95% | ✅ Excellent |
 
 ---

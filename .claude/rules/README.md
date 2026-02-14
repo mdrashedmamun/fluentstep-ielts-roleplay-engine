@@ -32,6 +32,14 @@ Modular rules for the FluentStep IELTS Roleplay Engine. Each rule file addresses
 - File locking and race condition prevention
 - Security and vulnerability checks
 
+### [WORKFLOW_RULES.md](./WORKFLOW_RULES.md)
+**Development strategy and scope management**
+- Single-scenario focus principle (prove one before scaling)
+- Targeted validation scope (avoid running all 52 scenarios)
+- Batch work approval process (5+ scenarios requires template proof)
+- Scope creep prevention and incremental development
+- Definition of done for scenarios
+
 ---
 
 ## How to Use
