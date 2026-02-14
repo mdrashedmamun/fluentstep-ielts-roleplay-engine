@@ -80,3 +80,15 @@ __pycache__/
 .claude/CLAUDE.local.md
 .claude/settings.local.json
 .claude/rules/*.local.md
+
+# Staging workflow
+# Ignore content files (author edits), but track structure and validation reports
+.staging/**/*.md
+.staging/**/*.json.backup
+.staging/.import.lock
+# Exceptions: preserve these
+!.staging/.gitkeep
+!.staging/**/.gitkeep
+!.staging/**/validation-*.json
+!.staging/**/qa-review.json
+!.staging/STAGING_README.md

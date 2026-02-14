@@ -51,7 +51,17 @@
     "type-check": "tsc --noEmit",
     "quality": "npm run type-check && npm run lint && npm run build",
     "test:pre-merge": "npm run build && npm run test:e2e:tier1 && npm run qa-test",
-    "test:pre-commit": "npm run build && npm run validate:critical && npm run test:e2e:tier1"
+    "test:pre-commit": "npm run build && npm run validate:critical && npm run test:e2e:tier1",
+    "stage:create": "tsx scripts/stagingCLIHelper.ts create",
+    "stage:submit": "tsx scripts/stagingCLIHelper.ts submit",
+    "stage:status": "tsx scripts/stagingCLIHelper.ts status",
+    "stage:list-ready": "tsx scripts/stagingCLIHelper.ts list-ready",
+    "stage:list-approved": "tsx scripts/stagingCLIHelper.ts list-approved",
+    "stage:validate": "tsx scripts/stagingValidateContent.ts",
+    "stage:import": "tsx scripts/stagingImportApproved.ts",
+    "stage:import:dry-run": "tsx scripts/stagingImportApproved.ts --dry-run",
+    "stage:unlock": "tsx scripts/stagingCLIHelper.ts unlock",
+    "stage:help": "tsx scripts/stagingCLIHelper.ts help"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.24.0",

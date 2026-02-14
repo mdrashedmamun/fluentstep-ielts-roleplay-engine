@@ -21,6 +21,42 @@
 - **Agent Architecture**: See [agents/README.md](./agents/README.md)
 - **Recent Work**: See [../docs/sessions/recent-work.md](../docs/sessions/recent-work.md)
 - **Implementation Details**: See [../docs/sessions/](../docs/sessions/) folder
+- **Staging Workflow** ⭐ NEW: See [../.staging/STAGING_README.md](../.staging/STAGING_README.md)
+
+---
+
+## Staging Workflow (⭐ New Feb 14, 2026)
+
+Professional EdTech-standard content staging system with 4-gate validation pipeline!
+
+### Quick Commands
+```bash
+npm run stage:create -- --id=scenario-1    # Create template
+npm run stage:submit -- --id=scenario-1    # Submit for review
+npm run stage:status                       # View all staged content
+npm run stage:validate                     # Run 4-gate validation
+npm run stage:import                       # Import approved scenarios
+npm run stage:help                         # Show all commands
+```
+
+### State Machine
+```
+in-progress/      ready-for-review/      approved/        archived/
+  (editing)    ←→  (validation)       →   (QA review)  →  (imported)
+                                           ↓
+                                       rejected/
+                                    (fix & resubmit)
+```
+
+### Gates
+1. **Structural** - File format, YAML, schema compliance
+2. **Linguistic** - UK spelling, chunks, grammar, alternatives
+3. **Integration** - Build, E2E tests, UI rendering
+4. **QA Review** - Manual approval
+
+**All gates must pass** (≥85% confidence) for approval.
+
+→ **Full Guide**: [../.staging/STAGING_README.md](../.staging/STAGING_README.md)
 
 ---
 
