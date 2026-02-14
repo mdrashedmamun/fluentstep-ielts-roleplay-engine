@@ -12973,9 +12973,260 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
     "id": "bbc-learning-6-dreams",
     "category": "Social",
     "topic": "Dreams & Life Regrets",
-    "context": "Two friends discuss childhood dreams, life regrets, and personal aspirations.",
-    "characters": [{"name": "Alex", "description": "Friend reflecting on life choices."}, {"name": "Sam", "description": "Friend sharing stories and insights."}],
-    "dialogue": [{"speaker": "Alex", "text": "Hey Sam! ________ you been up to?"}, {"speaker": "Sam", "text": "I know, right? ________ much going on?"}],
-    "answerVariations": [{"index": 0, "answer": "What have", "alternatives": ["What have you been"]}, {"index": 1, "answer": "What's", "alternatives": ["How's"]}]
+    "context": "A conversation between two friends about childhood dreams, life regrets, and following your aspirations. Features stories from Daisy (Riverside community) and Herman Zapp (world traveler).",
+    "characters": [
+      { "name": "Alex", "description": "Friend reflecting on life choices." },
+      { "name": "Sam", "description": "Friend sharing stories and insights." }
+    ],
+    "dialogue": [
+      { "speaker": "ALEX", "text": "Hey Sam! ________ you been up to these days? It feels like forever since we last caught up." },
+      { "speaker": "SAM", "text": "I know, right? Honestly, work has been crazy. But I'm glad we're doing this. How about you? ________ much going on?" },
+      { "speaker": "ALEX", "text": "Yeah, ________ been pretty hectic actually. But you know what? ________ I was thinking about something the other day. When we were kids, we had all these big dreams, didn't we?" },
+      { "speaker": "SAM", "text": "Oh, ________ your point. I remember! You wanted to be an astronaut, right?" },
+      { "speaker": "ALEX", "text": "________ I did! And you were going to be a fireman, or something like that?" },
+      { "speaker": "SAM", "text": "Ha! Yeah, I had big plans. But ________, as we grew up all that just kind of... disappeared. Between university, getting a job, paying bills... you know how it is." },
+      { "speaker": "ALEX", "text": "I know. That's what I've been struggling with lately, actually. It's ________ how all those childhood dreams just get lost in the adult world. Jobs, money, family responsibilities... ________" },
+      { "speaker": "SAM", "text": "Yeah, ________ is quite sad when you think about it. But not for everyone though. Actually, I read this interesting book recently about people's life regrets." },
+      { "speaker": "ALEX", "text": "________ about that? Tell me more." },
+      { "speaker": "SAM", "text": "Well, there's this Australian nurse called Bronnie Ware who interviewed terminally ill patients about their biggest regrets. And you know what the number one regret was?" },
+      { "speaker": "ALEX", "text": "Hmm... was it something about money? Like, wishing they'd earned more?" },
+      { "speaker": "SAM", "text": "No, actually. The biggest regret was not having the courage to ________ their dreams. Not following your passions – that's what people regret the most." },
+      { "speaker": "ALEX", "text": "Wow. That's... actually quite powerful. ________ makes sense, I suppose. Following your dreams can be tough though, right?" },
+      { "speaker": "SAM", "text": "True. But there are people who actually did it. Have you ever heard of the Zapp family? They're from Argentina." },
+      { "speaker": "ALEX", "text": "No, can't say I have. ________ about them?" },
+      { "speaker": "SAM", "text": "In 2000, this couple – Herman and Candelaria – bought an old car with barely any money and just drove off to travel the world." },
+      { "speaker": "ALEX", "text": "________ you serious? How long did they travel for?" },
+      { "speaker": "SAM", "text": "Twenty-two years! Can you imagine? And they took their three kids with them. Visited over a hundred countries, met countless people along the way. Just completely transformed their lives." },
+      { "speaker": "ALEX", "text": "That's ________ incredible. How did they end up doing that? I mean, wasn't that quite... I don't know... outlandish?" },
+      { "speaker": "SAM", "text": "Well, hermandina and Candelaria, they had this dream as childhood sweethearts, and they ________ the bullet. But here's the interesting part – what changed him wasn't about ________ the world anymore." },
+      { "speaker": "ALEX", "text": "What do you mean?" },
+      { "speaker": "SAM", "text": "He said something really beautiful. He was no longer the man who wanted to conquer the world – you know, like dominating it by force – but instead the world had ________ him. All these experiences, all the people he met... it made him much more humble." },
+      { "speaker": "ALEX", "text": "That's actually really profound. So he learned something about himself through all that travelling?" },
+      { "speaker": "SAM", "text": "Exactly. He said something like... he's a beautiful but tiny ________ of sand. An important piece, but still just one tiny part of something much bigger." },
+      { "speaker": "ALEX", "text": "________, that actually puts things in perspective. ________ what I mean. Life isn't just about conquering everything or achieving huge goals. It's about ________ and experiences, isn't it?" },
+      { "speaker": "SAM", "text": "Right! And there's another story about Daisy. She moved to this community in New Zealand called Riverside where everything is shared. All the money, all the resources." },
+      { "speaker": "ALEX", "text": "________ on earth! They share ________ ? That seems pretty unusual to me." },
+      { "speaker": "SAM", "text": "I know, right? Most people think it's quite strange. But Daisy believes in it because she thinks sharing resources can give people a real advantage in life." },
+      { "speaker": "ALEX", "text": "________ that with that though? I mean, doesn't everyone just want to keep what they earn?" },
+      { "speaker": "SAM", "text": "That's what she said – people outside ________ community struggle with the idea. They can't really accept it or even think about it properly. It's just ________ so different from how most of us are brought up." },
+      { "speaker": "ALEX", "text": "Fair ________. It takes courage to live that way, I suppose." },
+      { "speaker": "SAM", "text": "________ true. But the point is, both Daisy and Herman – they followed their dreams, and they ________ without regret. They didn't just talk about it; they actually did it." },
+      { "speaker": "ALEX", "text": "You know, I'm starting to think ________ maybe I should assess my own life a bit. What am I actually doing with my time?" },
+      { "speaker": "SAM", "text": "That's the spirit! It doesn't ________ you have to travel the world or join a commune. It's about being true to yourself, right?" },
+      { "speaker": "ALEX", "text": "________ your point. ________ what would you do if you could do anything right now? Seriously, what ________ your dream?" },
+      { "speaker": "SAM", "text": "Oh man, that's a tough question. I think I'd want to ________ more creative work. Maybe something with design or art. But I don't know... seems risky." },
+      { "speaker": "ALEX", "text": "But isn't that what the book was saying? That people regret not taking risks?" },
+      { "speaker": "SAM", "text": "True. ________ I guess you're right. By the way, you've really got me thinking about this stuff." },
+      { "speaker": "ALEX", "text": "Good! ________ keep in touch more often and actually talk about these things, yeah? I don't want to get to the end of my life and regret not having these conversations with you." },
+      { "speaker": "SAM", "text": "________ a deal. Let's make this a regular thing. And let's actually do something about our dreams instead of just talking." },
+      { "speaker": "ALEX", "text": "I like that. Come on, let's grab another coffee and ________ it over properly. I want to hear more about this creative work idea of yours." },
+      { "speaker": "SAM", "text": "Sounds good. ________ changing the subject, but do you remember that café we used to go to?" },
+      { "speaker": "ALEX", "text": "Yeah, down by the river? Why?" },
+      { "speaker": "SAM", "text": "They're ________ for people now. One of the owners is opening a new spot. I've been thinking maybe I should ________ if they need help with the design." },
+      { "speaker": "ALEX", "text": "________ do it! ________ mentioned it – you should actually follow through." },
+      { "speaker": "SAM", "text": "You know what? ________ the conversation, I think I will. Better now than regretting it later, right?" }
+    ],
+    "answerVariations": [
+      {
+          "index": 0,
+          "answer": "What have you been up to",
+          "alternatives": ["What have you been doing", "How have you been", "What's been going on"]
+        },
+      {
+          "index": 1,
+          "answer": "What's",
+          "alternatives": ["How's", "What have you had", "Is there"]
+        },
+      {
+          "index": 2,
+          "answer": "It's",
+          "alternatives": ["Work's", "Things have", "There's"]
+        },
+      {
+          "index": 3,
+          "answer": "Actually",
+          "alternatives": ["You know", "The thing is", "The truth is"]
+        },
+      {
+          "index": 4,
+          "answer": "I see",
+          "alternatives": ["Yeah I remember", "That's right", "Oh yeah"]
+        },
+      {
+          "index": 5,
+          "answer": "Fair enough",
+          "alternatives": ["Fair point", "Good point", "You're right"]
+        },
+      {
+          "index": 6,
+          "answer": "It's amazing",
+          "alternatives": ["It's incredible", "That's stunning", "It's surprising"]
+        },
+      {
+          "index": 7,
+          "answer": "Tell me",
+          "alternatives": ["Say more", "Go on", "Let's hear it"]
+        },
+      {
+          "index": 8,
+          "answer": "That",
+          "alternatives": ["It", "That's something", "The point"]
+        },
+      {
+          "index": 9,
+          "answer": "That makes sense",
+          "alternatives": ["Makes sense", "I understand", "I get it"]
+        },
+      {
+          "index": 10,
+          "answer": "Are",
+          "alternatives": ["Is", "Were", "Would you be"]
+        },
+      {
+          "index": 11,
+          "answer": "It's quite",
+          "alternatives": ["It's really", "That's so", "It's pretty"]
+        },
+      {
+          "index": 12,
+          "answer": "I understand",
+          "alternatives": ["I know", "I get it", "Fair point"]
+        },
+      {
+          "index": 13,
+          "answer": "To be honest",
+          "alternatives": ["Honestly", "In all honesty", "To tell you the truth"]
+        },
+      {
+          "index": 14,
+          "answer": "Tell me more",
+          "alternatives": ["Go on", "I'm interested", "Say more"]
+        },
+      {
+          "index": 15,
+          "answer": "follow",
+          "alternatives": ["pursue", "chase", "go for"]
+        },
+      {
+          "index": 16,
+          "answer": "That's actually quite powerful",
+          "alternatives": ["That's really impactful", "That really hits home", "That's profound"]
+        },
+      {
+          "index": 17,
+          "answer": "Did you hear",
+          "alternatives": ["Have you heard", "Do you know", "Are you aware"]
+        },
+      {
+          "index": 18,
+          "answer": "bit the",
+          "alternatives": ["took the", "made the", "took their"]
+        },
+      {
+          "index": 19,
+          "answer": "were dreaming of",
+          "alternatives": ["wanted to be doing", "wanted to do", "aimed to do"]
+        },
+      {
+          "index": 20,
+          "answer": "conquered",
+          "alternatives": ["changed", "transformed", "overwhelmed"]
+        },
+      {
+          "index": 21,
+          "answer": "grain",
+          "alternatives": ["speck", "piece", "drop"]
+        },
+      {
+          "index": 22,
+          "answer": "I see",
+          "alternatives": ["I get it", "I understand", "That's true"]
+        },
+      {
+          "index": 23,
+          "answer": "it's about people",
+          "alternatives": ["it involves people", "it's about experiences", "that's what matters"]
+        },
+      {
+          "index": 24,
+          "answer": "On earth",
+          "alternatives": ["Seriously", "Really", "What"]
+        },
+      {
+          "index": 25,
+          "answer": "everything",
+          "alternatives": ["anything", "all", "stuff"]
+        },
+      {
+          "index": 26,
+          "answer": "How do you struggle",
+          "alternatives": ["How do you deal with", "Do you find", "Isn't it hard"]
+        },
+      {
+          "index": 27,
+          "answer": "the",
+          "alternatives": ["that", "their", "this"]
+        },
+      {
+          "index": 28,
+          "answer": "seems",
+          "alternatives": ["sounds", "feels", "appears"]
+        },
+      {
+          "index": 29,
+          "answer": "lived",
+          "alternatives": ["went through", "experienced", "had"]
+        },
+      {
+          "index": 30,
+          "answer": "take",
+          "alternatives": ["require", "demand", "need"]
+        },
+      {
+          "index": 31,
+          "answer": "What would you",
+          "alternatives": ["What would be", "What would you do if", "What do you think you"]
+        },
+      {
+          "index": 32,
+          "answer": "was",
+          "alternatives": ["is", "could be", "might be"]
+        },
+      {
+          "index": 33,
+          "answer": "do more",
+          "alternatives": ["be more", "pursue", "engage in"]
+        },
+      {
+          "index": 34,
+          "answer": "seems risky",
+          "alternatives": ["feels risky", "sounds risky", "might be risky"]
+        },
+      {
+          "index": 35,
+          "answer": "You're",
+          "alternatives": ["You are", "That's", "I suppose you're"]
+        },
+      {
+          "index": 36,
+          "answer": "Let's",
+          "alternatives": ["We should", "Let us", "How about we"]
+        },
+      {
+          "index": 37,
+          "answer": "through",
+          "alternatives": ["about", "over", "out"]
+        },
+      {
+          "index": 38,
+          "answer": "You're",
+          "alternatives": ["You are", "You've got the", "That's a"]
+        },
+      {
+          "index": 39,
+          "answer": "Do it",
+          "alternatives": ["Go for it", "Try it", "Make the leap"]
+        }
+    ]
   }
 ];
