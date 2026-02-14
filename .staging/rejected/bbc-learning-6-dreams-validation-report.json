@@ -1,0 +1,28 @@
+{
+  "scenarioId": "bbc-learning-6-dreams",
+  "timestamp": "2026-02-14T14:52:12.187Z",
+  "gates": {
+    "gate1_structural": {
+      "status": "PASS",
+      "confidence": 80,
+      "warnings": [
+        "Manual review recommended"
+      ],
+      "timestamp": "2026-02-14T14:52:12.542Z"
+    },
+    "gate2_linguistic": {
+      "status": "PASS",
+      "confidence": 95,
+      "timestamp": "2026-02-14T14:52:13.110Z"
+    },
+    "gate3_integration": {
+      "status": "FAIL",
+      "errors": [
+        "Gate 3 failed - integration validation errors"
+      ],
+      "timestamp": "2026-02-14T14:59:42.108Z"
+    }
+  },
+  "overallStatus": "FAIL",
+  "nextSteps": "❌ Validation failed. See errors above. Fix and re-submit."
+}

@@ -1,0 +1,28 @@
+{
+  "scenarioId": "test-scenario-pilot",
+  "timestamp": "2026-02-14T14:23:05.663Z",
+  "gates": {
+    "gate1_structural": {
+      "status": "PASS",
+      "confidence": 80,
+      "warnings": [
+        "Manual review recommended"
+      ],
+      "timestamp": "2026-02-14T14:23:06.053Z"
+    },
+    "gate2_linguistic": {
+      "status": "PASS",
+      "confidence": 95,
+      "timestamp": "2026-02-14T14:23:06.666Z"
+    },
+    "gate3_integration": {
+      "status": "FAIL",
+      "errors": [
+        "Gate 3 failed - integration validation errors"
+      ],
+      "timestamp": "2026-02-14T14:32:03.224Z"
+    }
+  },
+  "overallStatus": "FAIL",
+  "nextSteps": "❌ Validation failed. See errors above. Fix and re-submit."
+}
