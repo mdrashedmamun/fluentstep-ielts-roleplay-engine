@@ -49,7 +49,9 @@
     "lint": "eslint src/ components/ services/ cli/ scripts/ --ext .ts,.tsx",
     "lint:fix": "eslint src/ components/ services/ cli/ scripts/ --ext .ts,.tsx --fix",
     "type-check": "tsc --noEmit",
-    "quality": "npm run type-check && npm run lint && npm run build"
+    "quality": "npm run type-check && npm run lint && npm run build",
+    "test:pre-merge": "npm run build && npm run test:e2e:tier1 && npm run qa-test",
+    "test:pre-commit": "npm run build && npm run validate:critical && npm run test:e2e:tier1"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.24.0",

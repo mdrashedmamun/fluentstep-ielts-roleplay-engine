@@ -1,17 +1,39 @@
 #!/bin/sh
 
-# Pre-commit hook: Run critical validation
-# Blocks commits with critical data errors
-# Allows warnings (code review items)
+# Pre-commit hook: Run critical validation + E2E tests
+# Blocks commits with critical data errors or failing E2E tests
+# Prevents incomplete scenarios from reaching main branch
+# (Added Feb 14, 2026 - addresses BBC deployment incident)
 
-echo "🔍 Running critical validation..."
+echo "🔍 Running pre-commit quality checks..."
 
+# Step 1: Critical validation
+echo "Step 1: Critical validation..."
 npm run validate:critical
 
 if [ $? -ne 0 ]; then
-  echo "❌ Pre-commit failed. Fix critical errors before committing."
+  echo "❌ Critical validation failed."
   exit 1
 fi
 
-echo "✅ Pre-commit passed"
+# Step 2: Build check
+echo "Step 2: Build verification..."
+npm run build
+
+if [ $? -ne 0 ]; then
+  echo "❌ Build failed. Fix TypeScript errors before committing."
+  exit 1
+fi
+
+# Step 3: E2E tier1 tests (quick feedback)
+echo "Step 3: Running E2E tier1 tests (quick check)..."
+npm run test:e2e:tier1
+
+if [ $? -ne 0 ]; then
+  echo "❌ E2E tests failed. Incomplete scenarios detected."
+  echo "   This prevents deploying broken data to production."
+  exit 1
+fi
+
+echo "✅ All pre-commit checks passed"
 exit 0

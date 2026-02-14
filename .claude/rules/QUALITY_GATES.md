@@ -68,9 +68,9 @@ npm run validate:feedback
 
 ---
 
-### Gate 3: Testing Suite
+### Gate 3: Testing Suite (BLOCKING - E2E Tests Required)
 
-**Trigger**: After validation passes
+**Trigger**: After validation passes, BEFORE merge to main
 
 **Requirements**:
 - ✅ E2E tests pass for new scenario
@@ -78,9 +78,13 @@ npm run validate:feedback
 - ✅ UI renders without errors
 - ✅ Feedback displays correctly
 - ✅ Blank randomization works
+- ✅ **Tests must run before merge (not optional)**
 
 **Commands**:
 ```bash
+# Pre-merge validation (REQUIRED before git push)
+npm run test:pre-merge
+
 # Quick check (6 scenarios, ~30s)
 npm run test:e2e:tier1
 
@@ -91,11 +95,15 @@ npm run test:e2e
 npm run test:e2e:coverage
 ```
 
-**Pass Criteria**: 97%+ pass rate (69/71 minimum)
+**Pass Criteria**:
+- 97%+ pass rate (69/71 minimum)
+- **BLOCKING: Deploy fails if Gate 3 tests fail**
 
 **Owner**: testing-agent
 
 **Acceptable Flakiness**: 2 tests max (documented known issues)
+
+**NEW (Feb 14, 2026)**: E2E tests now blocking gate to prevent incomplete scenarios from reaching production (addresses BBC deployment incident)
 
 ---
 
