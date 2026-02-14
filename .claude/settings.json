@@ -51,41 +51,6 @@
         "context": "fork"
       },
       {
-        "name": "learning-architect",
-        "description": "Define learning outcomes (Cambridge methodology)",
-        "model": "sonnet",
-        "tools": ["Read", "Write"],
-        "context": "fork"
-      },
-      {
-        "name": "task-designer",
-        "description": "Design roleplay tasks with communicative tension",
-        "model": "sonnet",
-        "tools": ["Read", "Write"],
-        "context": "fork"
-      },
-      {
-        "name": "chunk-curator",
-        "description": "Validate core repertoire using corpus linguistics",
-        "model": "haiku",
-        "tools": ["Read", "Write", "Bash"],
-        "context": "fork"
-      },
-      {
-        "name": "system-builder",
-        "description": "Implement scaffolding logic + blank placement",
-        "model": "sonnet",
-        "tools": ["Read", "Write"],
-        "context": "fork"
-      },
-      {
-        "name": "design-orchestrator",
-        "description": "Coordinate all Cambridge design agents",
-        "model": "opus",
-        "tools": ["Read", "Write", "Bash"],
-        "context": "default"
-      },
-      {
         "name": "content-gen-agent",
         "description": "Create and enhance scenario content: dialogue, blanks, feedback, patterns, active recall",
         "model": "sonnet",
@@ -120,7 +85,15 @@
         "tools": ["Read", "Write", "Bash", "Grep", "Glob"],
         "context": "default"
       }
-    ]
+    ],
+    "archived": {
+      "cambridge-layer-feb-2026": {
+        "agents": ["learning-architect", "task-designer", "chunk-curator", "system-builder", "design-orchestrator"],
+        "archivedDate": "2026-02-14",
+        "reason": "Phase 0 implementation complete but untested; not integrated with Phase 7-9 multi-agent team",
+        "restorationPath": ".claude/agents/archived/cambridge-layer-feb-2026/ARCHIVE_README.md"
+      }
+    }
   },
 
   "skills": {
