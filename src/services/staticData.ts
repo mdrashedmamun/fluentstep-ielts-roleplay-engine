@@ -12980,12 +12980,12 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
     ],
     "dialogue": [
       { "speaker": "ALEX", "text": "Hey Sam! ________ you been up to these days? It feels like forever since we last caught up." },
-      { "speaker": "SAM", "text": "I know, right? Honestly, work has been crazy. But I'm glad we're doing this. How about you? ________ much going on?" },
+      { "speaker": "SAM", "text": "I know, right? Honestly, work has been crazy. But I'm glad we're doing this. How about you? ________ going on?" },
       { "speaker": "ALEX", "text": "Yeah, ________ been pretty hectic actually. But you know what? ________ I was thinking about something the other day. When we were kids, we had all these big dreams, didn't we?" },
       { "speaker": "SAM", "text": "Oh, ________ your point. I remember! You wanted to be an astronaut, right?" },
       { "speaker": "ALEX", "text": "________ I did! And you were going to be a fireman, or something like that?" },
       { "speaker": "SAM", "text": "Ha! Yeah, I had big plans. But ________, as we grew up all that just kind of... disappeared. Between university, getting a job, paying bills... you know how it is." },
-      { "speaker": "ALEX", "text": "I know. That's what I've been struggling with lately, actually. It's ________ how all those childhood dreams just get lost in the adult world. Jobs, money, family responsibilities... ________" },
+      { "speaker": "ALEX", "text": "I know. That's what I've been struggling with lately, actually. ________ how all those childhood dreams just get lost in the adult world. Jobs, money, family responsibilities... ________" },
       { "speaker": "SAM", "text": "Yeah, ________ is quite sad when you think about it. But not for everyone though. Actually, I read this interesting book recently about people's life regrets." },
       { "speaker": "ALEX", "text": "________ about that? Tell me more." },
       { "speaker": "SAM", "text": "Well, there's this Australian nurse called Bronnie Ware who interviewed terminally ill patients about their biggest regrets. And you know what the number one regret was?" },
@@ -13059,8 +13059,8 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         },
       {
           "index": 6,
-          "answer": "It's a shame",
-          "alternatives": ["Sadly", "Unfortunately", "It's quite sad"]
+          "answer": "a shame",
+          "alternatives": ["sad", "a pity", "quite sad"]
         },
       {
           "index": 7,
