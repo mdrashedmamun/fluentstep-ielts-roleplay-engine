@@ -1,9 +1,9 @@
 # FluentStep - Claude Code Configuration
 
 **Project**: IELTS Roleplay Engine with Multi-Agent Content Generation
-**Status**: Production Ready ✅ (Session 10)
+**Status**: Production Ready ✅ (52 complete scenarios)
 **Agents**: 11 active (5 archived to context reduction)
-**Last Updated**: Feb 14, 2026
+**Last Updated**: Feb 14, 2026 (Session 12 - Post-Mortem & Multi-Agent Fix)
 
 ---
 
@@ -213,6 +213,13 @@ npm run type-check
 - **docs/architecture/feedback-system.md** - Feedback architecture
 - **docs/architecture/data-schemas.md** - V1 vs V2 comparison
 
+### Post-Mortems & Analysis
+- **[analysis/](./analysis/)** - Incident reports, root cause analyses
+- **analysis/ROOT_CAUSE_ANALYSIS.md** - BBC scenario deployment failure + multi-agent architecture issues
+  - Why 4 quality gates failed to catch incomplete data
+  - 5 critical design flaws in multi-agent system
+  - Actionable recommendations for fixing agent coordination
+
 ---
 
 ## How to Use This Directory
@@ -283,5 +290,5 @@ git checkout HEAD -- .gitignore
 
 ---
 
-**Last Updated**: Feb 14, 2026 (Session 10 - Best Practices Adoption)
+**Last Updated**: Feb 14, 2026 (Session 12 - Incident Response & Analysis)
 **Maintained by**: Claude Code Architecture Team
