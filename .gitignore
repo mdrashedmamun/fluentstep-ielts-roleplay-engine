@@ -75,3 +75,8 @@ test-results/
 # Python test artifacts
 __pycache__/
 *.pyc
+
+# Claude Code personal files (not committed)
+.claude/CLAUDE.local.md
+.claude/settings.local.json
+.claude/rules/*.local.md

@@ -4,8 +4,19 @@ Claude Code agent configurations, skills, and tooling for the FluentStep IELTS R
 
 ## Quick Navigation
 
-- **agents/** - All 11 agent definitions (6 core + 5 Cambridge layer)
+**Start here**: See **[CLAUDE.md](./CLAUDE.md)** for navigation index and quick start guide.
+
+### Directories
+- **agents/** - All 11 agent definitions (core + supporting)
+- **rules/** - Modular rule files (4 topic areas)
+- **skills/** - Reusable skill definitions
 - **hooks/** - Git hooks for validation and workflow automation
+
+### Configuration Files
+- **CLAUDE.md** - Navigation hub and quick start (read this first!)
+- **CLAUDE.local.md** - Personal session notes (gitignored)
+- **README.md** - This file (comprehensive overview)
+- **SHARED_CONTEXT.md** - Multi-agent team coordination
 - **settings.json** - Main agent registry and configuration
 - **settings.json.backup-*** - Daily backups (auto-created)
 
@@ -189,14 +200,21 @@ Each agent has a SKILL.md file with complete specification:
 - `agents/cambridge-layer/design-orchestrator/SKILL.md`
 
 ### Master Documentation
-- `agents/README.md` - Complete agent architecture and integration guide (1,200+ lines)
-- `.claude/README.md` - This file (overview and navigation)
+- **`CLAUDE.md`** - Navigation index and quick start (NEW - read first!)
+- **`agents/README.md`** - Complete agent architecture and integration guide (1,200+ lines)
+- **`.claude/README.md`** - This file (comprehensive overview)
+
+### Rules (Modular)
+- **`rules/CORE_RULES.md`** - Language constraints and pedagogy
+- **`rules/SCHEMA_RULES.md`** - Data structure compliance
+- **`rules/QUALITY_GATES.md`** - 4-stage quality enforcement
+- **`rules/DATA_INTEGRITY.md`** - Code safety and performance
+- **`rules/README.md`** - Rules index
 
 ### Reference Documentation
-- `RULES.md` - Project coding standards and patterns
-- `QUICK_REFERENCE.md` - Quick access to common commands
-- `docs/implementation-reports/` - Historical implementation details
-- `docs/test-reports/` - Historical test and verification reports
+- **`QUICK_REFERENCE.md`** - Quick access to common commands
+- **`docs/implementation-reports/`** - Historical implementation details
+- **`docs/test-reports/`** - Historical test and verification reports
 
 ---
 
