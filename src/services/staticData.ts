@@ -90,7 +90,8 @@ export interface ChunkFeedbackV2 {
     examples: string[];         // 1-2 natural usage examples
 }
 
-export interface RoleplayScript {
+/** Base properties shared by all RoleplayScript versions */
+export interface RoleplayScriptBase {
     id: string;
     category: 'Social' | 'Workplace' | 'Service/Logistics' | 'Advanced' | 'Academic' | 'Healthcare' | 'Cultural' | 'Community';
     topic: string;
@@ -109,18 +110,46 @@ export interface RoleplayScript {
         answer: string;
         alternatives: string[];
     }[];
-    deepDive?: {
+    backgroundUrl?: string;
+}
+
+/** V1 Schema: Legacy deepDive + chunkFeedback feedback */
+export interface RoleplayScriptV1 extends RoleplayScriptBase {
+    deepDive?: {  // Optional for legacy
         index: number;
         phrase: string;
         insight: string;
     }[];
-    chunkFeedback?: ChunkFeedback[];
-    chunkFeedbackV2?: ChunkFeedbackV2[];        // NEW - Template-compliant (new packages)
-    blanksInOrder?: BlankMapping[];              // NEW - Maps blank positions to chunks
-    activeRecall?: ActiveRecallItem[];           // NEW - Spaced repetition tests
-    patternSummary?: PatternSummary;             // Optional consolidated pattern insights
-    backgroundUrl?: string;
+    chunkFeedback?: ChunkFeedback[];  // Optional for legacy V1 ChunkFeedback type
+    // V1 MUST NOT have V2 properties (enforced by Union type)
+    chunkFeedbackV2?: never;  // Explicitly exclude V2 chunkFeedbackV2 from V1
+    blanksInOrder?: never;    // Explicitly exclude V2 blanksInOrder from V1
+    patternSummary?: never;   // Explicitly exclude V2 patternSummary from V1
+    activeRecall?: never;     // Explicitly exclude V2 activeRecall from V1
 }
+
+/** V2 Schema: New chunk-based feedback (ALL REQUIRED if V2) */
+export interface RoleplayScriptV2 extends RoleplayScriptBase {
+    chunkFeedbackV2: ChunkFeedbackV2[];          // REQUIRED - Template-compliant feedback
+    blanksInOrder: BlankMapping[];                // REQUIRED - Maps blank positions to chunks
+    patternSummary: PatternSummary;               // REQUIRED - Consolidated pattern insights
+    activeRecall: ActiveRecallItem[];             // REQUIRED - Spaced repetition tests
+    // V2 MUST NOT have V1 properties (enforced by Union type)
+    deepDive?: never;         // Explicitly exclude V1 deepDive from V2
+    chunkFeedback?: never;    // Explicitly exclude V1 chunkFeedback from V2
+}
+
+/**
+ * Union type: Scenarios MUST be either V1 (legacy feedback) OR V2 (modern feedback)
+ * Prevents mixing schemas (root cause of BBC incident)
+ * - V1: Has optional deepDive and/or chunkFeedback (legacy types)
+ * - V2: MUST have ALL of chunkFeedbackV2, blanksInOrder, patternSummary, activeRecall
+ *
+ * TypeScript will error if:
+ * - V2 scenario missing any required property (catches BBC-like incidents)
+ * - Code tries to mix V1 and V2 properties
+ */
+export type RoleplayScript = RoleplayScriptV1 | RoleplayScriptV2;
 
 export const CURATED_ROLEPLAYS: RoleplayScript[] = [
   {
