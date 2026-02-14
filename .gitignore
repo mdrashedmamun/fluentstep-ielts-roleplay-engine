@@ -92,3 +92,4 @@ __pycache__/
 !.staging/**/validation-*.json
 !.staging/**/qa-review.json
 !.staging/STAGING_README.md
+!.staging/IMPLEMENTATION_SUMMARY.md
