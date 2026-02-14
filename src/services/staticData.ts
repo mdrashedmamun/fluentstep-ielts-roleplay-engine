@@ -13034,8 +13034,8 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         },
       {
           "index": 1,
-          "answer": "What's",
-          "alternatives": ["How's", "What have you had", "Is there"]
+          "answer": "Not much",
+          "alternatives": ["Nothing special", "Not really", "Same as usual"]
         },
       {
           "index": 2,
@@ -13054,28 +13054,28 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         },
       {
           "index": 5,
-          "answer": "Fair enough",
-          "alternatives": ["Fair point", "Good point", "You're right"]
+          "answer": "Yeah",
+          "alternatives": ["That's right", "Exactly", "Yep"]
         },
       {
           "index": 6,
-          "answer": "It's amazing",
-          "alternatives": ["It's incredible", "That's stunning", "It's surprising"]
+          "answer": "It's a shame",
+          "alternatives": ["Sadly", "Unfortunately", "It's quite sad"]
         },
       {
           "index": 7,
-          "answer": "Tell me",
-          "alternatives": ["Say more", "Go on", "Let's hear it"]
+          "answer": "sad",
+          "alternatives": ["a shame", "quite sad", "unfortunate"]
         },
       {
           "index": 8,
-          "answer": "That",
-          "alternatives": ["It", "That's something", "The point"]
+          "answer": "all that stuff",
+          "alternatives": ["you know how it is", "and so on", "it all adds up"]
         },
       {
           "index": 9,
-          "answer": "That makes sense",
-          "alternatives": ["Makes sense", "I understand", "I get it"]
+          "answer": "it",
+          "alternatives": ["that", "that's", "it's"]
         },
       {
           "index": 10,
