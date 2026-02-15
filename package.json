@@ -61,7 +61,10 @@
     "stage:import": "tsx scripts/stagingImportApproved.ts",
     "stage:import:dry-run": "tsx scripts/stagingImportApproved.ts --dry-run",
     "stage:unlock": "tsx scripts/stagingCLIHelper.ts unlock",
-    "stage:help": "tsx scripts/stagingCLIHelper.ts help"
+    "stage:help": "tsx scripts/stagingCLIHelper.ts help",
+    "pipeline:watch": "tsx scripts/content-pipeline/cli.ts watch",
+    "pipeline:status": "tsx scripts/content-pipeline/cli.ts status",
+    "pipeline:help": "tsx scripts/content-pipeline/cli.ts help"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.24.0",

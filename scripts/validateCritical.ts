@@ -140,11 +140,20 @@ function validateChunkIdReferences(script: RoleplayScript): ValidationError[] {
 
   // Collect all defined chunkIds from chunkFeedbackV2
   const definedChunkIds = new Set<string>();
-  (script.chunkFeedbackV2 || []).forEach(feedback => {
-    if (feedback.chunkId) {
-      definedChunkIds.add(feedback.chunkId);
-    }
-  });
+  const chunkFeedback = script.chunkFeedbackV2 || {};
+  
+  // Handle both array (legacy) and object (V2) formats
+  if (Array.isArray(chunkFeedback)) {
+    chunkFeedback.forEach((feedback: any) => {
+      if (feedback.chunkId) {
+        definedChunkIds.add(feedback.chunkId);
+      }
+    });
+  } else if (typeof chunkFeedback === 'object') {
+    Object.keys(chunkFeedback).forEach(key => {
+      definedChunkIds.add(key);
+    });
+  }
 
   // Check blanksInOrder references
   (script.blanksInOrder || []).forEach((mapping, idx) => {

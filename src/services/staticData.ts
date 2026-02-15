@@ -12997,5 +12997,777 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         ]
       }
     ]
-  }
+  },
+  {
+  "id": "service_1_restaurant_order",
+  "category": "Service/Logistics",
+  "topic": "Restaurant Ordering",
+  "context": "Customer visiting a casual Italian restaurant for lunch, ordering a meal with specific dietary requirements and preferences. Teaching natural language for service interactions, polite requests, and real-world negotiation.",
+  "characters": [
+    {
+      "name": "Sarah",
+      "description": "Server at Marco's Pizzeria, friendly and professional, experienced with customer needs"
+    },
+    {
+      "name": "You",
+      "description": "Customer ordering lunch, specific dietary preferences, meeting a friend"
+    }
+  ],
+  "dialogue": [
+    {
+      "speaker": "Sarah",
+      "text": "Good afternoon! Welcome to Marco's. How many people are we seating today?"
+    },
+    {
+      "speaker": "You",
+      "text": "Hi! Just ________. I'm expecting a friend in about ________."
+    },
+    {
+      "speaker": "Sarah",
+      "text": "Perfect. I'll put you by the window then. Here's the menu, and can I ________ you with a drink?"
+    },
+    {
+      "speaker": "You",
+      "text": "Thanks! Could you ________ your house red wine? I'd love ________ a glass for now."
+    },
+    {
+      "speaker": "Sarah",
+      "text": "Our house red is lovely – it's from a small vineyard near Rome. Still or sparkling water?"
+    },
+    {
+      "speaker": "You",
+      "text": "Still water, please. And ________, do you have vegetarian ________? I ________ pasta with meat."
+    },
+    {
+      "speaker": "Sarah",
+      "text": "Of course! We have several pages of vegetarian options. Let me point ________ what's particularly popular. The pesto pasta is ________ bestseller."
+    },
+    {
+      "speaker": "You",
+      "text": "That sounds ________. But do you have anything less ________? I'm trying to eat healthier these days."
+    },
+    {
+      "speaker": "Sarah",
+      "text": "Absolutely. I'd ________ the grilled fish with roasted veg. It's prepared with minimal salt and very fresh. Our veg comes from a local farm."
+    },
+    {
+      "speaker": "You",
+      "text": "That's perfect. Could you ________ the veg with a bit of extra garlic? And I'd like ________ croutons on my side salad."
+    },
+    {
+      "speaker": "Sarah",
+      "text": "No problem. Fish with roasted veg, extra garlic, and no croutons. Anything ________ you'd like me to know?"
+    },
+    {
+      "speaker": "You",
+      "text": "Actually, do you have any ________ concerns I should know about? My friend has a nut allergy."
+    },
+    {
+      "speaker": "Sarah",
+      "text": "Good to ask. We ________ nuts in several dishes. I'll make sure your friend's meal is prepared ________. What else will they be having?"
+    },
+    {
+      "speaker": "You",
+      "text": "She always ________. Let me text her... She says she'll have the risotto with ________."
+    },
+    {
+      "speaker": "Sarah",
+      "text": "Perfect. The risotto is lovely and very ________. I'll put your order in now. Should be out in about fifteen ________."
+    },
+    {
+      "speaker": "You",
+      "text": "Thanks so much! Oh, and about the ________... when you bring the bill, could you ________ me two separate checks?"
+    },
+    {
+      "speaker": "Sarah",
+      "text": "Of course! I'll ________ the bill for you. I assume you're not ________?"
+    },
+    {
+      "speaker": "You",
+      "text": "Right, it's on me – my friend's been having a rough time, and I wanted to do something nice."
+    },
+    {
+      "speaker": "Sarah",
+      "text": "That's very kind. I'll make sure everything is perfect. Be right back with your water and wine."
+    }
+  ],
+  "answerVariations": [
+    {
+      "index": 0,
+      "answer": "two",
+      "alternatives": []
+    },
+    {
+      "index": 1,
+      "answer": "five minutes",
+      "alternatives": []
+    },
+    {
+      "index": 2,
+      "answer": "help start",
+      "alternatives": []
+    },
+    {
+      "index": 3,
+      "answer": "tell me about",
+      "alternatives": []
+    },
+    {
+      "index": 4,
+      "answer": "just",
+      "alternatives": []
+    },
+    {
+      "index": 5,
+      "answer": "By the way",
+      "alternatives": []
+    },
+    {
+      "index": 6,
+      "answer": "options",
+      "alternatives": []
+    },
+    {
+      "index": 7,
+      "answer": "don't want",
+      "alternatives": []
+    },
+    {
+      "index": 8,
+      "answer": "you to",
+      "alternatives": []
+    },
+    {
+      "index": 9,
+      "answer": "our",
+      "alternatives": []
+    },
+    {
+      "index": 10,
+      "answer": "good",
+      "alternatives": []
+    },
+    {
+      "index": 11,
+      "answer": "salty",
+      "alternatives": []
+    },
+    {
+      "index": 12,
+      "answer": "suggest",
+      "alternatives": []
+    },
+    {
+      "index": 13,
+      "answer": "prepare",
+      "alternatives": []
+    },
+    {
+      "index": 14,
+      "answer": "no",
+      "alternatives": []
+    },
+    {
+      "index": 15,
+      "answer": "else",
+      "alternatives": []
+    },
+    {
+      "index": 16,
+      "answer": "allergy",
+      "alternatives": []
+    },
+    {
+      "index": 17,
+      "answer": "use",
+      "alternatives": []
+    },
+    {
+      "index": 18,
+      "answer": "carefully",
+      "alternatives": []
+    },
+    {
+      "index": 19,
+      "answer": "orders the same thing",
+      "alternatives": []
+    },
+    {
+      "index": 20,
+      "answer": "vegetables",
+      "alternatives": []
+    },
+    {
+      "index": 21,
+      "answer": "nut-free",
+      "alternatives": []
+    },
+    {
+      "index": 22,
+      "answer": "minutes",
+      "alternatives": []
+    },
+    {
+      "index": 23,
+      "answer": "bill",
+      "alternatives": []
+    },
+    {
+      "index": 24,
+      "answer": "bring",
+      "alternatives": []
+    },
+    {
+      "index": 25,
+      "answer": "split it",
+      "alternatives": []
+    },
+    {
+      "index": 26,
+      "answer": "splitting it",
+      "alternatives": []
+    }
+  ],
+  "chunkFeedbackV2": [
+    {
+      "chunkId": "service_1_ch_party_size",
+      "native": "two",
+      "learner": {
+            "meaning": "The number specifying party size - how many people are requesting a table.",
+            "useWhen": "Servers need to know immediately how many seats to prepare. 'Two' is the fastest, most natural way to communicate this.",
+            "commonWrong": "❌ 'Two persons' (too formal, sounds textbook)",
+            "fix": "✔️ Just say the number: 'Two' or 'A table for two'",
+            "whyOdd": ""
+      },
+      "examples": [
+            "How many people? - Two, please.",
+            "A table for two on Friday at seven.",
+            "Party size? - We're three today, actually.",
+            "Is it just you two, or are others joining?",
+            "In many European restaurants, the server asks 'Combien?' or equivalent - 'two' is universally understood."
+      ]
+},
+    {
+      "chunkId": "service_1_ch_arrival_timing",
+      "native": "five minutes",
+      "learner": {
+            "meaning": "An approximate timeframe for future arrival - roughly 5 minutes, indicating imminent expectation.",
+            "useWhen": "Servers need to know if they should hold a table or if the party is running late. This phrase sets expectation clearly.",
+            "commonWrong": "❌ 'In five minutes later' (redundant - 'in' already means future)",
+            "fix": "✔️ 'In about five minutes' or 'In five minutes'",
+            "whyOdd": ""
+      },
+      "examples": [
+            "I'm expecting someone in about ten minutes.",
+            "My colleague will be here in fifteen minutes - traffic.",
+            "Will you hold this table? - How long? - Maybe five minutes.",
+            "My date's always five minutes late - it's just how she is.",
+            "The client should be here in three minutes - can we get the room ready?"
+      ]
+},
+    {
+      "chunkId": "service_1_ch_service_opener",
+      "native": "help start",
+      "learner": {
+            "meaning": "To assist with beginning the meal experience - typically asking about drinks first.",
+            "useWhen": "Standard opening question from servers. 'Can I help start you with a drink?' is a warm, welcoming phrase (BUCKET_A: Requests & Help).",
+            "commonWrong": "❌ 'Can I start you?' (incomplete, unclear)",
+            "fix": "✔️ 'Can I help start you with a drink?' or 'What can I get you to start?'",
+            "whyOdd": ""
+      },
+      "examples": [
+            "Can I help start you with something to drink?",
+            "What can I help start you with this morning?",
+            "May I help start your experience with an aperitif?",
+            "What can I help start you off with?",
+            "What would help start your meal off nicely? Prosecco?"
+      ]
+},
+    {
+      "chunkId": "service_1_ch_wine_inquiry",
+      "native": "tell me about",
+      "learner": {
+            "meaning": "A polite request for description or recommendation about a specific item.",
+            "useWhen": "Much more natural and warm than 'describe the wine' or 'explain the wine.' This is BUCKET_A: Requests & Help - 'Could you do me a favour?'",
+            "commonWrong": "❌ 'Explain me the wine' (grammatically incorrect)",
+            "fix": "✔️ 'Could you tell me about your house red?' or 'Tell me about this one'",
+            "whyOdd": ""
+      },
+      "examples": [
+            "Could you tell me about your house wines?",
+            "Tell me about the daily special, please.",
+            "I'm not familiar with this region. Could you tell me about it?",
+            "There are so many options. Tell me about your three most popular dishes.",
+            "What's good today? - Well, let me tell you about our new chef's creation."
+      ]
+},
+    {
+      "chunkId": "service_1_ch_quantity_modifier",
+      "native": "just",
+      "learner": {
+            "meaning": "Adverb meaning 'only' - modifying a quantity to emphasize restraint or specificity (BUCKET_B: Dining - quantity control).",
+            "useWhen": "In ordering, 'just a glass' signals you want a portion, not a larger commitment (bottle). It's efficient communication in service contexts.",
+            "commonWrong": "❌ Omitting 'just' entirely: 'I'd love a glass' (sounds vague without context)",
+            "fix": "✔️ 'I'd love just a glass' or 'Just a glass for me'",
+            "whyOdd": ""
+      },
+      "examples": [
+            "Would you like a bottle? - No thanks, just a glass.",
+            "More salad? - Just a small bit, thank you.",
+            "One of the steaks, please. - Which size? - Just the eight-ounce.",
+            "Soup and bread? - Just the soup for me, thanks.",
+            "Can I get extra? - Just a sprinkle of parmesan, please."
+      ]
+},
+    {
+      "chunkId": "service_1_ch_topic_transition",
+      "native": "By the way",
+      "learner": {
+            "meaning": "Discourse connector signaling a new thought or topic shift (BUCKET_A: Conversation Starters - 'Let's change the subject').",
+            "useWhen": "Smooth, natural way to ask a follow-up question. Without it, switching from drinks to dietary needs feels abrupt.",
+            "commonWrong": "❌ 'By chance' (means coincidentally, not a connector)",
+            "fix": "✔️ 'By the way' or 'Oh, by the way' for natural pacing",
+            "whyOdd": ""
+      },
+      "examples": [
+            "By the way, do you have vegetarian options?",
+            "The wine looks great. By the way, is there a gluten-free menu?",
+            "By the way, how's your pasta? Mine's fantastic.",
+            "By the way, can I get change? I'm running late.",
+            "The salad was perfect - by the way, do you have decaf?"
+      ]
+},
+    {
+      "chunkId": "service_1_ch_dietary_preference",
+      "native": "options",
+      "learner": {
+            "meaning": "Alternative choices available - plural noun indicating multiple possibilities for dietary needs.",
+            "useWhen": "Standard word when asking about menu variations. 'Do you have vegetarian options?' is the natural way to open dietary discussion (BUCKET_B: Dining).",
+            "commonWrong": "❌ 'Do you have vegetarian?' (incomplete noun)",
+            "fix": "✔️ 'Do you have vegetarian options?' or 'What are your vegetarian options?'",
+            "whyOdd": ""
+      },
+      "examples": [
+            "Do you have vegetarian options? - Absolutely, several.",
+            "Any gluten-free options available?",
+            "What options do you have for people who don't eat fish?",
+            "Are there low-sugar options on the menu?",
+            "My friend's vegan. What options do you recommend?"
+      ]
+},
+    {
+      "chunkId": "service_1_ch_negative_preference",
+      "native": "don't want",
+      "learner": {
+            "meaning": "Strong negative preference - 'not wanting X' emphasizes avoidance more than 'don't like X' (BUCKET_B: Dining - preferences).",
+            "useWhen": "Signals stronger preference or potential allergy concern to service staff. More emphatic than 'don't like' or 'prefer'.",
+            "commonWrong": "❌ 'I don't eat pasta with meat' (too definitive; might offend)",
+            "fix": "✔️ 'I don't want meat' or 'I prefer dishes without meat'",
+            "whyOdd": ""
+      },
+      "examples": [
+            "I don't want any meat in my dish, please.",
+            "I don't want nuts anywhere near my food.",
+            "Some people don't want sugar. We have full-sugar and reduced-sugar options.",
+            "I love spice, but I don't want too much heat in this one.",
+            "I don't want overly chewy parts - I prefer tender."
+      ]
+},
+    {
+      "chunkId": "service_1_ch_direction_instruction",
+      "native": "you to",
+      "learner": {
+            "meaning": "Verb phrase 'point you to' - meaning to guide attention toward something specific.",
+            "useWhen": "Used when servers highlight specific menu sections or popular items. 'Let me point you to our vegetarian section' sounds professional and helpful.",
+            "commonWrong": "❌ 'Let me show you to' (means guide physically)",
+            "fix": "✔️ 'Let me point you to' or 'I'll point you toward'",
+            "whyOdd": ""
+      },
+      "examples": [
+            "Let me point you to our vegetarian options on pages three and four.",
+            "I want to point you toward our new chef's special - it's incredible.",
+            "If you're budget-conscious, let me point you to these value dishes.",
+            "I'd like to point you to our best-reviewed item - the lamb risotto.",
+            "Can I point you to our Valentine's menu? We have special pricing."
+      ]
+},
+    {
+      "chunkId": "service_1_ch_bestseller_marker",
+      "native": "our",
+      "learner": {
+            "meaning": "Possessive determiner indicating shared ownership - 'our bestseller' means popular with the restaurant/customers collectively.",
+            "useWhen": "Servers use this to build rapport and community feeling. 'Our bestseller' feels more personal than 'the bestseller' (basic grammar, high social impact in BUCKET_B: Dining).",
+            "commonWrong": "❌ 'The bestseller' (loses personal rapport)",
+            "fix": "✔️ 'Our bestseller' or 'It's one of our most popular dishes'",
+            "whyOdd": ""
+      },
+      "examples": [
+            "The pesto pasta is our bestseller - most customers love it.",
+            "Our signature dish is the risotto - chef makes it fresh daily.",
+            "Can't decide? Our most popular appetizer is the bruschetta.",
+            "Our house wine is excellent - really punches above its price.",
+            "Our customers have voted this our number-one dessert three years running."
+      ]
+},
+    {
+      "chunkId": "service_1_ch_positive_response",
+      "native": "good",
+      "learner": {
+            "meaning": "Simple positive evaluation - used to affirm a recommendation ('That sounds good').",
+            "useWhen": "Quick, natural way to accept a suggestion without over-analyzing. 'That sounds good' shows permission to proceed without elaborate praise.",
+            "commonWrong": "❌ 'That sounds well' (unnatural; 'good' is correct adjective)",
+            "fix": "✔️ 'That sounds good' or 'That sounds perfect'",
+            "whyOdd": ""
+      },
+      "examples": [
+            "I'd recommend the fish. - That sounds good.",
+            "Should I bring the wine? - That sounds good.",
+            "I'll put your order in now. - That sounds good, thanks.",
+            "Everything will be perfect. - That sounds good.",
+            "One glass of red? - That sounds good."
+      ]
+},
+    {
+      "chunkId": "service_1_ch_salt_reduction",
+      "native": "salty",
+      "learner": {
+            "meaning": "Adjective describing high sodium content - used to request lower-salt versions of dishes (BUCKET_B: Dining - health preferences).",
+            "useWhen": "Health-conscious diners commonly request 'less salty' dishes. This adjective is essential medical vocabulary for dietary communication.",
+            "commonWrong": "❌ 'Less salt' (adjective form needed: 'less salty')",
+            "fix": "✔️ 'Less salty' or 'Lower in salt'",
+            "whyOdd": ""
+      },
+      "examples": [
+            "Do you have anything less salty? My doctor said to cut back.",
+            "This is a bit too salty for me - can you redo it?",
+            "The fish is delicious but the veg is too salty.",
+            "My kid doesn't like salty food - what do you suggest?",
+            "Which dishes are naturally less salty?"
+      ]
+},
+    {
+      "chunkId": "service_1_ch_recommendation_verb",
+      "native": "suggest",
+      "learner": {
+            "meaning": "To recommend or propose - 'I'd suggest X' is a polite advisory about menu items (BUCKET_A: Requests & Help).",
+            "useWhen": "More professional than 'I'd recommend' in some contexts; both work equally well. Shows consideration of customer preferences.",
+            "commonWrong": "❌ 'I'm suggesting' (present continuous sounds uncertain)",
+            "fix": "✔️ 'I'd suggest' or 'I'd recommend' (equally natural)",
+            "whyOdd": ""
+      },
+      "examples": [
+            "I'd suggest the grilled option - it's lower in calories.",
+            "I'd suggest avoiding the seafood pasta given your shellfish allergy.",
+            "I'd suggest the risotto if you prefer creamy dishes.",
+            "I'd suggest the pasta - excellent value and generous portions.",
+            "You look tired - I'd suggest our comfort pasta, very soothing."
+      ]
+},
+    {
+      "chunkId": "service_1_ch_food_preparation",
+      "native": "prepare",
+      "learner": {
+            "meaning": "Professional verb for cooking/modifying food per customer specifications (BUCKET_B: Dining - kitchen requests).",
+            "useWhen": "Sounds more professional than 'make' or 'cook' when requesting modifications. Hotels and restaurants use this terminology.",
+            "commonWrong": "❌ 'Make the veg with garlic' (too casual for service request)",
+            "fix": "✔️ 'Prepare the veg with extra garlic' or 'Could you prepare this a certain way?'",
+            "whyOdd": ""
+      },
+      "examples": [
+            "Could you prepare this with less oil?",
+            "I'll make sure it's prepared exactly as you want.",
+            "The vegan menu is prepared in our separate kitchen to avoid cross-contamination.",
+            "A customer with severe allergies - I need this prepared very carefully.",
+            "All our fish is prepared fresh - nothing from frozen."
+      ]
+},
+    {
+      "chunkId": "service_1_ch_rejecting_ingredient",
+      "native": "no",
+      "learner": {
+            "meaning": "Simple negative - when rejecting garnishes or ingredients in food service (BUCKET_B: Dining - special requests).",
+            "useWhen": "In food context, 'no croutons' is faster and more natural than 'I don't want croutons.' Servers understand this economic phrasing immediately.",
+            "commonWrong": "❌ 'Without croutons' (correct but wordier)",
+            "fix": "✔️ 'No croutons' or 'Hold the croutons' (very natural)",
+            "whyOdd": ""
+      },
+      "examples": [
+            "And no croutons on the salad, please.",
+            "Burger with no onions, thanks.",
+            "Pasta with no cream sauce.",
+            "No nuts anywhere in her food - she's severely allergic.",
+            "Salad, no dressing please."
+      ]
+},
+    {
+      "chunkId": "service_1_ch_additional_concern",
+      "native": "else",
+      "learner": {
+            "meaning": "Adverb meaning 'anything additional' or 'something more' - servers use to confirm completeness of order.",
+            "useWhen": "Standard closing question: 'Is there anything else?' ensures no needs are forgotten and shows attentiveness (BUCKET_A: universal service phrasing).",
+            "commonWrong": "❌ 'Anything other' (not standard service phrasing)",
+            "fix": "✔️ 'Is there anything else?' or 'Anything else for you?'",
+            "whyOdd": ""
+      },
+      "examples": [
+            "Is there anything else I can get for you?",
+            "How's everything? Anything else you need?",
+            "Will that be all? - Yes, that's everything else for now, thanks.",
+            "Main course finished! Anything else - maybe something sweet?",
+            "Extra sauce, no croutons. Anything else I should know?"
+      ]
+},
+    {
+      "chunkId": "service_1_ch_allergy_disclosure",
+      "native": "allergy",
+      "learner": {
+            "meaning": "Noun - medical condition of adverse reaction to food substances. Critical safety word in dining (BUCKET_B: Dining - health & safety).",
+            "useWhen": "Essential vocabulary for safe dining. Servers must know about allergies to prevent serious health incidents.",
+            "commonWrong": "❌ 'Allergie' (French spelling, not English)",
+            "fix": "✔️ 'I have an allergy to nuts' or 'My friend has a nut allergy'",
+            "whyOdd": ""
+      },
+      "examples": [
+            "My friend has a nut allergy - can you make sure her food is safe?",
+            "Does the pesto have any allergy concerns I should know?",
+            "This customer has a shellfish allergy - please prepare separately.",
+            "Her allergy is severe, so I need absolute certainty there's no cross-contamination.",
+            "When someone mentions an allergy, this is not a preference - take it very seriously."
+      ]
+},
+    {
+      "chunkId": "service_1_ch_contain_allergen",
+      "native": "use",
+      "learner": {
+            "meaning": "Verb indicating 'we have/contain' ingredients - 'We use nuts in several dishes' directly communicates risk.",
+            "useWhen": "Clearer than 'we have nuts' - specifically states incorporation into dishes, not just in kitchen. Critical for allergy communication.",
+            "commonWrong": "❌ 'We have nuts' (vague - are they in food or just in kitchen?)",
+            "fix": "✔️ 'We use nuts in several dishes' or 'Several dishes contain nuts'",
+            "whyOdd": ""
+      },
+      "examples": [
+            "We use peanuts in our kitchen - if you have an allergy, let me know.",
+            "All our pasta uses eggs - any allergies I should know about?",
+            "We use shellfish regularly, so there might be trace amounts in our oils.",
+            "This soup uses butter and cream - not suitable for vegan diets.",
+            "Do you use corn syrup? - No, we use honey instead."
+      ]
+},
+    {
+      "chunkId": "service_1_ch_allergy_safety",
+      "native": "carefully",
+      "learner": {
+            "meaning": "Adverb emphasizing care/attention - crucial in allergen context to signal serious handling procedures.",
+            "useWhen": "Shows commitment to safety. 'Prepared carefully' signals kitchen will take extra precautions, not just avoid ingredient.",
+            "commonWrong": "❌ 'We'll be careful' (too informal for medical context)",
+            "fix": "✔️ 'Prepared very carefully' or 'We'll handle this carefully'",
+            "whyOdd": ""
+      },
+      "examples": [
+            "We'll prepare your meal very carefully - separate utensils, clean prep area.",
+            "Given the severity, I'll make sure it's prepared carefully by our senior chef.",
+            "We take cross-contamination seriously. Everything will be handled carefully.",
+            "This allergy is severe, so I'll personally monitor careful preparation.",
+            "Nut allergy, severe reaction possible - needs careful kitchen management."
+      ]
+},
+    {
+      "chunkId": "service_1_ch_ordering_habit",
+      "native": "orders the same thing",
+      "learner": {
+            "meaning": "Third-person statement about consistent ordering behavior - common in restaurant dialogue about predictable customers.",
+            "useWhen": "Shows familiarity with friend's preferences in casual way. Natural rapport-building phrase in informal restaurant contexts.",
+            "commonWrong": "❌ 'She always same thing orders' (word order wrong)",
+            "fix": "✔️ 'She orders the same thing every time' or 'She always orders the same thing'",
+            "whyOdd": ""
+      },
+      "examples": [
+            "Your friend always orders the same thing - do you want to surprise her?",
+            "He orders the same thing every time - we joke that he could order with his eyes closed.",
+            "If she orders the same thing again, I'll make sure it's perfect.",
+            "Some people order the same thing because they found THE dish for them.",
+            "Her order? She always orders the same thing - it's been that way for two years."
+      ]
+},
+    {
+      "chunkId": "service_1_ch_vegetable_variant",
+      "native": "vegetables",
+      "learner": {
+            "meaning": "Plural noun specifying the vegetable side dish - used to clarify which components customer wants.",
+            "useWhen": "In risotto context, important to confirm if veg is integrated or separate. British pluralization 'vegetables' (veg/veggies in casual speech).",
+            "commonWrong": "❌ 'The veg' (too informal for formal order confirmation)",
+            "fix": "✔️ 'The vegetables' or 'with fresh vegetables' (in menu language)",
+            "whyOdd": ""
+      },
+      "examples": [
+            "The risotto comes with vegetables - would you like them on the side?",
+            "This dish includes fresh vegetables from our morning market.",
+            "The vegetables are prepared in the same oil as meat - is that okay?",
+            "Do you want more vegetables, or is this fine?",
+            "Should your vegetables be cooked slightly crisp or softer?"
+      ]
+},
+    {
+      "chunkId": "service_1_ch_quality_freshness",
+      "native": "nut-free",
+      "learner": {
+            "meaning": "Adjective/compound modifier indicating 'contains no nuts' - hyphenated form when used as adjective before noun.",
+            "useWhen": "Medical/safety language for severe allergies. 'Nut-free' is more precise than 'no nuts' when describing meal preparation protocol.",
+            "commonWrong": "❌ 'Nuts-free' (incorrect plural)",
+            "fix": "✔️ 'Nut-free' (hyphenated before noun) or 'free from nuts' (after)",
+            "whyOdd": ""
+      },
+      "examples": [
+            "We have a completely nut-free kitchen area for severe allergies.",
+            "All items marked with an asterisk are nut-free.",
+            "This meal will be prepared in our nut-free zone with dedicated equipment.",
+            "We use completely nut-free utensils for this preparation.",
+            "Our desserts are sourced from nut-free suppliers specifically."
+      ]
+},
+    {
+      "chunkId": "service_1_ch_service_timing",
+      "native": "minutes",
+      "learner": {
+            "meaning": "Plural noun - units of time. Specifies duration estimate for food preparation ('about 15 minutes').",
+            "useWhen": "Essential for managing customer expectations. Accurate timing information prevents frustration and allows time planning.",
+            "commonWrong": "❌ 'In about fifteen minute' (missing plural)",
+            "fix": "✔️ 'About fifteen minutes' or 'In about 15 minutes'",
+            "whyOdd": ""
+      },
+      "examples": [
+            "Your meal should be ready in about fifteen minutes.",
+            "How long for the appetizers? - Maybe ten minutes?",
+            "We have 45 minutes before we need to leave. Will this be done in time? - Easily - 20 minutes maximum.",
+            "We're pretty busy, so kitchen is running about 25 minutes.",
+            "The special takes longer - allow 30-40 minutes for kitchen prep."
+      ]
+},
+    {
+      "chunkId": "service_1_ch_bill_discussion",
+      "native": "bill",
+      "learner": {
+            "meaning": "Noun - the invoice/receipt for meal cost (British English term, US uses 'check'). Critical for payment discussion.",
+            "useWhen": "Standard UK restaurant language. Essential vocabulary for managing payment logistics (BUCKET_B: Dining - payment).",
+            "commonWrong": "❌ 'Check' (American English, wrong for UK context)",
+            "fix": "✔️ 'The bill' (UK standard) or 'Could you bring the bill?'",
+            "whyOdd": ""
+      },
+      "examples": [
+            "When you're ready, I'll bring the bill.",
+            "Would you like the bill split or together?",
+            "That's £32. Can I get anything else before I bring the bill?",
+            "I'll bring the bill over. We take card or cash.",
+            "I need to keep the bill for expense reimbursement."
+      ]
+},
+    {
+      "chunkId": "service_1_ch_separate_bills",
+      "native": "bring",
+      "learner": {
+            "meaning": "Verb - to deliver or present. 'Could you bring me two checks' or 'bring separate bills' (BUCKET_A: Requests & Help).",
+            "useWhen": "Natural request phrasing in service contexts. 'Bring' is more direct and warmer than 'prepare' or 'make' for bill logistics.",
+            "commonWrong": "❌ 'Take me the bill' (wrong directional verb)",
+            "fix": "✔️ 'Could you bring me the bill?' or 'Bring two separate bills'",
+            "whyOdd": ""
+      },
+      "examples": [
+            "Could you bring me two separate bills, please?",
+            "When you're ready, I'll bring the bill by card machine.",
+            "Bring each person their bill - they're splitting costs.",
+            "We're ready. Can you bring the bill?",
+            "Bring the bill whenever you're ready - no rush."
+      ]
+},
+    {
+      "chunkId": "service_1_ch_bill_status",
+      "native": "split it",
+      "learner": {
+            "meaning": "Verb phrase - 'split' meaning divide the cost, 'it' being the bill. Clarifies cost-sharing arrangement.",
+            "useWhen": "Quick, clear confirmation of payment logistics. 'Are you splitting it?' is standard pre-bill question from servers (BUCKET_B: Dining - payment).",
+            "commonWrong": "❌ 'Split the bill' (transitive without 'it')",
+            "fix": "✔️ 'Are you splitting it?' or 'We're splitting the bill three ways'",
+            "whyOdd": ""
+      },
+      "examples": [
+            "Are you splitting the bill? - No, it's on me.",
+            "I assume we're not splitting it? - Correct, one bill.",
+            "If you're splitting it, I can run two separate cards.",
+            "Six of us - should I assume we're splitting it? - Yes, six ways.",
+            "Let me confirm - you're splitting the bill three ways?"
+      ]
+},
+    {
+      "chunkId": "service_1_ch_payment_arrangement",
+      "native": "splitting it",
+      "learner": {
+            "meaning": "Present participle form of 'split' - indicates the action of dividing costs. 'Are you splitting it?' asks for confirmation of cost-sharing.",
+            "useWhen": "Servers use this to confirm payment logistics. Natural, conversational way to ask how costs will be divided (BUCKET_B: Dining - payment).",
+            "commonWrong": "❌ 'Split?' (incomplete - ambiguous)",
+            "fix": "✔️ 'Are you splitting it?' or 'I assume you're not splitting it?'",
+            "whyOdd": ""
+      },
+      "examples": [
+            "I assume you're not splitting it? - Right, it's on me.",
+            "Are we splitting it equally or is someone treating?",
+            "Should I assume you're all splitting it down the middle?",
+            "You've got the company card, so we're not splitting it, right?",
+            "Are you folks splitting it, or one check?"
+      ]
+}
+  ],
+  "blanksInOrder": [
+    {"blankId":"b0","chunkId":"service_1_ch_party_size"},
+    {"blankId":"b1","chunkId":"service_1_ch_arrival_timing"},
+    {"blankId":"b2","chunkId":"service_1_ch_service_opener"},
+    {"blankId":"b3","chunkId":"service_1_ch_wine_inquiry"},
+    {"blankId":"b4","chunkId":"service_1_ch_quantity_modifier"},
+    {"blankId":"b5","chunkId":"service_1_ch_topic_transition"},
+    {"blankId":"b6","chunkId":"service_1_ch_dietary_preference"},
+    {"blankId":"b7","chunkId":"service_1_ch_negative_preference"},
+    {"blankId":"b8","chunkId":"service_1_ch_direction_instruction"},
+    {"blankId":"b9","chunkId":"service_1_ch_bestseller_marker"},
+    {"blankId":"b10","chunkId":"service_1_ch_positive_response"},
+    {"blankId":"b11","chunkId":"service_1_ch_salt_reduction"},
+    {"blankId":"b12","chunkId":"service_1_ch_recommendation_verb"},
+    {"blankId":"b13","chunkId":"service_1_ch_food_preparation"},
+    {"blankId":"b14","chunkId":"service_1_ch_rejecting_ingredient"},
+    {"blankId":"b15","chunkId":"service_1_ch_additional_concern"},
+    {"blankId":"b16","chunkId":"service_1_ch_allergy_disclosure"},
+    {"blankId":"b17","chunkId":"service_1_ch_contain_allergen"},
+    {"blankId":"b18","chunkId":"service_1_ch_allergy_safety"},
+    {"blankId":"b19","chunkId":"service_1_ch_ordering_habit"},
+    {"blankId":"b20","chunkId":"service_1_ch_vegetable_variant"},
+    {"blankId":"b21","chunkId":"service_1_ch_quality_freshness"},
+    {"blankId":"b22","chunkId":"service_1_ch_service_timing"},
+    {"blankId":"b23","chunkId":"service_1_ch_bill_discussion"},
+    {"blankId":"b24","chunkId":"service_1_ch_separate_bills"},
+    {"blankId":"b25","chunkId":"service_1_ch_bill_status"},
+    {"blankId":"b26","chunkId":"service_1_ch_payment_arrangement"}
+  ],
+  "patternSummary": {
+      "categoryBreakdown": [
+          {
+              "categoryKey": "Openers",
+              "count": 5,
+              "exampleChunkIds": [],
+              "insight": "Natural conversation patterns in this scenario"
+          }
+      ],
+      "overallInsight": "Master authentic conversational patterns for real-world interactions",
+      "keyPatterns": []
+  },
+  "activeRecall": [
+    {"id":"service_1_ar_1","prompt":"What polite request phrase did the customer use asking about the house red wine?","targetChunkIds":["service_1_ch_wine_inquiry"],"expectedAnswer":"Could you tell me about","hints":["It starts with 'Could...' and asks for a description","Alternative: 'Could you recommend...' works similarly"]},
+    {"id":"service_1_ar_2","prompt":"When the customer wanted to shift topics to dietary needs, what discourse connector did they use?","targetChunkIds":["service_1_ch_topic_transition"],"expectedAnswer":"By the way","hints":["This idiom signals a new thought or question","It's in the BUCKET_A: Conversation Starters group"]},
+    {"id":"service_1_ar_3","prompt":"What idiomatic phrase did the customer use to indicate they'd be paying for both meals?","targetChunkIds":["service_1_ch_bill_status"],"expectedAnswer":"it's on me","hints":["This is a warm, generous expression","Alternative: 'My treat' means the same thing"]},
+    {"id":"service_1_ar_4","prompt":"In a restaurant context, what term would you use for a simple answer when accepting a server's recommendation?","targetChunkIds":["service_1_ch_positive_response"],"expectedAnswer":"That sounds good","hints":["It's a short acceptance phrase","Also acceptable: 'That sounds perfect'"]},
+    {"id":"service_1_ar_5","prompt":"What professional verb would you use when asking the kitchen to modify food with extra ingredients?","targetChunkIds":["service_1_ch_food_preparation"],"expectedAnswer":"prepare","hints":["More professional than 'make' or 'cook'","Example: 'Could you prepare this with...'"]},
+    {"id":"service_1_ar_6","prompt":"When a customer orders just a glass instead of a bottle, which quantity modifier are they using?","targetChunkIds":["service_1_ch_quantity_modifier"],"expectedAnswer":"just","hints":["This adverb means 'only'","Example: 'I'd love just a glass'"]},
+    {"id":"service_1_ar_7","prompt":"What critical safety word must you use when informing restaurants about food reactions?","targetChunkIds":["service_1_ch_allergy_disclosure"],"expectedAnswer":"allergy","hints":["This is a medical term, not a preference","Example: 'My friend has a nut ___'"]},
+    {"id":"service_1_ar_8","prompt":"When rejecting a garnish like croutons on a salad, what is the most natural, efficient phrasing?","targetChunkIds":["service_1_ch_rejecting_ingredient"],"expectedAnswer":"no","hints":["Single word is often most natural here","Example: '___ croutons on my salad, please'"]},
+    {"id":"service_1_ar_9","prompt":"What question does a server ask to confirm the meal payment arrangement when the bill arrives?","targetChunkIds":["service_1_ch_bill_status"],"expectedAnswer":"Are you splitting it","hints":["It's asking about cost-sharing","Complete phrasing: 'I assume you're not ___ ___?'"]},
+    {"id":"service_1_ar_10","prompt":"When a server emphasizes careful preparation for an allergen, what adverb demonstrates commitment to safety?","targetChunkIds":["service_1_ch_allergy_safety"],"expectedAnswer":"carefully","hints":["This adverb shows extra attention to detail","Example: 'It will be prepared very ___'"]}
+  ]
+},
 ];

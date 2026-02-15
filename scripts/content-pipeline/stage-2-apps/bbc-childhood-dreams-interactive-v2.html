@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBC 6-Minute English: Childhood Dreams - v2 Modal Interface</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.3);
+            margin-top: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: white;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .chunk-section {
+            margin-bottom: 40px;
+        }
+
+        .chunk-title {
+            color: #667eea;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chunk-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .dialogue {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            line-height: 1.8;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .blank {
+            display: inline-block;
+            background: #fff3cd;
+            color: #856404;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+            border: 2px solid #ffc107;
+            margin: 0 2px;
+        }
+
+        .blank:hover {
+            background: #ffc107;
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(255, 193, 7, 0.3);
+        }
+
+        .blank.answered-correct {
+            background: #d4edda;
+            color: #155724;
+            border-color: #28a745;
+        }
+
+        .blank.answered-incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+
+        .recall-section {
+            background: #e7f3ff;
+            padding: 15px;
+            border-left: 4px solid #2196F3;
+            border-radius: 4px;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .recall-section strong {
+            color: #1976D2;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 90%;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 18px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .modal-close:hover {
+            opacity: 1;
+        }
+
+        .modal-content {
+            padding: 25px;
+        }
+
+        .modal-question {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .option input[type="radio"] {
+            margin-right: 10px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+
+        .option label {
+            flex: 1;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .option.correct {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+
+        .option.incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
+        }
+
+        .modal-feedback {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            display: none;
+        }
+
+        .modal-feedback.show {
+            display: block;
+        }
+
+        .modal-feedback.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .modal-feedback.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-check {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-check:hover {
+            background: #5568d3;
+        }
+
+        .btn-close {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-close:hover {
+            background: #d0d0d0;
+        }
+
+        .stats {
+            background: white;
+            border-top: 1px solid #eee;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+        }
+
+        .stat {
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+
+        .completion-message {
+            text-align: center;
+            padding: 40px;
+            background: #f8f9fa;
+        }
+
+        .completion-message h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        .completion-message p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 600px) {
+            .content {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .dialogue {
+                font-size: 14px;
+            }
+
+            .stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌍 BBC 6-Minute English</h1>
+            <p>Childhood Dreams - Interactive Learning (v2 Modal Interface)</p>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div id="exercises-container"></div>
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value" id="accuracy">--%</div>
+                <div class="stat-label">Accuracy</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="completed">0/100</div>
+                <div class="stat-label">Completed</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="streak">0</div>
+                <div class="stat-label">Correct Streak</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Select the Correct Answer</h3>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="modal-content">
+                <div class="modal-question" id="modalQuestion"></div>
+                <div class="options-container" id="optionsContainer"></div>
+                <div class="modal-feedback" id="modalFeedback"></div>
+                <div class="modal-actions">
+                    <button class="btn btn-close" id="btnCancel">Cancel</button>
+                    <button class="btn btn-check" id="btnSubmit">Check Answer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data
+        const data = {
+            chunks: [
+                {
+                    id: "chunk_1",
+                    phrase: "follow your dreams",
+                    difficulty: "Beginner",
+                    dialogue: "A: What did you want to be when you were a child?\nB: I always wanted to be an astronaut. My parents encouraged me to <span class='blank' data-blank='0'>follow your dreams</span>. They said if you work hard, you can achieve anything.\nA: That's wonderful. Did you eventually become an astronaut?\nB: Not exactly, but I became an aerospace engineer. I still <span class='blank' data-blank='1'>follow your dreams</span> in a different way. Every day at work, I help design spacecraft.\nA: So your childhood dream influenced your career path?\nB: Absolutely! I tell everyone now - don't abandon your dreams. <span class='blank' data-blank='2'>Follow your dreams</span> because they are a roadmap to your future.\nA: What was your dream, by the way?\nB: I wanted to explore space and understand the universe. Even though I'm not in space, working on space technology lets me <span class='blank' data-blank='3'>follow my dreams</span> in practice.\nA: That's inspiring. Do you have any advice for young people?\nB: Yes - take your dreams seriously. Many people dismiss their childhood dreams as silly, but I believe you should always <span class='blank' data-blank='4'>follow your dreams</span> with determination and purpose.",
+                    answer_options: [
+                        ["follow your dreams", "pursue their interests", "chase their goals"],
+                        ["follow your dreams", "pursue their passions", "chase their aspirations"],
+                        ["follow your dreams", "chase their interests", "pursue their goals"],
+                        ["follow my dreams", "pursue my passions", "chase my aspirations"],
+                        ["follow your dreams", "pursue your goals", "chase your aspirations"]
+                    ],
+                    correct_answers: [0, 0, 0, 0, 0]
+                },
+                {
+                    id: "chunk_2",
+                    phrase: "struggle with",
+                    difficulty: "Intermediate",
+                    dialogue: "A: Everyone has challenges in life. What do you <span class='blank' data-blank='0'>struggle with</span>?\nB: I think most people <span class='blank' data-blank='1'>struggle with</span> self-doubt. It's a constant battle.\nA: That's very common. How do you deal with it?\nB: I try to recognize when I'm <span class='blank' data-blank='2'>struggling with</span> negative thoughts and replace them with positive ones.\nA: Have you always been like this?\nB: No, when I was younger, I would really <span class='blank' data-blank='3'>struggle with</span> my confidence. I was shy and reserved.\nA: What changed?\nB: I realized that everyone <span class='blank' data-blank='4'>struggles with</span> something. It's normal and part of being human. Once I accepted this, I felt less alone.",
+                    answer_options: [
+                        ["struggle with", "deal with", "face"],
+                        ["struggle with", "battle with", "deal with"],
+                        ["struggling with", "battling with", "dealing with"],
+                        ["struggle with", "face", "encounter"],
+                        ["struggles with", "battles with", "deals with"]
+                    ],
+                    correct_answers: [0, 0, 0, 0, 0]
+                },
+                {
+                    id: "chunk_3",
+                    phrase: "get lost in",
+                    difficulty: "Beginner",
+                    dialogue: "A: What's your favorite way to relax?\nB: I love to <span class='blank' data-blank='0'>get lost in</span> a good book. I can read for hours.\nA: Books are wonderful. What kind?\nB: I prefer fantasy novels where I can really <span class='blank' data-blank='1'>get lost in</span> another world.\nA: Do you ever get distracted?\nB: Rarely. When I'm reading, I completely <span class='blank' data-blank='2'>get lost in</span> the story. Time disappears.\nA: That sounds magical. Do your friends share this hobby?\nB: Some do. My best friend loves to <span class='blank' data-blank='3'>get lost in</span> movies in the same way I do with books.\nA: What makes this different from other hobbies?\nB: When you <span class='blank' data-blank='4'>get lost in</span> something you love, you forget about your worries and problems. It's therapeutic.",
+                    answer_options: [
+                        ["get lost in", "immerse in", "lose yourself in"],
+                        ["get lost in", "escape into", "dive into"],
+                        ["get lost in", "bury yourself in", "lose yourself in"],
+                        ["get lost in", "immerse in", "escape into"],
+                        ["get lost in", "lose yourself in", "dive into"]
+                    ],
+                    correct_answers: [0, 0, 0, 0, 0]
+                },
+                {
+                    id: "chunk_4",
+                    phrase: "set off to",
+                    difficulty: "Intermediate",
+                    dialogue: "A: Tell me about your travel experiences.\nB: I love to <span class='blank' data-blank='0'>set off to</span> new places and explore them.\nA: When did you last travel?\nB: Last summer, I decided to <span class='blank' data-blank='1'>set off to</span> Southeast Asia with just a backpack.\nA: That sounds adventurous! Were you nervous?\nB: Yes, but I was excited too. Before I could <span class='blank' data-blank='2'>set off to</span> the airport, I had to make sure all my documents were ready.\nA: Did you travel alone?\nB: Yes, for the first time. My parents helped me <span class='blank' data-blank='3'>set off to</span> my destination safely.\nA: What was your favorite memory?\nB: The moment I decided to <span class='blank' data-blank='4'>set off to</span> that journey changed my perspective on life completely.",
+                    answer_options: [
+                        ["set off to", "head to", "journey to"],
+                        ["set off to", "depart for", "travel to"],
+                        ["set off to", "leave for", "head to"],
+                        ["set off to", "journey to", "travel to"],
+                        ["set off to", "journey on", "depart for"]
+                    ],
+                    correct_answers: [0, 0, 0, 0, 0]
+                },
+                {
+                    id: "chunk_5",
+                    phrase: "conquer the world",
+                    difficulty: "Beginner",
+                    dialogue: "A: What were your childhood ambitions?\nB: I wanted to <span class='blank' data-blank='0'>conquer the world</span>! I thought I could do anything.\nA: That's a big dream. Were you more realistic as you grew up?\nB: A bit, but I still believe in aiming high. I want to <span class='blank' data-blank='1'>conquer the world</span> in my own way - through my career.\nA: What does that mean to you?\nB: It means to <span class='blank' data-blank='data-blank='2'>conquer the world</span> by making a positive impact wherever I go.\nA: Do you think it's possible?\nB: I think if you have determination, you can almost <span class='blank' data-blank='3'>conquer the world</span>. But you need focus.\nA: Any final thoughts?\nB: Yes - don't let go of those big dreams. Even if you don't literally <span class='blank' data-blank='4'>conquer the world</span>, pursuing them will lead to extraordinary things.",
+                    answer_options: [
+                        ["conquer the world", "take over the world", "rule the world"],
+                        ["conquer the world", "achieve global success", "dominate the world"],
+                        ["conquer the world", "succeed everywhere", "achieve everything"],
+                        ["conquer the world", "accomplish everything", "rule globally"],
+                        ["conquer the world", "achieve worldwide impact", "rule the world"]
+                    ],
+                    correct_answers: [0, 0, 0, 0, 0]
+                }
+            ]
+        };
+
+        // State
+        let state = {
+            currentChunkIndex: 0,
+            currentBlankIndex: 0,
+            selectedAnswer: null,
+            answered: {},
+            correct: 0,
+            streak: 0,
+            showFeedback: false
+        };
+
+        // DOM Elements
+        const container = document.getElementById('exercises-container');
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalQuestion = document.getElementById('modalQuestion');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const modalFeedback = document.getElementById('modalFeedback');
+        const btnSubmit = document.getElementById('btnSubmit');
+        const btnCancel = document.getElementById('btnCancel');
+        const modalClose = document.getElementById('modalClose');
+        const progressFill = document.querySelector('.progress-fill');
+
+        // Initialize
+        function init() {
+            renderChunks();
+            setupEventListeners();
+        }
+
+        function renderChunks() {
+            container.innerHTML = data.chunks.map((chunk, idx) => `
+                <div class="chunk-section">
+                    <div class="chunk-title">
+                        <span class="chunk-number">${idx + 1}</span>
+                        <span>"${chunk.phrase}"</span>
+                    </div>
+                    <div class="dialogue" id="chunk-${idx}">
+                        ${chunk.dialogue}
+                    </div>
+                    <div class="recall-section">
+                        <strong>💡 Memory Hint:</strong> Common contexts where this phrase is used...
+                    </div>
+                </div>
+            `).join('');
+
+            // Attach click handlers to blanks
+            document.querySelectorAll('.blank').forEach((blank, globalIdx) => {
+                blank.addEventListener('click', () => openModal(globalIdx));
+            });
+        }
+
+        function setupEventListeners() {
+            modalClose.addEventListener('click', closeModal);
+            btnCancel.addEventListener('click', closeModal);
+            btnSubmit.addEventListener('click', submitAnswer);
+
+            document.querySelectorAll('.option input[type="radio"]').forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    state.selectedAnswer = e.target.value;
+                });
+            });
+        }
+
+        function openModal(blankGlobalIndex) {
+            // Find chunk and blank index from global index
+            let count = 0;
+            let chunkIdx = 0;
+            let blankIdx = 0;
+
+            for (let i = 0; i < data.chunks.length; i++) {
+                const blanksInChunk = data.chunks[i].answer_options.length;
+                if (count + blanksInChunk > blankGlobalIndex) {
+                    chunkIdx = i;
+                    blankIdx = blankGlobalIndex - count;
+                    break;
+                }
+                count += blanksInChunk;
+            }
+
+            state.currentChunkIndex = chunkIdx;
+            state.currentBlankIndex = blankIdx;
+            state.selectedAnswer = null;
+
+            const chunk = data.chunks[chunkIdx];
+            const blank = chunk.answer_options[blankIdx];
+            const correctIndex = chunk.correct_answers[blankIdx];
+
+            modalQuestion.textContent = `Fill in the blank with: "${chunk.phrase}"`;
+            
+            optionsContainer.innerHTML = blank.map((option, idx) => `
+                <label class="option">
+                    <input type="radio" name="answer" value="${idx}">
+                    <label>${option}</label>
+                </label>
+            `).join('');
+
+            // Re-attach listeners
+            document.querySelectorAll('.option input[type="radio"]').forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    state.selectedAnswer = parseInt(e.target.value);
+                });
+            });
+
+            modalFeedback.classList.remove('show', 'success', 'error');
+            modalFeedback.textContent = '';
+            btnSubmit.textContent = 'Check Answer';
+            btnSubmit.disabled = false;
+
+            modalOverlay.classList.add('active');
+        }
+
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+            state.selectedAnswer = null;
+        }
+
+        function submitAnswer() {
+            if (state.selectedAnswer === null) {
+                alert('Please select an answer');
+                return;
+            }
+
+            const chunk = data.chunks[state.currentChunkIndex];
+            const correctIndex = chunk.correct_answers[state.currentBlankIndex];
+            const isCorrect = state.selectedAnswer === correctIndex;
+
+            if (isCorrect) {
+                state.correct++;
+                state.streak++;
+                modalFeedback.textContent = '✅ Correct! Great job!';
+                modalFeedback.classList.add('show', 'success');
+                document.querySelector(`input[value="${state.selectedAnswer}"]`).closest('.option').classList.add('correct');
+            } else {
+                state.streak = 0;
+                const correctOption = chunk.answer_options[state.currentBlankIndex][correctIndex];
+                modalFeedback.textContent = `❌ Not quite. The correct answer is: "${correctOption}"`;
+                modalFeedback.classList.add('show', 'error');
+                document.querySelector(`input[value="${state.selectedAnswer}"]`).closest('.option').classList.add('incorrect');
+            }
+
+            btnSubmit.disabled = true;
+            updateStats();
+
+            setTimeout(() => {
+                closeModal();
+            }, 1500);
+        }
+
+        function updateStats() {
+            const total = data.chunks.reduce((sum, chunk) => sum + chunk.answer_options.length, 0);
+            const accuracy = total > 0 ? Math.round((state.correct / total) * 100) : 0;
+            
+            document.getElementById('accuracy').textContent = accuracy + '%';
+            document.getElementById('completed').textContent = `${state.correct}/${total}`;
+            document.getElementById('streak').textContent = state.streak;
+
+            progressFill.style.width = ((state.correct / total) * 100) + '%';
+        }
+
+        init();
+    </script>
+</body>
+</html>
