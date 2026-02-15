@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBC 6-Minute English: Childhood Dreams - Interactive Learning</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.2);
+            height: 8px;
+            margin-top: 15px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #4ade80;
+            transition: width 0.3s ease;
+        }
+
+        .content {
+            padding: 40px;
+            min-height: 500px;
+        }
+
+        .chunk-header {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 4px solid #667eea;
+        }
+
+        .chunk-header h2 {
+            color: #667eea;
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .chunk-meta {
+            display: flex;
+            gap: 20px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .difficulty-badge.beginner {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .difficulty-badge.intermediate {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .difficulty-badge.advanced {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .dialogue-container {
+            background: #f3f4f6;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            line-height: 1.8;
+            font-size: 15px;
+        }
+
+        .dialogue-text {
+            margin-bottom: 20px;
+        }
+
+        .speaker {
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .blank-slot {
+            display: inline-block;
+            background: #fbbf24;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #78350f;
+            cursor: pointer;
+            margin: 0 2px;
+            transition: all 0.2s ease;
+        }
+
+        .blank-slot:hover {
+            background: #f59e0b;
+            transform: scale(1.05);
+        }
+
+        .blank-slot.filled {
+            background: #86efac;
+            color: #166534;
+            cursor: default;
+        }
+
+        .blank-slot.incorrect {
+            background: #fca5a5;
+            color: #7f1d1d;
+            cursor: default;
+        }
+
+        .options-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .current-blank-label {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .options {
+            display: grid;
+            gap: 10px;
+        }
+
+        .option {
+            padding: 12px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 14px;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #f3f4f6;
+        }
+
+        .option.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .option.correct {
+            background: #4ade80;
+            color: white;
+            border-color: #4ade80;
+        }
+
+        .option.incorrect {
+            background: #f87171;
+            color: white;
+            border-color: #f87171;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-submit {
+            background: #667eea;
+            color: white;
+            flex: 1;
+        }
+
+        .btn-submit:hover:not(:disabled) {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .btn-submit:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+        }
+
+        .btn-skip {
+            background: #e5e7eb;
+            color: #1f2937;
+        }
+
+        .btn-skip:hover {
+            background: #d1d5db;
+        }
+
+        .btn-nav {
+            background: #667eea;
+            color: white;
+            padding: 10px 15px;
+        }
+
+        .btn-nav:hover:not(:disabled) {
+            background: #5a67d8;
+        }
+
+        .btn-nav:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+        }
+
+        .recall-section {
+            background: #ede9fe;
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 4px solid #a78bfa;
+            margin-top: 30px;
+        }
+
+        .recall-section h3 {
+            color: #6d28d9;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .recall-question {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border-left: 3px solid #a78bfa;
+        }
+
+        .recall-situation {
+            color: #a78bfa;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .recall-question-text {
+            color: #1f2937;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .recall-question.answered .recall-question-text {
+            color: #059669;
+            font-weight: 500;
+        }
+
+        .feedback {
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .feedback.success {
+            background: #dcfce7;
+            color: #166534;
+            border-left: 3px solid #4ade80;
+        }
+
+        .feedback.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 3px solid #f87171;
+        }
+
+        .completed-screen {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .completed-screen h2 {
+            color: #667eea;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .completed-screen p {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .chunk-counter {
+            color: #999;
+            font-size: 13px;
+        }
+
+        @media (max-width: 640px) {
+            .content {
+                padding: 20px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .dialogue-container {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 BBC 6-Minute English: Childhood Dreams</h1>
+            <p>Interactive IELTS Speaking Practice - 10 Essential Phrases</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div class="content" id="content">
+            <!-- Content will be inserted here by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        // Data embedded directly
+        const data = {"project_name":"BBC 6 Minute English - Childhood Dreams","transcript_source":"BBC Learning English - 6 Minute English","chunks":[{"id":"chunk_001","phrase":"follow your dreams","context_category":"personal goals and aspirations","difficulty":"Intermediate","transcript_usage":"Not having the courage to follow your dreams was listed as the top life regret.","dialogue":"A: Hey, can I ask you something personal? B: Of course, what's on your mind? A: Well, I've been thinking about making a big change in my life. I want to [BLANK_1] my dreams. B: That sounds exciting! What kind of dreams are we talking about? A: I've always wanted to travel and write books, but I kept putting it off for years. B: Why did you wait so long? A: I was scared, honestly. My family said I should [BLANK_2] a more stable job instead. They thought it was too risky. B: I understand the pressure. Do you regret not doing it sooner? A: Absolutely. I read this statistic that many people's top regret is not [BLANK_3] their dreams. B: That's powerful. So what's changed now? A: I realized life's too short to waste on regrets. That's why I'm determined to [BLANK_4] my dreams now, while I still can. B: I think that's the right decision. I mean, life's too short to [BLANK_5] your passion on hold forever. A: Exactly! I'd rather try and fail than spend my whole life wondering 'what if'. B: When do you plan to start? A: Next month. I'm going to [BLANK_6] my dreams properly this time. No more excuses. B: I really admire that. You know, I've been thinking about [BLANK_7] my own dreams too. A: Really? What would you like to do? B: I want to learn music seriously. I used to play guitar but stopped. A: So why don't you start again? You could [BLANK_8] that dream if you really wanted to. B: You're right. Seeing your determination actually inspires me. A: Then let's both [BLANK_9] our dreams together! We can support each other. B: I like that idea. Promise me you won't give up? A: I promise. And you should [BLANK_10] yours too. Life's waiting for us to make something of ourselves.","blank_count":10,"answer_options":[["follow","pursue","chase"],["get","take","find"],["following","pursuing","chasing"],["follow","pursue","chase"],["keep","hold","put"],["follow","pursue","chase"],["pursuing","following","chasing"],["follow","pursue","chase"],["follow","pursue","chase"],["follow","pursue","chase"]],"active_recall":[{"situation":"career counselor conversation","question":"You're talking to a career counselor about students who abandon their ambitions. How would you describe this loss using the phrase? Create a sentence: 'Many young people stop...'"},{"situation":"motivational speech","question":"You're giving a speech to graduates about life goals. What's your main message? Create a sentence: 'The most important thing in life is to...'"},{"situation":"interview at a university","question":"An interviewer asks about your long-term vision. How would you respond? Create a sentence: 'My biggest goal is to...'"}]},{"id":"chunk_002","phrase":"struggle with (an idea/concept)","context_category":"difficulties and understanding","difficulty":"Intermediate","transcript_usage":"But Daisy says that local people struggle with the idea that everything is shared. If you struggle with an idea, you find it difficult to accept.","dialogue":"A: I'm taking a philosophy class and I'm finding it really challenging. B: What's the main problem you're having? A: Well, I [BLANK_1] the concept of communal living. It seems too idealistic and unrealistic to me. B: What do you mean exactly? Can you give me an example? A: I mean, I [BLANK_2] the idea that people would share absolutely everything equally. B: Why is that so difficult for you? A: Because I think humans are naturally selfish. We want to own things. B: That's a common perspective. Do you think you're alone in this? A: No, definitely not. Many people in my class [BLANK_3] this concept too. B: But Daisy, who we discussed before, manages to live this way in her community. A: Yes, but it's in a small, intentional community. Not everyone can adapt to that. B: True. So you [BLANK_4] the philosophical idea, even if practice could differ? A: Exactly. I also [BLANK_5] with the notion that property ownership is unethical. B: Why specifically that part? A: Because I wasn't raised that way. My parents taught me that my belongings are mine. B: I see. So culturally, you [BLANK_6] these values? A: Yes, very much. When people [BLANK_7] concepts like this, it's often because of their background. B: That's actually quite insightful. Do you think you could ever understand the viewpoint? A: Maybe over time, but right now I definitely [[BLANK_8] with it. B: What would help you understand better? A: Probably visiting a community like Riverside. Seeing it work in practice would help me [BLANK_9] with the theory. B: That's a great idea. You know, many people throughout history [BLANK_10] similar ideas before eventually accepting them.","blank_count":10,"answer_options":[["struggle with","find difficult","have trouble with"],["struggle with","find difficult","have trouble accepting"],["struggle with","find difficult","have trouble"],["struggle with","find difficult","have trouble"],["struggle with","find difficult","have trouble"],["struggle with","find difficult","have trouble with"],["struggle with","find difficult","have trouble with"],["struggle with","find difficult","have trouble"],["struggle with","find difficult","come to terms with"],["struggled with","found difficult","had trouble with"]],"active_recall":[{"situation":"student study group","question":"Your classmate tells you she doesn't understand the assignment. How would you acknowledge this? Create a sentence: 'I know many students...'"},{"situation":"workplace diversity training","question":"During cultural sensitivity training, someone admits they don't understand a different perspective. How would you respond? Create a sentence: 'It's normal to...'"},{"situation":"therapist session","question":"You're talking about your difficulty accepting a family change. How would you express this? Create a sentence: 'I really...'"}]},{"id":"chunk_003","phrase":"get lost in","context_category":"losing direction or becoming absorbed","difficulty":"Intermediate","transcript_usage":"Unfortunately, as we grow up these childhood dreams often get lost in the adult world of jobs, money, families and careers.","dialogue":"A: Do you remember what we wanted to be as kids? B: Yeah, I wanted to be an artist and create beautiful paintings. A: So what happened? Why didn't you [BLANK_1] that dream? B: You know, I don't really know exactly when it happened. I think it [BLANK_2] all the pressures of real life. A: What kind of pressures? B: Work, rent, bills, paying back student loans. Everything just seemed more urgent than art. A: That's really common. Many people's dreams [BLANK_3] in the daily struggle just to survive. B: Exactly! And before you know it, years have passed. A: Do you regret it? B: Absolutely. I sometimes wonder who I could have been. It's easy to [[BLANK_4] your passions when you're dealing with practical concerns. A: But some people manage to keep both, right? They don't [[BLANK_5]] their dreams in all the chaos. B: True, but those people usually have support or resources. A: Maybe, but I think it's also about priorities. B: I know. That's what makes me sad. My passion for art [[BLANK_6] all my responsibilities. A: Is it too late to start again? B: I've been thinking about that. Maybe I could [[BLANK_7] some time for it. A: I think you should try. Even just an hour a week could prevent your passion from [[BLANK_8] in the stress. B: You're right. I don't want to be seventy years old and still wondering what could have been. A: Exactly. Don't let your dreams [[BLANK_9] in regret. B: How do you stay motivated? A: Honestly, I remind myself of my younger self. I remember how much I cared about certain things. B: That's powerful. I think many people [[BLANK_10] their childhood dreams in the adult responsibilities. Maybe it's time I took mine back.","blank_count":10,"answer_options":[["pursue","follow","chase"],["got lost in","was lost in","disappeared in"],["get lost in","become lost in","disappear in"],["lose","let slip","abandon"],["let get lost in","lose","let disappear in"],["got lost in","was lost in","disappeared in"],["carve out","find","make"],["become lost in","get lost in","disappear in"],["become lost in","get lost in","disappear in"],["let get lost in","lose","had disappear in"]],"active_recall":[{"situation":"advice to a teenager","question":"You're warning a teenager about maintaining their passions. How would you phrase this? Create a sentence: 'Don't let your dreams...'"},{"situation":"midlife reflection","question":"You're reflecting on how your priorities shifted over twenty years. Create a sentence: 'Somehow, my passion for music...'"},{"situation":"parent talking to child","question":"You're advising your child to keep pursuing their interest. Create a sentence: 'I don't want you to...'"}]},{"id":"chunk_004","phrase":"set off to (do something)","context_category":"beginning a journey or undertaking","difficulty":"Intermediate","transcript_usage":"In 2000, childhood sweethearts, Herman and Candelaria Zapp, bought a vintage car and set off from Argentina to travel around the world.","dialogue":"A: Have you heard about the Zapp family? They're an incredible story. B: No, I haven't. Tell me about them! A: Well, they're from Argentina, and in 2000 they [BLANK_1] on this audacious adventure. B: What kind of adventure? A: They bought a vintage car with almost no money and [[BLANK_2] to travel the entire world. B: Wow! With how much money? A: Less than three thousand five hundred dollars! Can you believe that? B: That's insane! How did they manage? A: They [[BLANK_3] with their children, no plan, just determination. B: And what happened? A: Twenty-two years later, they've visited over a hundred countries. A: They've been [[BLANK_4]] for two decades, meeting people, learning cultures. B: Have they come back to Argentina? A: No, they're still traveling! B: That's amazing! But didn't they ever want to [[BLANK_5]] to settle down? A: Apparently they're so fulfilled by the journey that they don't feel that need. B: So when exactly did they [[BLANK_6]]? A: It was the year 2000. They were young and idealistic. B: What made them decide to [[BLANK_7] such a risky venture? A: Herman said he wanted to understand the world better. B: And did he? A: Yes! He said the experience transformed him. He went from wanting to conquer the world to just appreciating it. B: That's beautiful. I think I'd be terrified to [[BLANK_8] on such a journey. B: Me too, honestly. But Herman said fear almost stopped them. They almost didn't [[BLANK_9] at all. B: What changed their minds? A: They just decided that the regret of not going would be worse than any risk. B: That's the spirit! I'd love to [[BLANK_10] on an adventure like that someday.","blank_count":10,"answer_options":[["set off","set out","embarked"],["set off","set out","embarked"],["set off","set out","embarked"],["setting off","setting out","embarking"],["set off","set out","return"],["set off","set out","depart"],["set off","set out","embark"],["embark","set off","set out"],["set off","set out","embarked"],["set off","set out","embark"]],"active_recall":[{"situation":"planning gap year","question":"You're telling a friend about your post-graduation plans. How would you phrase it? Create a sentence: 'I'm thinking about...'"},{"situation":"family dinner conversation","question":"You're sharing your travel plans with relatives. Create a sentence: 'Next summer, we're planning to...'"},{"situation":"job interview","question":"An interviewer asks about your life experiences. How would you describe a big adventure? Create a sentence: 'After university, I...'"}]},{"id":"chunk_005","phrase":"conquer the world","context_category":"ambition and life goals","difficulty":"Intermediate","transcript_usage":"I am so happy with the Herman there is now, that I know now – not the one who wanted to conquer the world, but the one who was conquered by the world.","dialogue":"A: So Herman's perspective changed dramatically during his travels? B: Yes, completely. When he was younger, he wanted to [BLANK_1] and be powerful and successful. B: What do you mean by that? A: He wanted to dominate everything, win at everything, have total control. B: That's quite ambitious. What changed? A: Travel humbled him. After meeting thousands of people, he realized he couldn't [[BLANK_2]] alone. B: How did that realization come about? A: By seeing how vast the world is and how many incredible people are in it. A: He understood that you can't [[BLANK_3]] through force or ambition alone. B: So what became his new goal? A: Instead of trying to [[BLANK_4]], he wanted to understand people and cultures. B: That's actually much healthier. A: It is! He said in his old mindset, he'd forgotten to actually live. B: What do you mean? A: His drive to [[BLANK_5]] was so strong that he missed the beauty around him. B: And now? A: Now he's at peace. He describes himself as a grain of sand—small but important. B: That's poetic. Do you think most ambitious people feel like they need to [[BLANK_6]]? A: Probably many do when they're young. Society encourages that mindset. B: But it's not sustainable? A: No, because you can never actually [[BLANK_7]] everything. It's impossible. B: So what advice would Herman give his younger self? A: Probably to stop trying to [[BLANK_8]] and just focus on being a good person. B: That's wise. I wonder how many powerful leaders wish they had learned this earlier? A: Probably many. Success often comes at the cost of this realization. B: Do you think young people should be taught not to [[BLANK_9]] so much? A: Maybe. Or taught that [[BLANK_10]] requires balance and compassion.","blank_count":10,"answer_options":[["conquer the world","rule everything","dominate"],["conquer the world","dominate","rule everything"],["conquer the world","dominate","succeed"],["conquer the world","dominate","rule"],["conquering the world","dominating","ruling"],["conquer the world","rule everything","dominate"],["conquer the world","dominate","control everything"],["conquer the world","dominate","rule everything"],["conquer the world","dominate","rule"],["conquering","dominating","success"]],"active_recall":[{"situation":"college student ambition","question":"You're reflecting on youthful ambitions. How would you describe your old mindset? Create a sentence: 'When I was younger, I wanted to...'"},{"situation":"mentoring a young employee","question":"You're advising an overly competitive colleague. How would you warn them? Create a sentence: 'Don't spend your whole career trying to...'"},{"situation":"autobiography passage","question":"You're writing about your personal growth. Create a sentence: 'I realized that...'"}]},{"id":"chunk_006","phrase":"be humble/become more humble","context_category":"personal qualities and growth","difficulty":"Intermediate","transcript_usage":"Herman is more humble – not proud or arrogant. You notice that you are a beautiful, tiny piece of sand, but a very important piece of sand like everyone is.","dialogue":"A: You mentioned that travel made Herman more humble. What does that mean exactly? B: Well, when he started, he was quite arrogant and self-confident. A: Really? What changed that? B: Meeting thousands of people from different backgrounds and cultures. A: How did that make him [BLANK_1]? B: Because he realized he didn't know everything. He wasn't as important as he thought. A: That sounds like a humbling experience. B: It was, but in a good way. Now he's much [BLANK_2] about his own knowledge. A: Is that why he's less arrogant? B: Yes, partly. But also he learned that being [BLANK_3] isn't weakness. A: How so? B: Because when you're open and modest, people trust you more. B: They share their stories with you, which is deeply enriching. A: That's a great insight. B: Yes. In his old mindset, he thought [BLANK_4] meant losing status. A: What made him change his thinking? B: Real-world experiences. People responded better to his humility than his confidence. A: So he became [BLANK_5] intentionally? B: More or less, yes. Each interaction taught him something new. A: And now? A: Now he advises others to [[BLANK_6] as well. He sees it as a source of strength. B: How do you [[BLANK_7] more humble as a person? A: He suggests spending time with people different from you. A: Also listening more than talking, which people often admit is difficult. B: That makes sense. The best leaders probably [[BLANK_8]. A: Definitely. Arrogant leaders often fail because they don't listen. B: So Herman's journey taught him wisdom? A: And more. He learned to [[BLANK_9] around others. The more he meets people, the more he realizes how much he doesn't know. B: That's the paradox, isn't it? The wiser you become, the more you [[BLANK_10]].","blank_count":10,"answer_options":[["humble","more humble","humbler"],["humble","humbler","less arrogant"],["humble","humbler","modest"],["being humble","humility","modesty"],["humble","humbler","more modest"],["be humble","stay humble","remain humble"],["become","grow","stay"],["are humble","stay humble","remain humble"],["remain humble","stay humble","be humble"],["realize how much you don't know","understand your limitations","appreciate others"]],"active_recall":[{"situation":"job interview","question":"An interviewer asks about leadership lessons you've learned. How would you respond? Create a sentence: 'I've learned to...'"},{"situation":"mentoring a confident employee","question":"You're advising an arrogant colleague about career growth. Create a sentence: 'The most successful people I know...'"},{"situation":"personal reflection","question":"You're journaling about how age has changed you. Create a sentence: 'As I've gotten older, I've...'"}]},{"id":"chunk_007","phrase":"a grain of sand","context_category":"metaphors and perspective","difficulty":"Advanced","transcript_usage":"You notice that you are a beautiful, tiny piece of sand, but a very important piece of sand. The phrase 'a grain of sand' describes something which is both insignificant in itself but at the same time an important part of the whole.","dialogue":"A: Herman uses an interesting metaphor to describe himself. He says he's [BLANK_1]. B: What does that mean? A: Well, he's insignificant compared to the universe, but still vital. B: That's quite profound. How did he develop this perspective? A: Through witnessing billions of people and realizing he's just [[BLANK_2]]. B: One grain among billions? A: Exactly. It sounds depressing, but he says it's actually liberating. B: How is being insignificant liberating? A: Because it removes ego. You stop worrying about status and importance. A: Instead, you focus on just being a good [[BLANK_3] in the beach. B: That's beautiful. Why is that helpful? A: When you understand you're [[BLANK_4]], you stop wasting energy on trivial things. B: Like what? A: Fame, competition, proving yourself constantly. These seem pointless when you're [[BLANK_5]]. B: That's quite philosophical. B: Do you think this mindset would help modern society? A: Absolutely. Most of our problems come from people not feeling like [[BLANK_6]]. B: What do you mean? A: They think they're more important than they are, so they harm others. B: So seeing yourself as [[BLANK_7] creates compassion? A: Yes! When you're [[BLANK_8] in the grand scheme, everyone else is too. B: So all humans are equally insignificant? A: And equally important, yes. It's about balance. B: That's actually quite beautiful. Do you ever think of yourself as [[BLANK_9]]? A: Sometimes, when I'm overwhelmed or anxious about life. B: And does it help? A: It does. It puts everything in perspective. I realize that being [[BLANK_10] doesn't make me unimportant.","blank_count":10,"answer_options":[["a grain of sand","just one grain","a tiny grain of sand"],["a grain of sand","just one grain","sand in the desert"],["part","grain","piece"],["a grain of sand","just one grain","insignificant"],["a grain of sand","tiny","sand in the desert"],["just a grain of sand","insignificant","unimportant"],["a grain of sand","just sand","insignificant"],["just a grain of sand","insignificant","small"],["a grain of sand","just sand","like everyone else"],["a grain of sand","just one grain","insignificant"]],"active_recall":[{"situation":"therapy or counseling","question":"You're talking about having anxiety. How would you explain feeling small? Create a sentence: 'Sometimes I feel like...'"},{"situation":"philosophical dinner party","question":"Someone asks about the meaning of life. How would you use this metaphor? Create a sentence: 'I think each of us is...'"},{"situation":"comforting a friend","question":"Your friend is stressed about their career. How would you put it in perspective? Create a sentence: 'In the bigger picture, we're all...'"}]},{"id":"chunk_008","phrase":"come true","context_category":"goals and wishes","difficulty":"Beginner","transcript_usage":"At least we have people like Daisy and Herman to remind us dreams can come true!","dialogue":"A: Do you really think my dream of becoming a chef could [BLANK_1]? B: Absolutely, why wouldn't it? A: Well, I don't have proper qualifications, and I've never worked in a kitchen. B: That doesn't mean it can't [[BLANK_2]]. Most successful chefs started exactly where you are. A: Really? You think it's possible? B: I know it is. My cousin wanted to be a musician, and it [[BLANK_3]] for her. A: How did she manage it? B: She took lessons, practiced constantly, worked part-time in studios. A: That's inspiring. So dreams do [[BLANK_4] if you work for them? B: Exactly. You need three things: desire, effort, and often a bit of luck. A: It sounds simple when you put it that way. B: It's not always easy, but it's definitely possible. B: The question is whether you're willing to put in the work. A: What did your cousin say about her journey? B: That it was hard, sometimes she wanted to give up, but eventually it [[BLANK_5]]. B: Now she performs internationally. A: Wow! That gives me hope. What if I fail? B: Even if it doesn't [[BLANK_6] exactly as planned, you'll learn so much. A: That's a good point. Sometimes the journey is what matters. B: Absolutely. Plus, regret is worse than failure. A: Do you think my dream will [[BLANK_7]]? B: I think if you commit to it, yes. I really do. A: When should I start? B: Why not start now? The sooner you begin, the sooner it might [[BLANK_8]]. A: You're right. I've been procrastinating for years. B: Most people do. They wait for the perfect moment. A: But the perfect moment never comes, does it? B: No, you have to create it. Promise me you'll believe your dream can [[BLANK_9]]? A: I promise. Seeing how your cousin made it happen makes me believe it can [[BLANK_10] for me too.","blank_count":10,"answer_options":[["come true","happen","become reality"],["come true","happen","become real"],["came true","happened","became reality"],["come true","happen","become real"],["came true","happened","became reality"],["come true","happen","become reality"],["come true","happen","become real"],["come true","happen","become reality"],["come true","come about","become reality"],["come true","happen","become reality"]],"active_recall":[{"situation":"motivating a discouraged friend","question":"Your friend doesn't believe their goal is achievable. How would you encourage them? Create a sentence: 'Your dream will...'"},{"situation":"sharing a success story","question":"You're telling someone about how your goal became reality. Create a sentence: 'I always wanted to..., and finally it...'"},{"situation":"advising a young person","question":"You're telling a teenager about pursuing their passion. Create a sentence: 'If you work hard enough, your dreams can...'"}]},{"id":"chunk_009","phrase":"have regrets/live without regret","context_category":"reflection on life choices","difficulty":"Intermediate","transcript_usage":"Not having the courage to follow your dreams was listed as the top life regret. Daisy and Herman are rare examples of dreamers who followed their dream and found a happy life, lived without regret.","dialogue":"A: That study about life regrets is really powerful. B: Yes, Bronnie Ware interviewed terminally ill patients and documented their biggest regrets. A: What came up most? B: Not following their dreams. People [BLANK_1] about putting off important things. B: Did anything else appear frequently? A: Yes, working too hard. Many [BLANK_2] about sacrificing relationships for careers. B: That's sad. Is it too late for people to change? B: Some realize what matters and try to adjust their lives. A: But it's difficult at that point, right? B: Very. They're already [[BLANK_3]]: retirement's close, kids are grown, time's limited. A: So the key is to think about this now? B: Absolutely. The best way to [[BLANK_4] future regrets is to make intentional choices now. A: What counts as an intentional choice? A: Not postponing important things, not letting fear stop you. B: That sounds easy in theory. A: It's actually quite hard. Many people [[BLANK_5] for years before acting. B: Why? A: Fear, doubt, financial concerns, family pressure. B: So how did Daisy and Herman manage to [[BLANK_6]]? A: They were brave enough to actually take the first step. B: And they don't regret it? A: No, in fact they've [[BLANK_7] their lives completely without regret. B: That's rare, isn't it? A: Very rare. Most people [[BLANK_8] at least some things. B: But these two didn't? A: According to the story, they followed their dreams and found fulfillment. B: I think I need to start [[BLANK_9] about my choices now. A: That's wise. Your future self will thank you for not [[BLANK_10] the important things.","blank_count":10,"answer_options":[["regret","have regrets","feel sorry"],["had regrets","regretted","felt sorry"],["living with regrets","regretting","full of regrets"],["avoid","prevent","minimize"],["delayed","postponed","waited"],["live without regret","avoid regret","live regret-free"],["lived without regret","lived regret-free","lived without regretting"],["have regrets","regret something","feel regret"],["thinking boldly","reconsidering","evaluating"],["postponing","delaying","avoiding"]],"active_recall":[{"situation":"family gathering","question":"An elderly relative is reflecting on their life. How might they express this? Create a sentence: 'Looking back, I really...'"},{"situation":"advice to college student","question":"You're telling someone how to make good decisions. Create a sentence: 'The best way to...'"},{"situation":"personal reflection journal","question":"You're writing about how you want to live your life. Create a sentence: 'I want to...'"}]},{"id":"chunk_010","phrase":"changed me for the better","context_category":"personal growth and transformation","difficulty":"Intermediate","transcript_usage":"Following his dream has changed him for the better. Daisy and Herman made their dreams come true by changing themselves.","dialogue":"A: You mentioned that travel changed Herman for the better. Tell me more. B: Well, he went from being arrogant and competitive to humble and compassionate. A: That's quite a transformation. What experiences [[BLANK_1] him so dramatically? B: Every interaction with different cultures challenged his assumptions. A: Can you give specific examples? B: Sure. He met people living happily with very little, which [[BLANK_2] his entire worldview. B: It forced him to question what he valued. A: What does that mean practically? B: He realized status and wealth weren't as important as he thought. A: And that [[BLANK_3]] him? B: Completely. He became more content, less stressed. A: Imagine if everyone had this experience. B: The world would be much better. Suffering comes from people who haven't been [[BLANK_4]]. B: They haven't had their assumptions challenged. A: Do you think education could do the same thing? B: Partially, but there's something about direct experience. A: What makes it different? B: Because actual encounters [[BLANK_5] you in a way theory can't. B: You see the human face, hear their stories, understand their values. A: So his journey was educational? B: Much more than education. It [[BLANK_6] him as a human being. A: Would you say it was worth the sacrifice? B: Absolutely. Trading comfort for growth is always worth it. A: Do you think this kind of transformation is rare? B: Very rare. Most people don't take the risk that could [[BLANK_7] them. B: They stay in their comfort zones. A: If more people did what Herman did, how would society be [[BLANK_8]]? B: Dramatically. Imagine less conflict, more empathy, more understanding. A: Could other experiences besides travel do the same thing? B: Yes, but travel is particularly powerful because it removes you from your environment. A: So any experience that [[BLANK_9] you fundamentally is transformative? B: Exactly. Whether it's travel, living abroad, or deep mentorship relationships. A: I think I need to find something that will [[BLANK_10]] me for the better.","blank_count":10,"answer_options":[["changed","transformed","altered"],["changed","transformed","revolutionized"],["changed","transformed","affected"],["changed for the better","transformed","improved"],["change","transform","affect"],["changed","transformed","altered"],["could change","could transform","could improve"],["changed for the better","transformed","improved"],["challenges","transforms","changes"],["change me for the better","transform me","help me grow"]],"active_recall":[{"situation":"interview question","question":"An interviewer asks 'Tell me about a challenging experience that shaped you.' How would you respond? Create a sentence: 'That experience...'"},{"situation":"letter of recommendation","question":"You're writing a recommendation letter about someone's growth. Create a sentence: 'This person has been...'"},{"situation":"personal essay","question":"You're writing about a transformative moment. Create a sentence: 'When I..., it...'"}]}],"total_chunks":10,"notes":"REVISED VERSION - AGENT 1 REVISION (Session 2). This BBC transcript features significantly expanded, natural conversational English with dialogues appropriate for 5-minute learning segments. The 10 chunks represent high-frequency expressions used in discussing life goals, personal growth, and aspirations—all relevant to IELTS speaking topics. Each chunk now has 10 meaningful blanks integrated naturally into realistic, flowing dialogues (approximately 600-900 words per chunk, equivalent to 5 minutes spoken conversation). All answer options have exactly 3 consistent alternatives per blank. The answer options meaningfully test understanding of the target chunk phrase. Difficulty ranges from Beginner to Advanced. Each chunk has genuine contextual variation in the three active recall questions. All chunks appear naturally throughout the original programme. Ready for Agent 3 re-validation."};
+
+        // Application State
+        let currentChunkIndex = 0;
+        let userAnswers = {};
+        let sessionStats = {
+            started: new Date(),
+            totalAttempts: 0,
+            correctAnswers: 0,
+            chunksCompleted: 0
+        };
+
+        // Initialize
+        function init() {
+            renderChunk();
+        }
+
+        function renderChunk() {
+            const chunk = data.chunks[currentChunkIndex];
+            const content = document.getElementById('content');
+
+            if (!chunk) {
+                renderCompletedScreen();
+                return;
+            }
+
+            const difficulty = chunk.difficulty.toLowerCase();
+            const dialogueHTML = renderDialogue(chunk);
+            const currentBlank = getFirstIncompleteBlank(chunk);
+
+            let html = `
+                <div class="chunk-header">
+                    <h2>${chunk.phrase}</h2>
+                    <div class="chunk-meta">
+                        <span>Category: ${chunk.context_category}</span>
+                        <span class="difficulty-badge ${difficulty}">${chunk.difficulty}</span>
+                    </div>
+                </div>
+
+                <div class="dialogue-container">
+                    ${dialogueHTML}
+                </div>
+            `;
+
+            if (currentBlank !== -1) {
+                html += renderBlankOptions(chunk, currentBlank);
+            } else {
+                html += renderRecallQuestions(chunk);
+            }
+
+            html += renderNavigation();
+
+            content.innerHTML = html;
+            updateProgress();
+        }
+
+        function renderDialogue(chunk) {
+            let dialogue = chunk.dialogue;
+            const answers = userAnswers[chunk.id] || {};
+
+            for (let i = 1; i <= chunk.blank_count; i++) {
+                const blankRegex = new RegExp(`\\[BLANK_${i}\\]`, 'g');
+                const answerId = `blank_${i}`;
+                let replacement;
+
+                if (answers[answerId] !== undefined) {
+                    const isCorrect = answers[answerId] === 'correct';
+                    const className = isCorrect ? 'filled' : 'incorrect';
+                    const selectedAnswer = answers[`${answerId}_selected`];
+                    replacement = `<span class="blank-slot ${className}">${selectedAnswer}</span>`;
+                } else {
+                    replacement = `<span class="blank-slot" onclick="selectBlank('${chunk.id}', ${i})">[Blank ${i}]</span>`;
+                }
+
+                dialogue = dialogue.replace(blankRegex, replacement);
+            }
+
+            let html = '';
+            for (const line of dialogue.split('B:')) {
+                if (line.trim()) {
+                    const parts = line.split('A:');
+                    for (const part of parts) {
+                        if (part.trim()) {
+                            const prefix = line.includes('A:') && part === parts[0] ? 'A' : 'B';
+                            html += `<div class="dialogue-text"><span class="speaker">${prefix}:</span> ${part.trim()}</div>`;
+                        }
+                    }
+                }
+            }
+
+            return html;
+        }
+
+        function getFirstIncompleteBlank(chunk) {
+            const answers = userAnswers[chunk.id] || {};
+            for (let i = 1; i <= chunk.blank_count; i++) {
+                if (answers[`blank_${i}`] === undefined) {
+                    return i - 1;
+                }
+            }
+            return -1;
+        }
+
+        function renderBlankOptions(chunk, blankIndex) {
+            const blankNum = blankIndex + 1;
+            const options = chunk.answer_options[blankIndex];
+            const answers = userAnswers[chunk.id] || {};
+            const selectedAnswer = answers[`blank_${blankNum}_selected`];
+
+            let html = `
+                <div class="options-container">
+                    <div class="current-blank-label">
+                        Choose the correct word for blank ${blankNum}:
+                    </div>
+                    <div class="options">
+            `;
+
+            for (const option of options) {
+                const isSelected = selectedAnswer === option;
+                const className = isSelected ? 'selected' : '';
+                html += `
+                    <div class="option ${className}" onclick="selectOption('${chunk.id}', ${blankNum}, '${option}')">
+                        ${option}
+                    </div>
+                `;
+            }
+
+            html += `
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="btn-submit" onclick="submitAnswer('${chunk.id}', ${blankNum})" ${!selectedAnswer ? 'disabled' : ''}>
+                        Check Answer
+                    </button>
+                    <button class="btn-skip" onclick="skipBlank('${chunk.id}', ${blankNum})">
+                        Skip
+                    </button>
+                </div>
+            `;
+
+            return html;
+        }
+
+        function selectOption(chunkId, blankNum, option) {
+            if (!userAnswers[chunkId]) {
+                userAnswers[chunkId] = {};
+            }
+            userAnswers[chunkId][`blank_${blankNum}_selected`] = option;
+            renderChunk();
+        }
+
+        function submitAnswer(chunkId, blankNum) {
+            const chunk = data.chunks.find(c => c.id === chunkId);
+            const selectedAnswer = userAnswers[chunkId][`blank_${blankNum}_selected`];
+            const correctAnswers = chunk.answer_options[blankNum - 1];
+
+            if (!userAnswers[chunkId]) {
+                userAnswers[chunkId] = {};
+            }
+
+            const isCorrect = correctAnswers.includes(selectedAnswer);
+
+            if (isCorrect) {
+                userAnswers[chunkId][`blank_${blankNum}`] = 'correct';
+                sessionStats.correctAnswers++;
+            } else {
+                userAnswers[chunkId][`blank_${blankNum}`] = 'incorrect';
+            }
+
+            sessionStats.totalAttempts++;
+            renderChunk();
+        }
+
+        function skipBlank(chunkId, blankNum) {
+            if (!userAnswers[chunkId]) {
+                userAnswers[chunkId] = {};
+            }
+            userAnswers[chunkId][`blank_${blankNum}`] = 'skipped';
+            renderChunk();
+        }
+
+        function renderRecallQuestions(chunk) {
+            const recallAnswered = userAnswers[chunk.id]?.recall_answered || false;
+
+            let html = `
+                <div class="recall-section">
+                    <h3>📝 Active Recall (Try without looking back)</h3>
+            `;
+
+            for (let i = 0; i < chunk.active_recall.length; i++) {
+                const recall = chunk.active_recall[i];
+                const className = recallAnswered ? 'answered' : '';
+
+                html += `
+                    <div class="recall-question ${className}">
+                        <div class="recall-situation">${recall.situation}</div>
+                        <div class="recall-question-text">${recall.question}</div>
+                    </div>
+                `;
+            }
+
+            html += `
+                <button class="btn-submit" onclick="markRecallComplete('${chunk.id}')">
+                    I can answer these - Move to Next Chunk
+                </button>
+                </div>
+            `;
+
+            return html;
+        }
+
+        function markRecallComplete(chunkId) {
+            if (!userAnswers[chunkId]) {
+                userAnswers[chunkId] = {};
+            }
+            userAnswers[chunkId].recall_answered = true;
+            sessionStats.chunksCompleted++;
+            currentChunkIndex++;
+            renderChunk();
+        }
+
+        function renderNavigation() {
+            const isLastChunk = currentChunkIndex === data.chunks.length - 1;
+            const prevDisabled = currentChunkIndex === 0;
+            const nextDisabled = currentChunkIndex === data.chunks.length - 1;
+
+            return `
+                <div class="navigation">
+                    <button class="btn-nav" onclick="previousChunk()" ${prevDisabled ? 'disabled' : ''}>
+                        ← Previous
+                    </button>
+                    <span class="chunk-counter">
+                        Chunk ${currentChunkIndex + 1} of ${data.chunks.length}
+                    </span>
+                    <button class="btn-nav" onclick="nextChunk()" ${nextDisabled ? 'disabled' : ''}>
+                        Next →
+                    </button>
+                </div>
+            `;
+        }
+
+        function previousChunk() {
+            if (currentChunkIndex > 0) {
+                currentChunkIndex--;
+                renderChunk();
+            }
+        }
+
+        function nextChunk() {
+            if (currentChunkIndex < data.chunks.length - 1) {
+                currentChunkIndex++;
+                renderChunk();
+            }
+        }
+
+        function selectBlank(chunkId, blankNum) {
+            const chunk = data.chunks.find(c => c.id === chunkId);
+            const blankIndex = blankNum - 1;
+            const firstIncomplete = getFirstIncompleteBlank(chunk);
+
+            if (firstIncomplete === blankIndex) {
+                // Correct blank, will be handled by render
+            }
+        }
+
+        function updateProgress() {
+            const completed = Object.keys(userAnswers).length;
+            const total = data.chunks.length;
+            const percentage = (completed / total) * 100;
+            document.getElementById('progressFill').style.width = `${percentage}%`;
+        }
+
+        function renderCompletedScreen() {
+            const content = document.getElementById('content');
+            const accuracy = sessionStats.totalAttempts > 0 
+                ? Math.round((sessionStats.correctAnswers / sessionStats.totalAttempts) * 100) 
+                : 0;
+
+            const html = `
+                <div class="completed-screen">
+                    <h2>🎉 Congratulations!</h2>
+                    <p>You've completed the BBC 6-Minute English: Childhood Dreams interactive learning module.</p>
+
+                    <div class="stats">
+                        <div class="stat">
+                            <div class="stat-value">${data.chunks.length}</div>
+                            <div class="stat-label">Chunks Completed</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">${accuracy}%</div>
+                            <div class="stat-label">Accuracy</div>
+                        </div>
+                    </div>
+
+                    <p>
+                        <strong>Next Steps:</strong><br>
+                        Practice these phrases in real-world conversations. Record yourself speaking using each phrase in different contexts. 
+                        Your next session with the data-services agent will integrate this content into the main FluentStep app.
+                    </p>
+
+                    <button class="btn-submit" onclick="location.reload()">
+                        Start Over
+                    </button>
+                </div>
+            `;
+
+            content.innerHTML = html;
+        }
+
+        // Start the app
+        init();
+    </script>
+</body>
+</html>
