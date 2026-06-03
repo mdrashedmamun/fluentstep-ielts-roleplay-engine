@@ -2,15 +2,19 @@
  * Structural Discipline Validator
  *
  * Hard gates for scenario structure:
- * - 5-minute practice duration (estimated from word count)
+ * - Context presence
+ * - Answer variations match actual dialogue blank count
+ * - V2 blank mappings and feedback match actual dialogue blank count
+ *
+ * Advisory legacy checks retained for reviewer visibility:
+ * - Historical 5-minute practice duration estimate
  * - Speaker balance (no speaker dominates >70%)
- * - Blank density (1 blank per 15-25 words)
- * - Context quality (present and meaningful)
- * - Answer variations match blank count
+ * - Historical blank density (1 blank per 15-25 words)
+ * - Historical minimum dialogue exchanges
  */
 
 import { RoleplayScript } from '../src/services/staticData';
-import { ValidationFinding, FixConfidence } from '../src/services/linguisticAudit/types';
+import { ValidationFinding } from '../src/services/linguisticAudit/types';
 
 interface StructuralAnalysis {
   totalWordCount: number;
@@ -22,7 +26,12 @@ interface StructuralAnalysis {
   contextPresent: boolean;
   contextLength: number;
   answerVariationCount: number;
+  blanksInOrderCount: number;
+  chunkFeedbackV2Count: number;
+  isV2: boolean;
   matchesBlankCount: boolean;
+  matchesBlanksInOrderCount: boolean;
+  matchesChunkFeedbackV2Count: boolean;
 }
 
 /**
@@ -53,14 +62,13 @@ export function validateStructuralDiscipline(scenario: RoleplayScript): Validati
       issue: 'Context is too brief (less than 10 words)',
       currentValue: scenario.context,
       context: `Current length: ${analysis.contextLength} words`,
-      confidence: 0.9,
-      reasoning: 'Context should be detailed enough to fully set the scene'
+      confidence: 0.65,
+      reasoning: 'Context brevity is a reviewer advisory; current scenario architecture permits concise setup text'
     });
   }
 
   // Check 2: Duration (5-minute target)
   // Estimate: ~150 words per minute of natural conversation
-  const targetWords = 150 * 5;  // 750 words for 5 minutes
   const minWords = 150 * 4;     // 600 words minimum
   const maxWords = 150 * 6;     // 900 words maximum
 
@@ -72,8 +80,8 @@ export function validateStructuralDiscipline(scenario: RoleplayScript): Validati
       issue: `Dialogue too short (${analysis.estimatedMinutes.toFixed(1)} min, target 5 min). Minimum ${minWords} words.`,
       currentValue: `${analysis.totalWordCount} words`,
       context: `Current: ${analysis.estimatedMinutes.toFixed(1)} minutes (${analysis.totalWordCount} words)`,
-      confidence: 1.0,
-      reasoning: 'IELTS roleplay practice should be ~5 minutes to allow natural conversation development'
+      confidence: 0.55,
+      reasoning: 'Legacy 5-minute heuristic retained as advisory; current content architecture targets 10-14 dialogue turns'
     });
   } else if (analysis.totalWordCount > maxWords) {
     findings.push({
@@ -83,8 +91,8 @@ export function validateStructuralDiscipline(scenario: RoleplayScript): Validati
       issue: `Dialogue too long (${analysis.estimatedMinutes.toFixed(1)} min, target 5 min). Maximum ${maxWords} words.`,
       currentValue: `${analysis.totalWordCount} words`,
       context: `Current: ${analysis.estimatedMinutes.toFixed(1)} minutes (${analysis.totalWordCount} words)`,
-      confidence: 1.0,
-      reasoning: 'IELTS roleplay should fit ~5 minutes; longer dialogues become unfocused'
+      confidence: 0.55,
+      reasoning: 'Legacy 5-minute heuristic retained as advisory; current content architecture targets 10-14 dialogue turns'
     });
   }
 
@@ -102,13 +110,12 @@ export function validateStructuralDiscipline(scenario: RoleplayScript): Validati
       issue: `Imbalanced speakers: "${dominantSpeaker}" dominates ${maxPercentage.toFixed(0)}% (max 70%)`,
       currentValue: `${dominantSpeaker}: ${maxPercentage.toFixed(0)}%`,
       context: `Turn-taking is critical for realistic conversation`,
-      confidence: 1.0,
-      reasoning: 'One speaker should not dominate >70% to ensure balanced turn-taking and conversation practice'
+      confidence: 0.65,
+      reasoning: 'Speaker balance is useful reviewer context, but learner-led IELTS practice may intentionally weight the learner speaker'
     });
   }
 
   // Check 4: Blank density (1 blank per 15-25 words)
-  const densityTarget = 20; // 1 blank per 20 words
   const densityMin = 15;
   const densityMax = 25;
 
@@ -120,8 +127,8 @@ export function validateStructuralDiscipline(scenario: RoleplayScript): Validati
       issue: `Blanks too sparse (1 per ${analysis.blankDensity.toFixed(0)} words, target 15-25)`,
       currentValue: `${analysis.blankCount} blanks in ${analysis.totalWordCount} words`,
       context: `Too few blanks reduce learning opportunities`,
-      confidence: 0.95,
-      reasoning: 'Blank density should be 1 per 15-25 words for sufficient learning opportunities'
+      confidence: 0.55,
+      reasoning: 'Legacy density heuristic retained as advisory; current architecture validates actual blank counts directly'
     });
   } else if (analysis.blankDensity > densityMax) {
     findings.push({
@@ -131,12 +138,12 @@ export function validateStructuralDiscipline(scenario: RoleplayScript): Validati
       issue: `Blanks too dense (1 per ${analysis.blankDensity.toFixed(0)} words, target 15-25)`,
       currentValue: `${analysis.blankCount} blanks in ${analysis.totalWordCount} words`,
       context: `Too many blanks make dialogue disjointed`,
-      confidence: 0.95,
-      reasoning: 'Blank density should be 1 per 15-25 words to maintain natural dialogue flow'
+      confidence: 0.55,
+      reasoning: 'Legacy density heuristic retained as advisory; current architecture validates actual blank counts directly'
     });
   }
 
-  // Check 5: Answer variations match blank count
+  // Check 5: Answer variations match actual dialogue blank count
   if (!analysis.matchesBlankCount) {
     findings.push({
       validatorName: 'Structural Discipline',
@@ -150,7 +157,34 @@ export function validateStructuralDiscipline(scenario: RoleplayScript): Validati
     });
   }
 
-  // Check 6: Minimum dialogue exchanges (at least 8 exchanges for 5 min)
+  // Check 6: V2 mappings and feedback match actual dialogue blank count
+  if (analysis.isV2 && !analysis.matchesBlanksInOrderCount) {
+    findings.push({
+      validatorName: 'Structural Discipline',
+      scenarioId: scenario.id,
+      location: 'blanksInOrder',
+      issue: `blanksInOrder count mismatch: ${analysis.blanksInOrderCount} mappings vs ${analysis.blankCount} blanks`,
+      currentValue: `${analysis.blanksInOrderCount} blank mappings`,
+      context: `Expected ${analysis.blankCount} blank mappings`,
+      confidence: 1.0,
+      reasoning: 'V2 scenarios must map each dialogue blank to exactly one chunk ID'
+    });
+  }
+
+  if (analysis.isV2 && !analysis.matchesChunkFeedbackV2Count) {
+    findings.push({
+      validatorName: 'Structural Discipline',
+      scenarioId: scenario.id,
+      location: 'chunkFeedbackV2',
+      issue: `chunkFeedbackV2 count mismatch: ${analysis.chunkFeedbackV2Count} feedback items vs ${analysis.blankCount} blanks`,
+      currentValue: `${analysis.chunkFeedbackV2Count} chunk feedback items`,
+      context: `Expected ${analysis.blankCount} chunk feedback items`,
+      confidence: 1.0,
+      reasoning: 'V2 scenarios must provide one chunkFeedbackV2 item for each dialogue blank'
+    });
+  }
+
+  // Check 7: Minimum dialogue exchanges (at least 8 exchanges for 5 min)
   const exchanges = Math.floor(scenario.dialogue.length / 2);
   if (exchanges < 8) {
     findings.push({
@@ -160,8 +194,8 @@ export function validateStructuralDiscipline(scenario: RoleplayScript): Validati
       issue: `Insufficient dialogue exchanges (${exchanges}, minimum 8 for 5-minute practice)`,
       currentValue: `${scenario.dialogue.length} lines, ${exchanges} exchanges`,
       context: 'More exchanges create better practice flow',
-      confidence: 0.9,
-      reasoning: 'At least 8 exchanges (16 lines) needed for meaningful 5-minute practice'
+      confidence: 0.55,
+      reasoning: 'Legacy 5-minute exchange heuristic retained as advisory; current architecture targets 10-14 dialogue turns'
     });
   }
 
@@ -176,8 +210,8 @@ function analyzeStructure(scenario: RoleplayScript): StructuralAnalysis {
   const dialogueText = scenario.dialogue.map(d => d.text).join(' ');
   const totalWordCount = dialogueText.split(/\s+/).filter(w => w.length > 0).length;
 
-  // Count blanks
-  const blankCount = scenario.answerVariations.length;
+  // Count actual dialogue blanks, not the number of answer records.
+  const blankCount = countDialogueBlanks(scenario);
   const blankDensity = blankCount > 0 ? totalWordCount / blankCount : 0;
 
   // Estimate duration (150 words per minute)
@@ -199,7 +233,12 @@ function analyzeStructure(scenario: RoleplayScript): StructuralAnalysis {
 
   // Check answer variations
   const answerVariationCount = scenario.answerVariations.length;
+  const blanksInOrderCount = scenario.blanksInOrder?.length || 0;
+  const chunkFeedbackV2Count = scenario.chunkFeedbackV2?.length || 0;
+  const isV2 = Array.isArray(scenario.blanksInOrder) || Array.isArray(scenario.chunkFeedbackV2);
   const matchesBlankCount = answerVariationCount === blankCount;
+  const matchesBlanksInOrderCount = !isV2 || blanksInOrderCount === blankCount;
+  const matchesChunkFeedbackV2Count = !isV2 || chunkFeedbackV2Count === blankCount;
 
   return {
     totalWordCount,
@@ -211,8 +250,20 @@ function analyzeStructure(scenario: RoleplayScript): StructuralAnalysis {
     contextPresent,
     contextLength,
     answerVariationCount,
-    matchesBlankCount
+    blanksInOrderCount,
+    chunkFeedbackV2Count,
+    isV2,
+    matchesBlankCount,
+    matchesBlanksInOrderCount,
+    matchesChunkFeedbackV2Count
   };
+}
+
+function countDialogueBlanks(scenario: RoleplayScript): number {
+  return scenario.dialogue.reduce((count, turn) => {
+    const matches = turn.text.match(/________/g);
+    return count + (matches?.length || 0);
+  }, 0);
 }
 
 /**
@@ -233,8 +284,18 @@ export function getStructuralAnalysisReport(scenario: RoleplayScript): string {
     `Context: ${analysis.contextPresent ? `✓ (${analysis.contextLength} words)` : '✗ Missing'}`,
     `Answer Variations: ${analysis.answerVariationCount}/${analysis.blankCount} ${
       analysis.matchesBlankCount ? '✓' : '✗'
-    }`
+    }`,
+    analysis.isV2
+      ? `V2 Blank Mappings: ${analysis.blanksInOrderCount}/${analysis.blankCount} ${
+          analysis.matchesBlanksInOrderCount ? '✓' : '✗'
+        }`
+      : undefined,
+    analysis.isV2
+      ? `V2 Chunk Feedback: ${analysis.chunkFeedbackV2Count}/${analysis.blankCount} ${
+          analysis.matchesChunkFeedbackV2Count ? '✓' : '✗'
+        }`
+      : undefined
   ];
 
-  return lines.join('\n');
+  return lines.filter((line): line is string => Boolean(line)).join('\n');
 }

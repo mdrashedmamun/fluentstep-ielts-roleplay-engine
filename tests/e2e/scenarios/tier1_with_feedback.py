@@ -178,7 +178,7 @@ class TestTier1BlankFilling:
         blank = page.locator('button:has-text("Tap to discover")').first
         blank.click()
 
-        time.sleep(TIMEOUT_ACTION / 1000)
+        page.wait_for_timeout(500)
 
         # Verify popover appears
         popover = page.locator('text=Native Alternatives')
@@ -192,14 +192,14 @@ class TestTier1BlankFilling:
         blank = page.locator('button:has-text("Tap to discover")').first
         blank.click()
 
-        time.sleep(TIMEOUT_ACTION / 1000)
+        page.wait_for_timeout(500)
 
         popover = page.locator('text=Native Alternatives')
         assert popover.is_visible()
 
         # Check for the alternatives section and content
         # Alternatives are shown as: "Other ways to say it" followed by span elements
-        alternatives_header = page.locator('text=Other ways to say')
+        alternatives_header = page.get_by_text('Other ways to say it')
         assert alternatives_header.count() > 0, "No alternatives shown in popover"
 
     @pytest.mark.parametrize("scenario_id", list(TIER1_SCENARIOS.keys())[:2])
@@ -210,7 +210,7 @@ class TestTier1BlankFilling:
         blank = page.locator('button:has-text("Tap to discover")').first
         blank.click()
 
-        time.sleep(TIMEOUT_ACTION / 1000)
+        page.wait_for_timeout(500)
 
         popover = page.locator('text=Native Alternatives')
         assert popover.is_visible()
@@ -219,7 +219,7 @@ class TestTier1BlankFilling:
         close_btn = page.locator('button:has(i.fa-times)').first
         if close_btn.count() > 0:
             close_btn.click()
-            time.sleep(TIMEOUT_ACTION / 1000)
+            page.wait_for_timeout(500)
 
             # Verify popover closed
             assert not popover.is_visible(), "Popover still visible after close"
@@ -227,7 +227,7 @@ class TestTier1BlankFilling:
             # If close button not found, verify popover can be hidden via click-outside
             # Click on the page background
             page.click('body')
-            time.sleep(TIMEOUT_ACTION / 1000)
+            page.wait_for_timeout(500)
             assert not popover.is_visible(), "Popover should be hidden after click outside"
 
     @pytest.mark.parametrize("scenario_id", list(TIER1_SCENARIOS.keys())[:2])
@@ -244,7 +244,7 @@ class TestTier1BlankFilling:
 
         # Reveal first blank
         blanks[0].click()
-        time.sleep(TIMEOUT_ACTION / 1000)
+        page.wait_for_timeout(500)
 
         # Verify it's revealed
         popover1 = page.locator('text=Native Alternatives')
@@ -257,11 +257,11 @@ class TestTier1BlankFilling:
         else:
             # Click outside to close popover
             page.click('body')
-        time.sleep(TIMEOUT_ACTION / 1000)
+        page.wait_for_timeout(500)
 
         # Reveal second blank
         blanks[1].click()
-        time.sleep(TIMEOUT_ACTION / 1000)
+        page.wait_for_timeout(500)
 
         # Verify popover appears for second blank
         popover2 = page.locator('text=Native Alternatives')
@@ -292,7 +292,7 @@ class TestTier1ChunkFeedbackModal:
 
         # Click next turn to advance
         next_btn.first.click()
-        time.sleep(TIMEOUT_ACTION / 1000)
+        page.wait_for_timeout(500)
 
         # Verify we're still in the scenario
         next_btn_after = page.locator('button:has-text("Next Turn")')
@@ -313,13 +313,13 @@ class TestTier1ChunkFeedbackModal:
         if len(blanks) > 0:
             # Click the first blank if available
             blanks[0].click()
-            time.sleep(TIMEOUT_ACTION / 1000)
+            page.wait_for_timeout(500)
 
             # Verify popover appears with alternatives
             alternatives = page.locator('text=Native Alternatives')
             assert alternatives.count() >= 0, "Blank interaction failed"
 
-        time.sleep(TIMEOUT_ACTION / 1000)
+        page.wait_for_timeout(500)
 
     @pytest.mark.parametrize("scenario_id", list(TIER1_SCENARIOS.keys())[:2])
     def test_feedback_cards_filtered_by_revealed(self, page, goto_scenario, scenario_id):
@@ -330,7 +330,7 @@ class TestTier1ChunkFeedbackModal:
         blank = page.locator('button:has-text("Tap to discover")').first
         blank.click()
 
-        time.sleep(TIMEOUT_ACTION / 1000)
+        page.wait_for_timeout(500)
 
         # Verify popover appeared with alternatives
         alternatives = page.locator('text=Native Alternatives')
@@ -340,7 +340,7 @@ class TestTier1ChunkFeedbackModal:
         close_btn = page.locator('button:has-text("✕")').first
         if close_btn.count() > 0:
             close_btn.click()
-            time.sleep(TIMEOUT_ACTION / 1000)
+            page.wait_for_timeout(500)
 
     @pytest.mark.parametrize("scenario_id", list(TIER1_SCENARIOS.keys())[:2])
     def test_modal_close_button_works(self, page, goto_scenario, scenario_id):
@@ -351,7 +351,7 @@ class TestTier1ChunkFeedbackModal:
         blank = page.locator('button:has-text("Tap to discover")').first
         blank.click()
 
-        time.sleep(TIMEOUT_ACTION / 1000)
+        page.wait_for_timeout(500)
 
         # Verify popover is visible
         popover = page.locator('text=Native Alternatives')
@@ -361,7 +361,7 @@ class TestTier1ChunkFeedbackModal:
         close_btn = page.locator('button:has-text("✕")').first
         if close_btn.count() > 0:
             close_btn.click()
-            time.sleep(TIMEOUT_ACTION / 1000)
+            page.wait_for_timeout(500)
 
 
 class TestTier1FeedbackCardContent:
@@ -376,7 +376,7 @@ class TestTier1FeedbackCardContent:
         blank = page.locator('button:has-text("Tap to discover")').first
         blank.click()
 
-        time.sleep(TIMEOUT_ACTION / 1000)
+        page.wait_for_timeout(500)
 
         # Verify popover appears with alternatives
         alternatives = page.locator('text=Native Alternatives')
@@ -386,7 +386,7 @@ class TestTier1FeedbackCardContent:
         close_btn = page.locator('button:has-text("✕")').first
         if close_btn.count() > 0:
             close_btn.click()
-            time.sleep(TIMEOUT_ACTION / 1000)
+            page.wait_for_timeout(500)
 
 
 class TestTier1Completion:

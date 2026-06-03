@@ -97,9 +97,11 @@ export function validateChunkFeedback(feedback: ChunkFeedback): ValidationResult
         const exampleWordCheck = validateWordCount(sit.example, 15, `situation[${idx}].example`);
         if (!exampleWordCheck.isValid) {
             errors.push(exampleWordCheck.error!);
-            if (!fixes.situations) fixes.situations = JSON.parse(JSON.stringify(feedback.situations));
-            if (exampleWordCheck.fix) {
-                fixes.situations![idx].example = exampleWordCheck.fix;
+            if (!fixes.situations) {
+                fixes.situations = feedback.situations?.map((situation) => ({ ...situation }));
+            }
+            if (exampleWordCheck.fix && fixes.situations?.[idx]) {
+                fixes.situations[idx].example = exampleWordCheck.fix;
             }
         }
 
@@ -149,10 +151,10 @@ export function validateChunkFeedback(feedback: ChunkFeedback): ValidationResult
         if (!explanationWordCheck.isValid) {
             errors.push(explanationWordCheck.error!);
             if (!fixes.nonNativeContrast) {
-                fixes.nonNativeContrast = JSON.parse(JSON.stringify(feedback.nonNativeContrast));
+                fixes.nonNativeContrast = feedback.nonNativeContrast?.map((contrast) => ({ ...contrast }));
             }
-            if (explanationWordCheck.fix) {
-                fixes.nonNativeContrast![idx].explanation = explanationWordCheck.fix;
+            if (explanationWordCheck.fix && fixes.nonNativeContrast?.[idx]) {
+                fixes.nonNativeContrast[idx].explanation = explanationWordCheck.fix;
             }
         }
 

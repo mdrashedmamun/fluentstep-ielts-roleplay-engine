@@ -1,0 +1,60 @@
+{
+  "generatedAt": "2026-06-03T05:48:29.669Z",
+  "baseURL": "http://127.0.0.1:3000",
+  "scenarioId": "service_1_restaurant_order",
+  "screenshots": [
+    {
+      "name": "desktop-home",
+      "path": "/Users/md.rashedmamun/Documents/Business/Active/fluentstep_-ielts-roleplay-engine/docs/qa/long-horizon/screenshots/desktop-home.png",
+      "viewport": "1440x1000"
+    },
+    {
+      "name": "desktop-healthcare-disclaimer",
+      "path": "/Users/md.rashedmamun/Documents/Business/Active/fluentstep_-ielts-roleplay-engine/docs/qa/long-horizon/screenshots/desktop-healthcare-disclaimer.png",
+      "viewport": "1440x1000"
+    },
+    {
+      "name": "desktop-scenario-start",
+      "path": "/Users/md.rashedmamun/Documents/Business/Active/fluentstep_-ielts-roleplay-engine/docs/qa/long-horizon/screenshots/desktop-scenario-start.png",
+      "viewport": "1440x1000"
+    },
+    {
+      "name": "desktop-blank-popover",
+      "path": "/Users/md.rashedmamun/Documents/Business/Active/fluentstep_-ielts-roleplay-engine/docs/qa/long-horizon/screenshots/desktop-blank-popover.png",
+      "viewport": "1440x1000"
+    },
+    {
+      "name": "desktop-completion-feedback",
+      "path": "/Users/md.rashedmamun/Documents/Business/Active/fluentstep_-ielts-roleplay-engine/docs/qa/long-horizon/screenshots/desktop-completion-feedback.png",
+      "viewport": "1440x1000"
+    },
+    {
+      "name": "desktop-pattern-summary",
+      "path": "/Users/md.rashedmamun/Documents/Business/Active/fluentstep_-ielts-roleplay-engine/docs/qa/long-horizon/screenshots/desktop-pattern-summary.png",
+      "viewport": "1440x1000"
+    },
+    {
+      "name": "desktop-active-recall",
+      "path": "/Users/md.rashedmamun/Documents/Business/Active/fluentstep_-ielts-roleplay-engine/docs/qa/long-horizon/screenshots/desktop-active-recall.png",
+      "viewport": "1440x1000"
+    },
+    {
+      "name": "desktop-invalid-scenario",
+      "path": "/Users/md.rashedmamun/Documents/Business/Active/fluentstep_-ielts-roleplay-engine/docs/qa/long-horizon/screenshots/desktop-invalid-scenario.png",
+      "viewport": "1440x1000"
+    },
+    {
+      "name": "mobile-home",
+      "path": "/Users/md.rashedmamun/Documents/Business/Active/fluentstep_-ielts-roleplay-engine/docs/qa/long-horizon/screenshots/mobile-home.png",
+      "viewport": "390x844"
+    },
+    {
+      "name": "mobile-roleplay",
+      "path": "/Users/md.rashedmamun/Documents/Business/Active/fluentstep_-ielts-roleplay-engine/docs/qa/long-horizon/screenshots/mobile-roleplay.png",
+      "viewport": "390x844"
+    }
+  ],
+  "issues": [],
+  "consoleErrors": [],
+  "failedResponses": []
+}

@@ -38,14 +38,14 @@ const SearchBar: React.FC<SearchBarProps> = ({
       return () => document.removeEventListener('click', handleClickOutside);
     }
     return undefined;
-  }, [isExpanded, value]);
+  }, [inputRef, isExpanded, value]);
 
   // Auto-focus input when expanded
   useEffect(() => {
     if (isExpanded && inputRef.current) {
       inputRef.current.focus();
     }
-  }, [isExpanded]);
+  }, [inputRef, isExpanded]);
 
   const handleClear = () => {
     onClear();

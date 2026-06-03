@@ -1,9 +1,7 @@
 
-import React, { useState, useEffect, useMemo } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
-import { CURATED_ROLEPLAYS } from '../services/staticData';
-import { Button } from '../design-system/components/Button';
-import { Badge } from '../design-system/components/Badge';
+import React, { useState, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { CURATED_ROLEPLAYS, RoleplayScript } from '../services/staticData';
 import { progressService } from '../services/progressService';
 import { searchService } from '../services/searchService';
 import { filterService } from '../services/filterService';
@@ -21,23 +19,31 @@ interface TopicSelectorProps {
   onSelect: (scriptId: string) => void;
 }
 
-const CATEGORIES = ['Social', 'Workplace', 'Service/Logistics', 'Advanced', 'Healthcare', 'Community'] as const;
+const CATEGORIES = ['Social', 'Workplace', 'Service/Logistics', 'Advanced', 'Academic', 'Healthcare', 'Cultural', 'Community'] as const;
+
+const parseFilterParam = <T extends string>(value: string | null): T[] => {
+  return value ? (value.split(',') as T[]) : [];
+};
+
+const getInitialProgress = () => {
+  try {
+    return progressService.getProgress();
+  } catch (e) {
+    console.error('Error getting progress:', e);
+    return { completedScenarios: [], scenarioProgress: {}, lastVisited: null, totalTimeSpent: 0 };
+  }
+};
 
 const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect }) => {
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState<typeof CATEGORIES[number]>('Social');
-  const [completionPercentage, setCompletionPercentage] = useState(0);
-  const [completedScenarios, setCompletedScenarios] = useState<Set<string>>(new Set());
   const [useJourneyMap, setUseJourneyMap] = useState(false);
-  const [userProgress, setUserProgress] = useState(() => {
-    try {
-      return progressService.getProgress();
-    } catch (e) {
-      console.error('Error getting progress:', e);
-      return { completedScenarios: [], scenarioProgress: {}, lastVisited: null, totalTimeSpent: 0 };
-    }
-  });
+  const userProgress = useMemo(() => getInitialProgress(), []);
+  const completedScenarios = useMemo(() => new Set(userProgress?.completedScenarios || []), [userProgress]);
+  const completionPercentage = useMemo(
+    () => progressService.getCompletionPercentage(CURATED_ROLEPLAYS.length),
+    []
+  );
 
   // Initialize filters from URL
   const [filters, setFilters] = useState<FilterState>(() => {
@@ -47,9 +53,9 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect }) => {
       const statusParam = searchParams.get('status');
 
       return {
-        difficulty: (difficultyParam ? difficultyParam.split(',') : []) || [],
-        duration: (durationParam ? durationParam.split(',') : []) || [],
-        status: (statusParam ? statusParam.split(',') : []) || []
+        difficulty: parseFilterParam<FilterState['difficulty'][number]>(difficultyParam),
+        duration: parseFilterParam<FilterState['duration'][number]>(durationParam),
+        status: parseFilterParam<FilterState['status'][number]>(statusParam)
       };
     } catch (e) {
       console.error('Error initializing filters:', e);
@@ -66,35 +72,7 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect }) => {
     return (sortParam as SortOption) || 'recommended';
   });
 
-  // Update filters and sort when URL params change
-  useEffect(() => {
-    const difficultyParam = searchParams.get('difficulty');
-    const durationParam = searchParams.get('duration');
-    const statusParam = searchParams.get('status');
-
-    setFilters({
-      difficulty: difficultyParam ? difficultyParam.split(',') : [],
-      duration: durationParam ? durationParam.split(',') : [],
-      status: statusParam ? statusParam.split(',') : []
-    });
-
-    const sortParam = searchParams.get('sort');
-    setSort((sortParam as SortOption) || 'recommended');
-  }, [searchParams]);
-
-  const [searchQuery, setSearchQuery] = useState(() => searchParams.get('search') || '');
-
-  // Update searchQuery when URL search param changes
-  useEffect(() => {
-    setSearchQuery(searchParams.get('search') || '');
-  }, [searchParams]);
-
-  useEffect(() => {
-    const progress = progressService.getProgress();
-    setUserProgress(progress);
-    setCompletedScenarios(new Set(progress?.completedScenarios || []));
-    setCompletionPercentage(progressService.getCompletionPercentage(CURATED_ROLEPLAYS.length));
-  }, []);
+  const [searchQuery] = useState(() => searchParams.get('search') || '');
 
   // Filtering pipeline with comprehensive error handling
   const filteredAndSortedScenarios = useMemo(() => {
@@ -137,7 +115,7 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect }) => {
       // 3. Apply sorting
       if (sort && typeof sort === 'string') {
         try {
-          results = sortingService.sortScenarios(results, sort as any, userProgress);
+          results = sortingService.sortScenarios(results, sort, userProgress);
         } catch (e) {
           console.error('Sorting error:', e);
           results = CURATED_ROLEPLAYS;
@@ -205,7 +183,7 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect }) => {
           <div className="flex-1" />
           <button
             onClick={() => setUseJourneyMap(false)}
-            className="text-xs text-neutral-600 hover:text-primary-600 font-semibold uppercase tracking-wider transition-colors flex items-center gap-1"
+            className="min-h-8 py-2 text-xs text-neutral-600 hover:text-primary-600 font-semibold uppercase tracking-wider transition-colors flex items-center gap-1"
             title="Switch to grid view for easier navigation"
           >
             <i className="fas fa-th"></i> Grid View
@@ -231,7 +209,7 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect }) => {
         videoSrc="/videos/nature-journey.mp4"
         posterSrc="/videos/nature-journey-poster.jpg"
         headline="Your Journey to English Fluency"
-        subtitle="Master IELTS speaking through 43 immersive conversations"
+        subtitle={"Master IELTS speaking through " + CURATED_ROLEPLAYS.length + " immersive conversations"}
         ctaText="Explore Scenarios"
         onCtaClick={() => {
           // Smooth scroll to scenarios list
@@ -284,7 +262,7 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect }) => {
         {/* Toggle to Journey Map */}
         <button
           onClick={() => setUseJourneyMap(true)}
-          className="mt-4 text-xs text-primary-600 hover:text-primary-700 font-semibold uppercase tracking-wider transition-colors flex items-center gap-1 justify-center"
+          className="mt-4 min-h-8 py-2 text-xs text-primary-600 hover:text-primary-700 font-semibold uppercase tracking-wider transition-colors flex items-center gap-1 justify-center"
           title="Switch to interactive journey map"
         >
           <i className="fas fa-mountain"></i> Journey Map View
@@ -360,23 +338,25 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect }) => {
         </div>
 
       {/* Category Tabs - Underline Style */}
-      <div className="flex justify-center gap-8 pb-4 border-b-2 border-neutral-200 max-w-fit mx-auto px-4">
-        {CATEGORIES.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setActiveCategory(cat)}
-            className={`pb-3 font-semibold text-sm uppercase tracking-wider transition-all duration-200 relative ${
-              activeCategory === cat
-                ? 'text-primary-600'
-                : 'text-neutral-500 hover:text-neutral-700'
-            }`}
-          >
-            {cat}
-            {activeCategory === cat && (
-              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary-500 to-primary-600 rounded-full"></div>
-            )}
-          </button>
-        ))}
+      <div className="w-full max-w-full overflow-x-auto pb-4 border-b-2 border-neutral-200">
+        <div className="flex min-w-max justify-start sm:justify-center gap-4 sm:gap-8 px-4">
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className={`pb-3 font-semibold text-sm uppercase tracking-wider transition-all duration-200 relative whitespace-nowrap ${
+                activeCategory === cat
+                  ? 'text-primary-600'
+                  : 'text-neutral-500 hover:text-neutral-700'
+              }`}
+            >
+              {cat}
+              {activeCategory === cat && (
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary-500 to-primary-600 rounded-full"></div>
+              )}
+            </button>
+          ))}
+        </div>
       </div>
 
         {/* Storybook Grid */}
@@ -454,15 +434,5 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ onSelect }) => {
     </div>
   );
 };
-
-function getIcon(category: string) {
-  switch (category) {
-    case 'Social': return 'fa-users';
-    case 'Workplace': return 'fa-briefcase';
-    case 'Service/Logistics': return 'fa-concierge-bell';
-    case 'Advanced': return 'fa-brain';
-    default: return 'fa-book';
-  }
-}
 
 export default TopicSelector;

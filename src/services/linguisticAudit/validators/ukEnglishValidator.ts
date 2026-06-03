@@ -7,13 +7,8 @@ import { RoleplayScript } from '../../staticData';
 import { ValidationFinding } from '../types';
 import {
   findSpellingIssues,
-  applySpellingFix,
-  BRITISH_SPELLING_RULES
 } from '../rules/britishSpellingRules';
-import {
-  findAmericanisms,
-  getBritishEquivalent
-} from '../rules/britishVocabulary';
+import { findAmericanisms } from '../rules/britishVocabulary';
 import { scoreConfidence } from '../fixers/confidenceScorer';
 
 export function validateUKEnglish(scenario: RoleplayScript): ValidationFinding[] {

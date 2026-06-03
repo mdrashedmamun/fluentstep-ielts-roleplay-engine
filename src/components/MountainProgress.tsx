@@ -26,7 +26,7 @@ const MountainProgress: React.FC<MountainProgressProps> = ({
   ];
 
   // Get current position
-  let currentPosition = percentage;
+  const currentPosition = percentage;
   let hikerEmoji = '🥾';
   let positionLabel = '';
 

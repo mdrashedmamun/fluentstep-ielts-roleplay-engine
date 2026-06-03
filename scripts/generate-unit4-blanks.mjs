@@ -5,7 +5,24 @@
  * Standalone JavaScript version (no compilation needed)
  */
 
+/**
+ * @typedef {'BUCKET_A' | 'BUCKET_B' | 'NOVEL'} AnswerBucket
+ * @typedef {{ phrase: string, bucket: AnswerBucket, score: number, alternatives: string[] }} AnswerInfo
+ * @typedef {Record<number, AnswerInfo>} AnswerMap
+ * @typedef {{ speaker: string, text: string }} DialogueLine
+ * @typedef {{ id: string, title: string, context: string, speakers: string[], answers: AnswerMap, rawDialogue: string[] }} SourceDialogue
+ * @typedef {{ index: number, answer: string, alternatives: string[], bucket: AnswerBucket, score: number }} AnswerVariationWithMetrics
+ * @typedef {{ name: string, description: string }} Character
+ * @typedef {{ index: number, phrase: string, insight: string }} DeepDive
+ * @typedef {{ totalBlanks: number, bucketA: number, bucketB: number, novel: number, complianceScore: number }} Metrics
+ * @typedef {{ id: string, category: 'Advanced', topic: string, context: string, characters: Character[], dialogue: DialogueLine[], answerVariations: AnswerVariationWithMetrics[], deepDive: DeepDive[], metrics: Metrics }} Unit4Scenario
+ */
+
+const writeOut = (message = '') => {
+  process.stdout.write(String(message) + '\n');
+};
 // Dialogue 1: Adjusting to Virtual Meeting Culture
+/** @type {AnswerMap} */
 const DIALOGUE_1_ANSWERS = {
   1: { phrase: 'transformed', bucket: 'BUCKET_A', score: 50, alternatives: ['changed', 'altered', 'reshaped'] },
   2: { phrase: 'reluctant', bucket: 'BUCKET_B', score: 30, alternatives: ['hesitant', 'unwilling', 'resistant'] },
@@ -18,6 +35,7 @@ const DIALOGUE_1_ANSWERS = {
 };
 
 // Dialogue 2: Debating AI and Job Displacement
+/** @type {AnswerMap} */
 const DIALOGUE_2_ANSWERS = {
   1: { phrase: 'concern', bucket: 'BUCKET_A', score: 48, alternatives: ['worry', 'anxiety', 'apprehension'] },
   2: { phrase: 'redundant', bucket: 'BUCKET_B', score: 30, alternatives: ['obsolete', 'unnecessary', 'superfluous'] },
@@ -30,6 +48,7 @@ const DIALOGUE_2_ANSWERS = {
 };
 
 // Dialogue 3: Corporate Sustainability and Profit Tensions
+/** @type {AnswerMap} */
 const DIALOGUE_3_ANSWERS = {
   1: { phrase: 'questioned', bucket: 'BUCKET_A', score: 45, alternatives: ['challenged', 'disputed', 'scrutinized'] },
   2: { phrase: 'tension', bucket: 'BUCKET_A', score: 48, alternatives: ['conflict', 'strain', 'competition'] },
@@ -42,6 +61,7 @@ const DIALOGUE_3_ANSWERS = {
 };
 
 // Dialogue 4: Strategies for Effective Language Acquisition
+/** @type {AnswerMap} */
 const DIALOGUE_4_ANSWERS = {
   1: { phrase: 'unchanged', bucket: 'BUCKET_A', score: 45, alternatives: ['the same', 'unaltered', 'constant'] },
   2: { phrase: 'argue', bucket: 'BUCKET_A', score: 48, alternatives: ['suggest', 'propose', 'advocate'] },
@@ -53,6 +73,7 @@ const DIALOGUE_4_ANSWERS = {
   8: { phrase: 'implementing', bucket: 'BUCKET_B', score: 28, alternatives: ['applying', 'using', 'employing'] }
 };
 
+/** @type {Record<string, Record<string, string>>} */
 const CHARACTER_DESCRIPTIONS = {
   'Adjusting to Virtual Meeting Culture': {
     Alex: 'Colleague reflecting on remote work challenges',
@@ -72,6 +93,7 @@ const CHARACTER_DESCRIPTIONS = {
   }
 };
 
+/** @type {Record<string, string>} */
 const DEEP_DIVE_INSIGHTS = {
   'transformed': 'C1 verb: metaphorical transformation. Better than "changed" in formal discourse.',
   'reluctant': 'Adjective collocation: "reluctant to" + infinitive. Shows hesitation with reluctance.',
@@ -107,7 +129,11 @@ const DEEP_DIVE_INSIGHTS = {
   'implementing': 'Gerund: putting plan/method into action. Shows practical application.'
 };
 
+/**
+ * @returns {Unit4Scenario[]}
+ */
 function generateUnit4Scenarios() {
+  /** @type {SourceDialogue[]} */
   const dialogueData = [
     {
       id: 'advanced-virtual-meetings',
@@ -179,8 +205,9 @@ function generateUnit4Scenarios() {
     }
   ];
 
-  return dialogueData.map((data, idx) => {
+  return dialogueData.map((data) => {
     // Parse dialogue
+    /** @type {DialogueLine[]} */
     const dialogue = data.rawDialogue.map(line => {
       const match = line.match(/^([^:]+):\s*(.*)$/);
       if (match) {
@@ -193,9 +220,10 @@ function generateUnit4Scenarios() {
     });
 
     // Create answer variations
+    /** @type {AnswerVariationWithMetrics[]} */
     const answerVariations = Object.entries(data.answers).map(
       ([idxStr, answerInfo]) => ({
-        index: parseInt(idxStr),
+        index: parseInt(idxStr, 10),
         answer: answerInfo.phrase,
         alternatives: answerInfo.alternatives,
         bucket: answerInfo.bucket,
@@ -212,6 +240,7 @@ function generateUnit4Scenarios() {
     const complianceScore = Math.round(((bucketACount * 1.0 + bucketBCount * 0.6) / total) * 100);
 
     // Create deep dive insights
+    /** @type {DeepDive[]} */
     const deepDive = answerVariations.map(av => ({
       index: av.index,
       phrase: av.answer,
@@ -219,6 +248,7 @@ function generateUnit4Scenarios() {
     }));
 
     // Get characters
+    /** @type {Character[]} */
     const characters = data.speakers.map(speaker => ({
       name: speaker,
       description: CHARACTER_DESCRIPTIONS[data.title]?.[speaker] || `Speaker in ${data.title}`
@@ -244,6 +274,10 @@ function generateUnit4Scenarios() {
   });
 }
 
+/**
+ * @param {Unit4Scenario[]} scenarios
+ * @returns {string}
+ */
 function generateBlankInsertionReport(scenarios) {
   let report = `# Phase 8 Step 3: Blank Insertion - COMPLETE\n\n`;
   report += `**Date**: ${new Date().toISOString()}\n`;
@@ -300,6 +334,6 @@ function generateBlankInsertionReport(scenarios) {
 
 // Execute
 const scenarios = generateUnit4Scenarios();
-console.log(JSON.stringify(scenarios, null, 2));
-console.log('\n\n---\n\n');
-console.log(generateBlankInsertionReport(scenarios));
+writeOut(JSON.stringify(scenarios, null, 2));
+writeOut('\n\n---\n');
+writeOut(generateBlankInsertionReport(scenarios));

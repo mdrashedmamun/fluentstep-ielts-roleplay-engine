@@ -12,7 +12,6 @@ const TRANSCRIPTS_DIR = path.join(PIPELINE_ROOT, "transcripts");
 const STAGE1_DIR = path.join(PIPELINE_ROOT, "stage-1-extracted");
 const STAGE3_DIR = path.join(PIPELINE_ROOT, "stage-3-verified");
 const STAGE2_DIR = path.join(PIPELINE_ROOT, "stage-2-apps");
-const QUEUE_DIR = path.join(PIPELINE_ROOT, "_queue");
 
 // Color codes for terminal output
 const colors = {

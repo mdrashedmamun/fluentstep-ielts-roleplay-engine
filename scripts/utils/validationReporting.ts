@@ -20,7 +20,19 @@ export interface ValidationReport {
   };
   overallStatus: 'PASS' | 'FAIL' | 'PENDING';
   nextSteps: string;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
+}
+
+function isValidationReport(value: unknown): value is ValidationReport {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'scenarioId' in value &&
+    'timestamp' in value &&
+    'gates' in value &&
+    'overallStatus' in value &&
+    'nextSteps' in value
+  );
 }
 
 /**
@@ -113,7 +125,11 @@ export async function saveValidationReport(
 export async function loadValidationReport(reportPath: string): Promise<ValidationReport> {
   try {
     const content = await fs.readFile(reportPath, 'utf-8');
-    return JSON.parse(content);
+    const parsed: unknown = JSON.parse(content);
+    if (!isValidationReport(parsed)) {
+      throw new Error(`Invalid validation report format: ${reportPath}`);
+    }
+    return parsed;
   } catch (error) {
     console.error('❌ Failed to load validation report:', error);
     throw error;

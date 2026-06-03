@@ -143,6 +143,11 @@ class HTMLReporter:
         status_color = "green" if pass_rate >= 95 else "orange" if pass_rate >= 80 else "red"
         status_emoji = "✅" if pass_rate >= 95 else "⚠️" if pass_rate >= 80 else "❌"
 
+        scenario_pass_rate = (
+            summary['passed_scenarios'] / summary['total_scenarios'] * 100
+            if summary['total_scenarios'] > 0 else 0
+        )
+
         html = f"""<!DOCTYPE html>
 <html>
 <head>
@@ -279,7 +284,7 @@ class HTMLReporter:
             </div>
             <div class="summary-card">
                 <h3>Pass Rate (Scenarios)</h3>
-                <div class="value">{summary['passed_scenarios']/summary['total_scenarios']*100:.1f}%</div>
+                <div class="value">{scenario_pass_rate:.1f}%</div>
             </div>
             <div class="summary-card">
                 <h3>Total Checks</h3>

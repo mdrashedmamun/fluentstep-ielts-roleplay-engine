@@ -87,6 +87,9 @@ export function suggestChunkAlternativesWithContext(
  * This is a simplified semantic scorer without external APIs
  */
 function generateSemanticSuggestions(answer: string, context: string): string[] {
+  void answer;
+  void context;
+
   // This could be enhanced with:
   // 1. Synonym dictionaries
   // 2. Word embeddings (if available)

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from '../design-system/components/Button';
 
 interface OnboardingModalProps {
   isOpen: boolean;
@@ -66,8 +65,6 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({ isOpen, onClos
   if (!isOpen) return null;
 
   const currentStep = steps[step]!;
-  const stepPercent = ((step + 1) / steps.length) * 100;
-
   return (
     <div className="fixed inset-0 bg-neutral-950/30 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
       <div className="bg-white rounded-3xl max-w-md w-full overflow-hidden animate-in zoom-in-95 duration-300 shadow-2xl">
@@ -152,7 +149,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({ isOpen, onClos
               onChange={(e) => setDontShowAgain(e.target.checked)}
               className="w-4 h-4 rounded border-2 border-neutral-300 text-primary-600 focus:ring-primary-500 cursor-pointer"
             />
-            <span className="text-xs text-neutral-600">Don't show this again</span>
+            <span className="text-xs text-neutral-600">Don&apos;t show this again</span>
           </label>
         </div>
       </div>

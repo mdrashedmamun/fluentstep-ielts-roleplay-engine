@@ -266,6 +266,8 @@ export function generateChunkFeedback(
     blankIndex: number,
     script?: RoleplayScript
 ): ChunkFeedback {
+    void script;
+
     // Check if we have a predefined template for this chunk
     const template = FEEDBACK_TEMPLATES.find(
         t => t.chunk.toLowerCase() === chunk.toLowerCase()
@@ -291,13 +293,11 @@ export function generateChunkFeedback(
 /**
  * Generate fallback feedback for chunks without predefined templates
  */
-function generateFallbackFeedback(
+export function generateFallbackFeedback(
     chunk: string,
     blankIndex: number,
     category: ChunkCategory
 ): ChunkFeedback {
-    const lowerChunk = chunk.toLowerCase();
-
     // Generate core function based on category
     const coreFunctions: Record<ChunkCategory, string> = {
         'Openers': `Initiates conversation about "${chunk}"; establishes friendly, open tone.`,

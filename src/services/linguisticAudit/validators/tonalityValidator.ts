@@ -9,8 +9,7 @@ import {
   analyzeRegister,
   checkToneMatch,
   RegisterLevel,
-  containsHedging,
-  getMarkersByRegister
+  containsHedging
 } from '../rules/tonalityMappings';
 import { scoreConfidence } from '../fixers/confidenceScorer';
 
@@ -154,6 +153,8 @@ function registerDistance(r1: RegisterLevel, r2: RegisterLevel): number {
  * Find a more tonally appropriate alternative
  */
 function findMoreAppropriateAlternative(text: string, category: string): string {
+  void text;
+  void category;
   // This could be enhanced with synonym lookup
   // For now, return empty string to indicate no simple fix
   return '';
@@ -163,6 +164,8 @@ function findMoreAppropriateAlternative(text: string, category: string): string 
  * Generate alternatives with different tones
  */
 function generateToneAlternatives(text: string, expectedTone: RegisterLevel | RegisterLevel[], category: string): string[] {
+  void expectedTone;
+  void category;
   const alternatives: string[] = [];
 
   // These are simplified transformations

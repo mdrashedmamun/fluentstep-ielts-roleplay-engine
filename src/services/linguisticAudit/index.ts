@@ -6,7 +6,7 @@
 import { RoleplayScript } from '../staticData';
 import { ValidationFinding, ValidatorResult, AuditReport, Severity, AuditConfig } from './types';
 import { applyAutoFixes, AutoFixResult } from './fixers/autoFixer';
-import { generateSuggestions, UserSuggestion, sortSuggestions } from './fixers/suggestionEngine';
+import { generateSuggestions, sortSuggestions } from './fixers/suggestionEngine';
 
 // Validators will be imported here once created
 export interface ValidatorFn {
@@ -16,6 +16,10 @@ export interface ValidatorFn {
 
 // Registry of all validators
 const validators: ValidatorFn[] = [];
+
+const writeLine = (message = ''): void => {
+  process.stdout.write(`${message}\n`);
+};
 
 /**
  * Register a validator with the audit system
@@ -27,7 +31,7 @@ export function registerValidator(validator: ValidatorFn): void {
 /**
  * Run a comprehensive linguistic audit on all scenarios
  */
-export async function runAudit(
+export function runAudit(
   scenarios: RoleplayScript[],
   config: AuditConfig = {
     dryRun: false,
@@ -40,11 +44,11 @@ export async function runAudit(
   const allFindings: ValidationFinding[] = [];
   const validatorResults: ValidatorResult[] = [];
 
-  console.log('🔍 Starting Linguistic Audit...\n');
+  writeLine('🔍 Starting Linguistic Audit...\n');
 
   // Run each validator on all scenarios
   for (const validator of validators) {
-    console.log(`Running: ${validator.name}...`);
+    writeLine(`Running: ${validator.name}...`);
     const validatorFindings: ValidationFinding[] = [];
 
     for (const scenario of scenarios) {
@@ -77,12 +81,12 @@ export async function runAudit(
       severity
     });
 
-    console.log(
+    writeLine(
       `  ✓ ${validator.name}: ${validatorFindings.length} finding(s)`
     );
   }
 
-  console.log('');
+  writeLine('');
 
   // Apply auto-fixes if not in dry-run/report-only mode
   let autoFixResult: AutoFixResult = {
@@ -94,13 +98,13 @@ export async function runAudit(
   if (!config.dryRun && !config.reportOnly) {
     autoFixResult = applyAutoFixes(scenarios, allFindings);
 
-    console.log('Auto-fixes Applied');
-    console.log('==================');
-    autoFixResult.log.slice(0, 10).forEach(line => console.log(line));
+    writeLine('Auto-fixes Applied');
+    writeLine('==================');
+    autoFixResult.log.slice(0, 10).forEach(line => writeLine(line));
     if (autoFixResult.log.length > 10) {
-      console.log(`... and ${autoFixResult.log.length - 10} more`);
+      writeLine(`... and ${autoFixResult.log.length - 10} more`);
     }
-    console.log('');
+    writeLine('');
   }
 
   // Generate suggestions for MEDIUM/LOW confidence findings
@@ -126,7 +130,7 @@ export async function runAudit(
     summary
   };
 
-  return report;
+  return Promise.resolve(report);
 }
 
 /**

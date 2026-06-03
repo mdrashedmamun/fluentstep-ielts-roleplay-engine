@@ -45,6 +45,8 @@ function getBucketScore(phrase: string): number {
 
 // Estimate pedagogical value based on phrase characteristics
 function getPedagogicalValue(phrase: string, context: string): number {
+    void context;
+
     let score = 0;
 
     // Softening phrases are highly valuable (IELTS speaking)

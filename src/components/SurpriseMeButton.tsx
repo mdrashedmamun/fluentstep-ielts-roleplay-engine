@@ -13,7 +13,7 @@ const SurpriseMeButton: React.FC<SurpriseMeButtonProps> = ({
   onSelect
 }) => {
   const [isRolling, setIsRolling] = useState(false);
-  const [isAllCompleted, setIsAllCompleted] = useState(completedIds.length === scenarios.length);
+  const isAllCompleted = completedIds.length === scenarios.length;
 
   // Filter out completed scenarios
   const availableScenarios = scenarios.filter(s => !completedIds.includes(s.id));

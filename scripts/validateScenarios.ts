@@ -1,4 +1,4 @@
-import { CURATED_ROLEPLAYS } from '../src/services/staticData';
+import { CURATED_ROLEPLAYS, type RoleplayScript } from '../src/services/staticData';
 
 interface ValidationError {
   scenario: string;
@@ -15,6 +15,12 @@ interface ValidationError {
 }
 
 const errors: ValidationError[] = [];
+
+type AnswerVariation = NonNullable<RoleplayScript['answerVariations']>[number];
+
+const writeOut = (message = ''): void => {
+  process.stdout.write(`${message}\n`);
+};
 const scenariosMissingAnswers: Array<{
   scenarioId: string;
   topic: string;
@@ -29,12 +35,12 @@ const scenariosMissingAnswers: Array<{
 function hasNonLatinScript(str: string): boolean {
   // Check for Chinese characters (CJK range), emoji, Cyrillic, Arabic, etc.
   // Exclude ASCII letters, numbers, spaces, and common punctuation
-  const chineseEmojiRegex = /[\u4e00-\u9fff\u3400-\u4dbf\ud800-\udbff\udc00-\udfff\u3040-\u309f\u30a0-\u30ff]/g;
+  const chineseEmojiRegex = /[\u4e00-\u9fff\u3400-\u4dbf\u{1f300}-\u{1faff}\u3040-\u309f\u30a0-\u30ff]/gu;
   return chineseEmojiRegex.test(str);
 }
 
 // Helper to check if object has valid AnswerVariation structure
-function validateAnswerVariation(av: any, scenarioId: string): void {
+function validateAnswerVariation(av: AnswerVariation, scenarioId: string): void {
   if (typeof av.index !== 'number') {
     errors.push({
       scenario: scenarioId,
@@ -223,11 +229,11 @@ CURATED_ROLEPLAYS.forEach(scenario => {
 });
 
 // Report results
-console.log('\n=== Scenario Data Validation Report ===\n');
+writeOut('\n=== Scenario Data Validation Report ===\n');
 
 if (errors.length === 0) {
-  console.log('✅ All scenarios passed validation!');
-  console.log(`\nValidated ${CURATED_ROLEPLAYS.length} scenarios with zero errors.`);
+  writeOut('✅ All scenarios passed validation!');
+  writeOut(`\nValidated ${CURATED_ROLEPLAYS.length} scenarios with zero errors.`);
 } else {
   console.error(`❌ Found ${errors.length} validation error(s):\n`);
   errors.forEach((error, index) => {

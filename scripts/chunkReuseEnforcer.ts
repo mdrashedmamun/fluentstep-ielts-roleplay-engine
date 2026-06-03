@@ -87,7 +87,9 @@ const SYNONYM_GROUPS = [
  * Band level assessment for vocabulary items
  * (Simplified - based on IELTS vocabulary lists)
  */
-const VOCABULARY_BAND_LEVELS: Record<string, string> = {
+type BandLevel = 'B1' | 'B2' | 'B2+' | 'C1';
+
+const VOCABULARY_BAND_LEVELS = new Map<string, BandLevel>(Object.entries({
   // B1 level vocabulary
   'think': 'B1',
   'know': 'B1',
@@ -119,7 +121,7 @@ const VOCABULARY_BAND_LEVELS: Record<string, string> = {
   'ubiquitous': 'C1',
   'perspicacious': 'C1',
   'propitious': 'C1'
-};
+} satisfies Record<string, BandLevel>));
 
 /**
  * Analyze chunk reuse consistency across a scenario
@@ -154,8 +156,8 @@ export function analyzeChunkReuseInScenario(scenario: RoleplayScript): ChunkReus
  * Get band level for a vocabulary item (simplified)
  */
 function getBandLevel(word: string): 'B1' | 'B2' | 'B2+' | 'C1' {
-  const key = word.toLowerCase().split(/\s+/)[0];
-  return (VOCABULARY_BAND_LEVELS[key] as any) || 'B1';
+  const key = word.toLowerCase().split(/\s+/)[0] ?? '';
+  return VOCABULARY_BAND_LEVELS.get(key) ?? 'B1';
 }
 
 /**

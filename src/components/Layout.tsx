@@ -1,12 +1,14 @@
 
-import React, { useState, useEffect, useRef } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import React, { useState, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import SearchBar from './SearchBar';
 import MuteToggle from './MuteToggle';
 import { audioService } from '../services/audioService';
 import { urlService } from '../services/urlService';
 import { useKeyboard } from '../hooks/useKeyboard';
-import { FilterState } from '../types/ux-enhancements';
+import { FilterState, SortOption } from '../types/ux-enhancements';
+
+const SORT_OPTIONS: SortOption[] = ['recommended', 'recently_added', 'alphabetical', 'duration'];
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -14,7 +16,6 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
   const [isMuted, setIsMuted] = useState(audioService.isMuted());
   const [searchValue, setSearchValue] = useState(searchParams.get('search') || '');
   const searchInputRef = useRef<HTMLInputElement | null>(null);
@@ -34,7 +35,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       duration: (searchParams.get('duration')?.split(',') || []) as ('short' | 'medium' | 'long')[],
       status: (searchParams.get('status')?.split(',') || []) as ('not_started' | 'in_progress' | 'completed')[]
     };
-    const sort = searchParams.get('sort') as any || 'recommended';
+    const sortParam = searchParams.get('sort');
+    const sort = SORT_OPTIONS.includes(sortParam as SortOption) ? sortParam as SortOption : 'recommended';
     urlService.updateURLWithFilters(filters, value, sort);
   };
 

@@ -1,143 +1,209 @@
 import fs from 'fs';
 import path from 'path';
-import { CURATED_ROLEPLAYS, PatternSummary, RoleplayScript } from '../src/services/staticData';
+import { CURATED_ROLEPLAYS, type PatternSummary, type RoleplayScript } from '../src/services/staticData';
 
 /**
- * Import enriched scenarios with pattern summaries back into staticData.ts
- * Enforces category lock and batch size constraints
+ * Import enriched scenarios with pattern summaries back into staticData.ts.
+ * Enforces category lock and batch size constraints.
  * Usage: npm run import:enrichments -- --file=Social-batch1-enriched.md
  */
+
+type CategoryBreakdownItem = PatternSummary['categoryBreakdown'][number];
+type KeyPatternItem = PatternSummary['keyPatterns'][number];
+type EnrichedRoleplayScript = Omit<RoleplayScript, 'patternSummary'> & {
+  patternSummary?: PatternSummary;
+};
 
 interface EnrichmentData {
   scenarioId: string;
   patternSummary: PatternSummary;
 }
 
-interface ParsedFile {
+interface CategoryHeader {
   category: string;
   sourceFile: string;
   scenarioCount: number;
-  enrichments: EnrichmentData[];
 }
+
+const writeOut = (message = ''): void => {
+  process.stdout.write(`${message}\n`);
+};
+
+const writeWarn = (message: string): void => {
+  process.stderr.write(`${message}\n`);
+};
+
+const writeErr = (message: string): void => {
+  process.stderr.write(`${message}\n`);
+};
+
+const getErrorMessage = (error: unknown): string => (
+  error instanceof Error ? error.message : String(error)
+);
 
 function parseArgs(): string {
   const args = process.argv.slice(2);
-  for (let i = 0; i < args.length; i++) {
-    if (args[i] === '--file' && i + 1 < args.length) {
-      return args[i + 1];
+  for (let index = 0; index < args.length; index += 1) {
+    const arg = args[index];
+    const nextArg = args[index + 1];
+
+    if (arg?.startsWith('--file=')) {
+      return arg.substring('--file='.length);
+    }
+
+    if (arg === '--file' && nextArg) {
+      return nextArg;
     }
   }
 
-  console.error('Usage: npm run import:enrichments -- --file=<filename>');
-  console.error('Example: npm run import:enrichments -- --file=Social-batch1-enriched.md');
+  writeErr('Usage: npm run import:enrichments -- --file=<filename>');
+  writeErr('Example: npm run import:enrichments -- --file=Social-batch1-enriched.md');
   process.exit(1);
 }
 
 /**
- * Parse category header and validate format
+ * Parse category header and validate format.
  */
-function parseCategoryHeader(lines: string[]): { category: string; sourceFile: string; scenarioCount: number } | null {
-  if (lines.length < 3) {
-    return null;
-  }
-
+function parseCategoryHeader(lines: string[]): CategoryHeader | null {
   const categoryLine = lines[0];
   const sourceFileLine = lines[1];
   const countLine = lines[2];
+
+  if (!categoryLine || !sourceFileLine || !countLine) {
+    return null;
+  }
 
   const categoryMatch = categoryLine.match(/^# Category: (.+)$/);
   const sourceMatch = sourceFileLine.match(/^# Source file: (.+)\.md$/);
   const countMatch = countLine.match(/^# Scenarios included: (\d+)$/);
 
-  if (!categoryMatch || !sourceMatch || !countMatch) {
+  const category = categoryMatch?.[1];
+  const sourceFile = sourceMatch?.[1];
+  const scenarioCountText = countMatch?.[1];
+
+  if (!category || !sourceFile || !scenarioCountText) {
     return null;
   }
 
   return {
-    category: categoryMatch[1],
-    sourceFile: sourceMatch[1],
-    scenarioCount: parseInt(countMatch[1], 10),
+    category,
+    sourceFile,
+    scenarioCount: Number.parseInt(scenarioCountText, 10)
   };
 }
 
 /**
- * Extract YAML enrichment blocks from markdown
+ * Extract YAML enrichment blocks from markdown.
  */
-function extractEnrichments(content: string, expectedScenarioCount: number): EnrichmentData[] {
+function extractEnrichments(content: string): EnrichmentData[] {
   const enrichments: EnrichmentData[] = [];
 
-  // Find all scenario blocks (marked by ## Title)
+  // Find all scenario blocks (marked by ## Title).
   const scenarioBlocks = content.split(/\n## /).slice(1);
 
   for (const block of scenarioBlocks) {
-    // Extract scenario ID from first line (should be **ID**: `<id>`)
+    // Extract scenario ID from first line (should be **ID**: `<id>`).
     const idMatch = block.match(/\*\*ID\*\*:\s*`([^`]+)`/);
-    if (!idMatch) continue;
+    const scenarioId = idMatch?.[1];
+    if (!scenarioId) {
+      continue;
+    }
 
-    const scenarioId = idMatch[1];
-
-    // Extract YAML block
+    // Extract YAML block.
     const yamlMatch = block.match(/```yaml\npatternSummary:\n([\s\S]*?)```/);
-    if (!yamlMatch) continue;
+    const yamlContent = yamlMatch?.[1];
+    if (!yamlContent) {
+      continue;
+    }
 
     try {
-      const patternSummary = parseYamlPatternSummary(yamlMatch[1]);
+      const patternSummary = parseYamlPatternSummary(yamlContent);
       enrichments.push({ scenarioId, patternSummary });
     } catch (error) {
-      console.error(`⚠️ Failed to parse YAML for ${scenarioId}: ${error}`);
+      writeWarn(`Warning: failed to parse YAML for ${scenarioId}: ${getErrorMessage(error)}`);
     }
   }
 
   return enrichments;
 }
 
+const parseQuotedValue = (line: string, key: string): string | undefined => {
+  const match = line.match(new RegExp(`${key}:\\s*"(.*)"`));
+  return match?.[1];
+};
+
+const parseNumberValue = (line: string, key: string): number | undefined => {
+  const match = line.match(new RegExp(`${key}:\\s*(\\d+)`));
+  const value = match?.[1];
+  return value ? Number.parseInt(value, 10) : undefined;
+};
+
+const parseInlineList = (line: string, key: string): string[] | undefined => {
+  const match = line.match(new RegExp(`${key}:\\s*\\[(.*)\\]`));
+  const listContent = match?.[1];
+  if (listContent === undefined) {
+    return undefined;
+  }
+
+  return listContent
+    .split(',')
+    .map((entry) => entry.trim().replace(/["']/g, ''))
+    .filter(Boolean);
+};
+
+const isListStart = (line: string, key: string): boolean => (
+  new RegExp(`^\\s*-\\s+${key}:`).test(line)
+);
+
+const isChildLine = (line: string): boolean => (
+  /^\s{2,}\S/.test(line) && !/^\s*-\s+/.test(line)
+);
+
 /**
- * Parse YAML pattern summary block
+ * Parse YAML pattern summary block.
  */
 function parseYamlPatternSummary(yamlContent: string): PatternSummary {
   const summary: PatternSummary = {
     categoryBreakdown: [],
     overallInsight: '',
-    keyPatterns: [],
+    keyPatterns: []
   };
 
-  const lines = yamlContent.split('\n').map(l => l.trimEnd());
-  let i = 0;
+  const lines = yamlContent.split('\n').map((line) => line.trimEnd());
+  let index = 0;
 
-  while (i < lines.length) {
-    const line = lines[i];
-    const indent = line.match(/^(\s*)/)?.[1]?.length ?? 0;
+  while (index < lines.length) {
+    const line = lines[index] ?? '';
 
     if (line.includes('categoryBreakdown:')) {
-      i++;
-      while (i < lines.length && lines[i].match(/^  - category:/)) {
-        const breakdown = parseBreakdownItem(lines, i);
-        if (breakdown) {
-          summary.categoryBreakdown.push(breakdown.item);
-          i = breakdown.nextIndex;
-        } else {
-          i++;
+      index += 1;
+      while (index < lines.length && isListStart(lines[index] ?? '', 'category')) {
+        const breakdown = parseBreakdownItem(lines, index);
+        if (!breakdown) {
+          index += 1;
+          continue;
         }
+
+        summary.categoryBreakdown.push(breakdown.item);
+        index = breakdown.nextIndex;
       }
     } else if (line.includes('overallInsight:')) {
-      const match = line.match(/overallInsight:\s*"(.*)"/);
-      if (match) {
-        summary.overallInsight = match[1];
-      }
-      i++;
+      summary.overallInsight = parseQuotedValue(line, 'overallInsight') ?? '';
+      index += 1;
     } else if (line.includes('keyPatterns:')) {
-      i++;
-      while (i < lines.length && lines[i].match(/^  - pattern:/)) {
-        const pattern = parsePatternItem(lines, i);
-        if (pattern) {
-          summary.keyPatterns.push(pattern.item);
-          i = pattern.nextIndex;
-        } else {
-          i++;
+      index += 1;
+      while (index < lines.length && isListStart(lines[index] ?? '', 'pattern')) {
+        const pattern = parsePatternItem(lines, index);
+        if (!pattern) {
+          index += 1;
+          continue;
         }
+
+        summary.keyPatterns.push(pattern.item);
+        index = pattern.nextIndex;
       }
     } else {
-      i++;
+      index += 1;
     }
   }
 
@@ -145,158 +211,136 @@ function parseYamlPatternSummary(yamlContent: string): PatternSummary {
 }
 
 /**
- * Parse a single category breakdown item
+ * Parse a single category breakdown item.
  */
-function parseBreakdownItem(lines: string[], startIndex: number): { item: any; nextIndex: number } | null {
-  const item: any = {};
-  let i = startIndex;
+function parseBreakdownItem(lines: string[], startIndex: number): {
+  item: CategoryBreakdownItem;
+  nextIndex: number;
+} | null {
+  const startLine = lines[startIndex] ?? '';
+  const category = parseQuotedValue(startLine, 'category');
+  if (!category) {
+    return null;
+  }
 
-  while (i < lines.length && lines[i].match(/^    /)) {
-    const line = lines[i];
+  let item: CategoryBreakdownItem = {
+    category: category as CategoryBreakdownItem['category'],
+    count: 0,
+    exampleChunkIds: [],
+    insight: ''
+  };
 
-    if (line.includes('category:')) {
-      const match = line.match(/category:\s*"(.*)"/);
-      item.category = match?.[1];
-    } else if (line.includes('count:')) {
-      const match = line.match(/count:\s*(\d+)/);
-      item.count = match ? parseInt(match[1], 10) : 0;
+  let index = startIndex + 1;
+  while (index < lines.length && isChildLine(lines[index] ?? '')) {
+    const line = lines[index] ?? '';
+
+    if (line.includes('count:')) {
+      item = { ...item, count: parseNumberValue(line, 'count') ?? 0 };
     } else if (line.includes('exampleChunkIds:')) {
-      // NEW: Parse chunkIds instead of examples
-      const match = line.match(/exampleChunkIds:\s*\[(.*)\]/);
-      if (match) {
-        item.exampleChunkIds = match[1].split(',').map(e => e.trim().replace(/["']/g, ''));
-      }
+      item = { ...item, exampleChunkIds: parseInlineList(line, 'exampleChunkIds') ?? [] };
     } else if (line.includes('examples:')) {
-      // DEPRECATED: Keep for backward compat, parse if present
-      const match = line.match(/examples:\s*\[(.*)\]/);
-      if (match) {
-        item.examples = match[1].split(',').map(e => e.trim().replace(/["']/g, ''));
-      }
+      item = { ...item, examples: parseInlineList(line, 'examples') ?? [] };
     } else if (line.includes('insight:')) {
-      const match = line.match(/insight:\s*"(.*)"/);
-      item.insight = match?.[1];
+      item = { ...item, insight: parseQuotedValue(line, 'insight') ?? '' };
     } else if (line.includes('nativePatterns:')) {
-      // NEW: Optional native patterns
-      const match = line.match(/nativePatterns:\s*\[(.*)\]/);
-      if (match) {
-        item.nativePatterns = match[1].split(',').map(e => e.trim().replace(/["']/g, ''));
-      }
+      item = { ...item, nativePatterns: parseInlineList(line, 'nativePatterns') ?? [] };
     } else if (line.includes('commonMistakes:')) {
-      // NEW: Optional common mistakes
-      const match = line.match(/commonMistakes:\s*\[(.*)\]/);
-      if (match) {
-        item.commonMistakes = match[1].split(',').map(e => e.trim().replace(/["']/g, ''));
-      }
+      item = { ...item, commonMistakes: parseInlineList(line, 'commonMistakes') ?? [] };
     }
 
-    i++;
-
-    if (lines[i] && !lines[i].match(/^    /)) {
-      break;
-    }
+    index += 1;
   }
 
-  return item.category ? { item, nextIndex: i } : null;
+  return { item, nextIndex: index };
 }
 
 /**
- * Parse a single key pattern item
+ * Parse a single key pattern item.
  */
-function parsePatternItem(lines: string[], startIndex: number): { item: any; nextIndex: number } | null {
-  const item: any = {};
-  let i = startIndex;
-
-  while (i < lines.length && lines[i].match(/^    /)) {
-    const line = lines[i];
-
-    if (line.includes('pattern:')) {
-      const match = line.match(/pattern:\s*"(.*)"/);
-      item.pattern = match?.[1];
-    } else if (line.includes('explanation:')) {
-      const match = line.match(/explanation:\s*"(.*)"/);
-      item.explanation = match?.[1];
-    } else if (line.includes('chunkIds:')) {
-      // NEW: Parse chunkIds instead of chunks
-      const match = line.match(/chunkIds:\s*\[(.*)\]/);
-      if (match) {
-        item.chunkIds = match[1].split(',').map(c => c.trim().replace(/["']/g, ''));
-      }
-    } else if (line.includes('chunks:')) {
-      // DEPRECATED: Keep for backward compat, parse if present
-      const match = line.match(/chunks:\s*\[(.*)\]/);
-      if (match) {
-        item.chunks = match[1].split(',').map(c => c.trim().replace(/["']/g, ''));
-      }
-    } else if (line.includes('nativePatterns:')) {
-      // NEW: Optional native patterns
-      const match = line.match(/nativePatterns:\s*\[(.*)\]/);
-      if (match) {
-        item.nativePatterns = match[1].split(',').map(e => e.trim().replace(/["']/g, ''));
-      }
-    } else if (line.includes('commonMistakes:')) {
-      // NEW: Optional common mistakes
-      const match = line.match(/commonMistakes:\s*\[(.*)\]/);
-      if (match) {
-        item.commonMistakes = match[1].split(',').map(e => e.trim().replace(/["']/g, ''));
-      }
-    }
-
-    i++;
-
-    if (lines[i] && !lines[i].match(/^    /)) {
-      break;
-    }
+function parsePatternItem(lines: string[], startIndex: number): {
+  item: KeyPatternItem;
+  nextIndex: number;
+} | null {
+  const startLine = lines[startIndex] ?? '';
+  const patternName = parseQuotedValue(startLine, 'pattern');
+  if (!patternName) {
+    return null;
   }
 
-  return item.pattern ? { item, nextIndex: i } : null;
+  let item: KeyPatternItem = {
+    pattern: patternName,
+    explanation: '',
+    chunkIds: []
+  };
+
+  let index = startIndex + 1;
+  while (index < lines.length && isChildLine(lines[index] ?? '')) {
+    const line = lines[index] ?? '';
+
+    if (line.includes('explanation:')) {
+      item = { ...item, explanation: parseQuotedValue(line, 'explanation') ?? '' };
+    } else if (line.includes('chunkIds:')) {
+      item = { ...item, chunkIds: parseInlineList(line, 'chunkIds') ?? [] };
+    } else if (line.includes('chunks:')) {
+      item = { ...item, chunks: parseInlineList(line, 'chunks') ?? [] };
+    } else if (line.includes('nativePatterns:')) {
+      item = { ...item, nativePatterns: parseInlineList(line, 'nativePatterns') ?? [] };
+    } else if (line.includes('commonMistakes:')) {
+      item = { ...item, commonMistakes: parseInlineList(line, 'commonMistakes') ?? [] };
+    }
+
+    index += 1;
+  }
+
+  return { item, nextIndex: index };
 }
 
 /**
- * Validate category lock (all scenario IDs must match declared category)
+ * Validate category lock (all scenario IDs must match declared category).
  */
 function validateCategoryLock(
   declaredCategory: string,
   enrichments: EnrichmentData[],
   allScenarios: RoleplayScript[]
 ): boolean {
-  // Map declared category name to file prefix
+  // Map declared category name to file prefix.
   const categoryPrefixMap: Record<string, string> = {
-    'Social': 'social-',
-    'Workplace': 'workplace-',
+    Social: 'social-',
+    Workplace: 'workplace-',
     'Service/Logistics': 'service-',
     'Service-Logistics': 'service-',
-    'Advanced': 'advanced-',
-    'Academic': 'academic-',
-    'Healthcare': 'healthcare-',
-    'Cultural': 'cultural-',
-    'Community': 'community-',
+    Advanced: 'advanced-',
+    Academic: 'academic-',
+    Healthcare: 'healthcare-',
+    Cultural: 'cultural-',
+    Community: 'community-'
   };
 
   const expectedPrefix = categoryPrefixMap[declaredCategory];
   if (!expectedPrefix) {
-    console.error(`❌ Invalid category name: ${declaredCategory}`);
+    writeErr(`Invalid category name: ${declaredCategory}`);
     return false;
   }
 
-  // Check all scenario IDs match the expected prefix
+  // Check all scenario IDs match the expected prefix.
   for (const enrichment of enrichments) {
     if (!enrichment.scenarioId.startsWith(expectedPrefix)) {
-      console.error(
-        `❌ Category lock violation: Scenario ID '${enrichment.scenarioId}' doesn't match declared category '${declaredCategory}'`
+      writeErr(
+        `Category lock violation: Scenario ID '${enrichment.scenarioId}' does not match declared category '${declaredCategory}'`
       );
       return false;
     }
 
-    // Also verify scenario exists in database
-    const scenario = allScenarios.find(s => s.id === enrichment.scenarioId);
+    // Also verify scenario exists in database.
+    const scenario = allScenarios.find((candidate) => candidate.id === enrichment.scenarioId);
     if (!scenario) {
-      console.error(`❌ Scenario not found: ${enrichment.scenarioId}`);
+      writeErr(`Scenario not found: ${enrichment.scenarioId}`);
       return false;
     }
 
     if (scenario.category !== declaredCategory && scenario.category !== declaredCategory.replace('-', '/')) {
-      console.error(
-        `❌ Scenario ${enrichment.scenarioId} belongs to category '${scenario.category}', not '${declaredCategory}'`
+      writeErr(
+        `Scenario ${enrichment.scenarioId} belongs to category '${scenario.category}', not '${declaredCategory}'`
       );
       return false;
     }
@@ -306,43 +350,46 @@ function validateCategoryLock(
 }
 
 /**
- * Merge enrichments into scenarios
+ * Merge enrichments into scenarios.
  */
 function mergeEnrichments(
   enrichments: EnrichmentData[],
   currentData: RoleplayScript[]
-): RoleplayScript[] {
-  const merged = JSON.parse(JSON.stringify(currentData)); // Deep copy
+): EnrichedRoleplayScript[] {
+  return currentData.map((scenario) => {
+    const enrichment = enrichments.find((candidate) => candidate.scenarioId === scenario.id);
 
-  for (const enrichment of enrichments) {
-    const scenario = merged.find((s: RoleplayScript) => s.id === enrichment.scenarioId);
-    if (scenario) {
-      scenario.patternSummary = enrichment.patternSummary;
+    if (!enrichment) {
+      return scenario as EnrichedRoleplayScript;
     }
-  }
 
-  return merged;
+    return {
+      ...(scenario as EnrichedRoleplayScript),
+      patternSummary: enrichment.patternSummary
+    };
+  });
 }
 
 /**
- * Format merged data back to TypeScript
+ * Format merged data back to TypeScript.
  */
-function generateStaticDataFile(scenarios: RoleplayScript[]): string {
-  // Read original file to preserve imports and structure
+function generateStaticDataFile(scenarios: EnrichedRoleplayScript[]): string {
+  // Read original file to preserve imports and structure.
   const originalPath = path.join(process.cwd(), 'src/services/staticData.ts');
   const originalContent = fs.readFileSync(originalPath, 'utf-8');
 
-  // Find the CURATED_ROLEPLAYS export and replace it
+  // Find the CURATED_ROLEPLAYS export and replace it.
   const lines = originalContent.split('\n');
   let startIndex = -1;
   let endIndex = -1;
 
-  for (let i = 0; i < lines.length; i++) {
-    if (lines[i].includes('export const CURATED_ROLEPLAYS')) {
-      startIndex = i;
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index];
+    if (line?.includes('export const CURATED_ROLEPLAYS')) {
+      startIndex = index;
     }
-    if (startIndex !== -1 && lines[i].trim() === '];') {
-      endIndex = i;
+    if (startIndex !== -1 && line?.trim() === '];') {
+      endIndex = index;
       break;
     }
   }
@@ -351,114 +398,123 @@ function generateStaticDataFile(scenarios: RoleplayScript[]): string {
     throw new Error('Could not find CURATED_ROLEPLAYS in staticData.ts');
   }
 
-  // Generate new array
-  const newArray = 'export const CURATED_ROLEPLAYS: RoleplayScript[] = ' +
-    JSON.stringify(scenarios, null, 4).replace(/^/gm, '');
+  // Generate new array.
+  const newArray = `export const CURATED_ROLEPLAYS: RoleplayScript[] = ${JSON.stringify(scenarios, null, 4)}`;
 
-  // Reconstruct file
-  const newContent = [
+  // Reconstruct file.
+  return [
     ...lines.slice(0, startIndex),
     newArray,
-    ...lines.slice(endIndex + 1),
+    ...lines.slice(endIndex + 1)
   ].join('\n');
-
-  return newContent;
 }
 
-async function main() {
+function main(): void {
   const filename = parseArgs();
   const filePath = path.join(process.cwd(), 'exports', filename);
 
   if (!fs.existsSync(filePath)) {
-    console.error(`❌ File not found: ${filePath}`);
+    writeErr(`File not found: ${filePath}`);
     process.exit(1);
   }
 
-  console.log(`\n📥 Importing enriched scenarios...`);
-  console.log(`   File: ${filename}`);
+  writeOut();
+  writeOut('Importing enriched scenarios...');
+  writeOut(`   File: ${filename}`);
 
-  // Read and parse file
+  // Read and parse file.
   const content = fs.readFileSync(filePath, 'utf-8');
   const lines = content.split('\n');
 
-  // Parse header
+  // Parse header.
   const header = parseCategoryHeader(lines);
   if (!header) {
-    console.error('❌ Invalid file format. Missing or malformed category header.');
-    console.error('Header must be:');
-    console.error('# Category: <NAME>');
-    console.error('# Source file: <FILENAME>.md');
-    console.error('# Scenarios included: <count>');
+    writeErr('Invalid file format. Missing or malformed category header.');
+    writeErr('Header must be:');
+    writeErr('# Category: <NAME>');
+    writeErr('# Source file: <FILENAME>.md');
+    writeErr('# Scenarios included: <count>');
     process.exit(1);
   }
 
-  console.log(`   Category: ${header.category}`);
-  console.log(`   Expected scenarios: ${header.scenarioCount}`);
+  writeOut(`   Category: ${header.category}`);
+  writeOut(`   Source file: ${header.sourceFile}.md`);
+  writeOut(`   Expected scenarios: ${header.scenarioCount}`);
 
-  // Extract enrichments
-  const enrichments = extractEnrichments(content, header.scenarioCount);
-  console.log(`   Found enrichments: ${enrichments.length}`);
+  // Extract enrichments.
+  const enrichments = extractEnrichments(content);
+  writeOut(`   Found enrichments: ${enrichments.length}`);
 
   if (enrichments.length === 0) {
-    console.error('❌ No enrichments found in file');
+    writeErr('No enrichments found in file');
     process.exit(1);
   }
 
   if (enrichments.length !== header.scenarioCount) {
-    console.warn(
-      `⚠️  Header says ${header.scenarioCount} scenarios but found ${enrichments.length}. Proceeding with found enrichments.`
+    writeWarn(
+      `Header says ${header.scenarioCount} scenarios but found ${enrichments.length}. Proceeding with found enrichments.`
     );
   }
 
-  // Validate category lock
-  console.log(`\n🔒 Enforcing category lock...`);
+  // Validate category lock.
+  writeOut();
+  writeOut('Enforcing category lock...');
   if (!validateCategoryLock(header.category, enrichments, CURATED_ROLEPLAYS)) {
-    console.error('❌ Category lock validation failed. Import cancelled.');
+    writeErr('Category lock validation failed. Import cancelled.');
     process.exit(1);
   }
-  console.log(`   ✅ All scenarios match declared category: ${header.category}`);
+  writeOut(`   All scenarios match declared category: ${header.category}`);
 
-  // Check for existing summaries
-  const existingScenarios = enrichments.filter(e => {
-    const scenario = CURATED_ROLEPLAYS.find(s => s.id === e.scenarioId);
-    return scenario?.patternSummary !== undefined;
+  // Check for existing summaries.
+  const existingScenarios = enrichments.filter((enrichment) => {
+    const scenario = CURATED_ROLEPLAYS.find((candidate) => candidate.id === enrichment.scenarioId);
+    return 'patternSummary' in (scenario ?? {}) && scenario?.patternSummary !== undefined;
   });
 
   if (existingScenarios.length > 0) {
-    console.warn(`\n⚠️  ${existingScenarios.length} scenario(s) already have pattern summaries:`);
-    existingScenarios.forEach(e => console.warn(`    - ${e.scenarioId}`));
-    console.log('Proceeding to overwrite...\n');
+    writeWarn('');
+    writeWarn(`${existingScenarios.length} scenario(s) already have pattern summaries:`);
+    existingScenarios.forEach((enrichment) => writeWarn(`    - ${enrichment.scenarioId}`));
+    writeOut('Proceeding to overwrite...');
+    writeOut();
   }
 
-  // Merge enrichments
-  console.log(`\n🔄 Merging enrichments...`);
+  // Merge enrichments.
+  writeOut();
+  writeOut('Merging enrichments...');
   const merged = mergeEnrichments(enrichments, CURATED_ROLEPLAYS);
-  console.log(`   ✅ Merged ${enrichments.length} enrichments`);
+  writeOut(`   Merged ${enrichments.length} enrichments`);
 
-  // Create backup
+  // Create backup.
   const staticDataPath = path.join(process.cwd(), 'src/services/staticData.ts');
   const backupPath = path.join(process.cwd(), 'src/services/staticData.ts.backup');
 
-  console.log(`\n💾 Creating backup...`);
+  writeOut();
+  writeOut('Creating backup...');
   fs.copyFileSync(staticDataPath, backupPath);
-  console.log(`   ✅ Backup created: ${backupPath}`);
+  writeOut(`   Backup created: ${backupPath}`);
 
-  // Write updated file
-  console.log(`\n✍️  Writing updated staticData.ts...`);
+  // Write updated file.
+  writeOut();
+  writeOut('Writing updated staticData.ts...');
   const newContent = generateStaticDataFile(merged);
   fs.writeFileSync(staticDataPath, newContent, 'utf-8');
-  console.log(`   ✅ Updated: ${staticDataPath}`);
+  writeOut(`   Updated: ${staticDataPath}`);
 
-  console.log(`\n✅ Import complete!`);
-  console.log(`\n📋 Next steps:`);
-  console.log(`   1. Run: npm run validate:feedback`);
-  console.log(`   2. Run: npm run build`);
-  console.log(`   3. Run: npm run dev (and test scenarios in browser)`);
-  console.log(`   4. If satisfied, commit: git add src/services/staticData.ts && git commit`);
-  console.log('');
+  writeOut();
+  writeOut('Import complete.');
+  writeOut();
+  writeOut('Next steps:');
+  writeOut('   1. Run: npm run validate:feedback');
+  writeOut('   2. Run: npm run build');
+  writeOut('   3. Run: npm run dev and test scenarios in browser');
+  writeOut('   4. Review repo policy before staging or committing generated data');
+  writeOut();
 }
 
-main().catch(err => {
-  console.error('❌ Error:', err.message);
+try {
+  main();
+} catch (error) {
+  writeErr(`Error: ${getErrorMessage(error)}`);
   process.exit(1);
-});
+}

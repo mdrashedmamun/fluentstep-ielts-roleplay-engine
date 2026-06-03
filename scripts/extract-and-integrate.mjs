@@ -4,17 +4,36 @@
  */
 
 import fs from 'fs';
-import path from 'path';
+
+const writeLine = (message = '') => {
+  process.stdout.write(`${message}\n`);
+};
+
+const writeError = (message) => {
+  process.stderr.write(`${message}\n`);
+};
+
+const getErrorMessage = (error) => (
+  error instanceof Error ? error.message : String(error)
+);
+
+const getTextItemString = (item) => {
+  if (typeof item !== 'object' || item === null) {
+    return '';
+  }
+
+  return typeof Reflect.get(item, 'str') === 'string' ? String(Reflect.get(item, 'str')) : '';
+};
 
 async function main() {
   try {
-    console.log('\n📚 FluentStep PDF Extraction & Integration\n');
+    writeLine('\n📚 FluentStep PDF Extraction & Integration\n');
 
     // Load PDF.js
     const pdfjsLib = await import('pdfjs-dist/legacy/build/pdf.mjs');
 
     // Extract full PDF text
-    console.log('Step 1: Extracting PDF...');
+    writeLine('Step 1: Extracting PDF...');
     const pdfPath = './Learn w_ J.pdf';
     const pdfBuffer = fs.readFileSync(pdfPath);
     const uint8Array = new Uint8Array(pdfBuffer);
@@ -25,16 +44,16 @@ async function main() {
       const page = await pdf.getPage(i);
       const textContent = await page.getTextContent();
       const pageText = textContent.items
-        .map(item => item.str || '')
+        .map(getTextItemString)
         .join(' ')
         .replace(/\s+/g, ' ')
         .trim();
       fullText += pageText + '\n\n';
     }
-    console.log(`✓ Extracted ${pdf.numPages} pages\n`);
+    writeLine(`✓ Extracted ${pdf.numPages} pages\n`);
 
     // Parse scenarios manually with better regex
-    console.log('Step 2: Parsing scenarios...');
+    writeLine('Step 2: Parsing scenarios...');
 
     // More robust scenario detection:
     // Split by Role-Play markers (with emojis or plain text)
@@ -42,10 +61,9 @@ async function main() {
       /(?:[\p{Emoji}]*\s*)?Role-?Play:?\s*([^\n]+)\n([\s\S]*?)(?=(?:[\p{Emoji}]*\s*)?(?:Role-?Play|Tab|\d+\.|\n\n✈|🛒|$))/gu
     ) || [];
 
-    console.log(`Found ${scenarioPatterns.length} scenarios\n`);
+    writeLine(`Found ${scenarioPatterns.length} scenarios\n`);
 
     // Extract structured data from scenarios
-    const scenarios = [];
     let scenarioIndex = 31; // Start from 31 since there are already 30
 
     for (const scenario of scenarioPatterns.slice(0, 5)) {
@@ -65,26 +83,26 @@ async function main() {
         .map(a => a.replace(/^[•●]\s*/, '').trim())
         .slice(0, blanks); // Match to blank count
 
-      console.log(`${scenarioIndex}. ${title}`);
-      console.log(`   Blanks: ${blanks}`);
-      console.log(`   Answers extracted: ${answerOptions.length}`);
+      writeLine(`${scenarioIndex}. ${title}`);
+      writeLine(`   Blanks: ${blanks}`);
+      writeLine(`   Answers extracted: ${answerOptions.length}`);
       if (answerOptions.length > 0) {
-        console.log(`   Sample: ${answerOptions.slice(0, 2).join(', ')}`);
+        writeLine(`   Sample: ${answerOptions.slice(0, 2).join(', ')}`);
       }
-      console.log('');
+      writeLine('');
 
       scenarioIndex++;
     }
 
-    console.log('\n✨ Extraction preview complete!');
-    console.log('\nNext steps:');
-    console.log('1. Use extracted-scenarios.json as reference');
-    console.log('2. Manually review and adjust scenario IDs');
-    console.log('3. Ensure LOCKED CHUNKS compliance (target 80%+)');
-    console.log('4. Integrate into services/staticData.ts\n');
+    writeLine('\n✨ Extraction preview complete!');
+    writeLine('\nNext steps:');
+    writeLine('1. Use extracted-scenarios.json as reference');
+    writeLine('2. Manually review and adjust scenario IDs');
+    writeLine('3. Ensure LOCKED CHUNKS compliance (target 80%+)');
+    writeLine('4. Integrate into services/staticData.ts\n');
 
   } catch (error) {
-    console.error('Error:', error);
+    writeError(`Error: ${getErrorMessage(error)}`);
     process.exit(1);
   }
 }

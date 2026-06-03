@@ -131,50 +131,24 @@ function createCharacterDescriptions(
 }
 
 /**
- * Extract blanks and their positions from dialogue
- */
-function extractDialogueBlanks(
-  dialogue: Array<{ speaker: string; text: string }>
-): Array<{ index: number; lineIndex: number; text: string }> {
-  const blanks: Array<{ index: number; lineIndex: number; text: string }> = [];
-  let index = 0;
-
-  dialogue.forEach((line, lineIndex) => {
-    const blankMatches = Array.from(line.text.matchAll(/________/g));
-    blankMatches.forEach(() => {
-      blanks.push({
-        index: index++,
-        lineIndex,
-        text: line.text
-      });
-    });
-  });
-
-  return blanks;
-}
-
-/**
  * Transform dialogue: replace ________ with [BLANK_N]
  */
 function transformDialogueText(dialogue: Array<{ speaker: string; text: string }>): Array<{
   speaker: string;
   text: string;
 }> {
-  let blankIndex = 0;
-  return dialogue.map(line => {
-    const transformedText = line.text.replace(/________/g, () => {
-      const replacement = `________`; // Keep as is, will be rendered with popup
-      blankIndex++;
-      return replacement;
-    });
-    return { ...line, text: transformedText };
-  });
+  return dialogue.map(line => ({
+    ...line,
+    text: line.text.replace(/________/g, '________')
+  }));
 }
 
 /**
  * Main transformation function
  */
 export function transformToRoleplayScript(parsed: ParsedScenario, existingCount: number = 0): TransformResult {
+  void existingCount;
+
   const warnings: string[] = [];
 
   // Validate dialogue exists

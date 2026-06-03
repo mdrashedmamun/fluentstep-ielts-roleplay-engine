@@ -21,8 +21,9 @@ import {
 } from '../src/services/headwayPatternDetector';
 import { insertBlanksIntelligently } from '../src/services/blankInserter';
 import { transformToRoleplayScript } from '../src/services/scenarioTransformer';
+import type { TransformResult } from '../src/services/scenarioTransformer';
 import { validateWithAdaptiveCompliance, suggestContentType, createConfigForScenario } from '../src/services/adaptiveChunkValidator';
-import { parseScenario } from '../src/services/scenarioParser';
+import type { AdaptiveComplianceReport } from '../src/services/adaptiveChunkValidator';
 
 /**
  * CLI Configuration
@@ -42,11 +43,23 @@ interface CLIArgs {
 interface ExtractedScenarioResult {
   id: string;
   detectedDialogue: DetectedDialogue;
-  transformation: any;
-  compliance: any;
+  transformation: TransformResult | null;
+  compliance: AdaptiveComplianceReport | null;
   status: 'accepted' | 'rejected' | 'pending';
   notes: string;
 }
+
+const writeLine = (message = ''): void => {
+  process.stdout.write(`${message}\n`);
+};
+
+const writeError = (message: string): void => {
+  process.stderr.write(`${message}\n`);
+};
+
+const getErrorMessage = (error: unknown): string => (
+  error instanceof Error ? error.message : String(error)
+);
 
 /**
  * Parse CLI arguments
@@ -94,21 +107,21 @@ async function approveDialogues(
   const approved: ExtractedScenarioResult[] = [];
   const rl = createPrompt();
 
-  console.log(`\n📋 Found ${dialogues.length} dialogues. Approving first ${targetCount}...\n`);
+  writeLine(`\n📋 Found ${dialogues.length} dialogues. Approving first ${targetCount}...\n`);
 
   for (let i = 0; i < dialogues.length && approved.length < targetCount; i++) {
     const dialogue = dialogues[i];
-    console.log(`\n${'─'.repeat(60)}`);
-    console.log(
+    writeLine(`\n${'─'.repeat(60)}`);
+    writeLine(
       `[${i + 1}/${dialogues.length}] ${dialogue.type.toUpperCase()} | Confidence: ${(dialogue.confidence * 100).toFixed(0)}%`
     );
-    console.log(`Title: ${dialogue.title}`);
-    console.log(`Speakers: ${dialogue.speakers.join(', ')}`);
-    console.log(`Turns: ${dialogue.estimatedTurns}`);
-    console.log(`\nPreview: ${dialogue.rawText.substring(0, 150)}...`);
+    writeLine(`Title: ${dialogue.title}`);
+    writeLine(`Speakers: ${dialogue.speakers.join(', ')}`);
+    writeLine(`Turns: ${dialogue.estimatedTurns}`);
+    writeLine(`\nPreview: ${dialogue.rawText.substring(0, 150)}...`);
 
     if (dryRun) {
-      console.log('✓ (DRY RUN - auto-approved)');
+      writeLine('✓ (DRY RUN - auto-approved)');
       approved.push({
         id: `headway-${i + 1}`,
         detectedDialogue: dialogue,
@@ -134,14 +147,14 @@ async function approveDialogues(
           status: 'accepted',
           notes: 'User approved'
         });
-        console.log('✓ Approved');
+        writeLine('✓ Approved');
       } else if (response === 's') {
-        console.log('⊘ Skipped');
+        writeLine('⊘ Skipped');
       } else if (response === 'v') {
-        console.log(`\nFull text:\n${dialogue.rawText}\n`);
+        writeLine(`\nFull text:\n${dialogue.rawText}\n`);
         i--; // Re-prompt for this item
       } else if (response === 'q') {
-        console.log('\n⊗ Extraction halted by user');
+        writeLine('\n⊗ Extraction halted by user');
         break;
       } else {
         i--; // Re-prompt for this item
@@ -162,7 +175,7 @@ async function approveDialogues(
 function transformDialogues(
   approved: ExtractedScenarioResult[]
 ): ExtractedScenarioResult[] {
-  console.log(`\n⚙️  Transforming ${approved.length} approved dialogues...\n`);
+  writeLine(`\n⚙️  Transforming ${approved.length} approved dialogues...\n`);
 
   for (const result of approved) {
     try {
@@ -205,13 +218,13 @@ function transformDialogues(
       result.transformation = transformed;
       result.compliance = compliance;
 
-      console.log(
+      writeLine(
         `✓ ${result.detectedDialogue.title} | ${blanked.blanksInserted} blanks | ${compliance.complianceScore}% compliance`
       );
     } catch (error) {
       result.status = 'rejected';
       result.notes = `Transform error: ${error instanceof Error ? error.message : String(error)}`;
-      console.log(`✗ ${result.detectedDialogue.title} - Transform failed`);
+      writeLine(`✗ ${result.detectedDialogue.title} - Transform failed`);
     }
   }
 
@@ -254,64 +267,64 @@ async function main() {
   const args = parseArgs();
   const pdfPath = path.resolve('Source Materials/New-Headway-Advanced-Student_s-Book.pdf');
 
-  console.log('\n🚀 New Headway Advanced Content Extraction Pipeline');
-  console.log('═'.repeat(60));
+  writeLine('\n🚀 New Headway Advanced Content Extraction Pipeline');
+  writeLine('═'.repeat(60));
 
   // Check PDF exists
   if (!fs.existsSync(pdfPath)) {
-    console.error(`❌ PDF not found: ${pdfPath}`);
+    writeError(`❌ PDF not found: ${pdfPath}`);
     process.exit(1);
   }
 
-  console.log(`\n📖 Loading PDF: ${pdfPath}`);
-  console.log(`📏 Size: ${(fs.statSync(pdfPath).size / 1024 / 1024).toFixed(1)} MB`);
+  writeLine(`\n📖 Loading PDF: ${pdfPath}`);
+  writeLine(`📏 Size: ${(fs.statSync(pdfPath).size / 1024 / 1024).toFixed(1)} MB`);
 
   // Extract PDF text
-  console.log('\n⏳ Extracting PDF text...');
+  writeLine('\n⏳ Extracting PDF text...');
   const extracted = await extractPDFText(pdfPath);
-  console.log(`✓ Extracted ${extracted.totalPages} pages`);
+  writeLine(`✓ Extracted ${extracted.totalPages} pages`);
 
   // Chunk PDF
-  console.log('\n⏳ Chunking PDF by units...');
+  writeLine('\n⏳ Chunking PDF by units...');
   const chunks = chunkPDFByUnits(extracted.pages, 20);
-  console.log(`✓ Created ${chunks.length} chunks`);
+  writeLine(`✓ Created ${chunks.length} chunks`);
 
   if (args.verbose) {
     chunks.forEach(chunk => {
-      console.log(
+      writeLine(
         `  Unit ${chunk.unitNumber || '?'}: pages ${chunk.startPage}-${chunk.endPage}, richness: ${chunk.estimatedDialogueRichness}%`
       );
     });
   }
 
   // Detect dialogues
-  console.log('\n⏳ Detecting dialogues...');
+  writeLine('\n⏳ Detecting dialogues...');
   const richChunks = sortChunksByRichness(chunks).slice(0, Math.ceil(chunks.length / 2));
-  let allDialogues: DetectedDialogue[] = [];
+  const allDialogues: DetectedDialogue[] = [];
 
   for (const chunk of richChunks) {
     const detected = detectAllDialogues(chunk.extractedText, chunk.startPage);
     allDialogues.push(...detected);
   }
 
-  console.log(`✓ Detected ${allDialogues.length} potential dialogues`);
+  writeLine(`✓ Detected ${allDialogues.length} potential dialogues`);
 
   // Filter by confidence
   const filtered = filterDialoguesByConfidence(allDialogues, 0.6);
-  console.log(`✓ ${filtered.length} meet confidence threshold (≥60%)`);
+  writeLine(`✓ ${filtered.length} meet confidence threshold (≥60%)`);
 
   // Show type breakdown
   const grouped = groupDialoguesByType(filtered);
-  console.log('\nBy type:');
+  writeLine('\nBy type:');
   for (const [type, dialogues] of Object.entries(grouped)) {
-    console.log(`  ${type}: ${dialogues.length}`);
+    writeLine(`  ${type}: ${dialogues.length}`);
   }
 
   // Interactive approval
   const targetCount = args.target || 20;
   const approved = await approveDialogues(filtered, targetCount, args.dryRun);
 
-  console.log(`\n✓ Approved ${approved.length} dialogues`);
+  writeLine(`\n✓ Approved ${approved.length} dialogues`);
 
   // Transform
   const transformed = transformDialogues(approved.filter(a => a.status === 'accepted'));
@@ -319,7 +332,7 @@ async function main() {
   // Output results
   const outputPath = args.output || 'headway-extraction-results.json';
   fs.writeFileSync(outputPath, JSON.stringify(transformed, null, 2), 'utf-8');
-  console.log(`\n✓ Results saved to ${outputPath}`);
+  writeLine(`\n✓ Results saved to ${outputPath}`);
 
   // Summary
   const accepted = transformed.filter(t => t.status === 'accepted').length;
@@ -328,17 +341,17 @@ async function main() {
       .filter(t => t.compliance)
       .reduce((sum, t) => sum + (t.compliance?.complianceScore || 0), 0) / (accepted || 1);
 
-  console.log('\n📊 Summary:');
-  console.log(`  Accepted: ${accepted}`);
-  console.log(`  Rejected: ${transformed.filter(t => t.status === 'rejected').length}`);
-  console.log(`  Average compliance: ${avgCompliance.toFixed(0)}%`);
-  console.log('\n✅ Extraction complete!');
+  writeLine('\n📊 Summary:');
+  writeLine(`  Accepted: ${accepted}`);
+  writeLine(`  Rejected: ${transformed.filter(t => t.status === 'rejected').length}`);
+  writeLine(`  Average compliance: ${avgCompliance.toFixed(0)}%`);
+  writeLine('\n✅ Extraction complete!');
 
   process.exit(0);
 }
 
 // Run extraction
 main().catch(error => {
-  console.error('❌ Fatal error:', error);
+  writeError(`❌ Fatal error: ${getErrorMessage(error)}`);
   process.exit(1);
 });

@@ -22,7 +22,7 @@ export function validateDialogueFlow(scenario: RoleplayScript): ValidationFindin
           issueType: 'dialogue-flow',
           affectedText: '',
           suggestedFix: '',
-          context: scenario.dialogue.slice(Math.max(0, i - 2), i + 3).join(' '),
+          context: scenario.dialogue.slice(Math.max(0, i - 2), i + 3).map(d => d.text).join(' | '),
           category: scenario.category
         });
 
@@ -48,8 +48,6 @@ export function validateDialogueFlow(scenario: RoleplayScript): ValidationFindin
   // Simple heuristic: detect complaint/apology/thanks patterns
   for (const av of scenario.answerVariations) {
     const isComplaint = /sorry|apologize|apologise|wrong|issue|problem/i.test(av.answer);
-    const isThankful = /thank|appreciate|grateful|cheers/i.test(av.answer);
-
     // If complaint, next speaker should acknowledge
     if (isComplaint && av.index + 1 < scenario.dialogue.length) {
       const nextLine = scenario.dialogue[av.index + 1]?.text || '';

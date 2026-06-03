@@ -121,28 +121,6 @@ function parseDialogue(text: string): ParsedDialogue[] {
 }
 
 /**
- * Count blanks in a text and map to answers
- */
-function extractBlanks(dialogueLines: string[]): Array<{ lineIndex: number; position: number; blankCount: number }> {
-  const blanks: Array<{ lineIndex: number; position: number; blankCount: number }> = [];
-  let globalPosition = 0;
-
-  dialogueLines.forEach((line, lineIndex) => {
-    const blankMatches = Array.from(line.matchAll(/________/g));
-    blankMatches.forEach((match, posInLine) => {
-      blanks.push({
-        lineIndex,
-        position: posInLine,
-        blankCount: posInLine + 1
-      });
-      globalPosition++;
-    });
-  });
-
-  return blanks;
-}
-
-/**
  * Parse answer variations from "Answers" section
  * Format: "1 ⃣ "text" options: • option1 • option2"
  */

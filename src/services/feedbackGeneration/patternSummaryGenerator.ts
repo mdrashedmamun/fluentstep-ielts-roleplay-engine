@@ -1,5 +1,5 @@
 import { RoleplayScript, PatternSummary, CategoryBreakdown, KeyPattern, ChunkCategory } from '../staticData';
-import { analyzeScenarioPatterns, getCategoryBreakdownStats } from './patternAnalyzer';
+import { getCategoryBreakdownStats } from './patternAnalyzer';
 import { generateChunkId } from './chunkIdGenerator';
 
 /**
@@ -78,7 +78,7 @@ const OVERALL_INSIGHT_TEMPLATES = {
     `This scenario focuses on ${cat.toLowerCase()} patterns through ${count} key chunk${count > 1 ? 's' : ''}. Native speakers master these expressions to improve conversational flow and reduce cognitive load.`,
 
   mixedCategories: (categories: string[], count: number) =>
-    `This scenario integrates multiple pattern categories: ${categories.join(', ')}. Together, these chunks create natural, polished English that combines clarity with warmth.`,
+    `This scenario integrates ${count} key chunks across multiple pattern categories: ${categories.join(', ')}. Together, these chunks create natural, polished English that combines clarity with warmth.`,
 
   openerFocused: (count: number) =>
     `This conversation prioritizes strong openers and initial warmth. The ${count} key patterns show how natives establish immediate rapport before moving to specific content.`,

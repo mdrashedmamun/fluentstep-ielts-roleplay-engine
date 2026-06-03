@@ -9,7 +9,7 @@
  * Exit Code: 0 = Both scenarios pass | 1 = Critical issues found
  */
 
-import { CURATED_ROLEPLAYS, RoleplayScript, ChunkFeedbackV2 } from '../src/services/staticData';
+import { CURATED_ROLEPLAYS, type RoleplayScript } from '../src/services/staticData';
 
 interface ObjectiveCheckResult {
   name: string;
@@ -17,6 +17,11 @@ interface ObjectiveCheckResult {
   message: string;
   details?: string;
 }
+
+type PatternCategoryBreakdown = {
+  category: string;
+  categoryKey?: string;
+};
 
 interface ScenarioResults {
   id: string;
@@ -31,6 +36,14 @@ const colors = {
   yellow: '\x1b[33m',
   blue: '\x1b[34m',
   gray: '\x1b[90m',
+};
+
+const writeOut = (message = ''): void => {
+  process.stdout.write(`${message}\n`);
+};
+
+const writeErr = (message: string): void => {
+  process.stderr.write(`${message}\n`);
 };
 
 const TEMPLATE_SCENARIOS = ['healthcare-1-gp-appointment', 'community-1-council-meeting'];
@@ -168,14 +181,10 @@ function checkCategoryKeysValid(script: RoleplayScript): ObjectiveCheckResult {
 
   const invalidCategories = new Set<string>();
 
-  // Check chunkFeedbackV2 (if it has a category field - may not)
-  (script.chunkFeedbackV2 || []).forEach(feedback => {
-    // V2 may not have category field, that's OK
-  });
-
   // Check patternSummary categoryBreakdown
   script.patternSummary?.categoryBreakdown?.forEach(breakdown => {
-    const key = (breakdown as any).categoryKey || breakdown.category;
+    const typedBreakdown = breakdown as PatternCategoryBreakdown;
+    const key = typedBreakdown.categoryKey || typedBreakdown.category;
     if (!validCategories.has(key)) {
       invalidCategories.add(key);
     }
@@ -292,7 +301,7 @@ function validateScenario(scenario: RoleplayScript): ScenarioResults {
  * Main execution
  */
 function main() {
-  console.log(
+  writeOut(
     `\n${colors.blue}=== Validating Perfect Scenario Templates ===${colors.reset}\n`
   );
 
@@ -302,21 +311,21 @@ function main() {
   for (const templateId of TEMPLATE_SCENARIOS) {
     const scenario = CURATED_ROLEPLAYS.find(s => s.id === templateId);
     if (!scenario) {
-      console.error(`${colors.red}❌ Template scenario not found: ${templateId}${colors.reset}`);
+      writeErr(`${colors.red}❌ Template scenario not found: ${templateId}${colors.reset}`);
       process.exit(1);
     }
 
     const result = validateScenario(scenario);
     results.push(result);
 
-    console.log(`${scenario.id}:`);
+    writeOut(`${scenario.id}:`);
 
     for (const check of result.checks) {
       const icon = check.passed ? '✅' : '❌';
       const color = check.passed ? colors.green : colors.red;
-      console.log(`${color}${icon} ${check.name}: ${check.message}${colors.reset}`);
+      writeOut(`${color}${icon} ${check.name}: ${check.message}${colors.reset}`);
       if (check.details) {
-        console.log(`   ${colors.gray}${check.details}${colors.reset}`);
+        writeOut(`   ${colors.gray}${check.details}${colors.reset}`);
       }
     }
 
@@ -324,29 +333,29 @@ function main() {
       templatePass++;
     }
 
-    console.log();
+    writeOut();
   }
 
   // Print summary
-  console.log(`${colors.blue}=== Summary ===${colors.reset}`);
-  console.log(
+  writeOut(`${colors.blue}=== Summary ===${colors.reset}`);
+  writeOut(
     `${colors.green}✅ Templates passing: ${templatePass}/${TEMPLATE_SCENARIOS.length}${colors.reset}`
   );
 
   if (templatePass === TEMPLATE_SCENARIOS.length) {
-    console.log(
+    writeOut(
       `\n${colors.green}🎉 Both scenarios PASS objective data integrity checks${colors.reset}`
     );
     if (results.some(r => r.checks.some(c => !c.passed))) {
-      console.log(
+      writeOut(
         `${colors.yellow}⚠️  Some warnings above - address in code review${colors.reset}\n`
       );
     } else {
-      console.log(`${colors.green}No warnings - ready to scale to 50 scenarios\n${colors.reset}`);
+      writeOut(`${colors.green}No warnings - ready to scale to 50 scenarios\n${colors.reset}`);
     }
     process.exit(0);
   } else {
-    console.log(
+    writeOut(
       `${colors.red}❌ Templates failing - fix issues before using as template\n${colors.reset}`
     );
     process.exit(1);

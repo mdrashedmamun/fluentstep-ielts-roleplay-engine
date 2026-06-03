@@ -6,7 +6,7 @@
 import { CURATED_ROLEPLAYS } from '../src/services/staticData';
 import { runQACheck, formatQAReport, generateQASummary, QAReport } from './qaAgent';
 
-async function main() {
+function main() {
   console.log('🔍 QA Agent Test Suite');
   console.log('═'.repeat(70));
   console.log('');
@@ -38,4 +38,4 @@ async function main() {
   console.log(generateQASummary(reports));
 }
 
-main().catch(console.error);
+main();

@@ -1,6 +1,5 @@
 import { CURATED_ROLEPLAYS } from '../src/services/staticData';
-import { validateAllFeedback } from '../src/services/feedbackGeneration/feedbackValidator';
-import { ChunkCategory } from '../src/services/staticData';
+import { ChunkCategory, ChunkFeedback, PatternSummary, RoleplayScript } from '../src/services/staticData';
 
 /**
  * Comprehensive validation script for chunk feedback across all scenarios
@@ -16,7 +15,36 @@ interface ValidationResult {
   warnings: string[];
 }
 
-const validateFeedback = (feedback: any, maxBlankIndex: number): ValidationResult => {
+type ScenarioWithLegacyFeedback = RoleplayScript & {
+  chunkFeedback: ChunkFeedback[];
+  patternSummary?: PatternSummary;
+};
+
+type ScenarioWithPatternSummary = RoleplayScript & {
+  patternSummary: PatternSummary;
+};
+
+const hasLegacyChunkFeedback = (scenario: RoleplayScript): scenario is ScenarioWithLegacyFeedback => (
+  'chunkFeedback' in scenario && Array.isArray(scenario.chunkFeedback) && scenario.chunkFeedback.length > 0
+);
+
+const hasPatternSummary = (scenario: RoleplayScript): scenario is ScenarioWithPatternSummary => (
+  'patternSummary' in scenario && Boolean(scenario.patternSummary)
+);
+
+const writeLine = (message = ''): void => {
+  process.stdout.write(`${message}
+`);
+};
+
+const writeErrorLine = (message: string): void => {
+  process.stderr.write(`${message}
+`);
+};
+
+const wordCount = (value: string): number => value.split(' ').length;
+
+const validateFeedback = (feedback: ChunkFeedback, maxBlankIndex: number): ValidationResult => {
   const result: ValidationResult = { errors: [], warnings: [] };
 
   // Check blankIndex validity
@@ -50,7 +78,7 @@ const validateFeedback = (feedback: any, maxBlankIndex: number): ValidationResul
     result.errors.push('nativeUsageNotes is not an array');
   } else if (feedback.nativeUsageNotes.length < 3) {
     result.warnings.push(
-      `nativeUsageNotes has ${feedback.nativeUsageNotes.length} items (expected ≥3)`
+      `nativeUsageNotes has ${feedback.nativeUsageNotes.length} items (expected >=3)`
     );
   }
 
@@ -63,26 +91,26 @@ const validateFeedback = (feedback: any, maxBlankIndex: number): ValidationResul
   }
 
   // Check content lengths (soft validation - just warn)
-  const coreLength = (feedback.coreFunction || '').split(' ').length;
+  const coreLength = wordCount(feedback.coreFunction || '');
   if (coreLength > 20) {
     result.warnings.push(
-      `coreFunction is ${coreLength} words (recommended ≤20)`
+      `coreFunction is ${coreLength} words (recommended <=20)`
     );
   }
 
   // Validate situations structure
   if (Array.isArray(feedback.situations)) {
-    feedback.situations.forEach((sit: any, idx: number) => {
-      if (!sit.context) {
+    feedback.situations.forEach((situation, idx) => {
+      if (!situation.context) {
         result.errors.push(`situation[${idx}] missing context`);
       }
-      if (!sit.example) {
+      if (!situation.example) {
         result.errors.push(`situation[${idx}] missing example`);
       }
-      const exLen = (sit.example || '').split(' ').length;
+      const exLen = wordCount(situation.example || '');
       if (exLen > 15) {
         result.warnings.push(
-          `situation[${idx}] example is ${exLen} words (recommended ≤15)`
+          `situation[${idx}] example is ${exLen} words (recommended <=15)`
         );
       }
     });
@@ -90,7 +118,7 @@ const validateFeedback = (feedback: any, maxBlankIndex: number): ValidationResul
 
   // Validate contrast structure
   if (Array.isArray(feedback.nonNativeContrast)) {
-    feedback.nonNativeContrast.forEach((contrast: any, idx: number) => {
+    feedback.nonNativeContrast.forEach((contrast, idx) => {
       if (!contrast.nonNative) {
         result.errors.push(`contrast[${idx}] missing nonNative`);
       }
@@ -100,10 +128,10 @@ const validateFeedback = (feedback: any, maxBlankIndex: number): ValidationResul
       if (!contrast.explanation) {
         result.errors.push(`contrast[${idx}] missing explanation`);
       }
-      const expLen = (contrast.explanation || '').split(' ').length;
+      const expLen = wordCount(contrast.explanation || '');
       if (expLen > 20) {
         result.warnings.push(
-          `contrast[${idx}] explanation is ${expLen} words (recommended ≤20)`
+          `contrast[${idx}] explanation is ${expLen} words (recommended <=20)`
         );
       }
     });
@@ -114,7 +142,10 @@ const validateFeedback = (feedback: any, maxBlankIndex: number): ValidationResul
 
 const VALID_CHUNK_CATEGORIES: ChunkCategory[] = ['Openers', 'Softening', 'Disagreement', 'Repair', 'Exit', 'Idioms'];
 
-const validatePatternSummary = (summary: any, chunkFeedback: any[] | undefined, maxBlankIndex: number): ValidationResult => {
+const validatePatternSummary = (
+  summary: PatternSummary,
+  chunkFeedback: ChunkFeedback[] | undefined
+): ValidationResult => {
   const result: ValidationResult = { errors: [], warnings: [] };
 
   if (!summary) {
@@ -132,13 +163,16 @@ const validatePatternSummary = (summary: any, chunkFeedback: any[] | undefined, 
     }
 
     // Validate each category breakdown item
-    summary.categoryBreakdown.forEach((item: any, idx: number) => {
-      if (!VALID_CHUNK_CATEGORIES.includes(item.category)) {
-        result.errors.push(`categoryBreakdown[${idx}]: Invalid category '${item.category}'`);
+    summary.categoryBreakdown.forEach((item, idx) => {
+      const category = item.category;
+      const examples = item.examples || [];
+
+      if (!category || !VALID_CHUNK_CATEGORIES.includes(category)) {
+        result.errors.push(`categoryBreakdown[${idx}]: Invalid category '${category || ''}'`);
       }
-      if (item.count !== (item.examples || []).length) {
+      if (item.count !== examples.length) {
         result.errors.push(
-          `categoryBreakdown[${idx}]: count ${item.count} doesn't match examples length ${(item.examples || []).length}`
+          `categoryBreakdown[${idx}]: count ${item.count} doesn't match examples length ${examples.length}`
         );
       }
       if (!item.insight || item.insight.length < 30 || item.insight.length > 100) {
@@ -148,9 +182,9 @@ const validatePatternSummary = (summary: any, chunkFeedback: any[] | undefined, 
       }
 
       // Verify chunks exist in chunkFeedback
-      if (chunkFeedback && Array.isArray(item.examples)) {
-        item.examples.forEach((example: string) => {
-          if (!chunkFeedback.find(f => f.chunk === example)) {
+      if (chunkFeedback && examples.length > 0) {
+        examples.forEach((example) => {
+          if (!chunkFeedback.find(feedback => feedback.chunk === example)) {
             result.errors.push(
               `categoryBreakdown[${idx}]: chunk '${example}' not found in chunkFeedback`
             );
@@ -179,7 +213,7 @@ const validatePatternSummary = (summary: any, chunkFeedback: any[] | undefined, 
       );
     }
 
-    summary.keyPatterns.forEach((pattern: any, idx: number) => {
+    summary.keyPatterns.forEach((pattern, idx) => {
       if (!pattern.pattern || pattern.pattern.length < 10 || pattern.pattern.length > 50) {
         result.warnings.push(
           `keyPatterns[${idx}]: pattern length ${(pattern.pattern || '').length} (expected 10-50)`
@@ -200,13 +234,13 @@ const validatePatternSummary = (summary: any, chunkFeedback: any[] | undefined, 
 };
 
 // Main validation logic
-const main = () => {
-  const scenariosWithFeedback = CURATED_ROLEPLAYS.filter(s => s.chunkFeedback);
-  const scenariosWithSummary = CURATED_ROLEPLAYS.filter(s => s.patternSummary);
+const main = (): void => {
+  const scenariosWithFeedback = CURATED_ROLEPLAYS.filter(hasLegacyChunkFeedback);
+  const scenariosWithSummary = CURATED_ROLEPLAYS.filter(hasPatternSummary);
 
-  console.log('\n=== Chunk Feedback & Pattern Summary Validation Report ===\n');
-  console.log(`Found ${scenariosWithFeedback.length} scenarios with chunkFeedback`);
-  console.log(`Found ${scenariosWithSummary.length} scenarios with patternSummary\n`);
+  writeLine('\n=== Chunk Feedback & Pattern Summary Validation Report ===\n');
+  writeLine(`Found ${scenariosWithFeedback.length} scenarios with chunkFeedback`);
+  writeLine(`Found ${scenariosWithSummary.length} scenarios with patternSummary\n`);
 
   let totalErrors = 0;
   let totalWarnings = 0;
@@ -215,18 +249,18 @@ const main = () => {
   const failedScenarios: string[] = [];
 
   scenariosWithFeedback.forEach(scenario => {
-    console.log(`\n📋 ${scenario.id}`);
-    console.log(`   Topic: ${scenario.topic}`);
-    console.log(`   Blanks: ${scenario.answerVariations.length}`);
-    console.log(
+    writeLine(`\n📋 ${scenario.id}`);
+    writeLine(`   Topic: ${scenario.topic}`);
+    writeLine(`   Blanks: ${scenario.answerVariations.length}`);
+    writeLine(
       `   Feedback items: ${scenario.chunkFeedback?.length || 0}`
     );
-    console.log(
+    writeLine(
       `   Pattern summary: ${scenario.patternSummary ? 'Yes' : 'No'}`
     );
 
     if (!scenario.chunkFeedback || scenario.chunkFeedback.length === 0) {
-      console.log(`   ⚠️  No feedback defined`);
+      writeLine('   ⚠️  No feedback defined');
       return;
     }
 
@@ -240,13 +274,13 @@ const main = () => {
 
       if (result.errors.length > 0) {
         if (scenarioErrors === 0) {
-          console.log(`   ❌ Errors:`);
+          writeLine('   ❌ Errors:');
         }
-        console.log(
+        writeLine(
           `      Feedback #${idx + 1} (${feedback.chunk || 'MISSING'})`
         );
         result.errors.forEach(err => {
-          console.log(`         • ${err}`);
+          writeLine(`         • ${err}`);
           totalErrors++;
         });
         scenarioErrors += result.errors.length;
@@ -254,24 +288,24 @@ const main = () => {
 
       if (result.warnings.length > 0) {
         if (scenarioWarnings === 0) {
-          console.log(`   ⚠️  Warnings:`);
+          writeLine('   ⚠️  Warnings:');
         }
-        console.log(
+        writeLine(
           `      Feedback #${idx + 1} (${feedback.chunk || 'UNKNOWN'})`
         );
         result.warnings.forEach(warn => {
-          console.log(`         • ${warn}`);
+          writeLine(`         • ${warn}`);
           totalWarnings++;
         });
         scenarioWarnings += result.warnings.length;
       }
 
       if (result.errors.length > 0) {
-        console.log(`      ✗ Failed`);
+        writeLine('      ✗ Failed');
       } else if (result.warnings.length > 0) {
-        console.log(`      ⚠️  Passed with warnings`);
+        writeLine('      ⚠️  Passed with warnings');
       } else {
-        console.log(`      ✓ Passed`);
+        writeLine('      ✓ Passed');
       }
     });
 
@@ -280,24 +314,23 @@ const main = () => {
       totalSummaries++;
       const summaryResult = validatePatternSummary(
         scenario.patternSummary,
-        scenario.chunkFeedback,
-        scenario.answerVariations.length
+        scenario.chunkFeedback
       );
 
       if (summaryResult.errors.length > 0 || summaryResult.warnings.length > 0) {
-        console.log(`   📊 Pattern Summary:`);
+        writeLine('   📊 Pattern Summary:');
         summaryResult.errors.forEach(err => {
-          console.log(`      ❌ ${err}`);
+          writeLine(`      ❌ ${err}`);
           totalErrors++;
           scenarioErrors++;
         });
         summaryResult.warnings.forEach(warn => {
-          console.log(`      ⚠️  ${warn}`);
+          writeLine(`      ⚠️  ${warn}`);
           totalWarnings++;
           scenarioWarnings++;
         });
       } else {
-        console.log(`   📊 Pattern Summary: ✓ Passed`);
+        writeLine('   📊 Pattern Summary: ✓ Passed');
       }
     }
 
@@ -307,27 +340,28 @@ const main = () => {
   });
 
   // Summary
-  console.log('\n=== Summary ===');
-  console.log(`Total Feedback Items: ${totalFeedbackItems}`);
-  console.log(`Total Pattern Summaries: ${totalSummaries}`);
-  console.log(`Total Errors: ${totalErrors}`);
-  console.log(`Total Warnings: ${totalWarnings}`);
-  console.log(
-    `Feedback Pass Rate: ${((totalFeedbackItems - failedScenarios.length) / totalFeedbackItems * 100).toFixed(1)}%`
-  );
+  writeLine('\n=== Summary ===');
+  writeLine(`Total Feedback Items: ${totalFeedbackItems}`);
+  writeLine(`Total Pattern Summaries: ${totalSummaries}`);
+  writeLine(`Total Errors: ${totalErrors}`);
+  writeLine(`Total Warnings: ${totalWarnings}`);
+  const passRate = totalFeedbackItems > 0
+    ? ((totalFeedbackItems - failedScenarios.length) / totalFeedbackItems * 100).toFixed(1)
+    : '100.0';
+  writeLine(`Feedback Pass Rate: ${passRate}%`);
 
   if (failedScenarios.length > 0) {
-    console.log(`\nFailed Scenarios: ${failedScenarios.join(', ')}`);
+    writeLine(`\nFailed Scenarios: ${failedScenarios.join(', ')}`);
   }
 
-  console.log('\n' + '='.repeat(40) + '\n');
+  writeLine(`\n${'='.repeat(40)}\n`);
 
   // Exit with error code if validation failed
   if (totalErrors > 0) {
-    console.error('❌ Validation FAILED - Please fix errors above');
+    writeErrorLine('❌ Validation FAILED - Please fix errors above');
     process.exit(1);
   } else {
-    console.log('✅ Validation PASSED');
+    writeLine('✅ Validation PASSED');
     process.exit(0);
   }
 };

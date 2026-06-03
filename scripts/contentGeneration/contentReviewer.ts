@@ -8,9 +8,15 @@ import {
     validateFullChunkBlanks,
     validateAlternativesQuality,
     validateWhyOddSpecificity,
-    ValidationError,
-    ParsedPackage
+    type ValidationError,
+    type ParsedPackage
 } from './packageValidator';
+
+type ChunkFeedback = ParsedPackage['chunkFeedback'][number];
+
+const writeOut = (message = ''): void => {
+    process.stdout.write(`${message}\n`);
+};
 
 export interface ReviewerOutput {
     passed: boolean;
@@ -34,7 +40,7 @@ function parsePackageMarkdown(markdown: string): ParsedPackage {
         chunkFeedback: [],
         patternSummary: {},
         activeRecall: [],
-        yamlBlock: ''
+        yamlBlock: markdown
     };
 }
 
@@ -42,8 +48,8 @@ function parsePackageMarkdown(markdown: string): ParsedPackage {
  * Run content quality validation
  * Checks: chunkID references, full chunk blanks, alternatives, whyOdd specificity
  */
-export async function runContentReview(packageMarkdown: string): Promise<ReviewerOutput> {
-    console.log('  🔍 Reviewer 2: Content quality...');
+export function runContentReview(packageMarkdown: string): Promise<ReviewerOutput> {
+    writeOut('  🔍 Reviewer 2: Content quality...');
 
     const parsed = parsePackageMarkdown(packageMarkdown);
 
@@ -59,30 +65,30 @@ export async function runContentReview(packageMarkdown: string): Promise<Reviewe
 
     const passed = criticalIssues.length === 0;
 
-    console.log(`    ${passed ? '✅' : '❌'} ${criticalIssues.length} critical issues, ${warnings.length} warnings`);
+    writeOut(`    ${passed ? '✅' : '❌'} ${criticalIssues.length} critical issues, ${warnings.length} warnings`);
 
     if (!passed && criticalIssues.length > 0) {
         const criticalRules = [...new Set(criticalIssues.map(e => e.rule))];
-        console.log(`       Critical rules: ${criticalRules.join(', ')}`);
+        writeOut(`       Critical rules: ${criticalRules.join(', ')}`);
     }
 
     if (warnings.length > 0) {
         const warningRules = [...new Set(warnings.map(w => w.rule))];
-        console.log(`       Soft warnings: ${warningRules.join(', ')}`);
+        writeOut(`       Soft warnings: ${warningRules.join(', ')}`);
     }
 
-    return {
+    return Promise.resolve({
         passed,
         criticalIssues,
         warnings,
         reviewerName: 'Content Quality Validator'
-    };
+    });
 }
 
 /**
  * Analyze chunk feedback quality
  */
-function analyzeChunkQuality(chunk: any): {
+export function analyzeChunkQuality(chunk: ChunkFeedback): {
     hasMeaning: boolean;
     hasUseWhen: boolean;
     hasCommonWrong: boolean;
@@ -104,6 +110,10 @@ function analyzeChunkQuality(chunk: any): {
 export function formatContentReview(output: ReviewerOutput, chunkCount?: number): string {
     let report = '📚 CONTENT QUALITY REVIEW\n';
     report += '═══════════════════════════════════════════\n\n';
+
+    if (chunkCount !== undefined) {
+        report += `Chunks reviewed: ${chunkCount}\n\n`;
+    }
 
     if (output.passed && output.warnings.length === 0) {
         report += '✅ All content validations PASSED\n\n';

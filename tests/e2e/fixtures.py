@@ -15,7 +15,7 @@ from config import (
 )
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="session")
 def browser():
     """Create and teardown browser instance."""
 
@@ -30,11 +30,13 @@ def browser():
 
 @pytest.fixture(scope="function")
 def page(browser) -> Page:
-    """Create page with logging and timeouts."""
+    """Create an isolated page while reusing the browser process."""
 
-    page_instance = browser.new_page(
-        viewport=VIEWPORT
+    context = browser.new_context(viewport=VIEWPORT)
+    context.add_init_script(
+        "window.localStorage.setItem('fluentstep:skipOnboarding', 'true');"
     )
+    page_instance = context.new_page()
 
     # Set timeouts
     page_instance.set_default_timeout(TIMEOUT_ELEMENT)
@@ -62,6 +64,7 @@ def page(browser) -> Page:
     yield page_instance
 
     page_instance.close()
+    context.close()
 
 
 @pytest.fixture(scope="function")
@@ -70,19 +73,20 @@ def goto_scenario(page: Page):
 
     def _goto(scenario_id: str):
         """Navigate to scenario and reach the interactive turn."""
-        # First, go to homepage (with extended timeout for slower connections)
-        page.goto(f"{BASE_URL}/", timeout=TIMEOUT_LOAD)
-        page.wait_for_load_state('networkidle', timeout=TIMEOUT_LOAD)
+        # First, prove the local app route is responding. Vite/HMR and media can keep
+        # network activity open, so wait for DOM readiness rather than full load/networkidle.
+        page.goto(f"{BASE_URL}/", wait_until='domcontentloaded', timeout=TIMEOUT_LOAD)
+        page.wait_for_selector('#root', timeout=TIMEOUT_ELEMENT)
 
-        # Skip the homepage onboarding if it appears
+        # Skip the homepage onboarding if it appears despite the localStorage guard.
         skip_btns = page.locator('button:has-text("Skip for now")').all()
         if len(skip_btns) > 0:
             skip_btns[0].click()
-            page.wait_for_load_state('networkidle')
+            page.wait_for_timeout(250)
 
-        # Navigate to the scenario (with extended timeout)
+        # Navigate to the scenario. Use DOM readiness plus explicit roleplay controls.
         url = f"{BASE_URL}/scenario/{scenario_id}"
-        page.goto(url, wait_until='load', timeout=TIMEOUT_LOAD)
+        page.goto(url, wait_until='domcontentloaded', timeout=TIMEOUT_LOAD)
 
         # Wait for the scenario onboarding/tutorial to appear
         page.wait_for_selector('button:has-text("Skip for now"), button:has-text("Next Turn")', timeout=TIMEOUT_LOAD)
@@ -92,15 +96,27 @@ def goto_scenario(page: Page):
         if len(skip_btns) > 0:
             # Skip the last one (scenario-specific, not homepage)
             skip_btns[-1].click()
-            page.wait_for_load_state('networkidle')
+            page.wait_for_timeout(250)
 
-        # Click Next Turn to reach the interactive user turn with blanks
-        next_turn = page.locator('button:has-text("Next Turn")')
-        if next_turn.is_visible():
-            next_turn.click()
-            page.wait_for_load_state('networkidle')
+        # Advance until the first learner blank appears. Some scenarios have
+        # multiple setup turns before the first interactive blank.
+        for _ in range(8):
+            blanks = page.locator('button:has-text("Tap to discover")')
+            if blanks.count() > 0 and blanks.first.is_visible():
+                return page
 
-        # Wait for blanks to appear
+            next_turn = page.locator('button:has-text("Next Turn")')
+            if next_turn.count() > 0 and next_turn.first.is_visible():
+                next_turn.first.click()
+                page.wait_for_timeout(250)
+                continue
+
+            page.wait_for_selector(
+                'button:has-text("Tap to discover"), button:has-text("Next Turn")',
+                timeout=TIMEOUT_ELEMENT,
+            )
+
+        # Wait for blanks to appear before handing the page to tests.
         page.wait_for_selector('button:has-text("Tap to discover")', timeout=TIMEOUT_LOAD)
 
         return page
@@ -113,8 +129,8 @@ def load_home(page: Page):
     """Helper fixture to load homepage."""
 
     def _load():
-        page.goto(BASE_URL)
-        page.wait_for_load_state('networkidle')
+        page.goto(BASE_URL, wait_until='domcontentloaded', timeout=TIMEOUT_LOAD)
+        page.wait_for_selector('#root', timeout=TIMEOUT_ELEMENT)
         return page
 
     return _load

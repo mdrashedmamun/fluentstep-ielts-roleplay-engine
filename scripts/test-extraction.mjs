@@ -1,8 +1,26 @@
 import fs from 'fs';
-import path from 'path';
+const writeLine = (message = '') => {
+  process.stdout.write(`${message}\n`);
+};
+
+const writeError = (message) => {
+  process.stderr.write(`${message}\n`);
+};
+
+const getErrorMessage = (error) => (
+  error instanceof Error ? error.message : String(error)
+);
+
+const getTextItemString = (item) => {
+  if (typeof item !== 'object' || item === null) {
+    return '';
+  }
+
+  return typeof Reflect.get(item, 'str') === 'string' ? String(Reflect.get(item, 'str')) : '';
+};
 
 // Test PDF extraction
-console.log('Testing PDF extraction...\n');
+writeLine('Testing PDF extraction...\n');
 
 async function testExtraction() {
   try {
@@ -12,7 +30,7 @@ async function testExtraction() {
     const uint8Array = new Uint8Array(pdfBuffer);
 
     const pdf = await pdfjsLib.getDocument(uint8Array).promise;
-    console.log(`✓ PDF loaded: ${pdf.numPages} pages\n`);
+    writeLine(`✓ PDF loaded: ${pdf.numPages} pages\n`);
 
     // Extract first 10 pages to check structure
     let fullText = '';
@@ -20,26 +38,26 @@ async function testExtraction() {
       const page = await pdf.getPage(i);
       const textContent = await page.getTextContent();
       const pageText = textContent.items
-        .map(item => item.str || '')
+        .map(getTextItemString)
         .join(' ')
         .replace(/\s+/g, ' ')
         .trim();
-      fullText += pageText + '\n\n';
+      fullText += `${pageText}\n\n`;
     }
 
     // Look for scenario markers
     const roleplayMatches = fullText.match(/Role-?Play:[^\n]+/g) || [];
     const answersMatches = fullText.match(/Answers/g) || [];
 
-    console.log(`Found patterns:`);
-    console.log(`  • Role-Play headers: ${roleplayMatches.length}`);
-    console.log(`  • Answers sections: ${answersMatches.length}`);
-    console.log(`  • First 500 chars of extracted text:\n`);
-    console.log(fullText.substring(0, 500));
-    console.log('\n...\n');
+    writeLine(`Found patterns:`);
+    writeLine(`  • Role-Play headers: ${roleplayMatches.length}`);
+    writeLine(`  • Answers sections: ${answersMatches.length}`);
+    writeLine(`  • First 500 chars of extracted text:\n`);
+    writeLine(fullText.substring(0, 500));
+    writeLine('\n...\n');
 
   } catch (error) {
-    console.error('Error:', error);
+    writeError(`Error: ${getErrorMessage(error)}`);
   }
 }
 

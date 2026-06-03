@@ -13,6 +13,78 @@ interface FilterPanelProps {
 
 type FilterSection = 'difficulty' | 'duration' | 'status';
 
+type FilterOption = { value: string; label: string; icon: string };
+
+const difficultyOptions: FilterOption[] = [
+  { value: 'B2', label: 'B2 (Upper Intermediate)', icon: '📚' },
+  { value: 'C1', label: 'C1 (Advanced)', icon: '🎓' }
+];
+
+const durationOptions: FilterOption[] = [
+  { value: 'short', label: 'Short (5-10 min)', icon: '⚡' },
+  { value: 'medium', label: 'Medium (10-15 min)', icon: '⏱️' },
+  { value: 'long', label: 'Long (15+ min)', icon: '🏔️' }
+];
+
+const statusOptions: FilterOption[] = [
+  { value: 'not_started', label: 'Not Started', icon: '🆕' },
+  { value: 'in_progress', label: 'In Progress', icon: '🔄' },
+  { value: 'completed', label: 'Completed', icon: '✅' }
+];
+
+interface FilterAccordionProps {
+  title: string;
+  section: FilterSection;
+  options: FilterOption[];
+  isExpanded: boolean;
+  selectedValues: string[];
+  onToggleSection: (section: FilterSection) => void;
+  onToggleFilter: (section: FilterSection, value: string) => void;
+}
+
+const FilterAccordion: React.FC<FilterAccordionProps> = ({
+  title,
+  section,
+  options,
+  isExpanded,
+  selectedValues,
+  onToggleSection,
+  onToggleFilter
+}) => (
+  <div className="border-b border-neutral-200 last:border-b-0">
+    <button
+      onClick={() => onToggleSection(section)}
+      className="w-full flex items-center justify-between px-4 py-4 hover:bg-neutral-50 transition-colors"
+      aria-expanded={isExpanded}
+      type="button"
+    >
+      <span className="font-semibold text-neutral-800">{title}</span>
+      <i className={`fas fa-chevron-down text-primary-600 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}></i>
+    </button>
+
+    {isExpanded && (
+      <div className="px-4 pb-4 space-y-3 bg-neutral-50 animate-in fade-in slide-in-from-top-2 duration-200">
+        {options.map((option) => (
+          <label
+            key={option.value}
+            className="flex min-h-8 items-center gap-3 py-1 cursor-pointer group"
+          >
+            <input
+              type="checkbox"
+              checked={selectedValues.includes(option.value)}
+              onChange={() => onToggleFilter(section, option.value)}
+              className="w-5 h-5 rounded border-2 border-neutral-300 text-primary-600 focus:ring-2 focus:ring-primary-200 cursor-pointer accent-primary-600"
+              aria-label={option.label}
+            />
+            <span className="text-lg">{option.icon}</span>
+            <span className="text-neutral-700 group-hover:text-neutral-900 transition-colors">{option.label}</span>
+          </label>
+        ))}
+      </div>
+    )}
+  </div>
+);
+
 const FilterPanel: React.FC<FilterPanelProps> = ({
   filters,
   onChange,
@@ -72,70 +144,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
     filters.duration.length > 0 ||
     filters.status.length > 0;
 
-  const difficultyOptions = [
-    { value: 'B2', label: 'B2 (Upper Intermediate)', icon: '📚' },
-    { value: 'C1', label: 'C1 (Advanced)', icon: '🎓' }
-  ];
 
-  const durationOptions = [
-    { value: 'short', label: 'Short (5-10 min)', icon: '⚡' },
-    { value: 'medium', label: 'Medium (10-15 min)', icon: '⏱️' },
-    { value: 'long', label: 'Long (15+ min)', icon: '🏔️' }
-  ];
-
-  const statusOptions = [
-    { value: 'not_started', label: 'Not Started', icon: '🆕' },
-    { value: 'in_progress', label: 'In Progress', icon: '🔄' },
-    { value: 'completed', label: 'Completed', icon: '✅' }
-  ];
-
-  const FilterAccordion = ({
-    title,
-    section,
-    options
-  }: {
-    title: string;
-    section: FilterSection;
-    options: Array<{ value: string; label: string; icon: string }>;
-  }) => {
-    const isExpanded = expandedSections.has(section);
-    const selectedValues = (filters[section] || []) as string[];
-
-    return (
-      <div className="border-b border-neutral-200 last:border-b-0">
-        <button
-          onClick={() => toggleSection(section)}
-          className="w-full flex items-center justify-between px-4 py-4 hover:bg-neutral-50 transition-colors"
-          aria-expanded={isExpanded}
-          type="button"
-        >
-          <span className="font-semibold text-neutral-800">{title}</span>
-          <i className={`fas fa-chevron-down text-primary-600 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}></i>
-        </button>
-
-        {isExpanded && (
-          <div className="px-4 pb-4 space-y-3 bg-neutral-50 animate-in fade-in slide-in-from-top-2 duration-200">
-            {options.map((option) => (
-              <label
-                key={option.value}
-                className="flex items-center gap-3 cursor-pointer group"
-              >
-                <input
-                  type="checkbox"
-                  checked={selectedValues.includes(option.value)}
-                  onChange={() => toggleFilter(section, option.value)}
-                  className="w-5 h-5 rounded border-2 border-neutral-300 text-primary-600 focus:ring-2 focus:ring-primary-200 cursor-pointer accent-primary-600"
-                  aria-label={option.label}
-                />
-                <span className="text-lg">{option.icon}</span>
-                <span className="text-neutral-700 group-hover:text-neutral-900 transition-colors">{option.label}</span>
-              </label>
-            ))}
-          </div>
-        )}
-      </div>
-    );
-  };
 
   const panelContent = (
     <div className="space-y-6">
@@ -145,16 +154,28 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
           title="Difficulty"
           section="difficulty"
           options={difficultyOptions}
+          isExpanded={expandedSections.has('difficulty')}
+          selectedValues={filters.difficulty}
+          onToggleSection={toggleSection}
+          onToggleFilter={toggleFilter}
         />
         <FilterAccordion
           title="Duration"
           section="duration"
           options={durationOptions}
+          isExpanded={expandedSections.has('duration')}
+          selectedValues={filters.duration}
+          onToggleSection={toggleSection}
+          onToggleFilter={toggleFilter}
         />
         <FilterAccordion
           title="Status"
           section="status"
           options={statusOptions}
+          isExpanded={expandedSections.has('status')}
+          selectedValues={filters.status}
+          onToggleSection={toggleSection}
+          onToggleFilter={toggleFilter}
         />
       </div>
 

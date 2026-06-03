@@ -12,41 +12,70 @@
  * 5. Import Pipeline: Import to staticData.ts (optional)
  */
 
-import { generateContentPackage, estimateCost, validateEnvironment } from './contentGeneration/writerAgent';
-import { runReviewersInParallel, getAllCriticalIssues } from './contentGeneration/reviewerOrchestrator';
+import { generateContentPackage, estimateCost, validateEnvironment, type LLMProvider } from "./contentGeneration/writerAgent";
+import { runReviewersInParallel } from "./contentGeneration/reviewerOrchestrator";
 import { decideConsensus, formatConsensusDecision } from './contentGeneration/consensusEngine';
 import fs from 'fs';
 import path from 'path';
 import { execSync } from 'child_process';
 
 interface Args {
-    category: string;
-    topic: string;
+    category?: string;
+    topic?: string;
     chunks: number;
-    provider: 'claude' | 'chatgpt';
+    provider: LLMProvider;
     maxRetries: number;
     autoImport: boolean;
-    help?: boolean;
+    help: boolean;
+    invalidProvider?: string;
 }
+
+const writeOut = (message = ""): void => {
+    process.stdout.write(`${message}\n`);
+};
+
+const writeErr = (message: string): void => {
+    process.stderr.write(`${message}\n`);
+};
+
+const getErrorMessage = (error: unknown): string => (
+    error instanceof Error ? error.message : String(error)
+);
+
+const getArgValue = (arg: string): string => arg.slice(arg.indexOf("=") + 1);
+
+const parseIntegerArg = (value: string, fallback: number): number => {
+    const parsed = Number.parseInt(value, 10);
+    return Number.isFinite(parsed) ? parsed : fallback;
+};
+
+const isLLMProvider = (value: string): value is LLMProvider => (
+    value === "claude" || value === "chatgpt"
+);
 
 function parseArgs(): Args {
     const args = process.argv.slice(2);
-    const result: any = { provider: 'claude', chunks: 20, maxRetries: 3, autoImport: false };
+    const result: Args = { provider: "claude", chunks: 20, maxRetries: 3, autoImport: false, help: false };
 
     for (const arg of args) {
-        if (arg === '--help' || arg === '-h') {
+        if (arg === "--help" || arg === "-h") {
             result.help = true;
-        } else if (arg.startsWith('--category=')) {
-            result.category = arg.split('=')[1];
-        } else if (arg.startsWith('--topic=')) {
-            result.topic = arg.split('=')[1];
-        } else if (arg.startsWith('--chunks=')) {
-            result.chunks = parseInt(arg.split('=')[1]);
-        } else if (arg.startsWith('--provider=')) {
-            result.provider = arg.split('=')[1];
-        } else if (arg.startsWith('--max-retries=')) {
-            result.maxRetries = parseInt(arg.split('=')[1]);
-        } else if (arg === '--auto-import') {
+        } else if (arg.startsWith("--category=")) {
+            result.category = getArgValue(arg);
+        } else if (arg.startsWith("--topic=")) {
+            result.topic = getArgValue(arg);
+        } else if (arg.startsWith("--chunks=")) {
+            result.chunks = parseIntegerArg(getArgValue(arg), result.chunks);
+        } else if (arg.startsWith("--provider=")) {
+            const provider = getArgValue(arg);
+            if (isLLMProvider(provider)) {
+                result.provider = provider;
+            } else {
+                result.invalidProvider = provider;
+            }
+        } else if (arg.startsWith("--max-retries=")) {
+            result.maxRetries = parseIntegerArg(getArgValue(arg), result.maxRetries);
+        } else if (arg === "--auto-import") {
             result.autoImport = true;
         }
     }
@@ -55,7 +84,7 @@ function parseArgs(): Args {
 }
 
 function showHelp() {
-    console.log(`
+    writeOut(`
 🚀 Content Package Creator
 
 Full pipeline: Generate → Review (3 agents) → Decide → Revise (if needed) → Import
@@ -98,8 +127,14 @@ async function main() {
         process.exit(0);
     }
 
+    if (args.invalidProvider) {
+        writeErr(`❌ Unsupported provider: ${args.invalidProvider}`);
+        showHelp();
+        process.exit(1);
+    }
+
     if (!args.category || !args.topic) {
-        console.error('❌ Missing required arguments');
+        writeErr('❌ Missing required arguments');
         showHelp();
         process.exit(1);
     }
@@ -107,25 +142,25 @@ async function main() {
     // Validate environment
     const envCheck = validateEnvironment(args.provider);
     if (!envCheck.valid) {
-        console.error(`❌ ${envCheck.message}`);
+        writeErr(`❌ ${envCheck.message}`);
         process.exit(1);
     }
 
-    console.log(`\n${'═'.repeat(70)}`);
-    console.log('🚀 CONTENT PACKAGE CREATION PIPELINE');
-    console.log(`${'═'.repeat(70)}\n`);
+    writeOut(`\n${'═'.repeat(70)}`);
+    writeOut('🚀 CONTENT PACKAGE CREATION PIPELINE');
+    writeOut(`${'═'.repeat(70)}\n`);
 
-    console.log(`📋 Package Details:`);
-    console.log(`   Category: ${args.category}`);
-    console.log(`   Topic: ${args.topic}`);
-    console.log(`   Target chunks: ${args.chunks}`);
-    console.log(`   Provider: ${args.provider}`);
-    console.log(`   Max revisions: ${args.maxRetries}\n`);
+    writeOut(`📋 Package Details:`);
+    writeOut(`   Category: ${args.category}`);
+    writeOut(`   Topic: ${args.topic}`);
+    writeOut(`   Target chunks: ${args.chunks}`);
+    writeOut(`   Provider: ${args.provider}`);
+    writeOut(`   Max revisions: ${args.maxRetries}\n`);
 
     // Initial generation
-    console.log(`\n${'─'.repeat(70)}`);
-    console.log('PHASE 1: INITIAL GENERATION');
-    console.log(`${'─'.repeat(70)}\n`);
+    writeOut(`\n${'─'.repeat(70)}`);
+    writeOut('PHASE 1: INITIAL GENERATION');
+    writeOut(`${'─'.repeat(70)}\n`);
 
     const generated = await generateContentPackage({
         category: args.category,
@@ -148,7 +183,7 @@ async function main() {
     fs.mkdirSync(outputDir, { recursive: true });
     fs.writeFileSync(outputPath, packageMarkdown);
 
-    console.log(`\n✓ Initial draft generated and saved to ${outputPath}`);
+    writeOut(`\n✓ Initial draft generated and saved to ${outputPath}`);
 
     // Review-revise loop
     let iteration = 1;
@@ -157,9 +192,9 @@ async function main() {
     let decision;
 
     do {
-        console.log(`\n${'─'.repeat(70)}`);
-        console.log(`PHASE 2: REVIEW CYCLE ${iteration}/${maxIterations}`);
-        console.log(`${'─'.repeat(70)}\n`);
+        writeOut(`\n${'─'.repeat(70)}`);
+        writeOut(`PHASE 2: REVIEW CYCLE ${iteration}/${maxIterations}`);
+        writeOut(`${'─'.repeat(70)}\n`);
 
         // Run 3 reviewers in parallel
         review = await runReviewersInParallel(packageMarkdown);
@@ -167,15 +202,15 @@ async function main() {
         // Get consensus decision
         decision = decideConsensus(review, iteration, maxIterations);
 
-        console.log(formatConsensusDecision(decision));
+        writeOut(formatConsensusDecision(decision));
 
         // Handle revision
         if (decision.action === 'revise' && iteration < maxIterations) {
-            console.log(`${'─'.repeat(70)}`);
-            console.log(`PHASE 3: REVISION (ITERATION ${iteration})`);
-            console.log(`${'─'.repeat(70)}\n`);
+            writeOut(`${'─'.repeat(70)}`);
+            writeOut(`PHASE 3: REVISION (ITERATION ${iteration})`);
+            writeOut(`${'─'.repeat(70)}\n`);
 
-            console.log(`Revising package with ${decision.issuesForWriter?.length || 0} issues to fix...\n`);
+            writeOut(`Revising package with ${decision.issuesForWriter?.length || 0} issues to fix...\n`);
 
             // Call writer agent with revision prompt
             const revision = await generateContentPackage({
@@ -196,64 +231,64 @@ async function main() {
     } while (!['pass', 'reject'].includes(decision.action) && iteration <= maxIterations);
 
     // Final report
-    console.log(`\n${'═'.repeat(70)}`);
-    console.log('📊 FINAL REPORT');
-    console.log(`${'═'.repeat(70)}\n`);
+    writeOut(`\n${'═'.repeat(70)}`);
+    writeOut('📊 FINAL REPORT');
+    writeOut(`${'═'.repeat(70)}\n`);
 
-    console.log(`Result: ${decision.action.toUpperCase()}`);
-    console.log(`Iterations: ${iteration}/${maxIterations}`);
-    console.log(`LLM API calls: ${totalLLMCalls}`);
+    writeOut(`Result: ${decision.action.toUpperCase()}`);
+    writeOut(`Iterations: ${iteration}/${maxIterations}`);
+    writeOut(`LLM API calls: ${totalLLMCalls}`);
 
     const cost = estimateCost(totalLLMCalls, args.provider);
-    console.log(`Estimated cost: ${cost.cost}`);
+    writeOut(`Estimated cost: ${cost.cost}`);
 
     if (decision.action === 'pass') {
-        console.log(`\n✅ PACKAGE APPROVED - All validations passed!\n`);
+        writeOut(`\n✅ PACKAGE APPROVED - All validations passed!\n`);
 
         // Update file with final status
         const finalContent = packageMarkdown.replace(/# Status: Draft/, '# Status: Approved');
         fs.writeFileSync(outputPath, finalContent);
 
         if (args.autoImport) {
-            console.log(`\n${'─'.repeat(70)}`);
-            console.log('PHASE 4: AUTO-IMPORT');
-            console.log(`${'─'.repeat(70)}\n`);
+            writeOut(`\n${'─'.repeat(70)}`);
+            writeOut('PHASE 4: AUTO-IMPORT');
+            writeOut(`${'─'.repeat(70)}\n`);
 
-            console.log('Importing to staticData.ts...');
+            writeOut('Importing to staticData.ts...');
 
             try {
                 execSync(`npm run import:enrichments -- --file=${filename}`, { stdio: 'inherit' });
-                console.log('\n✅ Package imported successfully!');
-            } catch (e) {
-                console.error('\n❌ Import failed - please import manually');
-                console.log(`   npm run import:enrichments -- --file=${filename}`);
+                writeOut('\n✅ Package imported successfully!');
+            } catch {
+                writeErr('\n❌ Import failed - please import manually');
+                writeOut(`   npm run import:enrichments -- --file=${filename}`);
             }
         } else {
-            console.log(`\n📥 Next step: Import to staticData.ts`);
-            console.log(`   npm run import:enrichments -- --file=${filename}`);
+            writeOut(`\n📥 Next step: Import to staticData.ts`);
+            writeOut(`   npm run import:enrichments -- --file=${filename}`);
         }
 
         process.exit(0);
     } else if (decision.action === 'reject') {
-        console.log(`\n❌ PACKAGE REJECTED\n`);
-        console.log(`Reason: ${decision.reason}\n`);
+        writeOut(`\n❌ PACKAGE REJECTED\n`);
+        writeOut(`Reason: ${decision.reason}\n`);
 
         if (decision.nextSteps) {
-            console.log('Suggestions:');
+            writeOut('Suggestions:');
             for (const step of decision.nextSteps) {
-                console.log(`  • ${step}`);
+                writeOut(`  • ${step}`);
             }
         }
 
-        console.log(`\n📄 Review package: ${outputPath}`);
+        writeOut(`\n📄 Review package: ${outputPath}`);
         process.exit(1);
     } else {
-        console.log(`\n⚠️  Pipeline incomplete (status: ${decision.action})`);
+        writeOut(`\n⚠️  Pipeline incomplete (status: ${decision.action})`);
         process.exit(1);
     }
 }
 
-main().catch(err => {
-    console.error('\n❌ Fatal error:', err.message);
+main().catch((error: unknown) => {
+    writeErr(`\n❌ Fatal error: ${getErrorMessage(error)}`);
     process.exit(1);
 });

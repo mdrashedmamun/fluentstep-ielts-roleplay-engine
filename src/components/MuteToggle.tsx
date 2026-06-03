@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 interface MuteToggleProps {
   isMuted: boolean;
@@ -7,11 +7,7 @@ interface MuteToggleProps {
 
 const MuteToggle: React.FC<MuteToggleProps> = ({ isMuted, onToggle }) => {
   const [showTooltip, setShowTooltip] = useState(false);
-  const [tooltipText, setTooltipText] = useState(isMuted ? 'Unmute' : 'Mute');
-
-  useEffect(() => {
-    setTooltipText(isMuted ? 'Unmute' : 'Mute');
-  }, [isMuted]);
+  const tooltipText = isMuted ? 'Unmute' : 'Mute';
 
   return (
     <div className="relative group">

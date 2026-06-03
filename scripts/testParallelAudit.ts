@@ -3,8 +3,20 @@
  */
 
 import { consolidateFindings, calculateConsolidationStats } from '../src/services/linguisticAudit/consolidator';
-import { resolveConflicts, generateConflictLog } from '../src/services/linguisticAudit/conflictResolver';
+import { resolveConflicts } from '../src/services/linguisticAudit/conflictResolver';
 import { WorkerOutput, ConsolidatedFinding } from '../src/services/linguisticAudit/types';
+
+const writeLine = (message = ''): void => {
+  process.stdout.write(`${message}\n`);
+};
+
+const writeError = (message: string): void => {
+  process.stderr.write(`${message}\n`);
+};
+
+const getErrorMessage = (error: unknown): string => (
+  error instanceof Error ? error.message : String(error)
+);
 
 // Mock worker outputs for testing
 const mockWorkerOutput1: WorkerOutput = {
@@ -96,17 +108,17 @@ const mockWorkerOutput3: WorkerOutput = {
  * Test consolidation
  */
 function testConsolidation() {
-  console.log('\n✓ Testing Consolidation...\n');
+  writeLine('\n✓ Testing Consolidation...\n');
 
   const workerOutputs = [mockWorkerOutput1, mockWorkerOutput2, mockWorkerOutput3];
   const consolidated = consolidateFindings(workerOutputs);
   const stats = calculateConsolidationStats(workerOutputs, consolidated);
 
-  console.log(`  Total findings from workers: ${stats.totalFindingsFromWorkers}`);
-  console.log(`  Unique findings after dedup: ${stats.uniqueFindingsAfterDedup}`);
-  console.log(`  Duplicates removed: ${stats.duplicatesRemoved}`);
-  console.log(`  Conflicts detected: ${stats.conflictsDetected}`);
-  console.log(`  Agreement rate: ${stats.agreementRate.toFixed(1)}%`);
+  writeLine(`  Total findings from workers: ${stats.totalFindingsFromWorkers}`);
+  writeLine(`  Unique findings after dedup: ${stats.uniqueFindingsAfterDedup}`);
+  writeLine(`  Duplicates removed: ${stats.duplicatesRemoved}`);
+  writeLine(`  Conflicts detected: ${stats.conflictsDetected}`);
+  writeLine(`  Agreement rate: ${stats.agreementRate.toFixed(1)}%`);
 
   // Verify results
   // 5 total findings from 3 workers:
@@ -121,7 +133,7 @@ function testConsolidation() {
     throw new Error(`Expected 1 conflict, got ${stats.conflictsDetected}`);
   }
 
-  console.log('\n✅ Consolidation test passed!\n');
+  writeLine('\n✅ Consolidation test passed!\n');
 
   return consolidated;
 }
@@ -130,7 +142,7 @@ function testConsolidation() {
  * Test conflict resolution
  */
 function testConflictResolution(consolidated: ConsolidatedFinding[]) {
-  console.log('✓ Testing Conflict Resolution...\n');
+  writeLine('✓ Testing Conflict Resolution...\n');
 
   const resolved = resolveConflicts([...consolidated]);
 
@@ -139,13 +151,13 @@ function testConflictResolution(consolidated: ConsolidatedFinding[]) {
     throw new Error('Expected to find a conflict');
   }
 
-  console.log(`  Conflict at: ${conflictFinding.scenarioId}/${conflictFinding.location}`);
-  console.log(
+  writeLine(`  Conflict at: ${conflictFinding.scenarioId}/${conflictFinding.location}`);
+  writeLine(
     `  Alternatives: ${conflictFinding.conflict!.alternatives
       .map(alt => `"${alt.suggestedValue}" (${(alt.confidence * 100).toFixed(0)}%)`)
       .join(', ')}`
   );
-  console.log(`  Winner: "${conflictFinding.suggestedValue}"`);
+  writeLine(`  Winner: "${conflictFinding.suggestedValue}"`);
 
   // Verify highest confidence wins
   const highest = conflictFinding.conflict!.alternatives.reduce((a, b) =>
@@ -156,25 +168,25 @@ function testConflictResolution(consolidated: ConsolidatedFinding[]) {
     throw new Error('Highest confidence fix should win');
   }
 
-  console.log('\n✅ Conflict resolution test passed!\n');
+  writeLine('\n✅ Conflict resolution test passed!\n');
 }
 
 /**
  * Run all tests
  */
-async function runTests() {
-  console.log('🧪 Parallel Audit Architecture Test Suite\n');
-  console.log('='.repeat(50) + '\n');
+function runTests(): void {
+  writeLine('🧪 Parallel Audit Architecture Test Suite\n');
+  writeLine('='.repeat(50) + '\n');
 
   try {
     const consolidated = testConsolidation();
     testConflictResolution(consolidated);
 
-    console.log('='.repeat(50));
-    console.log('\n✅ All tests passed!\n');
+    writeLine('='.repeat(50));
+    writeLine('\n✅ All tests passed!\n');
     process.exit(0);
   } catch (error) {
-    console.error('\n❌ Test failed:', error);
+    writeError(`\n❌ Test failed: ${getErrorMessage(error)}`);
     process.exit(1);
   }
 }

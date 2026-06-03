@@ -36,7 +36,7 @@ function calculateRecommendationScore(
     return 0;
   }
 
-  let score = 0;
+  const score = 0;
 
   if (!progress) {
     // If no progress, prioritize not started, then by alphabetical

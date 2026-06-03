@@ -3,15 +3,26 @@
  * Applies high-confidence fixes directly to scenario data
  */
 
-import { RoleplayScript } from '../../staticData';
-import { AutoFix, ValidationFinding, Severity } from '../types';
-import { shouldAutoFix, scoreConfidence } from './confidenceScorer';
+import type { RoleplayScript, RoleplayScriptV1 } from '../../staticData';
+import type { AutoFix, ValidationFinding } from '../types';
+import { scoreConfidence } from './confidenceScorer';
 
 export interface AutoFixResult {
   totalChanges: number;
   fixesApplied: AutoFix[];
   log: string[];
 }
+
+type AnswerVariation = RoleplayScript['answerVariations'][number];
+type DeepDiveItem = NonNullable<RoleplayScriptV1['deepDive']>[number];
+
+const hasDeepDive = (scenario: RoleplayScript): scenario is RoleplayScriptV1 & { deepDive: DeepDiveItem[] } => (
+  Array.isArray(scenario.deepDive)
+);
+
+const getErrorMessage = (error: unknown): string => (
+  error instanceof Error ? error.message : String(error)
+);
 
 /**
  * Apply all high-confidence fixes to scenarios
@@ -53,7 +64,7 @@ export function applyAutoFixes(
       const index = parseInt(indexStr, 10);
 
       if (arrayName === 'answerVariations') {
-        const av = (scenario.answerVariations as any)[index];
+        const av: AnswerVariation | undefined = scenario.answerVariations[index];
         if (av && fieldName === 'answer') {
           const oldValue = av.answer;
           av.answer = finding.suggestedValue!;
@@ -92,7 +103,7 @@ export function applyAutoFixes(
           }
         }
       } else if (arrayName === 'deepDive') {
-        const dd = (scenario.deepDive as any)[index];
+        const dd = hasDeepDive(scenario) ? scenario.deepDive[index] : undefined;
         if (dd && fieldName === 'insight') {
           const oldValue = dd.insight;
           dd.insight = finding.suggestedValue!;
@@ -112,7 +123,7 @@ export function applyAutoFixes(
         }
       }
     } catch (error) {
-      log.push(`❌ Error applying fix to ${finding.scenarioId}: ${error}`);
+      log.push(`❌ Error applying fix to ${finding.scenarioId}: ${getErrorMessage(error)}`);
     }
   }
 

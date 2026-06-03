@@ -7,9 +7,9 @@ Defines base URLs, timeouts, browsers, and output directories.
 import os
 from pathlib import Path
 
-# Base URL (adjust if dev server runs on different port)
-# Use live Vercel deployment for production testing
-BASE_URL = "https://fluentstep-ielts-roleplay-engine.vercel.app"
+# Base URL
+# Defaults to live Vercel for production comparison; set E2E_BASE_URL for local QA.
+BASE_URL = os.getenv("E2E_BASE_URL", "https://fluentstep-ielts-roleplay-engine.vercel.app")
 
 # Timeouts (in milliseconds)
 # Increased for live Vercel deployment (network latency)

@@ -4,7 +4,7 @@
  * Detects and tracks conflicts in auto-fix suggestions
  */
 
-import { WorkerOutput, ConsolidatedFinding, ValidationFinding } from './types';
+import { WorkerOutput, ConsolidatedFinding } from './types';
 
 export interface ConsolidationStats {
   totalFindingsFromWorkers: number;
@@ -22,11 +22,8 @@ export function consolidateFindings(
   workerOutputs: WorkerOutput[]
 ): ConsolidatedFinding[] {
   const findingsMap = new Map<string, ConsolidatedFinding>();
-  let totalFindings = 0;
-
   for (const workerOutput of workerOutputs) {
     for (const finding of workerOutput.findings) {
-      totalFindings++;
       const key = `${finding.scenarioId}|${finding.location}|${finding.validatorName}`;
 
       if (findingsMap.has(key)) {

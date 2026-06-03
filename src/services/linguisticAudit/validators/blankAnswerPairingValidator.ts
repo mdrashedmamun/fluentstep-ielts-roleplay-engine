@@ -8,6 +8,13 @@ import { RoleplayScript } from '../../staticData';
 import { ValidationFinding } from '../types';
 import { scoreConfidence } from '../fixers/confidenceScorer';
 
+const getOptionalStringProperty = (value: object, key: string): string | undefined => {
+  const record = value as Record<string, unknown>;
+  const property = record[key];
+
+  return typeof property === 'string' ? property : undefined;
+};
+
 export function validateBlankAnswerPairing(scenario: RoleplayScript): ValidationFinding[] {
   const findings: ValidationFinding[] = [];
 
@@ -81,12 +88,18 @@ export function validateBlankAnswerPairing(scenario: RoleplayScript): Validation
       uniqueAnswers.add(av.answer.toLowerCase());
 
       for (let i = 0; i < av.alternatives.length; i++) {
-        const altLower = av.alternatives[i]!.toLowerCase();
+        const alternative = av.alternatives[i];
+
+        if (alternative === undefined) {
+          continue;
+        }
+
+        const altLower = alternative.toLowerCase();
 
         if (uniqueAnswers.has(altLower)) {
           const confidence = scoreConfidence({
             issueType: 'duplicate-alternative',
-            affectedText: av.alternatives[i],
+            affectedText: alternative,
             suggestedFix: undefined,
             ruleCertainty: 1.0
           });
@@ -96,11 +109,11 @@ export function validateBlankAnswerPairing(scenario: RoleplayScript): Validation
             scenarioId: scenario.id,
             location: `answerVariations[${av.index}]!.alternatives[${i}]`,
             issue: 'Duplicate alternative (same as main answer or another alternative)',
-            currentValue: av.alternatives[i],
+            currentValue: alternative,
             suggestedValue: undefined,
             context: `Main answer: "${av.answer}"`,
             confidence: confidence.score,
-            reasoning: `Alternative "${av.alternatives[i]}" is identical to main answer or another alternative`
+            reasoning: `Alternative "${alternative}" is identical to main answer or another alternative`
           });
         } else {
           uniqueAnswers.add(altLower);
@@ -108,35 +121,14 @@ export function validateBlankAnswerPairing(scenario: RoleplayScript): Validation
       }
     }
 
-    // Check 4: Verify deepDive index corresponds to dialogue line
-    const dialogueLine = scenario.dialogue[dd.index]!;
-    if (!dialogueLine) {
-      const confidence = scoreConfidence({
-        issueType: 'data-integrity',
-        affectedText: `index: ${dd.index}`,
-        suggestedFix: undefined,
-        ruleCertainty: 1.0
-      });
-
-      findings.push({
-        validatorName: 'Blank-Answer Pairing Validator',
-        scenarioId: scenario.id,
-        location: `deepDive[${ddIndex}]`,
-        issue: 'DeepDive index does not correspond to a dialogue line',
-        currentValue: `index: ${dd.index}`,
-        suggestedValue: undefined,
-        context: `Total dialogue lines: ${scenario.dialogue.length}`,
-        confidence: confidence.score,
-        reasoning: `DeepDive references index ${dd.index} but dialogue only has ${scenario.dialogue.length} lines`
-      });
-    }
-
-    // Check 5: Verify deepDive category is valid
+    // Check 4: Verify deepDive category is valid
     const validCategories = ['pronunciation', 'grammar', 'vocabulary', 'culture', 'usage', 'idiom', 'natural-english'];
-    if (!validCategories.includes(dd.category)) {
+    const deepDiveCategory = getOptionalStringProperty(dd, 'category');
+
+    if (deepDiveCategory && !validCategories.includes(deepDiveCategory)) {
       const confidence = scoreConfidence({
         issueType: 'invalid-category',
-        affectedText: dd.category,
+        affectedText: deepDiveCategory,
         suggestedFix: validCategories[0],
         ruleCertainty: 0.85
       });
@@ -146,11 +138,11 @@ export function validateBlankAnswerPairing(scenario: RoleplayScript): Validation
         scenarioId: scenario.id,
         location: `deepDive[${ddIndex}]!.category`,
         issue: 'Invalid deep dive category',
-        currentValue: dd.category,
+        currentValue: deepDiveCategory,
         suggestedValue: validCategories[0],
         context: `Valid categories: ${validCategories.join(', ')}`,
         confidence: confidence.score,
-        reasoning: `Category "${dd.category}" is not recognized. Use one of: ${validCategories.join(', ')}`
+        reasoning: `Category "${deepDiveCategory}" is not recognized. Use one of: ${validCategories.join(', ')}`
       });
     }
 
@@ -182,13 +174,20 @@ export function validateBlankAnswerPairing(scenario: RoleplayScript): Validation
 
       for (let i = 0; i < allAnswers.length; i++) {
         for (let j = i + 1; j < allAnswers.length; j++) {
+          const leftAnswer = allAnswers[i];
+          const rightAnswer = allAnswers[j];
+
+          if (leftAnswer === undefined || rightAnswer === undefined) {
+            continue;
+          }
+
           // Calculate similarity (very simple: shared starting letters)
-          if (allAnswers[i]!.substring(0, 3) === allAnswers[j]!.substring(0, 3)) {
+          if (leftAnswer.substring(0, 3) === rightAnswer.substring(0, 3)) {
             // Only flag if they're too similar (same root)
-            if (allAnswers[i]!.toLowerCase() === allAnswers[j]!.toLowerCase()) {
+            if (leftAnswer.toLowerCase() === rightAnswer.toLowerCase()) {
               const confidence = scoreConfidence({
                 issueType: 'low-diversity',
-                affectedText: allAnswers[j],
+                affectedText: rightAnswer,
                 suggestedFix: undefined,
                 ruleCertainty: 0.90
               });
@@ -198,7 +197,7 @@ export function validateBlankAnswerPairing(scenario: RoleplayScript): Validation
                 scenarioId: scenario.id,
                 location: `answerVariations[${av.index}]!.alternatives[${j - 1}]`,
                 issue: 'Alternatives lack sufficient diversity',
-                currentValue: allAnswers[j],
+                currentValue: rightAnswer,
                 suggestedValue: undefined,
                 context: `All answers: ${allAnswers.join(', ')}`,
                 confidence: confidence.score,

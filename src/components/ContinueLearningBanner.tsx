@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { CURATED_ROLEPLAYS } from '../services/staticData';
+import { UserProgress } from '../services/progressService';
 
 interface ContinueLearningBannerProps {
   scenarioId: string;
-  progress: any; // from progressService.getProgress()
+  progress: UserProgress;
   onContinue: (scenarioId: string) => void;
   onDismiss: () => void;
 }
+
+const SKIP_BANNER_KEY = 'fluentstep:skipBannerForSession';
 
 const ContinueLearningBanner: React.FC<ContinueLearningBannerProps> = ({
   scenarioId,
@@ -14,49 +17,41 @@ const ContinueLearningBanner: React.FC<ContinueLearningBannerProps> = ({
   onContinue,
   onDismiss
 }) => {
-  const [isDismissed, setIsDismissed] = useState(false);
-
-  // Check if this banner should be dismissed for the session
-  useEffect(() => {
-    const skipBannerKey = 'fluentstep:skipBannerForSession';
-    const skipBannerId = sessionStorage.getItem(skipBannerKey);
-    if (skipBannerId === scenarioId) {
-      setIsDismissed(true);
-    }
-  }, [scenarioId]);
+  const [dismissedScenarioId, setDismissedScenarioId] = useState<string | null>(() => (
+    typeof sessionStorage === 'undefined' ? null : sessionStorage.getItem(SKIP_BANNER_KEY)
+  ));
 
   // Get scenario data
   const scenario = CURATED_ROLEPLAYS.find(s => s.id === scenarioId);
+  const scenarioProgress = progress.scenarioProgress[scenarioId];
+  const isDismissed = dismissedScenarioId === scenarioId;
 
   // Only show if scenario exists and is in_progress
   if (
     !scenario ||
     isDismissed ||
-    !(progress.inProgressScenarios || []).includes(scenarioId)
+    scenarioProgress?.status !== 'in_progress'
   ) {
     return null;
   }
 
-  const scenarioProgress = (progress.scenarios || {})[scenarioId];
-  const progressPercentage = scenarioProgress
-    ? Math.round((scenarioProgress.completedPhrases / scenarioProgress.totalPhrases) * 100)
-    : 0;
+  const totalPhrases = Math.max(scenario.dialogue.length, 1);
+  const completedPhrases = Math.min(scenarioProgress.currentStep, totalPhrases);
+  const progressPercentage = Math.round((completedPhrases / totalPhrases) * 100);
 
   // Calculate time spent (in minutes)
-  const timeSpent = scenarioProgress?.timeSpent
+  const timeSpent = scenarioProgress.timeSpent
     ? Math.round(scenarioProgress.timeSpent / 60)
     : 0;
 
   const handleDismiss = () => {
-    const skipBannerKey = 'fluentstep:skipBannerForSession';
-    sessionStorage.setItem(skipBannerKey, scenarioId);
-    setIsDismissed(true);
+    sessionStorage.setItem(SKIP_BANNER_KEY, scenarioId);
+    setDismissedScenarioId(scenarioId);
     onDismiss();
   };
 
   const handleContinue = () => {
-    const skipBannerKey = 'fluentstep:skipBannerForSession';
-    sessionStorage.removeItem(skipBannerKey);
+    sessionStorage.removeItem(SKIP_BANNER_KEY);
     onContinue(scenarioId);
   };
 

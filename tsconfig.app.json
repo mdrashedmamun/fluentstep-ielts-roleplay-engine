@@ -1,0 +1,20 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noUncheckedIndexedAccess": false,
+    "noImplicitOverride": false,
+    "noImplicitAny": false
+  },
+  "include": [
+    "src/index.tsx",
+    "src/App.tsx",
+    "src/**/*.d.ts"
+  ],
+  "exclude": [
+    "cli/**",
+    "scripts/**",
+    "tests/**",
+    "temp/**",
+    "node_modules/**"
+  ]
+}

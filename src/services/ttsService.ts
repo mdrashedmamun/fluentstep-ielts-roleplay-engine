@@ -36,11 +36,50 @@ export interface TTSOptions {
  */
 const audioCache = new Map<string, { url: string; timestamp: number }>();
 
+type TTSErrorResponse = {
+  error?: string;
+};
+
+type TTSSuccessResponse = {
+  audioContent: string;
+};
+
+const logDebug = (...messages: unknown[]): void => {
+  void messages;
+};
+
+const isRecord = (value: unknown): value is Record<string, unknown> => (
+  typeof value === 'object' && value !== null
+);
+
+const isTTSSuccessResponse = (value: unknown): value is TTSSuccessResponse => (
+  isRecord(value) && typeof value.audioContent === 'string'
+);
+
+const parseTTSErrorResponse = (value: unknown): TTSErrorResponse => {
+  if (!isRecord(value) || typeof value.error !== 'string') {
+    return {};
+  }
+
+  return { error: value.error };
+};
+
 /**
  * Maximum cache age in milliseconds (24 hours)
  * Prevents stale audio on long sessions
  */
 const MAX_CACHE_AGE = 24 * 60 * 60 * 1000;
+
+const shouldUseLocalFallback = (): boolean => {
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
+  const explicitGoogleTTS = import.meta.env.VITE_ENABLE_GOOGLE_TTS === 'true';
+  const isLocalVite = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
+
+  return isLocalVite && !explicitGoogleTTS;
+};
 
 /**
  * Cleanup stale cache entries (runs once on page load)
@@ -91,7 +130,7 @@ function base64ToBlob(base64: string, mimeType: string): Blob {
  * Used when Google TTS is unavailable or fails
  */
 function fallbackToWebSpeech(text: string, options: TTSOptions) {
-  console.log('Falling back to Web Speech API for:', text);
+  logDebug('Falling back to Web Speech API for:', text);
   speakText(text, {
     rate: options.rate || 0.95,
     onEnd: options.onEnd
@@ -120,6 +159,11 @@ export const speakWithGoogle = async (options: TTSOptions): Promise<void> => {
     return;
   }
 
+  if (shouldUseLocalFallback()) {
+    fallbackToWebSpeech(text, options);
+    return;
+  }
+
   // Generate cache key
   const cacheKey = `${text}-${rate}-${pitch}`;
 
@@ -127,7 +171,7 @@ export const speakWithGoogle = async (options: TTSOptions): Promise<void> => {
   let audioUrl = audioCache.get(cacheKey)?.url;
 
   if (audioUrl) {
-    console.log('Using cached audio for:', text);
+    logDebug('Using cached audio for:', text);
     playAudio(audioUrl, onEnd);
     return;
   }
@@ -141,13 +185,14 @@ export const speakWithGoogle = async (options: TTSOptions): Promise<void> => {
     });
 
     if (!response.ok) {
-      const error = await response.json();
+      const errorBody: unknown = await response.json();
+      const error = parseTTSErrorResponse(errorBody);
       throw new Error(error.error || `TTS API error: ${response.status}`);
     }
 
-    const data = await response.json();
+    const data: unknown = await response.json();
 
-    if (!data.audioContent) {
+    if (!isTTSSuccessResponse(data)) {
       throw new Error('No audio content in response');
     }
 
@@ -161,12 +206,12 @@ export const speakWithGoogle = async (options: TTSOptions): Promise<void> => {
       timestamp: Date.now()
     });
 
-    console.log('Generated and cached audio for:', text);
+    logDebug('Generated and cached audio for:', text);
 
     // Play audio
     playAudio(audioUrl, onEnd);
 
-  } catch (error: any) {
+  } catch (error) {
     console.error('Google TTS error:', error);
 
     // Fallback to Web Speech API
@@ -211,11 +256,8 @@ function playAudio(audioUrl: string, onEnd?: () => void) {
  * @returns Cache info (number of entries, total size estimate)
  */
 export const getCacheStats = () => {
-  let sizeEstimate = 0;
-  for (const value of audioCache.values()) {
-    // Rough estimate: 30-50 KB per MP3 audio
-    sizeEstimate += 40000;
-  }
+  // Rough estimate: 30-50 KB per MP3 audio.
+  const sizeEstimate = audioCache.size * 40000;
 
   return {
     entries: audioCache.size,
@@ -232,7 +274,7 @@ export const clearCache = () => {
     URL.revokeObjectURL(value.url);
   }
   audioCache.clear();
-  console.log('TTS cache cleared');
+  logDebug('TTS cache cleared');
 };
 
 /**
@@ -243,7 +285,7 @@ export const clearCache = () => {
  *   preloadAudio(['hello', 'goodbye', 'thank you']);
  */
 export const preloadAudio = async (words: string[]): Promise<void> => {
-  console.log(`Preloading ${words.length} common words...`);
+  logDebug(`Preloading ${words.length} common words...`);
 
   for (const word of words) {
     // Don't await - load in background

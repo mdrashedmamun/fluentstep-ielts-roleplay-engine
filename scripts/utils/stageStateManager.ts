@@ -17,6 +17,27 @@ interface StateTransition {
   reversible?: boolean;
 }
 
+const writeLine = (message = ''): void => {
+  process.stdout.write(`${message}\n`);
+};
+
+const writeWarn = (message: string): void => {
+  process.stderr.write(`${message}\n`);
+};
+
+const getErrorMessage = (error: unknown): string => (
+  error instanceof Error ? error.message : String(error)
+);
+
+const getErrorCode = (error: unknown): string | undefined => {
+  if (typeof error !== 'object' || error === null || !('code' in error)) {
+    return undefined;
+  }
+
+  const code = (error as { code?: unknown }).code;
+  return typeof code === 'string' ? code : undefined;
+};
+
 /**
  * Define allowed state transitions
  */
@@ -93,7 +114,7 @@ export async function moveScenario(
   const toPath = getStateFilePath(scenarioId, toState);
 
   try {
-    console.log(`🔄 Moving ${scenarioId}: ${fromState} → ${toState}`);
+    writeLine(`🔄 Moving ${scenarioId}: ${fromState} → ${toState}`);
 
     // Ensure target directory exists
     await fs.mkdir(path.dirname(toPath), { recursive: true });
@@ -107,9 +128,9 @@ export async function moveScenario(
     // Delete from source
     await fs.unlink(fromPath);
 
-    console.log(`✅ Scenario moved successfully`);
+    writeLine('✅ Scenario moved successfully');
   } catch (error) {
-    console.error(`❌ Failed to move scenario:`, error);
+    writeWarn(`❌ Failed to move scenario: ${getErrorMessage(error)}`);
     throw error;
   }
 }
@@ -131,7 +152,7 @@ export async function copyValidationReport(
     await fs.writeFile(toReportPath, content, 'utf-8');
   } catch (error) {
     // Report may not exist, that's okay
-    console.warn(`⚠️  Could not copy validation report: ${error}`);
+    writeWarn(`⚠️  Could not copy validation report: ${getErrorMessage(error)}`);
   }
 }
 
@@ -146,7 +167,7 @@ export async function listScenariosInState(state: StagingState): Promise<string[
     return files
       .filter((f) => f.endsWith('.md') && !f.startsWith('.'))
       .map((f) => f.replace('.md', ''));
-  } catch (error) {
+  } catch {
     // Directory doesn't exist or is empty
     return [];
   }
@@ -180,9 +201,10 @@ export async function getStagingSummary(): Promise<{
 export async function printStagingSummary(): Promise<void> {
   const summary = await getStagingSummary();
 
-  console.log('\n' + '='.repeat(70));
-  console.log('📊 STAGING WORKFLOW SUMMARY');
-  console.log('='.repeat(70));
+  writeLine('');
+  writeLine('='.repeat(70));
+  writeLine('📊 STAGING WORKFLOW SUMMARY');
+  writeLine('='.repeat(70));
 
   const states: StagingState[] = ['in-progress', 'ready-for-review', 'approved', 'rejected', 'archived'];
 
@@ -199,14 +221,14 @@ export async function printStagingSummary(): Promise<void> {
               ? '❌'
               : '📦';
 
-    console.log(`\n${icon} ${state.toUpperCase()}: ${scenarios.length} scenario(s)`);
+    writeLine(`\n${icon} ${state.toUpperCase()}: ${scenarios.length} scenario(s)`);
 
     if (scenarios.length > 0) {
-      scenarios.forEach((s) => console.log(`   - ${s}`));
+      scenarios.forEach((s) => writeLine(`   - ${s}`));
     }
   }
 
-  console.log('\n' + '='.repeat(70) + '\n');
+  writeLine(`\n${'='.repeat(70)}\n`);
 }
 
 /**
@@ -216,18 +238,21 @@ export async function deleteScenariosFromStaging(
   scenarioId: string,
   allStates: boolean = false
 ): Promise<void> {
+  const currentState = await getCurrentState(scenarioId);
   const states: StagingState[] = allStates
     ? ['in-progress', 'ready-for-review', 'approved', 'rejected', 'archived']
-    : [await getCurrentState(scenarioId)] .filter(Boolean) as StagingState[];
+    : currentState === null
+      ? []
+      : [currentState];
 
   for (const state of states) {
     const filePath = getStateFilePath(scenarioId, state);
     try {
       await fs.unlink(filePath);
-      console.log(`🗑️  Deleted ${scenarioId} from ${state}`);
-    } catch (error: any) {
-      if (error.code !== 'ENOENT') {
-        console.warn(`⚠️  Could not delete from ${state}:`, error);
+      writeLine(`🗑️  Deleted ${scenarioId} from ${state}`);
+    } catch (error) {
+      if (getErrorCode(error) !== 'ENOENT') {
+        writeWarn(`⚠️  Could not delete from ${state}: ${getErrorMessage(error)}`);
       }
     }
   }

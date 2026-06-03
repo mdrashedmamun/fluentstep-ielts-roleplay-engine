@@ -4,7 +4,6 @@
  */
 
 import fs from 'fs';
-import path from 'path';
 
 export interface ExtractedPage {
   pageNum: number;
@@ -17,13 +16,29 @@ export interface ExtractedPDF {
   fullText: string;
 }
 
+interface TextContentItem {
+  str?: unknown;
+}
+
+const writeLine = (message = ''): void => {
+  process.stdout.write(`${message}\n`);
+};
+
+const getTextItemString = (item: unknown): string => {
+  if (typeof item !== 'object' || item === null) {
+    return '';
+  }
+
+  const textItem = item as TextContentItem;
+  return typeof textItem.str === 'string' ? textItem.str : '';
+};
+
 /**
  * Extracts text from PDF file asynchronously
  * Note: This requires pdfjs-dist to be available
  */
 export async function extractPDFText(filePath: string): Promise<ExtractedPDF> {
   try {
-    // Dynamic import for ESM compatibility
     const pdfjsLib = await import('pdfjs-dist/legacy/build/pdf.mjs');
 
     const pdfBuffer = fs.readFileSync(filePath);
@@ -37,13 +52,13 @@ export async function extractPDFText(filePath: string): Promise<ExtractedPDF> {
       const page = await pdf.getPage(i);
       const textContent = await page.getTextContent();
       const pageText = textContent.items
-        .map((item: any) => item.str || '')
+        .map(getTextItemString)
         .join(' ')
         .replace(/\s+/g, ' ')
         .trim();
 
       pages.push({ pageNum: i, text: pageText });
-      fullText += pageText + '\n\n';
+      fullText += `${pageText}\n\n`;
     }
 
     return {
@@ -63,5 +78,5 @@ export async function extractPDFText(filePath: string): Promise<ExtractedPDF> {
 export async function extractAndSaveToFile(pdfPath: string, outputPath: string): Promise<void> {
   const extracted = await extractPDFText(pdfPath);
   fs.writeFileSync(outputPath, extracted.fullText, 'utf-8');
-  console.log(`✓ Extracted ${extracted.totalPages} pages to ${outputPath}`);
+  writeLine(`✓ Extracted ${extracted.totalPages} pages to ${outputPath}`);
 }

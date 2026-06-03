@@ -9,7 +9,7 @@
  * Why composite key? Deterministic + human-readable + stable.
  */
 
-import { RoleplayScript } from './index';
+import { RoleplayScript } from '../staticData';
 
 /**
  * Generate a deterministic chunk ID from scenario ID and blank index.

@@ -180,6 +180,16 @@ interface UnlockedBadges {
 
 const BADGE_STORAGE_KEY = 'fluentstep:badges';
 
+function isUnlockedBadges(value: unknown): value is UnlockedBadges {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    Array.isArray((value as { badges?: unknown }).badges) &&
+    typeof (value as { unlockedDates?: unknown }).unlockedDates === 'object' &&
+    (value as { unlockedDates?: unknown }).unlockedDates !== null
+  );
+}
+
 /**
  * Get unlocked badges
  */
@@ -189,7 +199,8 @@ export function getUnlockedBadges(): UnlockedBadges {
     if (!stored) {
       return { badges: [], unlockedDates: {} };
     }
-    return JSON.parse(stored);
+    const parsed: unknown = JSON.parse(stored);
+    return isUnlockedBadges(parsed) ? parsed : { badges: [], unlockedDates: {} };
   } catch (error) {
     console.error('Error reading badge data:', error);
     return { badges: [], unlockedDates: {} };

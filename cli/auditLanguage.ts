@@ -7,21 +7,32 @@
 
 import readline from 'readline';
 import chalk from 'chalk';
-import { CURATED_ROLEPLAYS } from '../services/staticData';
-import { AuditConfig, ValidationFinding } from '../services/linguisticAudit/types';
-import { runAudit, registerValidator, ValidatorFn } from '../services/linguisticAudit';
-import { validateChunkCompliance } from '../services/linguisticAudit/validators/chunkComplianceValidator';
-import { validateUKEnglish } from '../services/linguisticAudit/validators/ukEnglishValidator';
-import { validateTonality } from '../services/linguisticAudit/validators/tonalityValidator';
-import { validateNaturalPatterns } from '../services/linguisticAudit/validators/naturalPatternsValidator';
-import { validateDialogueFlow } from '../services/linguisticAudit/validators/dialogueFlowValidator';
-import { validateAlternatives } from '../services/linguisticAudit/validators/alternativesValidator';
-import { validateDeepDive } from '../services/linguisticAudit/validators/deepDiveValidator';
-import { validateGrammarContext } from '../services/linguisticAudit/validators/grammarContextValidator';
-import { validateContextualSubstitution } from '../services/linguisticAudit/validators/contextualSubstitutionValidator';
-import { validateBlankAnswerPairing } from '../services/linguisticAudit/validators/blankAnswerPairingValidator';
-import { generateSuggestions, sortSuggestions, UserSuggestion, formatOptions } from '../services/linguisticAudit/fixers/suggestionEngine';
-import { applyAutoFixes } from '../services/linguisticAudit/fixers/autoFixer';
+import { CURATED_ROLEPLAYS } from '../src/services/staticData';
+import type { AuditConfig, AuditReport } from '../src/services/linguisticAudit/types';
+import { runAudit, registerValidator, type ValidatorFn } from '../src/services/linguisticAudit';
+import { validateChunkCompliance } from '../src/services/linguisticAudit/validators/chunkComplianceValidator';
+import { validateUKEnglish } from '../src/services/linguisticAudit/validators/ukEnglishValidator';
+import { validateTonality } from '../src/services/linguisticAudit/validators/tonalityValidator';
+import { validateNaturalPatterns } from '../src/services/linguisticAudit/validators/naturalPatternsValidator';
+import { validateDialogueFlow } from '../src/services/linguisticAudit/validators/dialogueFlowValidator';
+import { validateAlternatives } from '../src/services/linguisticAudit/validators/alternativesValidator';
+import { validateDeepDive } from '../src/services/linguisticAudit/validators/deepDiveValidator';
+import { validateGrammarContext } from '../src/services/linguisticAudit/validators/grammarContextValidator';
+import { validateContextualSubstitution } from '../src/services/linguisticAudit/validators/contextualSubstitutionValidator';
+import { validateBlankAnswerPairing } from '../src/services/linguisticAudit/validators/blankAnswerPairingValidator';
+import { generateSuggestions, sortSuggestions, type UserSuggestion, formatOptions } from '../src/services/linguisticAudit/fixers/suggestionEngine';
+
+const writeOut = (message = ''): void => {
+  process.stdout.write(`${message}\n`);
+};
+
+const writeErr = (message: string): void => {
+  process.stderr.write(`${message}\n`);
+};
+
+const getErrorMessage = (error: unknown): string => (
+  error instanceof Error ? error.message : String(error)
+);
 
 // Register all validators
 registerValidator({
@@ -98,18 +109,18 @@ async function main() {
     process.exit(0);
   }
 
-  console.log(chalk.bold.blue('\n🔍 FluentStep IELTS Linguistic Audit\n'));
+  writeOut(chalk.bold.blue('\n🔍 FluentStep IELTS Linguistic Audit\n'));
 
   // Run audit
   const report = await runAudit(CURATED_ROLEPLAYS, config);
 
-  console.log(chalk.bold(`Summary`));
-  console.log('========');
-  console.log(chalk.green(`✓ Passed: ${report.summary.passed}`));
-  console.log(chalk.yellow(`⚠ Warning: ${report.summary.warning}`));
-  console.log(chalk.red(`✗ Failed: ${report.summary.failed}`));
-  console.log(`Auto-fixes applied: ${chalk.green(report.autoFixesApplied)}`);
-  console.log(`Findings requiring approval: ${chalk.yellow(report.findingsRequiringApproval)}\n`);
+  writeOut(chalk.bold(`Summary`));
+  writeOut('========');
+  writeOut(chalk.green(`✓ Passed: ${report.summary.passed}`));
+  writeOut(chalk.yellow(`⚠ Warning: ${report.summary.warning}`));
+  writeOut(chalk.red(`✗ Failed: ${report.summary.failed}`));
+  writeOut(`Auto-fixes applied: ${chalk.green(report.autoFixesApplied)}`);
+  writeOut(`Findings requiring approval: ${chalk.yellow(report.findingsRequiringApproval)}\n`);
 
   if (config.reportOnly || config.dryRun) {
     generateReport(report);
@@ -121,13 +132,13 @@ async function main() {
   const suggestions = sortSuggestions(generateSuggestions(allFindings));
 
   if (suggestions.length === 0) {
-    console.log(chalk.green('✅ No issues requiring approval!\n'));
+    writeOut(chalk.green('✅ No issues requiring approval!\n'));
     generateReport(report);
     process.exit(0);
   }
 
   // Interactive approval loop
-  await interactiveApproval(suggestions, config);
+  await interactiveApproval(suggestions);
 
   // Generate final report
   generateReport(report);
@@ -136,10 +147,7 @@ async function main() {
 /**
  * Interactive approval workflow
  */
-async function interactiveApproval(
-  suggestions: UserSuggestion[],
-  config: AuditConfig
-): Promise<void> {
+async function interactiveApproval(suggestions: UserSuggestion[]): Promise<void> {
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -155,7 +163,7 @@ async function interactiveApproval(
     });
   };
 
-  console.log(chalk.bold(`\nReview Required (${suggestions.length} findings)\n`));
+  writeOut(chalk.bold(`\nReview Required (${suggestions.length} findings)\n`));
 
   while (currentIndex < suggestions.length) {
     const suggestion = suggestions[currentIndex];
@@ -166,20 +174,20 @@ async function interactiveApproval(
     const finding = suggestion.finding;
 
     // Display finding
-    console.log(chalk.bold.blue(`\n[${currentIndex + 1}/${suggestions.length}] ${finding.validatorName}`));
-    console.log(chalk.gray('─'.repeat(60)));
-    console.log(`Scenario: ${chalk.bold(finding.scenarioId)}`);
-    console.log(`Location: ${chalk.cyan(finding.location)}`);
-    console.log(`Issue: ${finding.issue}`);
-    console.log(`Confidence: ${chalk.yellow(`${Math.round(suggestion.confidence * 100)}%`)}`);
-    console.log(`\nCurrent: "${chalk.red(finding.currentValue)}"`);
+    writeOut(chalk.bold.blue(`\n[${currentIndex + 1}/${suggestions.length}] ${finding.validatorName}`));
+    writeOut(chalk.gray('─'.repeat(60)));
+    writeOut(`Scenario: ${chalk.bold(finding.scenarioId)}`);
+    writeOut(`Location: ${chalk.cyan(finding.location)}`);
+    writeOut(`Issue: ${finding.issue}`);
+    writeOut(`Confidence: ${chalk.yellow(`${Math.round(suggestion.confidence * 100)}%`)}`);
+    writeOut(`\nCurrent: "${chalk.red(finding.currentValue)}"`);
 
     if (suggestion.options && suggestion.options.length > 0) {
-      console.log(formatOptions(suggestion.options));
+      writeOut(formatOptions(suggestion.options));
     }
 
-    console.log(`\nContext: ${chalk.gray(finding.context)}`);
-    console.log(`Reasoning: ${chalk.gray(finding.reasoning)}`);
+    writeOut(`\nContext: ${chalk.gray(finding.context)}`);
+    writeOut(`Reasoning: ${chalk.gray(finding.reasoning)}`);
 
     // Get user choice
     const choice = await question(
@@ -190,66 +198,69 @@ async function interactiveApproval(
 
     switch (choice) {
       case 'a':
-        console.log(chalk.green('  ✓ Approved'));
+        writeOut(chalk.green('  ✓ Approved'));
         approved++;
         currentIndex++;
         break;
 
       case 's':
-        console.log(chalk.yellow('  ○ Skipped'));
+        writeOut(chalk.yellow('  ○ Skipped'));
         skipped++;
         currentIndex++;
         break;
 
-      case 'e':
+      case 'e': {
         const newValue = await question(chalk.cyan('Enter new value: '));
         if (newValue.trim()) {
-          console.log(chalk.green(`  ✓ Approved with custom value: "${newValue}"`));
+          writeOut(chalk.green(`  ✓ Approved with custom value: "${newValue}"`));
           // In real implementation, would apply custom fix
           approved++;
         }
         currentIndex++;
         break;
+      }
 
-      case 'v':
+      case 'v': {
         // Find full dialogue for context
-        const scenario = CURATED_ROLEPLAYS.find(s => s.id === finding.scenarioId);
+        const scenario = CURATED_ROLEPLAYS.find((candidate) => candidate.id === finding.scenarioId);
         if (scenario) {
-          console.log(chalk.bold.magenta('\n\nFull Dialogue:'));
-          console.log(chalk.gray('─'.repeat(60)));
+          writeOut(chalk.bold.magenta('\n\nFull Dialogue:'));
+          writeOut(chalk.gray('─'.repeat(60)));
           scenario.dialogue.forEach((line, idx) => {
-            const isBlanked = scenario.answerVariations.some(av => av.index === idx);
+            const isBlanked = scenario.answerVariations.some((answerVariation) => answerVariation.index === idx);
             const prefix = isBlanked ? chalk.yellow('➤') : ' ';
-            console.log(`${prefix} [${idx}] ${line}`);
+            writeOut(`${prefix} [${idx}] ${line.speaker}: ${line.text}`);
           });
-          console.log(chalk.gray('─'.repeat(60)) + '\n');
+          writeOut(chalk.gray('─'.repeat(60)) + '\n');
         }
         // Don't increment, let them decide again
         break;
+      }
 
       case 'q':
-        console.log(chalk.yellow('\nAudit paused. Changes not saved.'));
+        writeOut(chalk.yellow('\nAudit paused. Changes not saved.'));
         rl.close();
         process.exit(0);
+        break;
 
       default:
-        console.log(chalk.red('Invalid choice. Try again.'));
+        writeOut(chalk.red('Invalid choice. Try again.'));
     }
   }
 
   rl.close();
 
-  console.log(chalk.bold(`\nApproval Summary`));
-  console.log('═'.repeat(60));
-  console.log(`Approved: ${chalk.green(approved)}`);
-  console.log(`Skipped: ${chalk.yellow(skipped)}`);
-  console.log('');
+  writeOut(chalk.bold(`\nApproval Summary`));
+  writeOut('═'.repeat(60));
+  writeOut(`Approved: ${chalk.green(approved)}`);
+  writeOut(`Skipped: ${chalk.yellow(skipped)}`);
+  writeOut('');
 }
 
 /**
  * Generate audit report (Markdown)
  */
-function generateReport(report: any): void {
+function generateReport(report: AuditReport): void {
   const timestamp = new Date().toISOString();
   const reportPath = 'AUDIT_REPORT.md';
 
@@ -285,15 +296,15 @@ function generateReport(report: any): void {
   lines.push('\n---');
   lines.push(`Report generated at ${timestamp}`);
 
-  console.log(chalk.green(`\n✓ Report generated: ${reportPath}`));
-  console.log(`Total suggestions for review: ${report.findingsRequiringApproval}\n`);
+  writeOut(chalk.green(`\n✓ Report generated: ${reportPath}`));
+  writeOut(`Total suggestions for review: ${report.findingsRequiringApproval}\n`);
 }
 
 /**
  * Print help text
  */
 function printHelp(): void {
-  console.log(`
+  writeOut(`
 FluentStep IELTS Linguistic Audit CLI
 
 USAGE:
@@ -334,4 +345,4 @@ APPROVAL WORKFLOW:
 }
 
 // Run if executed directly
-main().catch(console.error);
+main().catch((error) => writeErr(getErrorMessage(error)));

@@ -16,6 +16,18 @@ interface StreakData {
 
 const STREAK_STORAGE_KEY = 'fluentstep:streak';
 
+function isStreakData(value: unknown): value is StreakData {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    typeof (value as { currentStreak?: unknown }).currentStreak === 'number' &&
+    typeof (value as { longestStreak?: unknown }).longestStreak === 'number' &&
+    typeof (value as { lastActivityDate?: unknown }).lastActivityDate === 'string' &&
+    typeof (value as { totalDaysActive?: unknown }).totalDaysActive === 'number' &&
+    Array.isArray((value as { history?: unknown }).history)
+  );
+}
+
 /**
  * Initialize or retrieve streak data
  */
@@ -25,7 +37,8 @@ export function getStreakData(): StreakData {
     if (!stored) {
       return initializeStreak();
     }
-    return JSON.parse(stored);
+    const parsed: unknown = JSON.parse(stored);
+    return isStreakData(parsed) ? parsed : initializeStreak();
   } catch (error) {
     console.error('Error reading streak data:', error);
     return initializeStreak();

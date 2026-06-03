@@ -71,6 +71,8 @@ export interface ActiveRecallItem {
     id: string;                 // e.g., "hc1_ar_1"
     prompt: string;             // Test question
     targetChunkIds: string[];   // References to chunkFeedback items
+    expectedAnswer?: string;    // Optional answer text for explicit recall prompts
+    hints?: string[];           // Optional progressive learner hints
 }
 
 /**
@@ -242,7 +244,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         "answer": "clean",
         "alternatives": [
           "tidy",
-          "organized",
+          "organised",
           "neat"
         ]
       },
@@ -362,38 +364,38 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
       },
       {
         "blankIndex": 3,
-        "chunk": "keep track",
+        "chunk": "clean",
         "category": "Idioms",
-        "coreFunction": "Means monitor progress or stay updated; practical collocation for management contexts.",
+        "coreFunction": "Describes keeping a shared space neat and usable; practical collocation for home routines.",
         "situations": [
           {
-            "context": "Project management",
-            "example": "I'll keep track of the budget throughout the project."
+            "context": "Shared flat routine",
+            "example": "It's hard to keep the kitchen clean."
           },
           {
-            "context": "Staying informed",
-            "example": "It's hard to keep track of all the emails."
+            "context": "Housework agreement",
+            "example": "We all help keep the living room clean."
           },
           {
-            "context": "Monitoring progress",
-            "example": "We need to keep track of deadlines carefully."
+            "context": "Describing a busy home",
+            "example": "The flat is difficult to keep tidy."
           }
         ],
         "nativeUsageNotes": [
-          "Collocation: always \"keep track of\" (not \"keep track on\")",
-          "Common in work/academic contexts",
-          "Implies active monitoring, not passive awareness"
+          "Collocation: \"keep clean\" means maintain cleanliness over time",
+          "Natural in shared-house conversations about chores",
+          "Use \"tidy\" for neatness and \"clean\" for hygiene or overall condition"
         ],
         "nonNativeContrast": [
           {
-            "nonNative": "It's very difficult to track it.",
-            "native": "It's hard to keep track of it.",
-            "explanation": "Native version uses natural collocation; direct translation sounds robotic."
+            "nonNative": "It is difficult to make it clean always.",
+            "native": "It's hard to keep it clean.",
+            "explanation": "Native version uses \"keep\" for maintaining a state over time."
           },
           {
-            "nonNative": "I will manage the follow-up.",
-            "native": "I'll keep track of the next steps.",
-            "explanation": "Native version is more specific and conversational."
+            "nonNative": "The flat is hard to stay clean.",
+            "native": "The flat is hard to keep clean.",
+            "explanation": "\"Keep clean\" is the standard collocation for maintaining cleanliness."
           }
         ]
       },
@@ -413,7 +415,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
           },
           {
             "context": "Community description",
-            "example": "It's a friendly neighborhood where everyone helps."
+            "example": "It's a friendly neighbourhood where everyone helps."
           }
         ],
         "nativeUsageNotes": [
@@ -613,7 +615,10 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
       {
         "index": 9,
         "answer": "cash",
-        "alternatives": []
+        "alternatives": [
+          "in cash",
+          "cash payment"
+        ]
       },
       {
         "index": 10,
@@ -943,15 +948,14 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         "index": 5,
         "answer": "pleasure",
         "alternatives": [
-          "vacation"
+          "holiday"
         ]
       },
       {
         "index": 6,
         "answer": "check",
         "alternatives": [
-          "check in",
-          "put in"
+          "put"
         ]
       },
       {
@@ -1492,7 +1496,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
   },
   {
     "id": "advanced-1-manager-escalation",
-    "category": "Advanced",
+    "category": "Service/Logistics",
     "topic": "Manager Escalation (Hard)",
     "context": "Advocating for a return after an assistant says no.",
     "characters": [
@@ -2687,9 +2691,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
       {
         "index": 9,
         "answer": "not",
-        "alternatives": [
-          "rather not"
-        ]
+        "alternatives": []
       }
     ],
     "deepDive": [
@@ -3825,8 +3827,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         "index": 0,
         "answer": "up to",
         "alternatives": [
-          "doing",
-          "been up to"
+          "doing"
         ]
       },
       {
@@ -3981,11 +3982,11 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         "chunkId": "social-7-house-rules-b3",
         "native": "tidy",
         "learner": {
-          "meaning": "Clean and organized.",
+          "meaning": "Clean and organised.",
           "useWhen": "When describing expectations for shared spaces.",
-          "commonWrong": "keep things organized",
+          "commonWrong": "keep things organised",
           "fix": "keep things tidy",
-          "whyOdd": "'Organized' can mean structured; 'tidy' specifically means neat and clean."
+          "whyOdd": "'Organised' can mean structured; 'tidy' specifically means neat and clean."
         },
         "examples": [
           "The bathroom is nice and tidy."
@@ -4066,7 +4067,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         "native": "separate",
         "learner": {
           "meaning": "Keep two things apart or distinct.",
-          "useWhen": "When giving instructions on how to organize waste.",
+          "useWhen": "When giving instructions on how to organise waste.",
           "commonWrong": "keep waste and recycling different",
           "fix": "keep waste and recycling separate",
           "whyOdd": "'Different' is vague; 'separate' clearly means they should not mix."
@@ -4608,7 +4609,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
       },
       {
         "speaker": "You",
-        "text": "Oh, the house is ________, genuinely. The kitchen is amazing, and there's this lovely garden. But there are these ________ little teething problems, you know?"
+        "text": "Oh, the house is ________, genuinely. The kitchen is amazing, and there's this lovely garden. But there are these ________ teething problems, you know?"
       },
       {
         "speaker": "Sarah",
@@ -4720,7 +4721,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
       },
       {
         "speaker": "You",
-        "text": "Brilliant. I'll message you once I've got things a bit more ________ and organized. Right now it's still a bit mad."
+        "text": "Brilliant. I'll message you once I've got things a bit more ________ and organised. Right now it's still a bit mad."
       },
       {
         "speaker": "Sarah",
@@ -4856,7 +4857,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         "answer": "fit",
         "alternatives": [
           "work",
-          "squeeze in"
+          "squeeze"
         ]
       },
       {
@@ -4953,7 +4954,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
   {
     "id": "social-10-new-neighbor",
     "category": "Social",
-    "topic": "Meeting a New Neighbor",
+    "topic": "Meeting a New Neighbour",
     "context": "Welcoming someone who just moved in next door.",
     "characters": [
       {
@@ -4962,7 +4963,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
       },
       {
         "name": "Mark",
-        "description": "New neighbor."
+        "description": "New neighbour."
       }
     ],
     "dialogue": [
@@ -4976,7 +4977,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
       },
       {
         "speaker": "Mrs. Higgins",
-        "text": "Welcome to the neighborhood. It's quite ________ here, I hope you like it."
+        "text": "Welcome to the neighbourhood. It's quite ________ here, I hope you like it."
       },
       {
         "speaker": "Mark",
@@ -5022,7 +5023,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         "index": 4,
         "answer": "hand",
         "alternatives": [
-          "favor",
+          "favour",
           "bit of help"
         ]
       },
@@ -5374,7 +5375,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         "index": 7,
         "answer": "learned",
         "alternatives": [
-          "learned",
+          "learnt",
           "noted"
         ]
       }
@@ -5672,7 +5673,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
       },
       {
         "speaker": "Receptionist",
-        "text": "You're absolutely ________. I apologize for the error. I'll ________ it immediately."
+        "text": "You're absolutely ________. I apologise for the error. I'll ________ it immediately."
       }
     ],
     "answerVariations": [
@@ -6416,8 +6417,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         "index": 6,
         "answer": "check",
         "alternatives": [
-          "check in",
-          "put in"
+          "put"
         ]
       },
       {
@@ -6592,7 +6592,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
       {
         "index": 3,
         "phrase": "leisure",
-        "insight": "Standard UK English for vacation/holiday travel."
+        "insight": "Standard UK English for holiday/holiday travel."
       },
       {
         "index": 15,
@@ -7250,7 +7250,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         "index": 9,
         "answer": "reduce",
         "alternatives": [
-          "minimize",
+          "minimise",
           "avoid",
           "cut down on"
         ]
@@ -7422,9 +7422,9 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
       },
       {
         "index": 4,
-        "answer": "up to",
+        "answer": "up",
         "alternatives": [
-          "up to lately"
+          "doing"
         ]
       },
       {
@@ -7619,7 +7619,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         "answer": "schedule",
         "alternatives": [
           "arrange",
-          "organize"
+          "organise"
         ]
       },
       {
@@ -7926,7 +7926,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         "index": 8,
         "answer": "dichotomy",
         "alternatives": [
-          "false choice"
+          "choice"
         ]
       },
       {
@@ -8133,7 +8133,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         "answer": "reduce",
         "alternatives": [
           "limit",
-          "minimize",
+          "minimise",
           "cut down"
         ]
       },
@@ -8305,7 +8305,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         "index": 7,
         "answer": "acknowledge",
         "alternatives": [
-          "recognize",
+          "recognise",
           "admit",
           "concede"
         ]
@@ -8378,7 +8378,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
       {
         "index": 7,
         "phrase": "acknowledge",
-        "insight": "Formal verb: recognize validity even while disagreeing."
+        "insight": "Formal verb: recognise validity even while disagreeing."
       },
       {
         "index": 8,
@@ -8405,7 +8405,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
     "dialogue": [
       {
         "speaker": "Morgan",
-        "text": "Our sustainability initiatives are being ________ by investors who prioritize short-term profits."
+        "text": "Our sustainability initiatives are being ________ by investors who prioritise short-term profits."
       },
       {
         "speaker": "Taylor",
@@ -8443,7 +8443,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         "alternatives": [
           "challenged",
           "disputed",
-          "scrutinized"
+          "scrutinised"
         ]
       },
       {
@@ -9010,7 +9010,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         "answer": "don't drink coffee",
         "alternatives": [
           "don't have caffeine",
-          "just relax",
+          "relax",
           "avoid caffeine"
         ]
       }
@@ -9037,11 +9037,11 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
     "id": "academic-1-tutorial-discussion",
     "category": "Academic",
     "topic": "University Tutorial - Essay Planning",
-    "context": "Discussing essay structure and argument development with your tutor at Oxford/Cambridge.",
+    "context": "Discussing essay structure and argument development with your tutor at a UK university.",
     "characters": [
       {
         "name": "Dr. Harrison",
-        "description": "Academic tutor at prestigious university",
+        "description": "Academic tutor",
         "avatarUrl": "/avatars/tutor.png"
       },
       {
@@ -9096,7 +9096,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
       },
       {
         "speaker": "You",
-        "text": "Would you mind awfully if I ________ you my draft next week?"
+        "text": "Would you mind awfully if I ________ next week?"
       }
     ],
     "answerVariations": [
@@ -9177,7 +9177,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         "answer": "bear in mind",
         "alternatives": [
           "remember",
-          "note that",
+          "note",
           "keep in mind"
         ]
       },
@@ -9201,11 +9201,11 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
       },
       {
         "index": 12,
-        "answer": "run",
+        "answer": "run my draft by you",
         "alternatives": [
-          "send",
-          "share",
-          "pass"
+          "send you my draft",
+          "share my draft with you",
+          "pass my draft to you"
         ]
       }
     ],
@@ -9227,7 +9227,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
       },
       {
         "index": 11,
-        "phrase": "run...draft",
+        "phrase": "run my draft by you",
         "insight": "Phrasal verb \"run by\" = submit for feedback. Casual enough for student-tutor dynamic whilst maintaining professionalism."
       }
     ],
@@ -9372,7 +9372,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
       },
       {
         "speaker": "Dr. Patel",
-        "text": "That sounds rather bothersome. ________ you noticed any patterns?  "
+        "text": "That sounds rather bothersome. ________ noticed any patterns?  "
       },
       {
         "speaker": "You",
@@ -9468,7 +9468,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
       },
       {
         "speaker": "Dr. Patel",
-        "text": "Blood work first, and if needed, we can look at imaging later. It's mostly to ________ anything serious out.  "
+        "text": "Blood work first, and if needed, we can look at imaging later. It's mostly to ________ anything serious.  "
       },
       {
         "speaker": "You",
@@ -9547,8 +9547,11 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
       },
       {
         "index": 2,
-        "answer": "Have",
-        "alternatives": []
+        "answer": "Have you",
+        "alternatives": [
+          "Have you ever",
+          "Have you also"
+        ]
       },
       {
         "index": 3,
@@ -9669,8 +9672,11 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
       },
       {
         "index": 17,
-        "answer": "rule",
-        "alternatives": []
+        "answer": "rule out",
+        "alternatives": [
+          "exclude",
+          "check for"
+        ]
       },
       {
         "index": 18,
@@ -9701,7 +9707,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         "answer": "fortnight",
         "alternatives": [
           "two weeks",
-          "a couple of weeks"
+          "couple of weeks"
         ]
       },
       {
@@ -9709,7 +9715,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         "answer": "follow it up",
         "alternatives": [
           "chase it up",
-          "check on it"
+          "check"
         ]
       },
       {
@@ -9777,7 +9783,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
       },
       {
         "chunkId": "hc1_ch_have_you_noticed",
-        "native": "Have",
+        "native": "Have you",
         "learner": {
           "meaning": "Asking if someone has observed something.",
           "useWhen": "When a doctor asks about patterns or triggers.",
@@ -9987,12 +9993,12 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
       },
       {
         "chunkId": "hc1_ch_rule_out",
-        "native": "rule",
+        "native": "rule out",
         "learner": {
           "meaning": "Exclude a serious cause by testing.",
           "useWhen": "When explaining why tests are needed.",
           "commonWrong": "remove the serious problems",
-          "fix": "rule anything serious out",
+          "fix": "rule out anything serious",
           "whyOdd": "'Remove' isn't how doctors explain testing; 'rule out' is standard."
         },
         "examples": [
@@ -11103,9 +11109,9 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         "learner": {
           "meaning": "Gathered and arranged systematically (British spelling).",
           "useWhen": "When showing you have formal community support through a petition.",
-          "commonWrong": "We organized a petition with 387 signatures.",
+          "commonWrong": "We've organized a petition with 387 signatures.",
           "fix": "We've organised a petition with 387 signatures.",
-          "whyOdd": "In British English, 'organised' uses 's', not 'z'. This is civic engagement vocabulary that signals coordinated community action."
+          "whyOdd": "In British English, organised uses 's', not 'z'. This is civic engagement vocabulary that signals coordinated community action."
         },
         "examples": [
           "We've organised a residents' meeting to discuss this.",
@@ -12135,7 +12141,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
       {
         "index": 5,
         "phrase": "keen to hear",
-        "insight": "Native idiom signaling receptiveness to feedback. More sophisticated than \"interested to hear\" in professional context."
+        "insight": "Native idiom signalling receptiveness to feedback. More sophisticated than \"interested to hear\" in professional context."
       },
       {
         "index": 8,
@@ -12192,7 +12198,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
       },
       {
         "speaker": "Victoria",
-        "text": "That's quite ________ . The asking price is already very competitive. Let me ________ with the vendors."
+        "text": "That's quite ________ . The asking price is already very competitive. Let me ________ the vendors."
       },
       {
         "speaker": "You",
@@ -12427,11 +12433,11 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
       },
       {
         "speaker": "You",
-        "text": "I'd really ________ it if you could prioritize this. It's affecting my ________ to enjoy the property. Would ________ days be more realistic?"
+        "text": "I'd really ________ it if you could prioritise this. It's affecting my ________ to enjoy the property. Would ________ days be more realistic?"
       },
       {
         "speaker": "Landlord",
-        "text": "Let me ________ into it and get back to you. I can probably arrange something in ________ weeks."
+        "text": "Let me ________ it and get back to you. I can probably arrange something in ________ weeks."
       },
       {
         "speaker": "You",
@@ -12495,8 +12501,8 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         "answer": "couple",
         "alternatives": [
           "number",
-          "few",
-          "several"
+          "handful",
+          "series"
         ]
       },
       {
@@ -12640,7 +12646,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         "alternatives": [
           "appreciate",
           "get",
-          "recognize"
+          "recognise"
         ]
       },
       {
@@ -12791,9 +12797,8 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
         "index": 37,
         "answer": "less",
         "alternatives": [
-          "not as",
-          "fewer",
-          "lower"
+          "slightly less",
+          "much less"
         ]
       },
       {
@@ -12961,27 +12966,27 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
       },
       {
         "blankIndex": 32,
-        "chunk": "appreciate",
+        "chunk": "commitment",
         "category": "Softening",
-        "coreFunction": "Acknowledges efforts warmly; maintains positive relationship while being firm.",
+        "coreFunction": "Names someone's promised effort warmly; maintains a positive relationship while asking for follow-through.",
         "situations": [
           {
             "context": "After someone agrees to help",
             "example": "I appreciate your commitment to resolve this."
           },
           {
-            "context": "Thanking for understanding",
-            "example": "I appreciate that you understand the urgency."
+            "context": "Recognising promised action",
+            "example": "I appreciate your commitment to dealing with the urgent repair."
           },
           {
             "context": "Valuing cooperation",
-            "example": "I really appreciate your willingness to help."
+            "example": "I appreciate your commitment to getting this sorted."
           }
         ],
         "nativeUsageNotes": [
-          "More genuine than \"thank you\" in diplomatic contexts",
+          "More specific than a general thank you",
           "Builds goodwill without losing firmness",
-          "Shows emotional intelligence in difficult situations"
+          "Useful when someone has promised a concrete next step"
         ],
         "nonNativeContrast": [
           {
@@ -12991,8 +12996,8 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
           },
           {
             "nonNative": "It is good that you will help.",
-            "native": "I appreciate your willingness to help with this.",
-            "explanation": "Native version is personal and grateful; non-native is impersonal."
+            "native": "I appreciate your commitment to helping with this.",
+            "explanation": "Native version names the commitment and sounds more professional; non-native is impersonal."
           }
         ]
       }
@@ -13024,7 +13029,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
     },
     {
       "speaker": "Sarah",
-      "text": "Perfect. I'll put you by the window then. Here's the menu, and can I ________ you with a drink?"
+      "text": "Perfect. I'll put you by the window then. Here's the menu, and can I ________ with a drink?"
     },
     {
       "speaker": "You",
@@ -13044,7 +13049,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
     },
     {
       "speaker": "You",
-      "text": "That sounds ________. But do you have anything less ________? I'm trying to eat healthier these days."
+      "text": "________. But do you have anything less ________? I'm trying to eat healthier these days."
     },
     {
       "speaker": "Sarah",
@@ -13076,7 +13081,7 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
     },
     {
       "speaker": "You",
-      "text": "Thanks so much! Oh, and about the ________... when you bring the bill, could you ________ me two separate checks?"
+      "text": "Thanks so much! Oh, and about the ________... when you bring the bill, could you ________ me two separate bills?"
     },
     {
       "speaker": "Sarah",
@@ -13092,629 +13097,656 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
     }
   ],
   "answerVariations": [
-    {
-      "index": 0,
-      "answer": "two",
-      "alternatives": []
-    },
-    {
-      "index": 1,
-      "answer": "five minutes",
-      "alternatives": []
-    },
-    {
-      "index": 2,
-      "answer": "help start",
-      "alternatives": []
-    },
-    {
-      "index": 3,
-      "answer": "tell me about",
-      "alternatives": []
-    },
-    {
-      "index": 4,
-      "answer": "just",
-      "alternatives": []
-    },
-    {
-      "index": 5,
-      "answer": "By the way",
-      "alternatives": []
-    },
-    {
-      "index": 6,
-      "answer": "options",
-      "alternatives": []
-    },
-    {
-      "index": 7,
-      "answer": "don't want",
-      "alternatives": []
-    },
-    {
-      "index": 8,
-      "answer": "you to",
-      "alternatives": []
-    },
-    {
-      "index": 9,
-      "answer": "our",
-      "alternatives": []
-    },
-    {
-      "index": 10,
-      "answer": "good",
-      "alternatives": []
-    },
-    {
-      "index": 11,
-      "answer": "salty",
-      "alternatives": []
-    },
-    {
-      "index": 12,
-      "answer": "suggest",
-      "alternatives": []
-    },
-    {
-      "index": 13,
-      "answer": "prepare",
-      "alternatives": []
-    },
-    {
-      "index": 14,
-      "answer": "no",
-      "alternatives": []
-    },
-    {
-      "index": 15,
-      "answer": "else",
-      "alternatives": []
-    },
-    {
-      "index": 16,
-      "answer": "allergy",
-      "alternatives": []
-    },
-    {
-      "index": 17,
-      "answer": "use",
-      "alternatives": []
-    },
-    {
-      "index": 18,
-      "answer": "carefully",
-      "alternatives": []
-    },
-    {
-      "index": 19,
-      "answer": "orders the same thing",
-      "alternatives": []
-    },
-    {
-      "index": 20,
-      "answer": "vegetables",
-      "alternatives": []
-    },
-    {
-      "index": 21,
-      "answer": "nut-free",
-      "alternatives": []
-    },
-    {
-      "index": 22,
-      "answer": "minutes",
-      "alternatives": []
-    },
-    {
-      "index": 23,
-      "answer": "bill",
-      "alternatives": []
-    },
-    {
-      "index": 24,
-      "answer": "bring",
-      "alternatives": []
-    },
-    {
-      "index": 25,
-      "answer": "split it",
-      "alternatives": []
-    },
-    {
-      "index": 26,
-      "answer": "splitting it",
-      "alternatives": []
-    }
+      {
+          "index": 0,
+          "answer": "two",
+          "alternatives": [
+              "a table for two",
+              "the two of us",
+              "two people"
+          ]
+      },
+      {
+          "index": 1,
+          "answer": "five minutes",
+          "alternatives": [
+              "a few minutes",
+              "ten minutes",
+              "two minutes"
+          ]
+      },
+      {
+          "index": 2,
+          "answer": "get you started",
+          "alternatives": [
+              "start you off",
+              "get things started",
+              "begin by getting you started"
+          ]
+      },
+      {
+          "index": 3,
+          "answer": "tell me about",
+          "alternatives": [
+              "talk me through",
+              "describe",
+              "say a bit about"
+          ]
+      },
+      {
+          "index": 4,
+          "answer": "just",
+          "alternatives": [
+              "only",
+              "maybe",
+              "simply"
+          ]
+      },
+      {
+          "index": 5,
+          "answer": "By the way",
+          "alternatives": [
+              "Oh, and",
+              "Also",
+              "While I'm asking"
+          ]
+      },
+      {
+          "index": 6,
+          "answer": "options",
+          "alternatives": [
+              "choices",
+              "dishes",
+              "meals"
+          ]
+      },
+      {
+          "index": 7,
+          "answer": "don't want",
+          "alternatives": [
+              "would rather avoid",
+              "don't fancy",
+              "can't have"
+          ]
+      },
+      {
+          "index": 8,
+          "answer": "you to",
+          "alternatives": [
+              "you towards",
+              "you in the direction of",
+              "out"
+          ]
+      },
+      {
+          "index": 9,
+          "answer": "our",
+          "alternatives": [
+              "the",
+              "a",
+              "this"
+          ]
+      },
+      {
+          "index": 10,
+          "answer": "That sounds good",
+          "alternatives": [
+              "That sounds great",
+              "That sounds lovely",
+              "That sounds perfect"
+          ]
+      },
+      {
+          "index": 11,
+          "answer": "salty",
+          "alternatives": [
+              "heavy",
+              "rich",
+              "oily"
+          ]
+      },
+      {
+          "index": 12,
+          "answer": "suggest",
+          "alternatives": [
+              "recommend",
+              "go with",
+              "try"
+          ]
+      },
+      {
+          "index": 13,
+          "answer": "prepare",
+          "alternatives": [
+              "make",
+              "cook",
+              "serve"
+          ]
+      },
+      {
+          "index": 14,
+          "answer": "no",
+          "alternatives": [
+              "no extra",
+              "none of the",
+              "zero"
+          ]
+      },
+      {
+          "index": 15,
+          "answer": "else",
+          "alternatives": [
+              "additional",
+              "other",
+              "more"
+          ]
+      },
+      {
+          "index": 16,
+          "answer": "allergy",
+          "alternatives": [
+              "allergen",
+              "dietary",
+              "food allergy"
+          ]
+      },
+      {
+          "index": 17,
+          "answer": "use",
+          "alternatives": [
+              "have",
+              "include",
+              "cook with"
+          ]
+      },
+      {
+          "index": 18,
+          "answer": "carefully",
+          "alternatives": [
+              "safely",
+              "separately",
+              "with extra care"
+          ]
+      },
+      {
+          "index": 19,
+          "answer": "orders the same thing",
+          "alternatives": [
+              "has the same thing",
+              "goes for the same dish",
+              "chooses the same thing"
+          ]
+      },
+      {
+          "index": 20,
+          "answer": "vegetables",
+          "alternatives": [
+              "veg",
+              "roasted vegetables",
+              "mushrooms"
+          ]
+      },
+      {
+          "index": 21,
+          "answer": "fresh",
+          "alternatives": [
+              "light",
+              "flavourful",
+              "creamy"
+          ]
+      },
+      {
+          "index": 22,
+          "answer": "minutes",
+          "alternatives": [
+              "mins",
+              "minutes or so",
+              "minute wait"
+          ]
+      },
+      {
+          "index": 23,
+          "answer": "bill",
+          "alternatives": [
+              "payment",
+              "total",
+              "final bill"
+          ]
+      },
+      {
+          "index": 24,
+          "answer": "bring",
+          "alternatives": [
+              "give",
+              "print",
+              "prepare"
+          ]
+      },
+      {
+          "index": 25,
+          "answer": "split",
+          "alternatives": [
+              "separate",
+              "divide",
+              "sort"
+          ]
+      },
+      {
+          "index": 26,
+          "answer": "splitting it",
+          "alternatives": [
+              "splitting the bill",
+              "sharing it",
+              "going halves"
+          ]
+      }
   ],
   "chunkFeedbackV2": [
-    {
-      "chunkId": "service_1_ch_party_size",
-      "native": "two",
-      "learner": {
-            "meaning": "The number specifying party size - how many people are requesting a table.",
-            "useWhen": "Servers need to know immediately how many seats to prepare. 'Two' is the fastest, most natural way to communicate this.",
-            "commonWrong": "❌ 'Two persons' (too formal, sounds textbook)",
-            "fix": "✔️ Just say the number: 'Two' or 'A table for two'",
-            "whyOdd": ""
+      {
+          "chunkId": "service_1_ch_party_size",
+          "native": "two",
+          "learner": {
+              "meaning": "A quick party-size answer for a table request.",
+              "useWhen": "Use it when staff ask how many seats to prepare.",
+              "commonWrong": "Two persons.",
+              "fix": "Two, please, or A table for two.",
+              "whyOdd": "Persons sounds formal and textbook in everyday restaurant talk."
+          },
+          "examples": [
+              "How many people? Two, please.",
+              "A table for two, if possible."
+          ]
       },
-      "examples": [
-            "How many people? - Two, please.",
-            "A table for two on Friday at seven.",
-            "Party size? - We're three today, actually.",
-            "Is it just you two, or are others joining?",
-            "In many European restaurants, the server asks 'Combien?' or equivalent - 'two' is universally understood."
-      ]
-},
-    {
-      "chunkId": "service_1_ch_arrival_timing",
-      "native": "five minutes",
-      "learner": {
-            "meaning": "An approximate timeframe for future arrival - roughly 5 minutes, indicating imminent expectation.",
-            "useWhen": "Servers need to know if they should hold a table or if the party is running late. This phrase sets expectation clearly.",
-            "commonWrong": "❌ 'In five minutes later' (redundant - 'in' already means future)",
-            "fix": "✔️ 'In about five minutes' or 'In five minutes'",
-            "whyOdd": ""
+      {
+          "chunkId": "service_1_ch_arrival_timing",
+          "native": "five minutes",
+          "learner": {
+              "meaning": "A short arrival estimate.",
+              "useWhen": "Use it to show the other person is arriving soon.",
+              "commonWrong": "In five minutes later.",
+              "fix": "In about five minutes.",
+              "whyOdd": "Later repeats the future meaning already carried by in."
+          },
+          "examples": [
+              "I'm expecting someone in about five minutes.",
+              "She should be here in a few minutes."
+          ]
       },
-      "examples": [
-            "I'm expecting someone in about ten minutes.",
-            "My colleague will be here in fifteen minutes - traffic.",
-            "Will you hold this table? - How long? - Maybe five minutes.",
-            "My date's always five minutes late - it's just how she is.",
-            "The client should be here in three minutes - can we get the room ready?"
-      ]
-},
-    {
-      "chunkId": "service_1_ch_service_opener",
-      "native": "help start",
-      "learner": {
-            "meaning": "To assist with beginning the meal experience - typically asking about drinks first.",
-            "useWhen": "Standard opening question from servers. 'Can I help start you with a drink?' is a warm, welcoming phrase (BUCKET_A: Requests & Help).",
-            "commonWrong": "❌ 'Can I start you?' (incomplete, unclear)",
-            "fix": "✔️ 'Can I help start you with a drink?' or 'What can I get you to start?'",
-            "whyOdd": ""
+      {
+          "chunkId": "service_1_ch_service_opener",
+          "native": "get you started",
+          "learner": {
+              "meaning": "A friendly service opener before drinks or first choices.",
+              "useWhen": "Servers use it to begin the order without sounding pushy.",
+              "commonWrong": "Help start you.",
+              "fix": "Can I get you started with a drink?",
+              "whyOdd": "Help start is a fragment; get you started is the natural service phrase."
+          },
+          "examples": [
+              "Can I get you started with a drink?",
+              "Shall I start you off with some water?"
+          ]
       },
-      "examples": [
-            "Can I help start you with something to drink?",
-            "What can I help start you with this morning?",
-            "May I help start your experience with an aperitif?",
-            "What can I help start you off with?",
-            "What would help start your meal off nicely? Prosecco?"
-      ]
-},
-    {
-      "chunkId": "service_1_ch_wine_inquiry",
-      "native": "tell me about",
-      "learner": {
-            "meaning": "A polite request for description or recommendation about a specific item.",
-            "useWhen": "Much more natural and warm than 'describe the wine' or 'explain the wine.' This is BUCKET_A: Requests & Help - 'Could you do me a favour?'",
-            "commonWrong": "❌ 'Explain me the wine' (grammatically incorrect)",
-            "fix": "✔️ 'Could you tell me about your house red?' or 'Tell me about this one'",
-            "whyOdd": ""
+      {
+          "chunkId": "service_1_ch_wine_inquiry",
+          "native": "tell me about",
+          "learner": {
+              "meaning": "A warm request for a short description or recommendation.",
+              "useWhen": "Use it when asking staff to explain an item conversationally.",
+              "commonWrong": "Explain me the wine.",
+              "fix": "Could you tell me about the house red?",
+              "whyOdd": "Explain does not take me directly in this pattern, and it sounds demanding."
+          },
+          "examples": [
+              "Could you tell me about your house red?",
+              "Could you talk me through the specials?"
+          ]
       },
-      "examples": [
-            "Could you tell me about your house wines?",
-            "Tell me about the daily special, please.",
-            "I'm not familiar with this region. Could you tell me about it?",
-            "There are so many options. Tell me about your three most popular dishes.",
-            "What's good today? - Well, let me tell you about our new chef's creation."
-      ]
-},
-    {
-      "chunkId": "service_1_ch_quantity_modifier",
-      "native": "just",
-      "learner": {
-            "meaning": "Adverb meaning 'only' - modifying a quantity to emphasize restraint or specificity (BUCKET_B: Dining - quantity control).",
-            "useWhen": "In ordering, 'just a glass' signals you want a portion, not a larger commitment (bottle). It's efficient communication in service contexts.",
-            "commonWrong": "❌ Omitting 'just' entirely: 'I'd love a glass' (sounds vague without context)",
-            "fix": "✔️ 'I'd love just a glass' or 'Just a glass for me'",
-            "whyOdd": ""
+      {
+          "chunkId": "service_1_ch_quantity_modifier",
+          "native": "just",
+          "learner": {
+              "meaning": "A small quantity marker meaning only this much.",
+              "useWhen": "Use it to limit an order politely.",
+              "commonWrong": "I'd love a glass for now.",
+              "fix": "I'd love just a glass for now.",
+              "whyOdd": "Without just, the portion contrast is less clear."
+          },
+          "examples": [
+              "I'd love just a glass for now.",
+              "Just water for me, thanks."
+          ]
       },
-      "examples": [
-            "Would you like a bottle? - No thanks, just a glass.",
-            "More salad? - Just a small bit, thank you.",
-            "One of the steaks, please. - Which size? - Just the eight-ounce.",
-            "Soup and bread? - Just the soup for me, thanks.",
-            "Can I get extra? - Just a sprinkle of parmesan, please."
-      ]
-},
-    {
-      "chunkId": "service_1_ch_topic_transition",
-      "native": "By the way",
-      "learner": {
-            "meaning": "Discourse connector signaling a new thought or topic shift (BUCKET_A: Conversation Starters - 'Let's change the subject').",
-            "useWhen": "Smooth, natural way to ask a follow-up question. Without it, switching from drinks to dietary needs feels abrupt.",
-            "commonWrong": "❌ 'By chance' (means coincidentally, not a connector)",
-            "fix": "✔️ 'By the way' or 'Oh, by the way' for natural pacing",
-            "whyOdd": ""
+      {
+          "chunkId": "service_1_ch_topic_transition",
+          "native": "By the way",
+          "learner": {
+              "meaning": "A natural signal that you are adding a related question.",
+              "useWhen": "Use it to move from one service topic to another smoothly.",
+              "commonWrong": "By chance, do you have vegetarian options?",
+              "fix": "By the way, do you have vegetarian options?",
+              "whyOdd": "By chance means coincidentally; it does not work as a topic-change marker."
+          },
+          "examples": [
+              "By the way, do you have vegetarian options?",
+              "Oh, and do you have a gluten-free menu?"
+          ]
       },
-      "examples": [
-            "By the way, do you have vegetarian options?",
-            "The wine looks great. By the way, is there a gluten-free menu?",
-            "By the way, how's your pasta? Mine's fantastic.",
-            "By the way, can I get change? I'm running late.",
-            "The salad was perfect - by the way, do you have decaf?"
-      ]
-},
-    {
-      "chunkId": "service_1_ch_dietary_preference",
-      "native": "options",
-      "learner": {
-            "meaning": "Alternative choices available - plural noun indicating multiple possibilities for dietary needs.",
-            "useWhen": "Standard word when asking about menu variations. 'Do you have vegetarian options?' is the natural way to open dietary discussion (BUCKET_B: Dining).",
-            "commonWrong": "❌ 'Do you have vegetarian?' (incomplete noun)",
-            "fix": "✔️ 'Do you have vegetarian options?' or 'What are your vegetarian options?'",
-            "whyOdd": ""
+      {
+          "chunkId": "service_1_ch_dietary_preference",
+          "native": "options",
+          "learner": {
+              "meaning": "Available choices on the menu.",
+              "useWhen": "Use it for dietary needs without sounding too demanding.",
+              "commonWrong": "Do you have vegetarian?",
+              "fix": "Do you have vegetarian options?",
+              "whyOdd": "Vegetarian needs a noun here, such as options or dishes."
+          },
+          "examples": [
+              "Do you have vegetarian options?",
+              "What gluten-free options do you have?"
+          ]
       },
-      "examples": [
-            "Do you have vegetarian options? - Absolutely, several.",
-            "Any gluten-free options available?",
-            "What options do you have for people who don't eat fish?",
-            "Are there low-sugar options on the menu?",
-            "My friend's vegan. What options do you recommend?"
-      ]
-},
-    {
-      "chunkId": "service_1_ch_negative_preference",
-      "native": "don't want",
-      "learner": {
-            "meaning": "Strong negative preference - 'not wanting X' emphasizes avoidance more than 'don't like X' (BUCKET_B: Dining - preferences).",
-            "useWhen": "Signals stronger preference or potential allergy concern to service staff. More emphatic than 'don't like' or 'prefer'.",
-            "commonWrong": "❌ 'I don't eat pasta with meat' (too definitive; might offend)",
-            "fix": "✔️ 'I don't want meat' or 'I prefer dishes without meat'",
-            "whyOdd": ""
+      {
+          "chunkId": "service_1_ch_negative_preference",
+          "native": "don't want",
+          "learner": {
+              "meaning": "A direct but acceptable way to avoid an ingredient.",
+              "useWhen": "Use it when the preference matters but is not necessarily an allergy.",
+              "commonWrong": "I don't eat pasta with meat.",
+              "fix": "I don't want pasta with meat.",
+              "whyOdd": "Don't eat can sound like a fixed rule; don't want fits this specific order."
+          },
+          "examples": [
+              "I don't want pasta with meat.",
+              "I'd rather avoid anything too rich."
+          ]
       },
-      "examples": [
-            "I don't want any meat in my dish, please.",
-            "I don't want nuts anywhere near my food.",
-            "Some people don't want sugar. We have full-sugar and reduced-sugar options.",
-            "I love spice, but I don't want too much heat in this one.",
-            "I don't want overly chewy parts - I prefer tender."
-      ]
-},
-    {
-      "chunkId": "service_1_ch_direction_instruction",
-      "native": "you to",
-      "learner": {
-            "meaning": "Verb phrase 'point you to' - meaning to guide attention toward something specific.",
-            "useWhen": "Used when servers highlight specific menu sections or popular items. 'Let me point you to our vegetarian section' sounds professional and helpful.",
-            "commonWrong": "❌ 'Let me show you to' (means guide physically)",
-            "fix": "✔️ 'Let me point you to' or 'I'll point you toward'",
-            "whyOdd": ""
+      {
+          "chunkId": "service_1_ch_direction_instruction",
+          "native": "you to",
+          "learner": {
+              "meaning": "Part of point you to, meaning guide attention to something.",
+              "useWhen": "Servers use it to direct customers to useful menu sections.",
+              "commonWrong": "Let me show you to what is popular.",
+              "fix": "Let me point you to what's popular.",
+              "whyOdd": "Show you to means physically escort someone to a place."
+          },
+          "examples": [
+              "Let me point you to what's popular.",
+              "I can point you towards the lighter dishes."
+          ]
       },
-      "examples": [
-            "Let me point you to our vegetarian options on pages three and four.",
-            "I want to point you toward our new chef's special - it's incredible.",
-            "If you're budget-conscious, let me point you to these value dishes.",
-            "I'd like to point you to our best-reviewed item - the lamb risotto.",
-            "Can I point you to our Valentine's menu? We have special pricing."
-      ]
-},
-    {
-      "chunkId": "service_1_ch_bestseller_marker",
-      "native": "our",
-      "learner": {
-            "meaning": "Possessive determiner indicating shared ownership - 'our bestseller' means popular with the restaurant/customers collectively.",
-            "useWhen": "Servers use this to build rapport and community feeling. 'Our bestseller' feels more personal than 'the bestseller' (basic grammar, high social impact in BUCKET_B: Dining).",
-            "commonWrong": "❌ 'The bestseller' (loses personal rapport)",
-            "fix": "✔️ 'Our bestseller' or 'It's one of our most popular dishes'",
-            "whyOdd": ""
+      {
+          "chunkId": "service_1_ch_bestseller_marker",
+          "native": "our",
+          "learner": {
+              "meaning": "A rapport-building possessive for a restaurant's dish.",
+              "useWhen": "Servers use our to make a recommendation feel owned and trusted.",
+              "commonWrong": "The bestseller.",
+              "fix": "Our bestseller.",
+              "whyOdd": "The is grammatical, but our sounds warmer and more natural from staff."
+          },
+          "examples": [
+              "The pesto pasta is our bestseller.",
+              "Our most popular dish is the risotto."
+          ]
       },
-      "examples": [
-            "The pesto pasta is our bestseller - most customers love it.",
-            "Our signature dish is the risotto - chef makes it fresh daily.",
-            "Can't decide? Our most popular appetizer is the bruschetta.",
-            "Our house wine is excellent - really punches above its price.",
-            "Our customers have voted this our number-one dessert three years running."
-      ]
-},
-    {
-      "chunkId": "service_1_ch_positive_response",
-      "native": "good",
-      "learner": {
-            "meaning": "Simple positive evaluation - used to affirm a recommendation ('That sounds good').",
-            "useWhen": "Quick, natural way to accept a suggestion without over-analyzing. 'That sounds good' shows permission to proceed without elaborate praise.",
-            "commonWrong": "❌ 'That sounds well' (unnatural; 'good' is correct adjective)",
-            "fix": "✔️ 'That sounds good' or 'That sounds perfect'",
-            "whyOdd": ""
+      {
+          "chunkId": "service_1_ch_positive_response",
+          "native": "That sounds good",
+          "learner": {
+              "meaning": "A simple phrase for accepting a recommendation naturally.",
+              "useWhen": "Use it to accept a recommendation without overexplaining.",
+              "commonWrong": "That sounds well.",
+              "fix": "That sounds good.",
+              "whyOdd": "Sounds takes an adjective here; well sounds like health or performance."
+          },
+          "examples": [
+              "That sounds good, thanks.",
+              "That sounds perfect."
+          ]
       },
-      "examples": [
-            "I'd recommend the fish. - That sounds good.",
-            "Should I bring the wine? - That sounds good.",
-            "I'll put your order in now. - That sounds good, thanks.",
-            "Everything will be perfect. - That sounds good.",
-            "One glass of red? - That sounds good."
-      ]
-},
-    {
-      "chunkId": "service_1_ch_salt_reduction",
-      "native": "salty",
-      "learner": {
-            "meaning": "Adjective describing high sodium content - used to request lower-salt versions of dishes (BUCKET_B: Dining - health preferences).",
-            "useWhen": "Health-conscious diners commonly request 'less salty' dishes. This adjective is essential medical vocabulary for dietary communication.",
-            "commonWrong": "❌ 'Less salt' (adjective form needed: 'less salty')",
-            "fix": "✔️ 'Less salty' or 'Lower in salt'",
-            "whyOdd": ""
+      {
+          "chunkId": "service_1_ch_salt_reduction",
+          "native": "salty",
+          "learner": {
+              "meaning": "An adjective for food with too much salt.",
+              "useWhen": "Use it when asking for a lighter or lower-salt option.",
+              "commonWrong": "Do you have anything less salt?",
+              "fix": "Do you have anything less salty?",
+              "whyOdd": "The sentence needs the adjective salty, not the noun salt."
+          },
+          "examples": [
+              "Do you have anything less salty?",
+              "This is a bit too salty for me."
+          ]
       },
-      "examples": [
-            "Do you have anything less salty? My doctor said to cut back.",
-            "This is a bit too salty for me - can you redo it?",
-            "The fish is delicious but the veg is too salty.",
-            "My kid doesn't like salty food - what do you suggest?",
-            "Which dishes are naturally less salty?"
-      ]
-},
-    {
-      "chunkId": "service_1_ch_recommendation_verb",
-      "native": "suggest",
-      "learner": {
-            "meaning": "To recommend or propose - 'I'd suggest X' is a polite advisory about menu items (BUCKET_A: Requests & Help).",
-            "useWhen": "More professional than 'I'd recommend' in some contexts; both work equally well. Shows consideration of customer preferences.",
-            "commonWrong": "❌ 'I'm suggesting' (present continuous sounds uncertain)",
-            "fix": "✔️ 'I'd suggest' or 'I'd recommend' (equally natural)",
-            "whyOdd": ""
+      {
+          "chunkId": "service_1_ch_recommendation_verb",
+          "native": "suggest",
+          "learner": {
+              "meaning": "A polite recommendation verb.",
+              "useWhen": "Staff use it to propose a dish based on your needs.",
+              "commonWrong": "I'm suggesting the fish.",
+              "fix": "I'd suggest the fish.",
+              "whyOdd": "The continuous form sounds uncertain; I'd suggest is a natural recommendation."
+          },
+          "examples": [
+              "I'd suggest the grilled fish.",
+              "I'd recommend the risotto."
+          ]
       },
-      "examples": [
-            "I'd suggest the grilled option - it's lower in calories.",
-            "I'd suggest avoiding the seafood pasta given your shellfish allergy.",
-            "I'd suggest the risotto if you prefer creamy dishes.",
-            "I'd suggest the pasta - excellent value and generous portions.",
-            "You look tired - I'd suggest our comfort pasta, very soothing."
-      ]
-},
-    {
-      "chunkId": "service_1_ch_food_preparation",
-      "native": "prepare",
-      "learner": {
-            "meaning": "Professional verb for cooking/modifying food per customer specifications (BUCKET_B: Dining - kitchen requests).",
-            "useWhen": "Sounds more professional than 'make' or 'cook' when requesting modifications. Hotels and restaurants use this terminology.",
-            "commonWrong": "❌ 'Make the veg with garlic' (too casual for service request)",
-            "fix": "✔️ 'Prepare the veg with extra garlic' or 'Could you prepare this a certain way?'",
-            "whyOdd": ""
+      {
+          "chunkId": "service_1_ch_food_preparation",
+          "native": "prepare",
+          "learner": {
+              "meaning": "A professional verb for making food in a requested way.",
+              "useWhen": "Use it for kitchen modifications and allergy-safe handling.",
+              "commonWrong": "Could you make the veg with garlic?",
+              "fix": "Could you prepare the veg with extra garlic?",
+              "whyOdd": "Make is understandable, but prepare sounds more natural for restaurant requests."
+          },
+          "examples": [
+              "Could you prepare the veg with extra garlic?",
+              "We'll prepare it separately."
+          ]
       },
-      "examples": [
-            "Could you prepare this with less oil?",
-            "I'll make sure it's prepared exactly as you want.",
-            "The vegan menu is prepared in our separate kitchen to avoid cross-contamination.",
-            "A customer with severe allergies - I need this prepared very carefully.",
-            "All our fish is prepared fresh - nothing from frozen."
-      ]
-},
-    {
-      "chunkId": "service_1_ch_rejecting_ingredient",
-      "native": "no",
-      "learner": {
-            "meaning": "Simple negative - when rejecting garnishes or ingredients in food service (BUCKET_B: Dining - special requests).",
-            "useWhen": "In food context, 'no croutons' is faster and more natural than 'I don't want croutons.' Servers understand this economic phrasing immediately.",
-            "commonWrong": "❌ 'Without croutons' (correct but wordier)",
-            "fix": "✔️ 'No croutons' or 'Hold the croutons' (very natural)",
-            "whyOdd": ""
+      {
+          "chunkId": "service_1_ch_rejecting_ingredient",
+          "native": "no",
+          "learner": {
+              "meaning": "A concise way to exclude an ingredient.",
+              "useWhen": "Use it for simple order modifications like toppings or garnishes.",
+              "commonWrong": "I would like without croutons.",
+              "fix": "I'd like no croutons.",
+              "whyOdd": "Without needs a different sentence shape; no fits directly before the ingredient."
+          },
+          "examples": [
+              "I'd like no croutons.",
+              "No onions, please."
+          ]
       },
-      "examples": [
-            "And no croutons on the salad, please.",
-            "Burger with no onions, thanks.",
-            "Pasta with no cream sauce.",
-            "No nuts anywhere in her food - she's severely allergic.",
-            "Salad, no dressing please."
-      ]
-},
-    {
-      "chunkId": "service_1_ch_additional_concern",
-      "native": "else",
-      "learner": {
-            "meaning": "Adverb meaning 'anything additional' or 'something more' - servers use to confirm completeness of order.",
-            "useWhen": "Standard closing question: 'Is there anything else?' ensures no needs are forgotten and shows attentiveness (BUCKET_A: universal service phrasing).",
-            "commonWrong": "❌ 'Anything other' (not standard service phrasing)",
-            "fix": "✔️ 'Is there anything else?' or 'Anything else for you?'",
-            "whyOdd": ""
+      {
+          "chunkId": "service_1_ch_additional_concern",
+          "native": "else",
+          "learner": {
+              "meaning": "Anything additional beyond what has already been said.",
+              "useWhen": "Servers use it to check whether the order or safety information is complete.",
+              "commonWrong": "Anything other you'd like me to know?",
+              "fix": "Anything else you'd like me to know?",
+              "whyOdd": "Anything else is the fixed service phrase; anything other sounds translated."
+          },
+          "examples": [
+              "Anything else you'd like me to know?",
+              "Is there anything else I can get you?"
+          ]
       },
-      "examples": [
-            "Is there anything else I can get for you?",
-            "How's everything? Anything else you need?",
-            "Will that be all? - Yes, that's everything else for now, thanks.",
-            "Main course finished! Anything else - maybe something sweet?",
-            "Extra sauce, no croutons. Anything else I should know?"
-      ]
-},
-    {
-      "chunkId": "service_1_ch_allergy_disclosure",
-      "native": "allergy",
-      "learner": {
-            "meaning": "Noun - medical condition of adverse reaction to food substances. Critical safety word in dining (BUCKET_B: Dining - health & safety).",
-            "useWhen": "Essential vocabulary for safe dining. Servers must know about allergies to prevent serious health incidents.",
-            "commonWrong": "❌ 'Allergie' (French spelling, not English)",
-            "fix": "✔️ 'I have an allergy to nuts' or 'My friend has a nut allergy'",
-            "whyOdd": ""
+      {
+          "chunkId": "service_1_ch_allergy_disclosure",
+          "native": "allergy",
+          "learner": {
+              "meaning": "The safety word for a food reaction risk.",
+              "useWhen": "Use it clearly in restaurants so staff treat the issue seriously.",
+              "commonWrong": "My friend has an allergie.",
+              "fix": "My friend has a nut allergy.",
+              "whyOdd": "Allergie is not English spelling, and allergy is the expected safety term."
+          },
+          "examples": [
+              "My friend has a nut allergy.",
+              "Are there any allergy concerns?"
+          ]
       },
-      "examples": [
-            "My friend has a nut allergy - can you make sure her food is safe?",
-            "Does the pesto have any allergy concerns I should know?",
-            "This customer has a shellfish allergy - please prepare separately.",
-            "Her allergy is severe, so I need absolute certainty there's no cross-contamination.",
-            "When someone mentions an allergy, this is not a preference - take it very seriously."
-      ]
-},
-    {
-      "chunkId": "service_1_ch_contain_allergen",
-      "native": "use",
-      "learner": {
-            "meaning": "Verb indicating 'we have/contain' ingredients - 'We use nuts in several dishes' directly communicates risk.",
-            "useWhen": "Clearer than 'we have nuts' - specifically states incorporation into dishes, not just in kitchen. Critical for allergy communication.",
-            "commonWrong": "❌ 'We have nuts' (vague - are they in food or just in kitchen?)",
-            "fix": "✔️ 'We use nuts in several dishes' or 'Several dishes contain nuts'",
-            "whyOdd": ""
+      {
+          "chunkId": "service_1_ch_contain_allergen",
+          "native": "use",
+          "learner": {
+              "meaning": "A direct way to say an ingredient is used in dishes.",
+              "useWhen": "Staff use it to explain allergen risk clearly.",
+              "commonWrong": "We have nuts in several dishes.",
+              "fix": "We use nuts in several dishes.",
+              "whyOdd": "Have is vague; use makes it clear nuts are ingredients."
+          },
+          "examples": [
+              "We use nuts in several dishes.",
+              "Some sauces include peanuts."
+          ]
       },
-      "examples": [
-            "We use peanuts in our kitchen - if you have an allergy, let me know.",
-            "All our pasta uses eggs - any allergies I should know about?",
-            "We use shellfish regularly, so there might be trace amounts in our oils.",
-            "This soup uses butter and cream - not suitable for vegan diets.",
-            "Do you use corn syrup? - No, we use honey instead."
-      ]
-},
-    {
-      "chunkId": "service_1_ch_allergy_safety",
-      "native": "carefully",
-      "learner": {
-            "meaning": "Adverb emphasizing care/attention - crucial in allergen context to signal serious handling procedures.",
-            "useWhen": "Shows commitment to safety. 'Prepared carefully' signals kitchen will take extra precautions, not just avoid ingredient.",
-            "commonWrong": "❌ 'We'll be careful' (too informal for medical context)",
-            "fix": "✔️ 'Prepared very carefully' or 'We'll handle this carefully'",
-            "whyOdd": ""
+      {
+          "chunkId": "service_1_ch_allergy_safety",
+          "native": "carefully",
+          "learner": {
+              "meaning": "An adverb showing extra attention and safety.",
+              "useWhen": "Use it when explaining serious handling for allergies.",
+              "commonWrong": "We'll be careful.",
+              "fix": "It will be prepared carefully.",
+              "whyOdd": "The corrected phrase sounds more specific and professional in an allergy context."
+          },
+          "examples": [
+              "It will be prepared carefully.",
+              "We'll handle it with extra care."
+          ]
       },
-      "examples": [
-            "We'll prepare your meal very carefully - separate utensils, clean prep area.",
-            "Given the severity, I'll make sure it's prepared carefully by our senior chef.",
-            "We take cross-contamination seriously. Everything will be handled carefully.",
-            "This allergy is severe, so I'll personally monitor careful preparation.",
-            "Nut allergy, severe reaction possible - needs careful kitchen management."
-      ]
-},
-    {
-      "chunkId": "service_1_ch_ordering_habit",
-      "native": "orders the same thing",
-      "learner": {
-            "meaning": "Third-person statement about consistent ordering behavior - common in restaurant dialogue about predictable customers.",
-            "useWhen": "Shows familiarity with friend's preferences in casual way. Natural rapport-building phrase in informal restaurant contexts.",
-            "commonWrong": "❌ 'She always same thing orders' (word order wrong)",
-            "fix": "✔️ 'She orders the same thing every time' or 'She always orders the same thing'",
-            "whyOdd": ""
+      {
+          "chunkId": "service_1_ch_ordering_habit",
+          "native": "orders the same thing",
+          "learner": {
+              "meaning": "A natural phrase for someone's repeated choice.",
+              "useWhen": "Use it when explaining a friend's predictable order.",
+              "commonWrong": "She always same thing orders.",
+              "fix": "She always orders the same thing.",
+              "whyOdd": "English word order puts the verb before the object phrase."
+          },
+          "examples": [
+              "She always orders the same thing.",
+              "He usually goes for the same dish."
+          ]
       },
-      "examples": [
-            "Your friend always orders the same thing - do you want to surprise her?",
-            "He orders the same thing every time - we joke that he could order with his eyes closed.",
-            "If she orders the same thing again, I'll make sure it's perfect.",
-            "Some people order the same thing because they found THE dish for them.",
-            "Her order? She always orders the same thing - it's been that way for two years."
-      ]
-},
-    {
-      "chunkId": "service_1_ch_vegetable_variant",
-      "native": "vegetables",
-      "learner": {
-            "meaning": "Plural noun specifying the vegetable side dish - used to clarify which components customer wants.",
-            "useWhen": "In risotto context, important to confirm if veg is integrated or separate. British pluralization 'vegetables' (veg/veggies in casual speech).",
-            "commonWrong": "❌ 'The veg' (too informal for formal order confirmation)",
-            "fix": "✔️ 'The vegetables' or 'with fresh vegetables' (in menu language)",
-            "whyOdd": ""
+      {
+          "chunkId": "service_1_ch_vegetable_variant",
+          "native": "vegetables",
+          "learner": {
+              "meaning": "A clear menu noun for the side or risotto ingredient.",
+              "useWhen": "Use it when confirming what comes with or inside a dish.",
+              "commonWrong": "Risotto with vegetable.",
+              "fix": "Risotto with vegetables.",
+              "whyOdd": "For mixed or general veg, the plural is the natural menu form."
+          },
+          "examples": [
+              "She'll have the risotto with vegetables.",
+              "Does it come with roasted veg?"
+          ]
       },
-      "examples": [
-            "The risotto comes with vegetables - would you like them on the side?",
-            "This dish includes fresh vegetables from our morning market.",
-            "The vegetables are prepared in the same oil as meat - is that okay?",
-            "Do you want more vegetables, or is this fine?",
-            "Should your vegetables be cooked slightly crisp or softer?"
-      ]
-},
-    {
-      "chunkId": "service_1_ch_quality_freshness",
-      "native": "nut-free",
-      "learner": {
-            "meaning": "Adjective/compound modifier indicating 'contains no nuts' - hyphenated form when used as adjective before noun.",
-            "useWhen": "Medical/safety language for severe allergies. 'Nut-free' is more precise than 'no nuts' when describing meal preparation protocol.",
-            "commonWrong": "❌ 'Nuts-free' (incorrect plural)",
-            "fix": "✔️ 'Nut-free' (hyphenated before noun) or 'free from nuts' (after)",
-            "whyOdd": ""
+      {
+          "chunkId": "service_1_ch_quality_freshness",
+          "native": "fresh",
+          "learner": {
+              "meaning": "A positive food-quality adjective.",
+              "useWhen": "Staff use it to reassure customers about ingredients and preparation.",
+              "commonWrong": "The risotto is very freshness.",
+              "fix": "The risotto is very fresh.",
+              "whyOdd": "Freshness is a noun; the sentence needs the adjective fresh."
+          },
+          "examples": [
+              "The risotto is lovely and very fresh.",
+              "The vegetables are fresh today."
+          ]
       },
-      "examples": [
-            "We have a completely nut-free kitchen area for severe allergies.",
-            "All items marked with an asterisk are nut-free.",
-            "This meal will be prepared in our nut-free zone with dedicated equipment.",
-            "We use completely nut-free utensils for this preparation.",
-            "Our desserts are sourced from nut-free suppliers specifically."
-      ]
-},
-    {
-      "chunkId": "service_1_ch_service_timing",
-      "native": "minutes",
-      "learner": {
-            "meaning": "Plural noun - units of time. Specifies duration estimate for food preparation ('about 15 minutes').",
-            "useWhen": "Essential for managing customer expectations. Accurate timing information prevents frustration and allows time planning.",
-            "commonWrong": "❌ 'In about fifteen minute' (missing plural)",
-            "fix": "✔️ 'About fifteen minutes' or 'In about 15 minutes'",
-            "whyOdd": ""
+      {
+          "chunkId": "service_1_ch_service_timing",
+          "native": "minutes",
+          "learner": {
+              "meaning": "The plural time unit after a number.",
+              "useWhen": "Use it when giving or hearing preparation estimates.",
+              "commonWrong": "About fifteen minute.",
+              "fix": "About fifteen minutes.",
+              "whyOdd": "After fifteen, the plural form minutes is required."
+          },
+          "examples": [
+              "It should be out in about fifteen minutes.",
+              "The starter will take ten minutes."
+          ]
       },
-      "examples": [
-            "Your meal should be ready in about fifteen minutes.",
-            "How long for the appetizers? - Maybe ten minutes?",
-            "We have 45 minutes before we need to leave. Will this be done in time? - Easily - 20 minutes maximum.",
-            "We're pretty busy, so kitchen is running about 25 minutes.",
-            "The special takes longer - allow 30-40 minutes for kitchen prep."
-      ]
-},
-    {
-      "chunkId": "service_1_ch_bill_discussion",
-      "native": "bill",
-      "learner": {
-            "meaning": "Noun - the invoice/receipt for meal cost (British English term, US uses 'check'). Critical for payment discussion.",
-            "useWhen": "Standard UK restaurant language. Essential vocabulary for managing payment logistics (BUCKET_B: Dining - payment).",
-            "commonWrong": "❌ 'Check' (American English, wrong for UK context)",
-            "fix": "✔️ 'The bill' (UK standard) or 'Could you bring the bill?'",
-            "whyOdd": ""
+      {
+          "chunkId": "service_1_ch_bill_discussion",
+          "native": "bill",
+          "learner": {
+              "meaning": "The UK restaurant word for the amount to pay.",
+              "useWhen": "Use it when asking to pay or discussing payment.",
+              "commonWrong": "About the check.",
+              "fix": "About the bill.",
+              "whyOdd": "Check is American; bill is the standard UK restaurant term."
+          },
+          "examples": [
+              "Could we have the bill, please?",
+              "About the bill, could we split it?"
+          ]
       },
-      "examples": [
-            "When you're ready, I'll bring the bill.",
-            "Would you like the bill split or together?",
-            "That's £32. Can I get anything else before I bring the bill?",
-            "I'll bring the bill over. We take card or cash.",
-            "I need to keep the bill for expense reimbursement."
-      ]
-},
-    {
-      "chunkId": "service_1_ch_separate_bills",
-      "native": "bring",
-      "learner": {
-            "meaning": "Verb - to deliver or present. 'Could you bring me two checks' or 'bring separate bills' (BUCKET_A: Requests & Help).",
-            "useWhen": "Natural request phrasing in service contexts. 'Bring' is more direct and warmer than 'prepare' or 'make' for bill logistics.",
-            "commonWrong": "❌ 'Take me the bill' (wrong directional verb)",
-            "fix": "✔️ 'Could you bring me the bill?' or 'Bring two separate bills'",
-            "whyOdd": ""
+      {
+          "chunkId": "service_1_ch_separate_bills",
+          "native": "bring",
+          "learner": {
+              "meaning": "A service verb meaning deliver or present something.",
+              "useWhen": "Use it when asking staff to bring the bill, water, or food.",
+              "commonWrong": "Could you take me the bill?",
+              "fix": "Could you bring me the bill?",
+              "whyOdd": "Take moves away from the speaker; bring moves the item to you."
+          },
+          "examples": [
+              "Could you bring me two separate bills?",
+              "Could you bring the bill when you're ready?"
+          ]
       },
-      "examples": [
-            "Could you bring me two separate bills, please?",
-            "When you're ready, I'll bring the bill by card machine.",
-            "Bring each person their bill - they're splitting costs.",
-            "We're ready. Can you bring the bill?",
-            "Bring the bill whenever you're ready - no rush."
-      ]
-},
-    {
-      "chunkId": "service_1_ch_bill_status",
-      "native": "split it",
-      "learner": {
-            "meaning": "Verb phrase - 'split' meaning divide the cost, 'it' being the bill. Clarifies cost-sharing arrangement.",
-            "useWhen": "Quick, clear confirmation of payment logistics. 'Are you splitting it?' is standard pre-bill question from servers (BUCKET_B: Dining - payment).",
-            "commonWrong": "❌ 'Split the bill' (transitive without 'it')",
-            "fix": "✔️ 'Are you splitting it?' or 'We're splitting the bill three ways'",
-            "whyOdd": ""
+      {
+          "chunkId": "service_1_ch_bill_status",
+          "native": "split",
+          "learner": {
+              "meaning": "Divide one bill into separate parts.",
+              "useWhen": "Use it when asking staff to separate payment.",
+              "commonWrong": "I'll split it the bill.",
+              "fix": "I'll split the bill for you.",
+              "whyOdd": "Use either split the bill or split it, but not both object forms together."
+          },
+          "examples": [
+              "I'll split the bill for you.",
+              "Could you split it two ways?"
+          ]
       },
-      "examples": [
-            "Are you splitting the bill? - No, it's on me.",
-            "I assume we're not splitting it? - Correct, one bill.",
-            "If you're splitting it, I can run two separate cards.",
-            "Six of us - should I assume we're splitting it? - Yes, six ways.",
-            "Let me confirm - you're splitting the bill three ways?"
-      ]
-},
-    {
-      "chunkId": "service_1_ch_payment_arrangement",
-      "native": "splitting it",
-      "learner": {
-            "meaning": "Present participle form of 'split' - indicates the action of dividing costs. 'Are you splitting it?' asks for confirmation of cost-sharing.",
-            "useWhen": "Servers use this to confirm payment logistics. Natural, conversational way to ask how costs will be divided (BUCKET_B: Dining - payment).",
-            "commonWrong": "❌ 'Split?' (incomplete - ambiguous)",
-            "fix": "✔️ 'Are you splitting it?' or 'I assume you're not splitting it?'",
-            "whyOdd": ""
-      },
-      "examples": [
-            "I assume you're not splitting it? - Right, it's on me.",
-            "Are we splitting it equally or is someone treating?",
-            "Should I assume you're all splitting it down the middle?",
-            "You've got the company card, so we're not splitting it, right?",
-            "Are you folks splitting it, or one check?"
-      ]
-}
+      {
+          "chunkId": "service_1_ch_payment_arrangement",
+          "native": "splitting it",
+          "learner": {
+              "meaning": "Paying separately or sharing the cost.",
+              "useWhen": "Servers use it to confirm who is paying before printing bills.",
+              "commonWrong": "Are you split?",
+              "fix": "Are you splitting it?",
+              "whyOdd": "Split needs an object here; splitting it is the natural question form."
+          },
+          "examples": [
+              "I assume you're not splitting it?",
+              "Are you splitting the bill?"
+          ]
+      }
   ],
   "blanksInOrder": [
     {"blankId":"b0","chunkId":"service_1_ch_party_size"},
@@ -13750,7 +13782,13 @@ export const CURATED_ROLEPLAYS: RoleplayScript[] = [
           {
               "categoryKey": "Openers",
               "count": 5,
-              "exampleChunkIds": [],
+              "exampleChunkIds": [
+                "service_1_ch_party_size",
+                "service_1_ch_service_opener",
+                "service_1_ch_wine_inquiry",
+                "service_1_ch_topic_transition",
+                "service_1_ch_additional_concern"
+              ],
               "insight": "Natural conversation patterns in this scenario"
           }
       ],

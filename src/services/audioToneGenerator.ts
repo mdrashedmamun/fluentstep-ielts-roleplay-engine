@@ -3,6 +3,16 @@
  * Generates simple tones using Web Audio API as fallback when sound files are unavailable
  */
 
+type AudioContextConstructor = new () => AudioContext;
+
+type WindowWithWebkitAudio = Window & typeof globalThis & {
+  webkitAudioContext?: AudioContextConstructor;
+};
+
+const getAudioContextConstructor = (): AudioContextConstructor | undefined => (
+  window.AudioContext ?? (window as WindowWithWebkitAudio).webkitAudioContext
+);
+
 /**
  * Generate a simple success tone using Web Audio API
  * Creates a pleasant "ding" sound
@@ -13,7 +23,13 @@
  */
 export function generateSuccessTone(duration: number = 500): void {
   try {
-    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const AudioContextCtor = getAudioContextConstructor();
+
+    if (!AudioContextCtor) {
+      return;
+    }
+
+    const audioContext = new AudioContextCtor();
     const now = audioContext.currentTime;
 
     // Create oscillator for the tone
@@ -48,14 +64,21 @@ export function generateSuccessTone(duration: number = 500): void {
  */
 export function generateCelebrationTone(duration: number = 1000): void {
   try {
-    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-    const now = audioContext.currentTime;
+    const AudioContextCtor = getAudioContextConstructor();
 
-    // Create two notes for a celebratory sound
+    if (!AudioContextCtor) {
+      return;
+    }
+
+    const audioContext = new AudioContextCtor();
+    const now = audioContext.currentTime;
+    const durationScale = duration / 1000;
+
+    // Create three notes for a celebratory sound
     const frequencies = [
-      { freq: 523.25, start: 0, duration: 0.3 },      // C5
-      { freq: 659.25, start: 0.35, duration: 0.3 },   // E5
-      { freq: 783.99, start: 0.7, duration: 0.5 }     // G5
+      { freq: 523.25, start: 0, duration: 0.3 * durationScale },      // C5
+      { freq: 659.25, start: 0.35 * durationScale, duration: 0.3 * durationScale },   // E5
+      { freq: 783.99, start: 0.7 * durationScale, duration: 0.5 * durationScale }     // G5
     ];
 
     frequencies.forEach(({ freq, start, duration: noteDuration }) => {

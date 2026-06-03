@@ -133,7 +133,7 @@ export function validateWithAdaptiveCompliance(
   const novelAnswers: string[] = [];
 
   for (const answer of answers) {
-    const { matched, bucket } = matchesChunk(answer, bucketA, bucketB, allChunks, config.ieltsLevel);
+    const { matched } = matchesChunk(answer, bucketA, bucketB, allChunks, config.ieltsLevel);
 
     if (matched) {
       chunkMatches++;

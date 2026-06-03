@@ -3,10 +3,8 @@ import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { useFloating, flip, shift, offset } from '@floating-ui/react';
 import { RoleplayScript, CURATED_ROLEPLAYS, ChunkFeedback, ChunkFeedbackV2 } from '../services/staticData';
 import { progressService } from '../services/progressService';
-import { audioService } from '../services/audioService';
 import { navigationService } from '../services/navigationService';
 import { useKeyboard } from '../hooks/useKeyboard';
-import { getBlanksSource, getChunkFeedbackSource, getBlankCount } from '../utils/safePatterns';
 import NavigationButtons from './NavigationButtons';
 import CelebrationOverlay from './CelebrationOverlay';
 import FeedbackCard from './FeedbackCard';
@@ -20,50 +18,40 @@ interface RoleplayViewerProps {
   onReset: () => void;
 }
 
-/**
- * Validate that a blank can only be filled with its assigned answer
- * Returns true if the answer is valid for this blank
- */
-function validateBlankAnswerMatch(
-  blankIndex: number,
-  answerText: string,
-  script: RoleplayScript
-): boolean {
-  // Get expected chunkId for this blank
-  const blankMapping = script.blanksInOrder?.[blankIndex];
-  if (!blankMapping) return true; // No blanksInOrder, skip validation
 
-  const expectedChunkId = blankMapping.chunkId;
-  if (!expectedChunkId) return true; // No chunkId requirement, skip validation
+type FeedbackCompatibleScript = RoleplayScript & {
+  chunkFeedback?: ChunkFeedback[];
+  chunkFeedbackV2?: ChunkFeedbackV2[];
+};
 
-  // Get the answer for this blank
-  const answerData = script.answerVariations.find(v => v.index === blankIndex);
-  if (!answerData) return false; // No answer found
+const getV1ChunkFeedback = (script: RoleplayScript): ChunkFeedback[] => {
+  const feedback = (script as FeedbackCompatibleScript).chunkFeedback;
+  return Array.isArray(feedback) ? feedback : [];
+};
 
-  // Check if the answer text matches
-  const isMatch = answerData.answer === answerText ||
-                  answerData.alternatives?.includes(answerText);
+const getV2ChunkFeedback = (script: RoleplayScript): ChunkFeedbackV2[] => {
+  const feedback = (script as FeedbackCompatibleScript).chunkFeedbackV2;
+  return Array.isArray(feedback) ? feedback : [];
+};
 
-  if (!isMatch) {
-    console.warn(
-      `⚠️ Blank ${blankIndex} validation failed: "${answerText}" is not valid for ${expectedChunkId}`
-    );
-  }
 
-  return isMatch;
-}
+const getAnswerDataForBlank = (
+  script: RoleplayScript,
+  blankIndex: number
+): RoleplayScript['answerVariations'][number] | undefined => {
+  return script.answerVariations.find(v => v.index === blankIndex) ||
+    script.answerVariations.find(v => v.index === blankIndex + 1);
+};
+
 
 const InteractiveBlank: React.FC<{
   answer: string;
   alternatives: string[];
-  index: number;
   isRevealed: boolean;
   onReveal: () => void;
   expectedChunkId?: string;
   actualChunkId?: string;
-}> = ({ answer, alternatives, index, isRevealed, onReveal, expectedChunkId, actualChunkId }) => {
-  // Validate chunkId match
-  const isValidChunk = !expectedChunkId || !actualChunkId || expectedChunkId === actualChunkId;
+}> = ({ answer, alternatives, isRevealed, onReveal, expectedChunkId, actualChunkId }) => {
   const chunkMismatch = expectedChunkId && actualChunkId && expectedChunkId !== actualChunkId;
   const isClosingRef = useRef(false);
   const [referenceElement, setReferenceElement] = useState<HTMLButtonElement | null>(null);
@@ -206,7 +194,6 @@ const InteractiveBlank: React.FC<{
   );
 };
 
-import { speakText } from '../services/speechService';
 import { speakWithGoogle } from '../services/ttsService';
 
 const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
@@ -247,6 +234,7 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
   });
 
   const totalSteps = script.dialogue.length;
+  const activeRecallQuestionCount = script.activeRecall?.length || 0;
 
   // Track previous completion percentage for milestone detection
   const previousCompletionRef = useRef(0);
@@ -345,7 +333,7 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
         if (i < lineBlanks.length) {
           const blankIdx = lineBlanks[i];
           if (blankIdx !== undefined) {
-            const answer = script.answerVariations.find(v => v.index === blankIdx)?.answer || "";
+            const answer = getAnswerDataForBlank(script, blankIdx)?.answer || "";
             reconstructed += revealedBlanks.has(blankIdx) ? answer : "..."; // Slight pause for unrevealed
           }
         }
@@ -353,7 +341,7 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
       textToSpeak = reconstructed;
     }
 
-    speakWithGoogle({
+    void speakWithGoogle({
       text: textToSpeak,
       rate: 0.95,
       onEnd: () => setActiveSpeechIdx(null)
@@ -436,17 +424,7 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
     onReset();
   }, [script.id, onReset]);
 
-  const toggleBlank = useCallback((index: number) => {
-    setRevealedBlanks(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(index)) {
-        newSet.delete(index);
-      } else {
-        newSet.add(index);
-      }
-      return newSet;
-    });
-  }, []);
+
 
   const handleBlankReveal = useCallback((blankIndex: number) => {
     // Toggle reveal state
@@ -460,11 +438,11 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
         newSet.add(blankIndex);     // Open popup
 
         // Play audio for the answer when revealing
-        const answerData = script.answerVariations.find(v => v.index === blankIndex);
+        const answerData = getAnswerDataForBlank(script, blankIndex);
         if (answerData) {
           // Small delay allows popup to appear first (better UX)
           setTimeout(() => {
-            speakWithGoogle({
+            void speakWithGoogle({
               text: answerData.answer,
               rate: 0.95
             });
@@ -474,7 +452,7 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
 
       return newSet;
     });
-  }, [script.answerVariations]);
+  }, [script]);
 
   // Handler for navigation buttons
   const handleNavigate = useCallback((scenarioId: string) => {
@@ -622,7 +600,7 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
         attempts.push({
           attemptedAt: Date.now(),
           score: activeRecallState.results.correct.length,
-          totalQuestions: script.activeRecall!.length,
+          totalQuestions: activeRecallQuestionCount,
           timeSpentSeconds: Math.floor((Date.now() - activeRecallState.startTime) / 1000)
         });
 
@@ -630,27 +608,27 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
         progressService.saveProgress(progress);
       }
     }
-  }, [activeRecallState.results, script.id, activeRecallState.startTime]);
+  }, [activeRecallState.results, activeRecallQuestionCount, script.id, activeRecallState.startTime]);
 
   let blankGlobalCounter = -1;
 
   return (
-    <div className="max-w-4xl mx-auto h-[85vh] flex flex-col gap-6 animate-world-entry">
+    <div className="w-full max-w-4xl mx-auto h-[85vh] flex flex-col gap-6 animate-world-entry px-3 sm:px-0">
       {/* Header - Warm Gradient */}
-      <div className="flex justify-between items-center bg-gradient-to-r from-orange-50 via-white to-teal-50 backdrop-blur-md p-4 rounded-3xl border-2 border-orange-100 shadow-sm gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center bg-gradient-to-r from-orange-50 via-white to-teal-50 backdrop-blur-md p-4 rounded-3xl border-2 border-orange-100 shadow-sm gap-3 sm:gap-4">
         <button
           onClick={handleReset}
-          className="group px-5 py-2.5 text-neutral-600 hover:text-primary-600 flex items-center gap-3 font-bold transition-all flex-shrink-0"
+          className="group px-3 sm:px-5 py-2.5 text-neutral-600 hover:text-primary-600 flex items-center justify-center sm:justify-start gap-2 sm:gap-3 font-bold transition-all flex-shrink-0 text-sm sm:text-base"
           title="Back to Library (Cmd/Ctrl + B)"
         >
           <i className="fas fa-chevron-left text-sm group-hover:-translate-x-1 transition-transform"></i>
           Back to Library
         </button>
-        <div className="flex flex-col items-center flex-1">
+        <div className="flex min-w-0 flex-col items-center flex-1 text-center">
           <span className="text-[10px] font-bold text-primary-600 uppercase tracking-wider">{script.category}</span>
-          <h2 className="text-lg font-black text-neutral-800 tracking-tight font-display">{script.topic}</h2>
+          <h2 className="w-full max-w-full truncate text-base sm:text-lg font-black text-neutral-800 tracking-tight font-display">{script.topic}</h2>
         </div>
-        <div className="flex items-center gap-4 flex-shrink-0">
+        <div className="flex items-center justify-center sm:justify-end gap-3 sm:gap-4 flex-shrink-0">
           {/* Navigation Buttons */}
           <NavigationButtons
             currentScenarioId={script.id}
@@ -665,6 +643,12 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
           </div>
         </div>
       </div>
+
+      {script.category === 'Healthcare' && (
+        <div className="rounded-2xl border-2 border-sky-100 bg-sky-50 px-4 py-3 text-sm font-medium leading-relaxed text-sky-900 shadow-sm" role="note" aria-label="Healthcare learning notice">
+          <span className="font-bold">Learning-only healthcare roleplay.</span> Practise English for a GP conversation; this is not medical advice, diagnosis, or treatment guidance.
+        </div>
+      )}
 
       {/* Main Story Area - Warm Gradient */}
       <div className="flex-grow bg-gradient-to-br from-white via-orange-50/20 to-white rounded-[3rem] shadow-2xl shadow-primary-500/10 border-2 border-orange-100 overflow-hidden flex flex-col relative">
@@ -723,15 +707,14 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
                         <React.Fragment key={pIdx}>
                           <span className="font-medium">{part}</span>
                           {pIdx < parts.length - 1 && lineBlanks[pIdx] !== undefined && (() => {
-                            const blankIdx = lineBlanks[pIdx]!;
-                            const answerData = script.answerVariations.find(v => v.index === blankIdx);
+                            const blankIdx = lineBlanks[pIdx];
+                            const answerData = getAnswerDataForBlank(script, blankIdx);
                             const blankMapping = script.blanksInOrder?.[blankIdx];
                             const expectedChunkId = blankMapping?.chunkId;
                             return (
                               <InteractiveBlank
                                 answer={answerData?.answer || '??'}
                                 alternatives={answerData?.alternatives || []}
-                                index={blankIdx}
                                 isRevealed={revealedBlanks.has(blankIdx)}
                                 onReveal={() => handleBlankReveal(blankIdx)}
                                 expectedChunkId={expectedChunkId}
@@ -844,8 +827,10 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
                     // TWEAK 4: Always use blanksInOrder if it exists (even for V1)
                     if (script.blanksInOrder && script.blanksInOrder.length > 0) {
                       // TWEAK 2: Build lookup maps once (O(1) lookups instead of O(n²))
-                      const v2Map = new Map((script.chunkFeedbackV2 || []).map(f => [f.chunkId, f]));
-                      const v1Map = new Map((script.chunkFeedback || []).map(f => [f.chunkId, f]));
+                      const v2Feedback = getV2ChunkFeedback(script);
+                      const v1Feedback = getV1ChunkFeedback(script);
+                      const v2Map = new Map(v2Feedback.map(f => [f.chunkId, f]));
+                      const v1Map = new Map(v1Feedback.map(f => [f.chunkId, f]));
 
                       script.blanksInOrder.forEach((mapping, index) => {
                         // Show if completed OR this index is revealed
@@ -881,16 +866,16 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
                           <div className="flex flex-col items-center justify-center py-12 text-neutral-600">
                             <div className="text-4xl mb-4">📝</div>
                             <p className="font-semibold text-lg">No chunk feedback available</p>
-                            <p className="text-sm mt-2 text-neutral-500">This scenario doesn't have detailed feedback yet</p>
+                            <p className="text-sm mt-2 text-neutral-500">This scenario doesn&apos;t have detailed feedback yet</p>
                           </div>
                         );
                       }
                     }
 
                     // Render feedback cards
-                    return filteredFeedback.map((feedback, idx) => (
+                    return filteredFeedback.map((feedback) => (
                       <FeedbackCard
-                        key={'chunkId' in feedback ? feedback.chunkId : `${(feedback as ChunkFeedback).blankIndex}`}
+                        key={'chunkId' in feedback ? feedback.chunkId : `${(feedback).blankIndex}`}
                         feedback={feedback}
                         isExpanded={false}
                       />
@@ -921,8 +906,7 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
                                 <button
                                   onClick={() => {
                                     // FIX 1: Unified chunk validation (V2 or V1)
-                                    const hasChunks = (script.chunkFeedbackV2 && script.chunkFeedbackV2.length > 0) ||
-                                                      (script.chunkFeedback && script.chunkFeedback.length > 0);
+                                    const hasChunks = getV2ChunkFeedback(script).length > 0 || getV1ChunkFeedback(script).length > 0;
                                     if (!hasChunks) {
                                       console.error('Active Recall requires chunk feedback data (V1 or V2)');
                                       return;
@@ -943,7 +927,7 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
                     <div className="flex flex-col items-center justify-center py-12 text-neutral-600">
                       <div className="text-4xl mb-4">📊</div>
                       <p className="font-semibold text-lg">No pattern summary available</p>
-                      <p className="text-sm mt-2 text-neutral-500">This scenario doesn't have consolidated pattern insights yet</p>
+                      <p className="text-sm mt-2 text-neutral-500">This scenario doesn&apos;t have consolidated pattern insights yet</p>
                     </div>
                   )}
                 </div>
@@ -1025,8 +1009,6 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
 
                   const questionOptions = getQuestionOptions(currentQuestion.id);
                   const selectedChunks = activeRecallState.answers[currentQuestion.id] || [];
-                  const hasAnswer = selectedChunks.length > 0;
-
                   return (
                     <div className="space-y-6">
                       {/* Question Prompt */}
@@ -1090,30 +1072,30 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
                       {/* FIX 7: Score Summary without emojis, with icons instead */}
                       <div className="text-center space-y-4 pb-6 border-b-2 border-neutral-200">
                         <div className={`w-20 h-20 mx-auto rounded-full flex items-center justify-center ${
-                          activeRecallState.results.correct.length === script.activeRecall!.length
+                          activeRecallState.results.correct.length === script.activeRecall.length
                             ? 'bg-success-100 text-success-700'
-                            : activeRecallState.results.correct.length >= script.activeRecall!.length * 0.7
+                            : activeRecallState.results.correct.length >= script.activeRecall.length * 0.7
                             ? 'bg-primary-100 text-primary-700'
                             : 'bg-orange-100 text-orange-700'
                         }`}>
                           <i className={`fas ${
-                            activeRecallState.results.correct.length === script.activeRecall!.length
+                            activeRecallState.results.correct.length === script.activeRecall.length
                               ? 'fa-trophy'
-                              : activeRecallState.results.correct.length >= script.activeRecall!.length * 0.7
+                              : activeRecallState.results.correct.length >= script.activeRecall.length * 0.7
                               ? 'fa-star'
                               : 'fa-chart-line'
                           } text-4xl`}></i>
                         </div>
                         <h3 className="text-3xl font-black text-neutral-800">
-                          {activeRecallState.results.correct.length} / {script.activeRecall!.length} Correct
+                          {activeRecallState.results.correct.length} / {script.activeRecall.length} Correct
                         </h3>
                         <p className="text-xl text-neutral-600">
-                          {Math.round((activeRecallState.results.correct.length / script.activeRecall!.length) * 100)}% Accuracy
+                          {Math.round((activeRecallState.results.correct.length / script.activeRecall.length) * 100)}% Accuracy
                         </p>
                         <p className="text-sm text-neutral-500">
                           {getPerformanceMessage(
                             activeRecallState.results.correct.length,
-                            script.activeRecall!.length
+                            script.activeRecall.length
                           )}
                         </p>
                       </div>
@@ -1121,7 +1103,7 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
                       {/* Question Review */}
                       <div className="space-y-3">
                         <h4 className="font-bold text-neutral-700">Review Your Answers:</h4>
-                        {script.activeRecall!.map((question, idx) => {
+                        {script.activeRecall.map((question, idx) => {
                           const isCorrect = activeRecallState.results!.correct.includes(question.id);
                           const userAnswer = activeRecallState.answers[question.id] || [];
 

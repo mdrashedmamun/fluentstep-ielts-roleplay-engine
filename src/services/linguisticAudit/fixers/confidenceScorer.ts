@@ -11,6 +11,9 @@ export interface ConfidenceScore {
   reason: string;
 }
 
+const HIGH_CONFIDENCE_THRESHOLD: number = FixConfidence.HIGH;
+const MEDIUM_CONFIDENCE_THRESHOLD: number = FixConfidence.MEDIUM;
+
 /**
  * Score the confidence of a fix based on multiple factors
  */
@@ -179,9 +182,9 @@ export function scoreConfidence(params: {
 
   // Determine confidence level
   let level: 'HIGH' | 'MEDIUM' | 'LOW';
-  if (score >= FixConfidence.HIGH) {
+  if (score >= HIGH_CONFIDENCE_THRESHOLD) {
     level = 'HIGH';
-  } else if (score >= FixConfidence.MEDIUM) {
+  } else if (score >= MEDIUM_CONFIDENCE_THRESHOLD) {
     level = 'MEDIUM';
   } else {
     level = 'LOW';
@@ -198,19 +201,19 @@ export function scoreConfidence(params: {
  * Determine if a confidence score warrants auto-fixing
  */
 export function shouldAutoFix(score: ConfidenceScore): boolean {
-  return score.level === 'HIGH' && score.score >= FixConfidence.HIGH;
+  return score.level === 'HIGH' && score.score >= HIGH_CONFIDENCE_THRESHOLD;
 }
 
 /**
  * Determine if a confidence score warrants presenting for user approval
  */
 export function requiresApproval(score: ConfidenceScore): boolean {
-  return score.level === 'MEDIUM' && score.score >= FixConfidence.MEDIUM;
+  return score.level === 'MEDIUM' && score.score >= MEDIUM_CONFIDENCE_THRESHOLD;
 }
 
 /**
  * Determine if a finding should be reported as low-confidence
  */
 export function isLowConfidence(score: ConfidenceScore): boolean {
-  return score.level === 'LOW' && score.score < FixConfidence.MEDIUM;
+  return score.level === 'LOW' && score.score < MEDIUM_CONFIDENCE_THRESHOLD;
 }

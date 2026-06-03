@@ -1,6 +1,19 @@
-import { CURATED_ROLEPLAYS } from '../src/services/staticData';
 import * as fs from 'fs';
 import * as path from 'path';
+import { CURATED_ROLEPLAYS, type RoleplayScript } from '../src/services/staticData';
+
+type DialogueLine = RoleplayScript['dialogue'][number];
+type AnswerVariation = RoleplayScript['answerVariations'][number];
+type DeepDiveHint = {
+  index: number;
+  phrase: string;
+  insight: string;
+};
+
+interface DialogueLineMatch {
+  line: DialogueLine;
+  lineNumber: number;
+}
 
 interface MissingAnswerContext {
   scenarioId: string;
@@ -10,33 +23,53 @@ interface MissingAnswerContext {
     dialogueLine: string;
     dialogueLineNumber: number;
     speaker: string;
-    previousAnswer?: { index: number; answer: string; alternatives: string[] };
-    nextAnswer?: { index: number; answer: string; alternatives: string[] };
-    deepDiveHint?: { phrase: string; insight: string };
-    context: string; // surrounding dialogue for understanding
+    previousAnswer?: AnswerVariation;
+    nextAnswer?: AnswerVariation;
+    deepDiveHint?: DeepDiveHint;
+    context: string;
   }[];
 }
 
-// Helper to extract surrounding dialogue context
-function getDialogueContext(scenario: any, blankIndex: number): string {
-  let currentBlank = 0;
-  let contextLines: string[] = [];
+const BLANK_PATTERN = /________/g;
 
-  scenario.dialogue.forEach((line: any, lineIdx: number) => {
-    const blanksInLine = (line.text.match(/________/g) || []).length;
+function writeOut(message = ''): void {
+  process.stdout.write(`${message}\n`);
+}
+
+function countBlanks(text: string): number {
+  return text.match(BLANK_PATTERN)?.length ?? 0;
+}
+
+function getDeepDiveHint(scenario: RoleplayScript, blankIndex: number): DeepDiveHint | undefined {
+  if (!('deepDive' in scenario) || !Array.isArray(scenario.deepDive)) {
+    return undefined;
+  }
+
+  return scenario.deepDive.find((deepDiveItem) => deepDiveItem.index === blankIndex);
+}
+
+function getDialogueContext(scenario: RoleplayScript, blankIndex: number): string {
+  let currentBlank = 0;
+  const contextLines: string[] = [];
+
+  scenario.dialogue.forEach((line, lineIndex) => {
+    const blanksInLine = countBlanks(line.text);
     const lineStart = currentBlank + 1;
     const lineEnd = currentBlank + blanksInLine;
     currentBlank += blanksInLine;
 
-    // Include lines around the target blank
     if (lineStart <= blankIndex && lineEnd >= blankIndex) {
-      // Include 1 line before and after for context
-      if (lineIdx > 0) {
-        contextLines.push(`(prev) ${scenario.dialogue[lineIdx - 1].speaker}: ${scenario.dialogue[lineIdx - 1].text}`);
+      const previousLine = scenario.dialogue[lineIndex - 1];
+      const nextLine = scenario.dialogue[lineIndex + 1];
+
+      if (previousLine) {
+        contextLines.push(`(prev) ${previousLine.speaker}: ${previousLine.text}`);
       }
+
       contextLines.push(`${line.speaker}: ${line.text}`);
-      if (lineIdx < scenario.dialogue.length - 1) {
-        contextLines.push(`(next) ${scenario.dialogue[lineIdx + 1].speaker}: ${scenario.dialogue[lineIdx + 1].text}`);
+
+      if (nextLine) {
+        contextLines.push(`(next) ${nextLine.speaker}: ${nextLine.text}`);
       }
     }
   });
@@ -44,18 +77,17 @@ function getDialogueContext(scenario: any, blankIndex: number): string {
   return contextLines.join('\n');
 }
 
-// Helper to find dialogue line containing a blank index
-function findDialogueLine(scenario: any, blankIndex: number): { line: any; lineNumber: number } | null {
+function findDialogueLine(scenario: RoleplayScript, blankIndex: number): DialogueLineMatch | null {
   let currentBlank = 0;
 
-  for (let lineIdx = 0; lineIdx < scenario.dialogue.length; lineIdx++) {
-    const line = scenario.dialogue[lineIdx];
-    const blanksInLine = (line.text.match(/________/g) || []).length;
+  for (const [lineIndex, line] of scenario.dialogue.entries()) {
+    const blanksInLine = countBlanks(line.text);
 
-    for (let i = 0; i < blanksInLine; i++) {
-      currentBlank++;
+    for (let blankOffset = 0; blankOffset < blanksInLine; blankOffset += 1) {
+      currentBlank += 1;
+
       if (currentBlank === blankIndex) {
-        return { line, lineNumber: lineIdx + 1 };
+        return { line, lineNumber: lineIndex + 1 };
       }
     }
   }
@@ -63,104 +95,121 @@ function findDialogueLine(scenario: any, blankIndex: number): { line: any; lineN
   return null;
 }
 
-// Generate missing answer report
-const reportData: MissingAnswerContext[] = [];
+function getPreviousAnswer(answerVariations: AnswerVariation[], blankIndex: number): AnswerVariation | undefined {
+  return answerVariations
+    .filter((answerVariation) => answerVariation.index < blankIndex)
+    .sort((first, second) => second.index - first.index)[0];
+}
 
-CURATED_ROLEPLAYS.forEach(scenario => {
-  // Count blanks
-  const blankCount = scenario.dialogue.reduce((sum: number, line: any) => {
-    return sum + (line.text.match(/________/g) || []).length;
-  }, 0);
+function getNextAnswer(answerVariations: AnswerVariation[], blankIndex: number): AnswerVariation | undefined {
+  return answerVariations
+    .filter((answerVariation) => answerVariation.index > blankIndex)
+    .sort((first, second) => first.index - second.index)[0];
+}
 
-  // Identify missing indices
-  const presentIndices = new Set(scenario.answerVariations.map((av: any) => av.index));
+function getMissingIndices(scenario: RoleplayScript): number[] {
+  const blankCount = scenario.dialogue.reduce((sum, line) => sum + countBlanks(line.text), 0);
+  const presentIndices = new Set(scenario.answerVariations.map((answerVariation) => answerVariation.index));
   const missingIndices: number[] = [];
 
-  for (let i = 1; i <= blankCount; i++) {
-    if (!presentIndices.has(i)) {
-      missingIndices.push(i);
+  for (let index = 1; index <= blankCount; index += 1) {
+    if (!presentIndices.has(index)) {
+      missingIndices.push(index);
     }
   }
 
-  if (missingIndices.length > 0) {
-    const missingAnswers = missingIndices.map(index => {
-      const dialogueInfo = findDialogueLine(scenario, index);
-      const context = getDialogueContext(scenario, index);
+  return missingIndices;
+}
 
-      // Find adjacent answer variations
-      const previousAnswer = scenario.answerVariations
-        .filter((av: any) => av.index < index)
-        .sort((a: any, b: any) => b.index - a.index)[0];
+function buildMissingAnswerContext(scenario: RoleplayScript, index: number): MissingAnswerContext['missingAnswers'][number] {
+  const dialogueInfo = findDialogueLine(scenario, index);
 
-      const nextAnswer = scenario.answerVariations
-        .filter((av: any) => av.index > index)
-        .sort((a: any, b: any) => a.index - b.index)[0];
+  return {
+    index,
+    dialogueLine: dialogueInfo?.line.text ?? '(line not found)',
+    dialogueLineNumber: dialogueInfo?.lineNumber ?? -1,
+    speaker: dialogueInfo?.line.speaker ?? '(unknown)',
+    previousAnswer: getPreviousAnswer(scenario.answerVariations, index),
+    nextAnswer: getNextAnswer(scenario.answerVariations, index),
+    deepDiveHint: getDeepDiveHint(scenario, index),
+    context: getDialogueContext(scenario, index)
+  };
+}
 
-      // Find deepDive hint
-      const deepDiveHint = scenario.deepDive?.find((dd: any) => dd.index === index);
+function buildReportData(scenarios: RoleplayScript[]): MissingAnswerContext[] {
+  return scenarios.reduce<MissingAnswerContext[]>((report, scenario) => {
+    const missingIndices = getMissingIndices(scenario);
 
-      return {
-        index,
-        dialogueLine: dialogueInfo?.line.text || '(line not found)',
-        dialogueLineNumber: dialogueInfo?.lineNumber || -1,
-        speaker: dialogueInfo?.line.speaker || '(unknown)',
-        previousAnswer,
-        nextAnswer,
-        deepDiveHint,
-        context
-      };
-    });
+    if (missingIndices.length === 0) {
+      return report;
+    }
 
-    reportData.push({
+    report.push({
       scenarioId: scenario.id,
       topic: scenario.topic,
-      missingAnswers
+      missingAnswers: missingIndices.map((index) => buildMissingAnswerContext(scenario, index))
     });
+
+    return report;
+  }, []);
+}
+
+function printMissingAnswer(missing: MissingAnswerContext['missingAnswers'][number]): void {
+  writeOut(`   Index ${missing.index}:`);
+  writeOut(`   Dialogue (Line ${missing.dialogueLineNumber}): "${missing.dialogueLine}"`);
+  writeOut(`   Speaker: ${missing.speaker}`);
+
+  if (missing.previousAnswer) {
+    writeOut(`   Previous answer (index ${missing.previousAnswer.index}): "${missing.previousAnswer.answer}"`);
+    writeOut(`      Alternatives: ${missing.previousAnswer.alternatives.join(', ')}`);
   }
-});
 
-// Write report to file
-const reportPath = path.join(process.cwd(), 'missing-answers-report.json');
-fs.writeFileSync(reportPath, JSON.stringify(reportData, null, 2));
+  if (missing.nextAnswer) {
+    writeOut(`   Next answer (index ${missing.nextAnswer.index}): "${missing.nextAnswer.answer}"`);
+    writeOut(`      Alternatives: ${missing.nextAnswer.alternatives.join(', ')}`);
+  }
 
-console.log('\n=== Missing Answer Variations Report ===\n');
-console.log(`Generated report for ${reportData.length} scenarios with missing answers.\n`);
+  if (missing.deepDiveHint) {
+    writeOut(`   DeepDive hint: "${missing.deepDiveHint.phrase}"`);
+    writeOut(`      Insight: ${missing.deepDiveHint.insight}`);
+  }
 
-reportData.forEach(scenario => {
-  console.log(`\n📋 ${scenario.scenarioId} - ${scenario.topic}`);
-  console.log(`   Missing: ${scenario.missingAnswers.length} answer(s)\n`);
-
-  scenario.missingAnswers.forEach(missing => {
-    console.log(`   Index ${missing.index}:`);
-    console.log(`   Dialogue (Line ${missing.dialogueLineNumber}): "${missing.dialogueLine}"`);
-    console.log(`   Speaker: ${missing.speaker}`);
-
-    if (missing.previousAnswer) {
-      console.log(`   📌 Previous answer (index ${missing.previousAnswer.index}): "${missing.previousAnswer.answer}"`);
-      console.log(`      Alternatives: ${missing.previousAnswer.alternatives.join(', ')}`);
-    }
-
-    if (missing.nextAnswer) {
-      console.log(`   📌 Next answer (index ${missing.nextAnswer.index}): "${missing.nextAnswer.answer}"`);
-      console.log(`      Alternatives: ${missing.nextAnswer.alternatives.join(', ')}`);
-    }
-
-    if (missing.deepDiveHint) {
-      console.log(`   💡 DeepDive hint: "${missing.deepDiveHint.phrase}"`);
-      console.log(`      Insight: ${missing.deepDiveHint.insight}`);
-    }
-
-    console.log(`\n   📍 Dialogue Context:`);
-    missing.context.split('\n').forEach(line => {
-      console.log(`      ${line}`);
-    });
-
-    console.log();
+  writeOut();
+  writeOut('   Dialogue Context:');
+  missing.context.split('\n').forEach((line) => {
+    writeOut(`      ${line}`);
   });
-});
 
-console.log(`\n✅ Report saved to: ${reportPath}\n`);
-console.log('Next steps:');
-console.log('1. Review the report file for missing answers and context');
-console.log('2. Manually add the missing answer variations to services/staticData.ts');
-console.log('3. Run "npm run validate" to verify the fixes\n');
+  writeOut();
+}
+
+function printReport(reportData: MissingAnswerContext[], reportPath: string): void {
+  writeOut();
+  writeOut('=== Missing Answer Variations Report ===');
+  writeOut();
+  writeOut(`Generated report for ${reportData.length} scenarios with missing answers.`);
+
+  reportData.forEach((scenario) => {
+    writeOut();
+    writeOut(`${scenario.scenarioId} - ${scenario.topic}`);
+    writeOut(`   Missing: ${scenario.missingAnswers.length} answer(s)`);
+    writeOut();
+
+    scenario.missingAnswers.forEach(printMissingAnswer);
+  });
+
+  writeOut();
+  writeOut(`Report saved to: ${reportPath}`);
+  writeOut();
+  writeOut('Next steps:');
+  writeOut('1. Review the report file for missing answers and context');
+  writeOut('2. Manually add the missing answer variations to src/services/staticData.ts');
+  writeOut('3. Run "npm run validate" to verify the fixes');
+  writeOut();
+}
+
+const reportData = buildReportData(CURATED_ROLEPLAYS);
+const reportPath = path.join(process.cwd(), 'missing-answers-report.json');
+
+fs.writeFileSync(reportPath, JSON.stringify(reportData, null, 2));
+printReport(reportData, reportPath);

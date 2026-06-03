@@ -3,7 +3,8 @@
  * Integrates with existing qaAgent for 4-gate linguistic validation
  */
 
-import { validateHealthcareSafety, ValidationError, ParsedPackage } from './packageValidator';
+import { validateHealthcareSafety } from './packageValidator';
+import type { ValidationError, ParsedPackage } from './packageValidator';
 
 export interface ReviewerOutput {
     passed: boolean;
@@ -12,11 +13,36 @@ export interface ReviewerOutput {
     reviewerName: string;
 }
 
+interface ScenarioForQA {
+    id: string;
+    category: string;
+    topic: string;
+    context: string;
+    characters: ParsedPackage['characters'];
+    dialogue: ParsedPackage['dialogue'];
+    answerVariations: Array<{
+        index: number;
+        answer: string;
+        alternatives: string[];
+    }>;
+    chunkFeedbackV2: Array<{
+        chunkId: string;
+        native: string;
+        learner: ParsedPackage['chunkFeedback'][number]['learner'];
+        examples: string[];
+    }>;
+}
+
+const writeLine = (message: string): void => {
+    process.stdout.write(`${message}\n`);
+};
+
 /**
  * Parse markdown package into structured format
  */
 function parsePackageMarkdown(markdown: string): ParsedPackage {
     // TODO: Full markdown parser implementation
+    void markdown;
     return {
         category: 'Healthcare',
         context: '',
@@ -35,7 +61,7 @@ function parsePackageMarkdown(markdown: string): ParsedPackage {
  * Convert parsed package to scenario format for QA Agent
  * Stub implementation - actual implementation would convert to RoleplayScript
  */
-function convertPackageToScenario(pkg: ParsedPackage): any {
+function convertPackageToScenario(pkg: ParsedPackage): ScenarioForQA {
     return {
         id: 'temp-' + Date.now(),
         category: pkg.category,
@@ -43,7 +69,7 @@ function convertPackageToScenario(pkg: ParsedPackage): any {
         context: pkg.context,
         characters: pkg.characters,
         dialogue: pkg.dialogue,
-        answerVariations: pkg.answers.map((a, i) => ({
+        answerVariations: pkg.answers.map((a) => ({
             index: a.index,
             answer: a.answer,
             alternatives: a.alternatives
@@ -61,10 +87,11 @@ function convertPackageToScenario(pkg: ParsedPackage): any {
  * Run QA Agent checks (would call actual QA agent)
  * Stub implementation - actual would execute qaAgent logic
  */
-async function runQAAgentChecks(scenario: any): Promise<{ criticalIssues: ValidationError[]; warnings: ValidationError[] }> {
+function runQAAgentChecks(scenario: ScenarioForQA): Promise<{ criticalIssues: ValidationError[]; warnings: ValidationError[] }> {
     // TODO: Integrate with actual QA Agent from scripts/qaAgent.ts
     // For now, return empty (QA Agent would check 4 gates: Structural, Pragmatic, Chunk, Register)
-    return { criticalIssues: [], warnings: [] };
+    void scenario;
+    return Promise.resolve({ criticalIssues: [], warnings: [] });
 }
 
 /**
@@ -72,7 +99,7 @@ async function runQAAgentChecks(scenario: any): Promise<{ criticalIssues: Valida
  * Checks: Healthcare safety + QA Agent 4-gate system
  */
 export async function runLinguisticReview(packageMarkdown: string): Promise<ReviewerOutput> {
-    console.log('  🔍 Reviewer 3: Linguistic QA...');
+    writeLine('  🔍 Reviewer 3: Linguistic QA...');
 
     const parsed = parsePackageMarkdown(packageMarkdown);
 
@@ -86,11 +113,11 @@ export async function runLinguisticReview(packageMarkdown: string): Promise<Revi
     const allCriticalIssues = [...healthcareErrors, ...qaResults.criticalIssues];
     const passed = allCriticalIssues.length === 0;
 
-    console.log(`    ${passed ? '✅' : '❌'} ${allCriticalIssues.length} critical issues, ${qaResults.warnings.length} warnings`);
+    writeLine(`    ${passed ? '✅' : '❌'} ${allCriticalIssues.length} critical issues, ${qaResults.warnings.length} warnings`);
 
     if (!passed && allCriticalIssues.length > 0) {
         const criticalRules = [...new Set(allCriticalIssues.map(e => e.rule))];
-        console.log(`       Issues: ${criticalRules.join(', ')}`);
+        writeLine(`       Issues: ${criticalRules.join(', ')}`);
     }
 
     return {
@@ -104,17 +131,18 @@ export async function runLinguisticReview(packageMarkdown: string): Promise<Revi
 /**
  * Analyze linguistic patterns in dialogue
  */
-function analyzeDialogueLinguistics(dialogue: Array<{ speaker: string; text: string }>): {
+export function analyzeDialogueLinguistics(dialogue: Array<{ speaker: string; text: string }>): {
     avgWordsPerLine: number;
     uniqueWords: number;
     contractionCount: number;
     hasFillerWords: boolean;
 } {
     const allText = dialogue.map(d => d.text).join(' ');
-    const words = allText.toLowerCase().split(/\s+/);
+    const words = allText.toLowerCase().split(/\s+/).filter(Boolean);
+    const lineCount = Math.max(dialogue.length, 1);
 
     return {
-        avgWordsPerLine: words.length / dialogue.length,
+        avgWordsPerLine: words.length / lineCount,
         uniqueWords: new Set(words).size,
         contractionCount: (allText.match(/'\w+/g) || []).length,
         hasFillerWords: /\b(uh|um|like|you know|kind of|sort of)\b/i.test(allText)

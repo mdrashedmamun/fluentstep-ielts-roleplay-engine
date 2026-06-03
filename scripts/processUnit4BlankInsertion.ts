@@ -402,7 +402,7 @@ export function generateUnit4Scenarios(): Unit4RoleplayScript[] {
     }
   ];
 
-  return dialogueData.map((data, idx) => {
+  return dialogueData.map((data) => {
     // Parse dialogue
     const dialogue = data.rawDialogue.map(line => {
       const match = line.match(/^([^:]+):\s*(.*)$/);

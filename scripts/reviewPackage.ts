@@ -9,9 +9,26 @@ import { runReviewersInParallel, formatAggregatedReview } from './contentGenerat
 import fs from 'fs';
 import path from 'path';
 
-function parseArgs(): { file?: string; help?: boolean } {
+interface ReviewPackageArgs {
+    file?: string;
+    help?: boolean;
+}
+
+const writeLine = (message = ''): void => {
+    process.stdout.write(`${message}\n`);
+};
+
+const writeError = (message: string): void => {
+    process.stderr.write(`${message}\n`);
+};
+
+const getErrorMessage = (error: unknown): string => (
+    error instanceof Error ? error.message : String(error)
+);
+
+function parseArgs(): ReviewPackageArgs {
     const args = process.argv.slice(2);
-    const result: any = {};
+    const result: ReviewPackageArgs = {};
 
     for (const arg of args) {
         if (arg === '--help' || arg === '-h') {
@@ -25,7 +42,7 @@ function parseArgs(): { file?: string; help?: boolean } {
 }
 
 function showHelp() {
-    console.log(`
+    writeLine(`
 📋 Package Reviewer
 
 Review a generated content package using 3-reviewer system:
@@ -60,7 +77,7 @@ async function main() {
     }
 
     if (!args.file) {
-        console.error('❌ Missing required argument: --file=FILENAME');
+        writeError('❌ Missing required argument: --file=FILENAME');
         showHelp();
         process.exit(1);
     }
@@ -69,46 +86,46 @@ async function main() {
     const filePath = path.join('exports', 'generated', args.file);
 
     if (!fs.existsSync(filePath)) {
-        console.error(`❌ File not found: ${filePath}`);
+        writeError(`❌ File not found: ${filePath}`);
         process.exit(1);
     }
 
     // Read package markdown
     const packageMarkdown = fs.readFileSync(filePath, 'utf-8');
 
-    console.log(`\n${'═'.repeat(60)}`);
-    console.log('📋 PACKAGE REVIEW SYSTEM');
-    console.log(`${'═'.repeat(60)}\n`);
+    writeLine(`\n${'═'.repeat(60)}`);
+    writeLine('📋 PACKAGE REVIEW SYSTEM');
+    writeLine(`${'═'.repeat(60)}\n`);
 
-    console.log(`📄 Package: ${args.file}`);
-    console.log(`📊 Size: ${(packageMarkdown.length / 1024).toFixed(1)} KB\n`);
+    writeLine(`📄 Package: ${args.file}`);
+    writeLine(`📊 Size: ${(packageMarkdown.length / 1024).toFixed(1)} KB\n`);
 
     // Run 3 reviewers in parallel
     const review = await runReviewersInParallel(packageMarkdown);
 
     // Display aggregated results
-    console.log(formatAggregatedReview(review));
+    writeLine(formatAggregatedReview(review));
 
     // Summary
     if (review.passed) {
-        console.log('✅ PACKAGE APPROVED - Ready for import to staticData.ts\n');
-        console.log('📥 Next step:');
-        console.log(`   npm run import:enrichments -- --file=${args.file}`);
+        writeLine('✅ PACKAGE APPROVED - Ready for import to staticData.ts\n');
+        writeLine('📥 Next step:');
+        writeLine(`   npm run import:enrichments -- --file=${args.file}`);
     } else {
-        console.log(`⚠️  PACKAGE NEEDS REVISION\n`);
-        console.log(`Critical Issues: ${review.criticalIssueCount}`);
+        writeLine(`⚠️  PACKAGE NEEDS REVISION\n`);
+        writeLine(`Critical Issues: ${review.criticalIssueCount}`);
         if (review.warningCount > 0) {
-            console.log(`Warnings: ${review.warningCount}`);
+            writeLine(`Warnings: ${review.warningCount}`);
         }
-        console.log('\n📝 Next step:');
-        console.log('   npm run create:package -- --category=... --topic=...');
-        console.log('   (Generate a new attempt with LLM)');
+        writeLine('\n📝 Next step:');
+        writeLine('   npm run create:package -- --category=... --topic=...');
+        writeLine('   (Generate a new attempt with LLM)');
     }
 
     process.exit(review.passed ? 0 : 1);
 }
 
-main().catch(err => {
-    console.error('❌ Fatal error:', err.message);
+main().catch((error: unknown) => {
+    writeError(`❌ Fatal error: ${getErrorMessage(error)}`);
     process.exit(1);
 });

@@ -35,9 +35,6 @@ const SPEAKING_PATTERN =
 const SPEAKER_PATTERN =
   /^(Person\s+[A-Z]|Speaker\s+\d+|[A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)\s*:\s*(.+)$/gm;
 
-// Helper pattern to find section boundaries
-const SECTION_BOUNDARY = /\n\n(?=(?:Grammar|Vocabulary|Writing|Reading|Unit\s+\d+|Everyday|Listening|Speaking))/i;
-
 /**
  * Detect Everyday English sections
  */

@@ -18,7 +18,6 @@ import { promises as fs } from 'fs';
 import * as path from 'path';
 import {
   getCurrentState,
-  getStagingSummary,
   printStagingSummary,
   moveScenario,
   getStateFilePath,
@@ -28,6 +27,18 @@ import { forceReleaseLock } from './utils/fileLocking.js';
 
 const STAGING_BASE = '.staging';
 const LOCK_FILE = path.join(STAGING_BASE, '.import.lock');
+
+const writeLine = (message = ''): void => {
+  process.stdout.write(`${message}\n`);
+};
+
+const writeError = (message: string): void => {
+  process.stderr.write(`${message}\n`);
+};
+
+const getErrorMessage = (error: unknown): string => (
+  error instanceof Error ? error.message : String(error)
+);
 
 async function handleCommand(command: string, args: Map<string, string>): Promise<void> {
   switch (command) {
@@ -53,7 +64,7 @@ async function handleCommand(command: string, args: Map<string, string>): Promis
       printHelp();
       break;
     default:
-      console.error(`Unknown command: ${command}`);
+      writeError(`Unknown command: ${command}`);
       printHelp();
       process.exit(1);
   }
@@ -61,7 +72,7 @@ async function handleCommand(command: string, args: Map<string, string>): Promis
 
 async function createScenario(scenarioId?: string): Promise<void> {
   if (!scenarioId) {
-    console.error('❌ Scenario ID required: stage:create --id=scenario-1');
+    writeError('❌ Scenario ID required: stage:create --id=scenario-1');
     process.exit(1);
   }
 
@@ -70,7 +81,7 @@ async function createScenario(scenarioId?: string): Promise<void> {
   try {
     // Check if already exists
     await fs.access(filePath);
-    console.error(`❌ Scenario already exists: ${scenarioId}`);
+    writeError(`❌ Scenario already exists: ${scenarioId}`);
     process.exit(1);
   } catch {
     // File doesn't exist, that's good
@@ -133,17 +144,17 @@ Blank 1: [answer option B]
     await fs.mkdir(path.dirname(filePath), { recursive: true });
     await fs.writeFile(filePath, template, 'utf-8');
 
-    console.log(`✅ Created scenario template: ${filePath}`);
-    console.log(`📝 Edit the file to add content, then run: npm run stage:submit --id=${scenarioId}`);
+    writeLine(`✅ Created scenario template: ${filePath}`);
+    writeLine(`📝 Edit the file to add content, then run: npm run stage:submit --id=${scenarioId}`);
   } catch (error) {
-    console.error('❌ Failed to create scenario:', error);
+    writeError('❌ Failed to create scenario:', error);
     process.exit(1);
   }
 }
 
 async function submitForReview(scenarioId?: string): Promise<void> {
   if (!scenarioId) {
-    console.error('❌ Scenario ID required: stage:submit --id=scenario-1');
+    writeError('❌ Scenario ID required: stage:submit --id=scenario-1');
     process.exit(1);
   }
 
@@ -151,28 +162,28 @@ async function submitForReview(scenarioId?: string): Promise<void> {
     const currentState = await getCurrentState(scenarioId);
 
     if (!currentState) {
-      console.error(`❌ Scenario not found: ${scenarioId}`);
+      writeError(`❌ Scenario not found: ${scenarioId}`);
       process.exit(1);
     }
 
     if (currentState === 'ready-for-review') {
-      console.log(`ℹ️  Scenario already in ready-for-review: ${scenarioId}`);
-      console.log('   Run: npm run stage:validate to start validation');
+      writeLine(`ℹ️  Scenario already in ready-for-review: ${scenarioId}`);
+      writeLine('   Run: npm run stage:validate to start validation');
       return;
     }
 
     if (currentState === 'in-progress') {
-      console.log(`📤 Submitting ${scenarioId} for review...`);
+      writeLine(`📤 Submitting ${scenarioId} for review...`);
       await moveScenario(scenarioId, 'in-progress', 'ready-for-review');
-      console.log(`✅ Submitted for review`);
-      console.log('   Next: npm run stage:validate to run validation pipeline');
+      writeLine(`✅ Submitted for review`);
+      writeLine('   Next: npm run stage:validate to run validation pipeline');
     } else {
-      console.error(`❌ Cannot submit from state: ${currentState}`);
-      console.error('   Scenario must be in in-progress state');
+      writeError(`❌ Cannot submit from state: ${currentState}`);
+      writeError('   Scenario must be in in-progress state');
       process.exit(1);
     }
   } catch (error) {
-    console.error('❌ Failed to submit:', error);
+    writeError('❌ Failed to submit:', error);
     process.exit(1);
   }
 }
@@ -184,51 +195,51 @@ async function printStatus(): Promise<void> {
 async function listReady(): Promise<void> {
   const ready = await listScenariosInState('ready-for-review');
 
-  console.log('\n🔍 SCENARIOS READY FOR REVIEW:');
-  console.log('='.repeat(50));
+  writeLine('\n🔍 SCENARIOS READY FOR REVIEW:');
+  writeLine('='.repeat(50));
 
   if (ready.length === 0) {
-    console.log('(none)');
+    writeLine('(none)');
   } else {
-    ready.forEach((s) => console.log(`  - ${s}`));
+    ready.forEach((s) => writeLine(`  - ${s}`));
   }
 
-  console.log('');
+  writeLine('');
 }
 
 async function listApproved(): Promise<void> {
   const approved = await listScenariosInState('approved');
 
-  console.log('\n✅ APPROVED SCENARIOS (ready to import):');
-  console.log('='.repeat(50));
+  writeLine('\n✅ APPROVED SCENARIOS (ready to import):');
+  writeLine('='.repeat(50));
 
   if (approved.length === 0) {
-    console.log('(none)');
+    writeLine('(none)');
   } else {
-    approved.forEach((s) => console.log(`  - ${s}`));
+    approved.forEach((s) => writeLine(`  - ${s}`));
   }
 
-  console.log('\nRun: npm run stage:import');
-  console.log('');
+  writeLine('\nRun: npm run stage:import');
+  writeLine('');
 }
 
 async function forceUnlock(): Promise<void> {
-  console.warn('⚠️  FORCE UNLOCK - Use only if import process crashed');
-  console.warn(
+  writeError('⚠️  FORCE UNLOCK - Use only if import process crashed');
+  writeError(
     'This should only be used as an emergency measure if a lock is stuck.\n'
   );
 
   try {
     await forceReleaseLock(LOCK_FILE);
-    console.log('✅ Lock released');
+    writeLine('✅ Lock released');
   } catch (error) {
-    console.error('❌ Failed to release lock:', error);
+    writeError('❌ Failed to release lock:', error);
     process.exit(1);
   }
 }
 
 function printHelp(): void {
-  console.log(`
+  writeLine(`
 ╔════════════════════════════════════════════════════════════════╗
 ║              STAGING WORKFLOW - CLI HELPER                     ║
 ╚════════════════════════════════════════════════════════════════╝
@@ -287,7 +298,7 @@ for (const arg of args.slice(1)) {
   }
 }
 
-handleCommand(command, argMap).catch((error) => {
-  console.error('❌ Error:', error.message);
+handleCommand(command, argMap).catch((error: unknown) => {
+  writeError(`❌ Error: ${getErrorMessage(error)}`);
   process.exit(1);
 });

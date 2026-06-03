@@ -17,7 +17,11 @@ const CORRUPTION_PATTERNS = [
   'CORRUPTION DETECTED',
 ];
 
-async function detectCorruption(): Promise<void> {
+const writeLine = (message = ''): void => {
+  process.stdout.write(`${message}\n`);
+};
+
+function detectCorruption(): void {
   try {
     const content = readFileSync(STATIC_DATA_PATH, 'utf-8');
     const lines = content.split('\n');
@@ -51,7 +55,7 @@ async function detectCorruption(): Promise<void> {
       process.exit(1);
     }
 
-    console.log('✅ Data integrity check passed - no corruption detected');
+    writeLine('✅ Data integrity check passed - no corruption detected');
     process.exit(0);
   } catch (error) {
     console.error('❌ Error reading staticData.ts:', error);

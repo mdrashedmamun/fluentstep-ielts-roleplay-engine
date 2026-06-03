@@ -30,7 +30,6 @@ function parseLOCKEDChunks() {
   const bucketB: Set<string> = new Set();
 
   const lines = UNIVERSAL_CHUNKS.split('\n');
-  let currentSection = '';
   let inBucketA = true;
 
   for (const line of lines) {
@@ -183,7 +182,6 @@ export function suggestChunkAlternatives(answer: string): string[] {
 
   const answerWords = answer.toLowerCase().split(/\s+/);
   for (const chunk of allChunks) {
-    const chunkWords = chunk.split(/\s+/);
 
     // Check for semantic overlap
     const overlap = answerWords.filter(w => chunk.includes(w)).length;

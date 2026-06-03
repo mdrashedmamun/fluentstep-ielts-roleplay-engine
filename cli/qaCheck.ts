@@ -16,7 +16,6 @@
 import { CURATED_ROLEPLAYS } from '../src/services/staticData';
 import { runQACheck, formatQAReport, generateQASummary, QAReport } from '../scripts/qaAgent';
 import { analyzeChunkReuseAcrossScenarios, getChunkReuseReport } from '../scripts/chunkReuseEnforcer';
-import { getStructuralAnalysisReport } from '../scripts/structuralDisciplineValidator';
 
 interface CLIOptions {
   scenario?: string;
@@ -26,13 +25,25 @@ interface CLIOptions {
   help: boolean;
 }
 
+const writeLine = (message = ''): void => {
+  process.stdout.write(`${message}\n`);
+};
+
+const writeError = (message: string): void => {
+  process.stderr.write(`${message}\n`);
+};
+
+const getErrorMessage = (error: unknown): string => (
+  error instanceof Error ? error.message : String(error)
+);
+
 /**
  * Parse CLI arguments
  */
 function parseArgs(): CLIOptions {
   const args = process.argv.slice(2);
   const options: CLIOptions = {
-    strict: false,
+    strict: process.env.npm_config_strict === "true",
     verbose: false,
     report: false,
     help: false
@@ -59,7 +70,7 @@ function parseArgs(): CLIOptions {
  * Print help message
  */
 function printHelp(): void {
-  console.log(`
+  writeLine(`
 ╔═══════════════════════════════════════════════════════════════╗
 ║                        QA CHECK COMMAND                       ║
 ╚═══════════════════════════════════════════════════════════════╝
@@ -92,7 +103,7 @@ For more information, see the QA Agent documentation.
 /**
  * Main function
  */
-async function main(): Promise<void> {
+function main(): void {
   const options = parseArgs();
 
   if (options.help) {
@@ -100,7 +111,7 @@ async function main(): Promise<void> {
     process.exit(0);
   }
 
-  console.log('\n🔍 FluentStep QA Agent\n');
+  writeLine('\n🔍 FluentStep QA Agent\n');
 
   // Get scenarios to check
   let scenarios = CURATED_ROLEPLAYS;
@@ -108,8 +119,8 @@ async function main(): Promise<void> {
   if (options.scenario) {
     const scenario = CURATED_ROLEPLAYS.find(s => s.id === options.scenario);
     if (!scenario) {
-      console.error(`❌ Scenario not found: ${options.scenario}`);
-      console.error(`Available scenarios: ${CURATED_ROLEPLAYS.map(s => s.id).join(', ')}`);
+      writeError(`❌ Scenario not found: ${options.scenario}`);
+      writeError(`Available scenarios: ${CURATED_ROLEPLAYS.map(s => s.id).join(', ')}`);
       process.exit(2);
     }
     scenarios = [scenario];
@@ -128,13 +139,13 @@ async function main(): Promise<void> {
     }
 
     if (options.verbose || options.scenario) {
-      console.log(formatQAReport(report));
+      writeLine(formatQAReport(report));
     }
   }
 
   // Print summary
   if (!options.scenario) {
-    console.log(generateQASummary(reports));
+    writeLine(generateQASummary(reports));
   }
 
   // Strict mode: fail on warnings too
@@ -143,34 +154,36 @@ async function main(): Promise<void> {
     : reports.filter(r => !r.passed);
 
   if (failedStrict.length > 0 && options.strict) {
-    console.log('\n⚠️  STRICT MODE: Failed due to warnings or critical issues');
+    writeLine('\n⚠️  STRICT MODE: Failed due to warnings or critical issues');
     allPassed = false;
   }
 
   // Generate chunk reuse report if requested
   if (options.report) {
-    console.log('\n' + getChunkReuseReport(scenarios));
+    writeLine('\n' + getChunkReuseReport(scenarios));
   }
 
   // Chunk reuse enforcement summary
   const chunkReuseReport = analyzeChunkReuseAcrossScenarios(scenarios);
   if (chunkReuseReport.totalIssues > 0) {
-    console.log(`\n⚠️  Chunk reuse issues found: ${chunkReuseReport.totalIssues}`);
-    console.log(`   Recommendations: ${chunkReuseReport.recommendations.join('; ')}`);
+    writeLine(`\n⚠️  Chunk reuse issues found: ${chunkReuseReport.totalIssues}`);
+    writeLine(`   Recommendations: ${chunkReuseReport.recommendations.join('; ')}`);
   }
 
   // Exit with appropriate code
   if (allPassed) {
-    console.log('\n✅ QA CHECK PASSED\n');
+    writeLine('\n✅ QA CHECK PASSED\n');
     process.exit(0);
   } else {
-    console.log('\n❌ QA CHECK FAILED\n');
+    writeLine('\n❌ QA CHECK FAILED\n');
     process.exit(1);
   }
 }
 
 // Run
-main().catch(error => {
-  console.error('❌ QA Agent Error:', error);
+try {
+  main();
+} catch (error) {
+  writeError(`❌ QA Agent Error: ${getErrorMessage(error)}`);
   process.exit(2);
-});
+}

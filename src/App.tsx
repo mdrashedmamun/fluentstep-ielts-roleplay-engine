@@ -1,7 +1,6 @@
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AppView } from './types';
 import Layout from './components/Layout';
 import TopicSelector from './components/TopicSelector';
 import RoleplayViewer from './components/RoleplayViewer';
@@ -9,7 +8,20 @@ import { OnboardingModal } from './components/OnboardingModal';
 import { KeyboardShortcutsModal } from './components/KeyboardShortcutsModal';
 import ErrorBoundary from './components/ErrorBoundary';
 import { useKeyboard } from './hooks/useKeyboard';
-import { CURATED_ROLEPLAYS, RoleplayScript } from './services/staticData';
+import { CURATED_ROLEPLAYS } from './services/staticData';
+
+const getScriptIdFromPath = (): string | null => {
+  if (typeof window === 'undefined') return null;
+
+  const pathParts = window.location.pathname.split('/');
+  const scenarioIndex = pathParts.indexOf('scenario');
+  if (scenarioIndex >= 0 && scenarioIndex + 1 < pathParts.length) {
+    const id = pathParts[scenarioIndex + 1];
+    return decodeURIComponent(id);
+  }
+
+  return null;
+};
 
 // Page Components
 const TopicSelectorPage: React.FC<{ onSelect: (scriptId: string) => void }> = ({ onSelect }) => (
@@ -17,18 +29,7 @@ const TopicSelectorPage: React.FC<{ onSelect: (scriptId: string) => void }> = ({
 );
 
 const ScenarioPage: React.FC<{ onReset: () => void }> = ({ onReset }) => {
-  const [scriptId, setScriptId] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    // Extract scenario ID from URL
-    const pathParts = window.location.pathname.split('/');
-    const scenarioIndex = pathParts.indexOf('scenario');
-    if (scenarioIndex >= 0 && scenarioIndex + 1 < pathParts.length) {
-      const id = pathParts[scenarioIndex + 1];
-      setScriptId(decodeURIComponent(id));
-    }
-  }, []);
+  const [scriptId] = useState<string | null>(() => getScriptIdFromPath());
 
   if (!scriptId) {
     return (
@@ -38,7 +39,7 @@ const ScenarioPage: React.FC<{ onReset: () => void }> = ({ onReset }) => {
         </div>
         <div className="text-center space-y-4 max-w-lg">
           <h2 className="text-3xl font-black text-slate-900 tracking-tight">Scenario Not Found</h2>
-          <p className="text-slate-600 font-medium leading-relaxed px-6">The scenario you're looking for doesn't exist or has been moved.</p>
+          <p className="text-slate-600 font-medium leading-relaxed px-6">The scenario you&apos;re looking for doesn&apos;t exist or has been moved.</p>
           <a href="/" className="px-8 py-3.5 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 transition-all inline-block">
             Back to Scenarios
           </a>
@@ -70,16 +71,10 @@ const ScenarioPage: React.FC<{ onReset: () => void }> = ({ onReset }) => {
 };
 
 const App: React.FC = () => {
-  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(() => (
+    typeof window !== 'undefined' && !localStorage.getItem('fluentstep:skipOnboarding')
+  ));
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
-
-  // Show onboarding on first visit
-  useEffect(() => {
-    const skipOnboarding = localStorage.getItem('fluentstep:skipOnboarding');
-    if (!skipOnboarding) {
-      setShowOnboarding(true);
-    }
-  }, []);
 
   // Keyboard shortcuts
   useKeyboard({

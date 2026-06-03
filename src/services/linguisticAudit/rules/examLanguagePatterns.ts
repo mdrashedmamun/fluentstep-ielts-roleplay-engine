@@ -128,17 +128,6 @@ const ABSTRACT_LANGUAGE = [
 ];
 
 /**
- * Overly complex sentence structures (sign of essay writing)
- */
-const COMPLEX_STRUCTURES = [
-  {
-    pattern: /\b[A-Za-z\s]+,\s+which\s+(?:is|are)\s+[A-Za-z]+,\s+[A-Za-z]/gi,
-    issue: 'Complex relative clause (sounds written)',
-    suggestions: ['Break into simpler sentences', 'Use more direct language']
-  }
-];
-
-/**
  * First-person academic language
  */
 const ACADEMIC_FIRST_PERSON = [

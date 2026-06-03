@@ -1,4 +1,4 @@
-import { RoleplayScript, ChunkCategory, ChunkFeedback } from '../staticData';
+import { RoleplayScript, ChunkCategory } from '../staticData';
 
 /**
  * Pattern Analyzer: Detects and analyzes patterns in scenarios
@@ -111,6 +111,8 @@ export function calculatePatternValue(
   pattern: PatternFrequency,
   allScenarios: RoleplayScript[]
 ): number {
+  void allScenarios;
+
   let score = 0;
 
   // Frequency score (higher = more repeated pattern)

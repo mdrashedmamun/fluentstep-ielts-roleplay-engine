@@ -49,7 +49,7 @@ export const BRITISH_SPELLING_RULES: SpellingRule[] = [
 
   {
     name: 'double L before suffix',
-    pattern: /\b(\w+[aeiouy])l(ing|ed|s)\b/gi,
+    pattern: /\b(travel|cancel|model|level|signal|label)(ing|ed)\b/gi,
     fix: (match) => {
       // Check for consonant before 'l'
       const base = match.replace(/(ing|ed|s)$/, '');

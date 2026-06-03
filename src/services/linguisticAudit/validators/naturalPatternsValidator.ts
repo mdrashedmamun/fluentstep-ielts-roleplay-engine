@@ -15,11 +15,13 @@ export function validateNaturalPatterns(scenario: RoleplayScript): ValidationFin
     const issues = findTextbookPatterns(av.answer);
 
     for (const issue of issues) {
+      const dialogueLine = scenario.dialogue[av.index]?.text || '';
+
       const confidence = scoreConfidence({
         issueType: 'textbook-phrase',
         affectedText: issue.match,
         suggestedFix: issue.pattern.suggestions[0] || '',
-        context: scenario.dialogue[av.index] || '',
+        context: dialogueLine,
         category: scenario.category
       });
 
@@ -30,7 +32,7 @@ export function validateNaturalPatterns(scenario: RoleplayScript): ValidationFin
         issue: issue.pattern.issue,
         currentValue: av.answer,
         alternatives: issue.pattern.suggestions,
-        context: `Dialogue: "${scenario.dialogue[av.index]}"`,
+        context: `Dialogue: "${dialogueLine}"`,
         confidence: confidence.score,
         reasoning: `"${issue.match}" sounds textbook-like. Native speakers would say: ${issue.pattern.suggestions.slice(0, 2).join(' or ')}`
       });

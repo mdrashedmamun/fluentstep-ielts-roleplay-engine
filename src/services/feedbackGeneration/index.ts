@@ -21,7 +21,7 @@ export {
 import { RoleplayScript, ChunkFeedback } from '../staticData';
 import { selectHighValueChunks } from './chunkSelector';
 import { generateChunkFeedback } from './feedbackGenerator';
-import { validateChunkFeedback, autoFixChunkFeedback, validateAllFeedback } from './feedbackValidator';
+import { autoFixChunkFeedback, validateAllFeedback } from './feedbackValidator';
 
 /**
  * End-to-end feedback generation pipeline for a single scenario

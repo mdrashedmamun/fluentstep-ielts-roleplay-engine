@@ -6,7 +6,6 @@
 
 import React, { useState, useMemo, useCallback } from 'react';
 import { RoleplayScript } from '../services/staticData';
-import ScenarioWaypoint from './ScenarioWaypoint';
 import { useMilestoneDetection } from '../hooks/useMilestoneDetection';
 import { getEncouragementMessage, getZoneDescription, getMotivationalPhrase } from '../services/encouragementMessages';
 import { generateOrganicPath, generateSmoothPathD } from '../services/organicPathGenerator';
@@ -92,17 +91,6 @@ const JourneyMap: React.FC<JourneyMapProps> = ({
 
   // Activate milestone detection with automatic celebrations
   useMilestoneDetection(completionPercentage);
-
-  // Group scenarios by category for zone visualization
-  const categoryGroups = useMemo(() => {
-    const groups = new Map<string, WaypointPosition[]>();
-    waypointPositions.forEach(pos => {
-      const cat = pos.scenario.category;
-      if (!groups.has(cat)) groups.set(cat, []);
-      groups.get(cat)!.push(pos);
-    });
-    return groups;
-  }, [waypointPositions]);
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-top-4 duration-1000">

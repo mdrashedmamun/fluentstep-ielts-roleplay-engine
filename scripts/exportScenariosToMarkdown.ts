@@ -1,4 +1,4 @@
-import { CURATED_ROLEPLAYS, RoleplayScript, ChunkFeedback } from '../src/services/staticData'
+import { CURATED_ROLEPLAYS, RoleplayScript } from '../src/services/staticData'
 import * as fs from 'fs'
 import * as path from 'path'
 import { fileURLToPath } from 'url'

@@ -188,16 +188,16 @@ export function play(soundId: SoundId): void {
         playPromise.catch((error) => {
           console.warn(`Failed to play audio ${soundId}, using fallback tone:`, error);
           // Use tone generator as fallback
-          useToneFallback(soundId);
+          playToneFallback(soundId);
         });
       }
     } else {
       // No audio element, use tone generator fallback
-      useToneFallback(soundId);
+      playToneFallback(soundId);
     }
   } catch (error) {
     console.warn(`Error playing audio ${soundId}, using fallback tone:`, error);
-    useToneFallback(soundId);
+    playToneFallback(soundId);
   }
 }
 
@@ -209,7 +209,7 @@ export function play(soundId: SoundId): void {
  *
  * @internal
  */
-function useToneFallback(soundId: SoundId): void {
+function playToneFallback(soundId: SoundId): void {
   try {
     switch (soundId) {
       case 'completion':

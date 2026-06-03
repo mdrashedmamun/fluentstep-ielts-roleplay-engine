@@ -3,6 +3,16 @@
  * Handles celebratory effects like confetti and animations
  */
 
+type AudioContextConstructor = new () => AudioContext;
+
+type WindowWithWebkitAudio = Window & typeof globalThis & {
+  webkitAudioContext?: AudioContextConstructor;
+};
+
+const readParticleNumber = (particle: HTMLElement, property: string): number => (
+  Number.parseFloat(getComputedStyle(particle).getPropertyValue(property))
+);
+
 export interface ConfettiOptions {
   particleCount?: number;
   duration?: number;
@@ -61,14 +71,14 @@ export function celebrateWithConfetti(options: ConfettiOptions = {}): void {
     const elapsed = currentTime - startTime;
     const progress = elapsed / duration;
 
-    particles.forEach((particle, idx) => {
+    particles.forEach(particle => {
       if (progress >= 1) {
         particle.remove();
         return;
       }
 
-      const angle = parseFloat(getComputedStyle(particle).getPropertyValue('--angle')) as any;
-      const velocity = parseFloat(getComputedStyle(particle).getPropertyValue('--velocity')) as any;
+      const angle = readParticleNumber(particle, "--angle");
+      const velocity = readParticleNumber(particle, "--velocity");
 
       // Calculate position
       const radians = (angle * Math.PI) / 180;
@@ -88,7 +98,7 @@ export function celebrateWithConfetti(options: ConfettiOptions = {}): void {
       particles.forEach(p => {
         try {
           p.remove();
-        } catch (e) {
+        } catch {
           // Particle already removed
         }
       });
@@ -104,7 +114,13 @@ export function celebrateWithConfetti(options: ConfettiOptions = {}): void {
 export function playSuccessSound(): void {
   try {
     // Use Web Audio API for a simple success tone
-    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const AudioContextCtor = window.AudioContext ?? (window as WindowWithWebkitAudio).webkitAudioContext;
+
+    if (!AudioContextCtor) {
+      return;
+    }
+
+    const audioContext = new AudioContextCtor();
     const now = audioContext.currentTime;
 
     // Create oscillator for a pleasant chime
@@ -124,7 +140,7 @@ export function playSuccessSound(): void {
 
     osc.start(now);
     osc.stop(now + 0.3);
-  } catch (error) {
+  } catch {
     // Web Audio API not available, silently fail
     // console.warn('Web Audio API not available');
   }
@@ -205,8 +221,8 @@ export function particleEffect(
         return;
       }
 
-      const angle = parseFloat(getComputedStyle(particle).getPropertyValue('--angle')) as any;
-      const velocity = parseFloat(getComputedStyle(particle).getPropertyValue('--velocity')) as any;
+      const angle = readParticleNumber(particle, "--angle");
+      const velocity = readParticleNumber(particle, "--velocity");
 
       const radians = (angle * Math.PI) / 180;
       const distance = velocity * 100 * progress;
@@ -223,7 +239,7 @@ export function particleEffect(
       particles.forEach(p => {
         try {
           p.remove();
-        } catch (e) {
+        } catch {
           // Already removed
         }
       });

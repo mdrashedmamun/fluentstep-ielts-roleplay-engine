@@ -71,7 +71,7 @@ const CelebrationOverlay: React.FC<CelebrationOverlayProps> = ({
   achievement,
   onDismiss
 }) => {
-  const [displayMessage, setDisplayMessage] = useState(achievement.message);
+  const displayMessage = achievement.message;
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(
     typeof window !== 'undefined'
       ? window.matchMedia('(prefers-reduced-motion: reduce)').matches

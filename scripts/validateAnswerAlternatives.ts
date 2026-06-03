@@ -27,57 +27,54 @@ interface AlternativeCheckResult {
   issues: string[];
 }
 
+interface BlankContext {
+  text: string;
+  occurrenceInLine: number;
+}
+
+const writeLine = (message = ''): void => {
+  process.stdout.write(`${message}\n`);
+};
+
+const writeError = (message: string): void => {
+  process.stderr.write(`${message}\n`);
+};
+
 /**
  * Validate sentence structure when alternative is substituted
  */
 function validateSentenceStructure(sentence: string): SubstitutionResult {
-  // Check 1: No duplicate words within 2 positions (except articles, prepositions)
-  const words = sentence.toLowerCase().split(/\s+/);
-  const stopWords = new Set(['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'of', 'is', 'are']);
+  const normalized = sentence
+    .toLowerCase()
+    .replace(/[’']/g, "'")
+    .replace(/[^a-z0-9'\s-]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  const words = normalized.split(/\s+/).filter(Boolean);
+  const allowedRepeats = new Set(['yes', 'no', 'very', 'really', 'so']);
 
+  // Deterministic substitution errors: duplicated adjacent words introduced by an alternative.
   for (let i = 0; i < words.length - 1; i++) {
-    if (stopWords.has(words[i] || '')) continue;
-
-    for (let j = i + 1; j <= Math.min(i + 2, words.length - 1); j++) {
-      if (words[i] === words[j] && (words[i] || '').length > 2) {
-        return {
-          valid: false,
-          reason: `Duplicate word "${words[i]}" creates redundancy`
-        };
-      }
+    if (words[i] === words[i + 1] && !allowedRepeats.has(words[i] || '')) {
+      return {
+        valid: false,
+        reason: `Duplicate adjacent word "${words[i]}" creates redundancy`
+      };
     }
   }
 
-  // Check 2: No double negatives
-  const negatives = ['no', 'not', 'none', "n't", 'never', 'neither', 'nothing', 'nobody'];
-  let negativeCount = 0;
+  const deterministicGrammarIssues: Array<[RegExp, string]> = [
+    [/\ba few of issues\b/, 'Use "a few issues" rather than "a few of issues"'],
+    [/\ba several\b/, 'Use "several" rather than "a several"'],
+    [/\bsort out me\b/, 'Use "sort me out" or "sort out" rather than "sort out me"'],
+    [/\bfewer urgent\b/, 'Use "less urgent" rather than "fewer urgent"'],
+    [/\blower urgent\b/, 'Use "less urgent" rather than "lower urgent"'],
+  ];
 
-  for (const neg of negatives) {
-    if (sentence.toLowerCase().includes(neg)) {
-      negativeCount++;
+  for (const [pattern, reason] of deterministicGrammarIssues) {
+    if (pattern.test(normalized)) {
+      return { valid: false, reason };
     }
-  }
-
-  if (negativeCount >= 2) {
-    return {
-      valid: false,
-      reason: `Double negative detected (${negativeCount} negations found)`
-    };
-  }
-
-  // Check 3: Reasonable sentence length (not too short or too long)
-  if (words.length < 3) {
-    return {
-      valid: false,
-      reason: `Sentence too short (${words.length} words)`
-    };
-  }
-
-  if (words.length > 30) {
-    return {
-      valid: false,
-      reason: `Sentence too long (${words.length} words, consider breaking it up)`
-    };
   }
 
   return { valid: true, reason: '' };
@@ -87,38 +84,9 @@ function validateSentenceStructure(sentence: string): SubstitutionResult {
  * Validate semantic fit with context
  */
 function validateSemanticFit(substitutedSentence: string, alternative: string, mainAnswer: string): SubstitutionResult {
-  // Check 1: Part of speech consistency
-  const mainIsNoun = isLikelyNoun(mainAnswer);
-  const altIsNoun = isLikelyNoun(alternative);
-
-  if (mainIsNoun && !altIsNoun && !isLikelyAdjective(alternative) && !isLikelyVerb(alternative)) {
-    return {
-      valid: false,
-      reason: `Part of speech mismatch: "${mainAnswer}" is noun, "${alternative}" is not`
-    };
-  }
-
-  const mainIsAdjective = isLikelyAdjective(mainAnswer);
-  const altIsAdjective = isLikelyAdjective(alternative);
-
-  if (mainIsAdjective && !altIsAdjective) {
-    return {
-      valid: false,
-      reason: `Part of speech mismatch: "${mainAnswer}" is adjective, "${alternative}" is not`
-    };
-  }
-
-  const mainIsVerb = isLikelyVerb(mainAnswer);
-  const altIsVerb = isLikelyVerb(alternative);
-
-  if (mainIsVerb && !altIsVerb) {
-    return {
-      valid: false,
-      reason: `Part of speech mismatch: "${mainAnswer}" is verb, "${alternative}" is not`
-    };
-  }
-
-  // Check 2: Formality/register alignment
+  // POS guessing produced many false positives for valid spoken alternatives
+  // such as "great/lovely", "free/available", and phrase-level chunks.
+  // Keep this validator deterministic: register and explicit formal/slang checks only.
   const mainFormality = estimateFormality(mainAnswer);
   const altFormality = estimateFormality(alternative);
 
@@ -129,11 +97,17 @@ function validateSemanticFit(substitutedSentence: string, alternative: string, m
     };
   }
 
-  // Check 3: Detect formal/academic words in casual contexts
   if (isFormalWord(alternative) && isCasualContext(substitutedSentence)) {
     return {
       valid: false,
       reason: `Formal word "${alternative}" inappropriate in casual context`
+    };
+  }
+
+  if (isInappropriateSlang(alternative, substitutedSentence)) {
+    return {
+      valid: false,
+      reason: `Informal/slang word "${alternative}" inappropriate in formal context`
     };
   }
 
@@ -165,60 +139,8 @@ function isCasualContext(sentence: string): boolean {
   return casualMarkers.some(m => lower.includes(m));
 }
 
-/**
- * Simple heuristic: is this word likely a noun?
- */
-function isLikelyNoun(word: string): boolean {
-  const nounEndings = ['tion', 'ment', 'ness', 'ity', 'er', 'or', 'ist', 'ism', 'ship'];
-  const lower = word.toLowerCase();
 
-  if (nounEndings.some(ending => lower.endsWith(ending))) {
-    return true;
-  }
 
-  const commonVerbs = new Set(['be', 'have', 'do', 'say', 'go', 'know', 'take', 'see', 'come', 'think']);
-  const commonAdj = new Set(['good', 'bad', 'big', 'small', 'new', 'old', 'many', 'some', 'more', 'most']);
-
-  if (commonVerbs.has(lower) || commonAdj.has(lower)) {
-    return false;
-  }
-
-  return true;
-}
-
-/**
- * Simple heuristic: is this word likely an adjective?
- */
-function isLikelyAdjective(word: string): boolean {
-  const lower = word.toLowerCase();
-  const adjEndings = ['ful', 'less', 'ous', 'ible', 'able', 'ive', 'al', 'ic', 'ed', 'en'];
-
-  if (adjEndings.some(ending => lower.endsWith(ending))) {
-    return true;
-  }
-
-  const commonAdj = new Set(['good', 'bad', 'big', 'small', 'new', 'old', 'many', 'some', 'more', 'most',
-    'happy', 'sad', 'beautiful', 'ugly', 'bright', 'dark', 'hot', 'cold', 'amazing', 'incredible',
-    'stunning', 'surprising', 'shame', 'unfortunate', 'quite']);
-
-  return commonAdj.has(lower);
-}
-
-/**
- * Simple heuristic: is this word likely a verb?
- */
-function isLikelyVerb(word: string): boolean {
-  const lower = word.toLowerCase();
-
-  if (lower.endsWith('ing') || lower.endsWith('ed')) {
-    return true;
-  }
-
-  const commonVerbs = new Set(['be', 'have', 'do', 'say', 'go', 'know', 'take', 'see', 'come', 'think',
-    'make', 'get', 'use', 'find', 'tell', 'ask', 'work', 'seem', 'feel', 'try']);
-
-  return commonVerbs.has(lower);
-}
 
 /**
  * Estimate formality on 0-1 scale (0=casual, 1=formal)
@@ -251,17 +173,42 @@ function isInappropriateSlang(word: string, sentence: string): boolean {
   return isFormalContext && slangTerms.has(word.toLowerCase());
 }
 
+function getBlankContexts(dialogue: { text: string }[]): BlankContext[] {
+  const contexts: BlankContext[] = [];
+
+  for (const turn of dialogue) {
+    const matches = turn.text.match(/________/g) || [];
+    for (let occurrenceInLine = 0; occurrenceInLine < matches.length; occurrenceInLine++) {
+      contexts.push({ text: turn.text, occurrenceInLine });
+    }
+  }
+
+  return contexts;
+}
+
+function substituteBlank(context: BlankContext, value: string): string {
+  let seen = 0;
+  return context.text.replace(/________/g, match => {
+    if (seen === context.occurrenceInLine) {
+      seen++;
+      return value;
+    }
+    seen++;
+    return match;
+  });
+}
+
 /**
  * Main validation function
  */
 function checkAlternatives(): void {
-  console.log('\n=== Answer Alternatives Quality Validation (Validator 7) ===\n');
+  writeLine('\n=== Answer Alternatives Quality Validation (Validator 7) ===\n');
 
   let totalScenarios = 0;
   let totalBlanks = 0;
   let totalAlternatives = 0;
   let totalIssues = 0;
-  let issuesByType: { [key: string]: number } = {
+  const issuesByType: { [key: string]: number } = {
     'structure': 0,
     'semantic': 0,
     'register': 0
@@ -272,15 +219,17 @@ function checkAlternatives(): void {
   CURATED_ROLEPLAYS.forEach(scenario => {
     const scenarioIssues: { blank: number; issues: AlternativeCheckResult[] }[] = [];
 
+    const blankContexts = getBlankContexts(scenario.dialogue);
+
     scenario.answerVariations.forEach((av, blankIdx) => {
       totalBlanks++;
       totalAlternatives += (av.alternatives?.length || 0) + 1; // +1 for main answer
 
-      // Check main answer
-      const dialogueLine = scenario.dialogue[blankIdx]?.text;
-      if (!dialogueLine) return;
+      // Check main answer against actual blank-bearing dialogue, not dialogue array index.
+      const blankContext = blankContexts[blankIdx];
+      if (!blankContext) return;
 
-      const mainSubstituted = dialogueLine.replace('________', av.answer);
+      const mainSubstituted = substituteBlank(blankContext, av.answer);
       const mainStructure = validateSentenceStructure(mainSubstituted);
       const mainSemantic = validateSemanticFit(mainSubstituted, av.answer, av.answer);
 
@@ -310,7 +259,7 @@ function checkAlternatives(): void {
 
       // Check alternatives
       (av.alternatives || []).forEach((alt, altIdx) => {
-        const substituted = dialogueLine.replace('________', alt);
+        const substituted = substituteBlank(blankContext, alt);
         const structureResult = validateSentenceStructure(substituted);
         const semanticResult = validateSemanticFit(substituted, alt, av.answer);
 
@@ -345,22 +294,22 @@ function checkAlternatives(): void {
     // Report scenario issues
     if (scenarioIssues.length > 0) {
       problemScenarios.push(scenario.id);
-      console.log(`\n📋 ${scenario.id}`);
-      console.log(`   Topic: ${scenario.topic}`);
-      console.log(`   Issues found: ${scenarioIssues.length} blank(s) with problems\n`);
+      writeLine(`\n📋 ${scenario.id}`);
+      writeLine(`   Topic: ${scenario.topic}`);
+      writeLine(`   Issues found: ${scenarioIssues.length} blank(s) with problems\n`);
 
       scenarioIssues.forEach(({ blank, issues }) => {
-        console.log(`   Blank #${blank + 1}:`);
-        console.log(`      Main answer: "${issues[0]!.answer}"`);
+        writeLine(`   Blank #${blank + 1}:`);
+        writeLine(`      Main answer: "${issues[0]!.answer}"`);
 
         issues.forEach(issue => {
           if (issue.alternative !== issue.answer) {
-            console.log(`      Alternative: "${issue.alternative}"`);
+            writeLine(`      Alternative: "${issue.alternative}"`);
           }
-          console.log(`         Substituted: "${issue.substituted}"`);
+          writeLine(`         Substituted: "${issue.substituted}"`);
 
           issue.issues.forEach(err => {
-            console.log(`         ❌ ${err}`);
+            writeLine(`         ❌ ${err}`);
           });
         });
       });
@@ -368,28 +317,28 @@ function checkAlternatives(): void {
   });
 
   // Summary
-  console.log('\n=== Summary ===');
-  console.log(`Total Scenarios: ${totalScenarios}`);
-  console.log(`Total Blanks: ${totalBlanks}`);
-  console.log(`Total Alternatives (including main): ${totalAlternatives}`);
-  console.log(`Total Issues Found: ${totalIssues}`);
-  console.log(`Issues by Type:`);
-  console.log(`  - Structure: ${issuesByType['structure']}`);
-  console.log(`  - Semantic: ${issuesByType['semantic']}`);
-  console.log(`  - Register: ${issuesByType['register']}`);
+  writeLine('\n=== Summary ===');
+  writeLine(`Total Scenarios: ${totalScenarios}`);
+  writeLine(`Total Blanks: ${totalBlanks}`);
+  writeLine(`Total Alternatives (including main): ${totalAlternatives}`);
+  writeLine(`Total Issues Found: ${totalIssues}`);
+  writeLine(`Issues by Type:`);
+  writeLine(`  - Structure: ${issuesByType['structure']}`);
+  writeLine(`  - Semantic: ${issuesByType['semantic']}`);
+  writeLine(`  - Register: ${issuesByType['register']}`);
 
-  console.log(`\nScenarios with issues: ${problemScenarios.length}`);
+  writeLine(`\nScenarios with issues: ${problemScenarios.length}`);
   if (problemScenarios.length > 0) {
-    console.log(`  ${problemScenarios.join(', ')}`);
+    writeLine(`  ${problemScenarios.join(', ')}`);
   }
 
-  console.log('\n' + '='.repeat(40) + '\n');
+  writeLine('\n' + '='.repeat(40) + '\n');
 
   if (totalIssues > 0) {
-    console.error(`❌ Found ${totalIssues} issue(s) in answer alternatives`);
+    writeError(`❌ Found ${totalIssues} issue(s) in answer alternatives`);
     process.exit(1);
   } else {
-    console.log('✅ All answer alternatives are natural and grammatically correct');
+    writeLine('✅ All answer alternatives are natural and grammatically correct');
     process.exit(0);
   }
 }

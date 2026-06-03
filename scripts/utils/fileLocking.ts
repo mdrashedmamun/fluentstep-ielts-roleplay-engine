@@ -1,5 +1,4 @@
 import { promises as fs } from 'fs';
-import * as path from 'path';
 
 interface LockOptions {
   timeout?: number; // milliseconds
@@ -16,6 +15,37 @@ interface LockInfo {
 
 const DEFAULT_TIMEOUT = 300000; // 5 minutes
 const DEFAULT_WAIT_INTERVAL = 1000; // 1 second
+
+const writeOut = (message = ''): void => {
+  process.stdout.write(`${message}\n`);
+};
+
+const writeWarn = (message: string): void => {
+  process.stderr.write(`${message}\n`);
+};
+
+const getErrorCode = (error: unknown): string | undefined => {
+  if (typeof error !== 'object' || error === null || !('code' in error)) {
+    return undefined;
+  }
+
+  const code = (error as { code?: unknown }).code;
+  return typeof code === 'string' ? code : undefined;
+};
+
+const isLockInfo = (value: unknown): value is LockInfo => {
+  if (typeof value !== 'object' || value === null) {
+    return false;
+  }
+
+  const candidate = value as Partial<LockInfo>;
+  return (
+    typeof candidate.locked_by === 'string' &&
+    typeof candidate.locked_at === 'string' &&
+    typeof candidate.timeout_ms === 'number' &&
+    typeof candidate.acquired_at === 'number'
+  );
+};
 
 /**
  * Acquire a file lock with timeout and retry logic
@@ -44,28 +74,28 @@ export async function acquireLock(
       await fileHandle.writeFile(JSON.stringify(lockInfo, null, 2));
       await fileHandle.close();
 
-      console.log(`✅ Lock acquired by ${owner}`);
+      writeOut(`✅ Lock acquired by ${owner}`);
       return lockInfo;
-    } catch (error: any) {
+    } catch (error) {
       // Lock file already exists
-      if (error.code === 'EEXIST') {
+      if (getErrorCode(error) === 'EEXIST') {
         const elapsed = Date.now() - startTime;
 
         if (elapsed > timeout) {
           // Timeout: force release stale lock
-          console.warn(
+          writeWarn(
             `⚠️  Lock timeout (${elapsed}ms > ${timeout}ms). Force releasing stale lock.`
           );
           try {
             await fs.unlink(lockFilePath);
-          } catch (e) {
+          } catch {
             // Lock already released or doesn't exist
           }
           continue;
         }
 
         // Wait and retry
-        console.log(
+        writeOut(
           `⏳ Waiting for lock (${elapsed}ms/${timeout}ms)... retrying in ${waitInterval}ms`
         );
         await sleep(waitInterval);
@@ -83,10 +113,10 @@ export async function acquireLock(
 export async function releaseLock(lockFilePath: string): Promise<void> {
   try {
     await fs.unlink(lockFilePath);
-    console.log('✅ Lock released');
-  } catch (error: any) {
-    if (error.code === 'ENOENT') {
-      console.warn('⚠️  Lock file not found (already released)');
+    writeOut('✅ Lock released');
+  } catch (error) {
+    if (getErrorCode(error) === 'ENOENT') {
+      writeWarn('⚠️  Lock file not found (already released)');
     } else {
       throw error;
     }
@@ -111,7 +141,8 @@ export async function isLocked(lockFilePath: string): Promise<boolean> {
 export async function getLockInfo(lockFilePath: string): Promise<LockInfo | null> {
   try {
     const content = await fs.readFile(lockFilePath, 'utf-8');
-    return JSON.parse(content);
+    const parsed: unknown = JSON.parse(content);
+    return isLockInfo(parsed) ? parsed : null;
   } catch {
     return null;
   }
@@ -123,10 +154,10 @@ export async function getLockInfo(lockFilePath: string): Promise<LockInfo | null
 export async function forceReleaseLock(lockFilePath: string): Promise<void> {
   try {
     await fs.unlink(lockFilePath);
-    console.log('🔓 Force released lock');
-  } catch (error: any) {
-    if (error.code === 'ENOENT') {
-      console.warn('⚠️  Lock file not found');
+    writeOut('🔓 Force released lock');
+  } catch (error) {
+    if (getErrorCode(error) === 'ENOENT') {
+      writeWarn('⚠️  Lock file not found');
     } else {
       throw error;
     }

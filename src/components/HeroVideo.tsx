@@ -14,19 +14,23 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
   videoSrc,
   posterSrc,
   headline = "Your Journey to English Fluency",
-  subtitle = "Master IELTS speaking through 43 immersive conversations",
+  subtitle = "Master IELTS speaking through immersive conversations",
   ctaText = "Explore Scenarios",
   onCtaClick,
   height = 'three-quarter'
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [hasVideoError, setHasVideoError] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(() => (
+    typeof window !== 'undefined'
+      ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      : false
+  ));
 
   useEffect(() => {
     // Check for reduced motion preference
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setPrefersReducedMotion(mediaQuery.matches);
 
     const handleChange = () => setPrefersReducedMotion(mediaQuery.matches);
     mediaQuery.addEventListener('change', handleChange);
@@ -36,37 +40,42 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
   useEffect(() => {
     if (videoRef.current && !prefersReducedMotion) {
       videoRef.current.play().catch(err => {
-        console.log('Autoplay prevented:', err);
+        console.warn('Autoplay prevented:', err);
       });
     }
   }, [prefersReducedMotion]);
 
   const heightClass = height === 'full' ? 'h-screen' : 'h-[60vh] sm:h-[70vh] md:h-[80vh]';
+  const shouldShowPoster = Boolean(posterSrc) && (!isLoaded || prefersReducedMotion || hasVideoError);
+  const shouldShowVideo = !prefersReducedMotion && !hasVideoError;
 
   return (
     <div className={`relative ${heightClass} w-full overflow-hidden`}>
-      {/* Video Background */}
-      <video
-        ref={videoRef}
-        className="absolute inset-0 w-full h-full object-cover"
-        poster={posterSrc}
-        muted
-        loop
-        playsInline
-        onLoadedData={() => setIsLoaded(true)}
-        style={{ display: prefersReducedMotion ? 'none' : 'block' }}
-      >
-        <source src={videoSrc} type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
-
-      {/* Fallback Poster for Reduced Motion */}
-      {prefersReducedMotion && posterSrc && (
+      {/* Poster fallback renders first so the hero never flashes to a black loading panel. */}
+      {shouldShowPoster && posterSrc && (
         <img
           src={posterSrc}
           alt="Nature journey"
           className="absolute inset-0 w-full h-full object-cover"
         />
+      )}
+
+      {/* Video Background */}
+      {shouldShowVideo && (
+        <video
+          ref={videoRef}
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+          poster={posterSrc}
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          onLoadedData={() => setIsLoaded(true)}
+          onError={() => setHasVideoError(true)}
+        >
+          <source src={videoSrc} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
       )}
 
       {/* Gradient Overlay */}
@@ -115,9 +124,9 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({
       </div>
 
       {/* Loading indicator */}
-      {!isLoaded && !prefersReducedMotion && (
-        <div className="absolute inset-0 flex items-center justify-center bg-neutral-900">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
+      {!isLoaded && shouldShowVideo && (
+        <div className="absolute bottom-6 right-6 rounded-full bg-black/35 p-2 backdrop-blur-sm" aria-label="Loading background video">
+          <div className="h-5 w-5 animate-spin rounded-full border-2 border-white/40 border-b-white"></div>
         </div>
       )}
     </div>

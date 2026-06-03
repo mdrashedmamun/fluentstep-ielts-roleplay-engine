@@ -1,9 +1,18 @@
 import * as fs from 'fs';
-import * as yaml from 'js-yaml';
-import { RoleplayScript, ChunkFeedbackV2, BlankMapping, ActiveRecallItem, PatternSummary } from '../src/services/staticData';
+import { load as loadYaml } from 'js-yaml';
+import {
+  type ActiveRecallItem,
+  type BlankMapping,
+  type ChunkFeedbackV2,
+  type PatternSummary,
+  type RoleplayScript
+} from '../src/services/staticData';
+
+type ScenarioCategory = RoleplayScript['category'];
+type UnknownRecord = Record<string, unknown>;
 
 interface ParsedPackage {
-  category: string;
+  category: ScenarioCategory;
   scenarioId: string;
   topic: string;
   context: string;
@@ -16,6 +25,92 @@ interface ParsedPackage {
   activeRecall: ActiveRecallItem[];
 }
 
+const VALID_CATEGORIES = new Set<ScenarioCategory>([
+  'Social',
+  'Workplace',
+  'Service/Logistics',
+  'Advanced',
+  'Academic',
+  'Healthcare',
+  'Cultural',
+  'Community'
+]);
+
+const writeOut = (message = ''): void => {
+  process.stdout.write(`${message}\n`);
+};
+
+const writeErr = (message = ''): void => {
+  process.stderr.write(`${message}\n`);
+};
+
+function isRecord(value: unknown): value is UnknownRecord {
+  return typeof value === 'object' && value !== null;
+}
+
+function isStringArray(value: unknown): value is string[] {
+  return Array.isArray(value) && value.every((item) => typeof item === 'string');
+}
+
+function getString(record: UnknownRecord, key: string, location: string): string {
+  const value = record[key];
+  if (typeof value !== 'string') {
+    throw new Error(`${location}: missing string field "${key}"`);
+  }
+
+  return value;
+}
+
+function getOptionalString(record: UnknownRecord, key: string): string | undefined {
+  const value = record[key];
+  return typeof value === 'string' ? value : undefined;
+}
+
+function getNumber(record: UnknownRecord, key: string, location: string): number {
+  const value = record[key];
+  if (typeof value !== 'number') {
+    throw new Error(`${location}: missing number field "${key}"`);
+  }
+
+  return value;
+}
+
+function getRecord(record: UnknownRecord, key: string, location: string): UnknownRecord {
+  const value = record[key];
+  if (!isRecord(value)) {
+    throw new Error(`${location}: missing object field "${key}"`);
+  }
+
+  return value;
+}
+
+function getRecordArray(record: UnknownRecord, key: string, location: string): UnknownRecord[] {
+  const value = record[key];
+  if (!Array.isArray(value) || !value.every(isRecord)) {
+    throw new Error(`${location}: missing object array field "${key}"`);
+  }
+
+  return value;
+}
+
+function getOptionalRecordArray(record: UnknownRecord, key: string): UnknownRecord[] {
+  const value = record[key];
+  return Array.isArray(value) ? value.filter(isRecord) : [];
+}
+
+function getOptionalStringArray(record: UnknownRecord, key: string): string[] {
+  const value = record[key];
+  return isStringArray(value) ? value : [];
+}
+
+function parseCategoryValue(value: string): ScenarioCategory {
+  if (!VALID_CATEGORIES.has(value as ScenarioCategory)) {
+    throw new Error(`Invalid category "${value}". Valid categories: ${Array.from(VALID_CATEGORIES).join(', ')}`);
+  }
+
+  return value as ScenarioCategory;
+}
+
 /**
  * Parse a markdown content package into structured data
  */
@@ -23,59 +118,30 @@ export function parsePackageMarkdown(filePath: string): ParsedPackage {
   const content = fs.readFileSync(filePath, 'utf-8');
   const lines = content.split('\n');
 
-  let currentSection = '';
-  let headerLines = [];
-  let roleplayLines = [];
-  let answerLines = [];
-  let yamlLines = [];
+  const yamlLines: string[] = [];
   let inYamlBlock = false;
 
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
+  for (const line of lines) {
     const trimmed = line.trim();
 
-    // Detect section markers (### or ## but not the # Category: line)
-    if (trimmed === '---') {
-      // Separator between sections
-      continue;
-    } else if ((trimmed.startsWith('### ') || trimmed.startsWith('## ')) && !trimmed.startsWith('# Category')) {
-      currentSection = trimmed;
-      if (!inYamlBlock) {
-        // Add section header to appropriate section
-        if (currentSection.includes('Context') || currentSection.includes('Characters') ||
-            currentSection.includes('ID') || currentSection.includes('Category')) {
-          headerLines.push(line);
-        } else if (currentSection.includes('Roleplay')) {
-          roleplayLines.push(line);
-        } else if (currentSection.includes('Answers')) {
-          answerLines.push(line);
-        }
-      }
-      continue;
-    } else if (trimmed === '```yaml') {
+    if (trimmed === '```yaml') {
       inYamlBlock = true;
       continue;
-    } else if (trimmed === '```' && inYamlBlock) {
+    }
+
+    if (trimmed === '```' && inYamlBlock) {
       inYamlBlock = false;
       continue;
     }
 
-    // Route lines to appropriate sections
     if (inYamlBlock) {
       yamlLines.push(line);
-    } else if (currentSection.includes('Context') || currentSection.includes('Characters') ||
-               currentSection.includes('ID') || currentSection.includes('Category') || i < 15) {
-      headerLines.push(line);
-    } else if (currentSection.includes('Roleplay')) {
-      roleplayLines.push(line);
-    } else if (currentSection.includes('Answers')) {
-      answerLines.push(line);
     }
   }
 
   // Parse each section
   const category = parseCategory(lines);
-  const { scenarioId, topic } = parseMetadata(lines, lines);
+  const { scenarioId, topic } = parseMetadata(lines);
   const context = parseContext(lines);
   const characters = parseCharacters(lines);
   const { dialogue, blankCount } = parseRoleplay(lines);
@@ -87,7 +153,7 @@ export function parsePackageMarkdown(filePath: string): ParsedPackage {
     chunkFeedbackV2,
     blanksInOrder,
     patternSummary,
-    activeRecall,
+    activeRecall
   } = parseYamlBlock(yamlContent);
 
   return {
@@ -101,23 +167,26 @@ export function parsePackageMarkdown(filePath: string): ParsedPackage {
     chunkFeedbackV2,
     blanksInOrder,
     patternSummary,
-    activeRecall,
+    activeRecall
   };
 }
 
 /**
  * Extract category from header
  */
-function parseCategory(allLines: string[]): string {
-  const categoryLine = allLines.find(line => line.startsWith('# Category:'));
-  if (!categoryLine) throw new Error('Missing # Category: header');
-  return categoryLine.replace('# Category:', '').trim();
+function parseCategory(allLines: string[]): ScenarioCategory {
+  const categoryLine = allLines.find((line) => line.startsWith('# Category:'));
+  if (!categoryLine) {
+    throw new Error('Missing # Category: header');
+  }
+
+  return parseCategoryValue(categoryLine.replace('# Category:', '').trim());
 }
 
 /**
  * Extract scenario ID and topic
  */
-function parseMetadata(allLines: string[], _unused: string[]): { scenarioId: string; topic: string } {
+function parseMetadata(allLines: string[]): { scenarioId: string; topic: string } {
   let scenarioId = '';
   let topic = '';
 
@@ -125,7 +194,9 @@ function parseMetadata(allLines: string[], _unused: string[]): { scenarioId: str
   for (const line of allLines) {
     if (line.includes('**ID**:')) {
       const match = line.match(/`([^`]+)`/);
-      if (match) scenarioId = match[1];
+      if (match?.[1]) {
+        scenarioId = match[1];
+      }
     }
   }
 
@@ -137,8 +208,12 @@ function parseMetadata(allLines: string[], _unused: string[]): { scenarioId: str
     }
   }
 
-  if (!scenarioId) throw new Error('Missing **ID**: `scenarioId` line');
-  if (!topic) throw new Error('Missing ## Topic line');
+  if (!scenarioId) {
+    throw new Error('Missing **ID**: `scenarioId` line');
+  }
+  if (!topic) {
+    throw new Error('Missing ## Topic line');
+  }
 
   return { scenarioId, topic };
 }
@@ -147,8 +222,8 @@ function parseMetadata(allLines: string[], _unused: string[]): { scenarioId: str
  * Extract context (pre-roleplay popup text)
  */
 function parseContext(allLines: string[]): string {
+  const contextLines: string[] = [];
   let collecting = false;
-  let contextLines = [];
 
   for (const line of allLines) {
     if (line.includes('### Context')) {
@@ -170,7 +245,7 @@ function parseContext(allLines: string[]): string {
  * Extract characters array from all lines
  */
 function parseCharacters(allLines: string[]): Array<{ name: string; description: string }> {
-  const characters = [];
+  const characters: Array<{ name: string; description: string }> = [];
   let collecting = false;
 
   for (const line of allLines) {
@@ -184,16 +259,19 @@ function parseCharacters(allLines: string[]): Array<{ name: string; description:
 
     if (collecting && line.trim().startsWith('- **')) {
       const match = line.match(/- \*\*([^*]+)\*\*: (.*)/);
-      if (match) {
+      if (match?.[1] && match[2]) {
         characters.push({
           name: match[1],
-          description: match[2].trim(),
+          description: match[2].trim()
         });
       }
     }
   }
 
-  if (characters.length === 0) throw new Error('No characters found');
+  if (characters.length === 0) {
+    throw new Error('No characters found');
+  }
+
   return characters;
 }
 
@@ -201,7 +279,7 @@ function parseCharacters(allLines: string[]): Array<{ name: string; description:
  * Parse roleplay dialogue with blanks as ________ (8 underscores)
  */
 function parseRoleplay(allLines: string[]): { dialogue: Array<{ speaker: string; text: string }>; blankCount: number } {
-  const dialogue = [];
+  const dialogue: Array<{ speaker: string; text: string }> = [];
   let blankCount = 0;
   let collecting = false;
 
@@ -214,27 +292,33 @@ function parseRoleplay(allLines: string[]): { dialogue: Array<{ speaker: string;
       break;
     }
 
-    if (!collecting || !line.trim()) continue;
+    if (!collecting || !line.trim()) {
+      continue;
+    }
 
     // Match pattern: **Speaker**: text
     const match = line.match(/^\*\*([^*]+)\*\*: (.*)/);
-    if (match) {
+    if (match?.[1] && match[2]) {
       const speaker = match[1];
       const text = match[2];
 
       // Count blanks (8 underscores = 1 blank)
-      const blanks = (text.match(/________/g) || []).length;
+      const blanks = text.match(/________/g)?.length ?? 0;
       blankCount += blanks;
 
       dialogue.push({
         speaker,
-        text,
+        text
       });
     }
   }
 
-  if (dialogue.length === 0) throw new Error('No dialogue found');
-  if (blankCount === 0) throw new Error('No blanks found in dialogue');
+  if (dialogue.length === 0) {
+    throw new Error('No dialogue found');
+  }
+  if (blankCount === 0) {
+    throw new Error('No blanks found in dialogue');
+  }
 
   return { dialogue, blankCount };
 }
@@ -248,11 +332,21 @@ function parseAnswers(
   allLines: string[],
   expectedCount: number
 ): Array<{ index: number; answer: string; alternatives: string[] }> {
-  const answers = [];
+  const answers: Array<{ index: number; answer: string; alternatives: string[] }> = [];
   let currentAnswer = '';
   let currentAlternatives: string[] = [];
   let currentIndex = -1;
   let collecting = false;
+
+  const pushCurrentAnswer = (): void => {
+    if (currentIndex >= 0) {
+      answers.push({
+        index: currentIndex,
+        answer: currentAnswer,
+        alternatives: currentAlternatives
+      });
+    }
+  };
 
   for (const line of allLines) {
     if (line.includes('### Answers')) {
@@ -263,33 +357,26 @@ function parseAnswers(
       break;
     }
 
-    if (!collecting) continue;
+    if (!collecting) {
+      continue;
+    }
 
     const trimmed = line.trim();
 
     // New blank marker
     if (trimmed.match(/^\*\*Blank \d+\*\*:/)) {
-      // Save previous if exists
-      if (currentIndex >= 0) {
-        answers.push({
-          index: currentIndex,
-          answer: currentAnswer,
-          alternatives: currentAlternatives,
-        });
-      }
+      pushCurrentAnswer();
 
       // Parse new blank
       const match = trimmed.match(/^\*\*Blank (\d+)\*\*: `([^`]+)`/);
-      if (match) {
-        currentIndex = parseInt(match[1]) - 1; // 0-indexed
+      if (match?.[1] && match[2]) {
+        currentIndex = Number.parseInt(match[1], 10) - 1; // 0-indexed
         currentAnswer = match[2];
         currentAlternatives = [];
       }
-    }
-    // Alternatives line: starts with "- Alternatives:" or contains backtick-quoted alternatives
-    else if (trimmed.includes('Alternatives:')) {
+    } else if (trimmed.includes('Alternatives:')) {
       const altMatch = trimmed.match(/Alternatives: (.*)/);
-      if (altMatch) {
+      if (altMatch?.[1]) {
         const altText = altMatch[1];
         // Extract alternatives: `alt1`, `alt2`, or _(none)_
         if (altText.includes('_(none)_')) {
@@ -297,21 +384,15 @@ function parseAnswers(
         } else {
           const alts = altText.match(/`([^`]+)`/g);
           if (alts) {
-            currentAlternatives = alts.map(a => a.replace(/`/g, ''));
+            currentAlternatives = alts.map((alternative) => alternative.replace(/`/g, ''));
           }
         }
       }
     }
   }
 
-  // Don't forget last answer
-  if (currentIndex >= 0) {
-    answers.push({
-      index: currentIndex,
-      answer: currentAnswer,
-      alternatives: currentAlternatives,
-    });
-  }
+  // Do not forget last answer
+  pushCurrentAnswer();
 
   if (answers.length !== expectedCount) {
     throw new Error(
@@ -320,6 +401,72 @@ function parseAnswers(
   }
 
   return answers;
+}
+
+function parseChunkFeedback(chunkFeedbackObj: UnknownRecord): ChunkFeedbackV2[] {
+  return Object.entries(chunkFeedbackObj).map(([chunkId, chunk], index) => {
+    if (!isRecord(chunk)) {
+      throw new Error(`chunkFeedback.${chunkId || index}: expected object`);
+    }
+
+    const learner = getRecord(chunk, 'learner', `chunkFeedback.${chunkId}.learner`);
+
+    return {
+      chunkId,
+      native: getString(chunk, 'native', `chunkFeedback.${chunkId}`),
+      learner: {
+        meaning: getString(learner, 'meaning', `chunkFeedback.${chunkId}.learner`),
+        useWhen: getString(learner, 'useWhen', `chunkFeedback.${chunkId}.learner`),
+        commonWrong: getString(learner, 'commonWrong', `chunkFeedback.${chunkId}.learner`),
+        fix: getString(learner, 'fix', `chunkFeedback.${chunkId}.learner`),
+        whyOdd: getString(learner, 'whyOdd', `chunkFeedback.${chunkId}.learner`)
+      },
+      examples: getOptionalStringArray(chunk, 'examples')
+    };
+  });
+}
+
+function parseBlanksInOrder(parsed: UnknownRecord): BlankMapping[] {
+  return getRecordArray(parsed, 'blanksInOrder', 'YAML').map((mapping, index) => ({
+    blankId: getString(mapping, 'blankId', `blanksInOrder[${index}]`),
+    chunkId: getString(mapping, 'chunkId', `blanksInOrder[${index}]`)
+  }));
+}
+
+function parsePatternSummary(parsed: UnknownRecord): PatternSummary {
+  const patternSummaryRaw = getRecord(parsed, 'patternSummary', 'YAML');
+  const categoryBreakdown = getOptionalRecordArray(patternSummaryRaw, 'categoryBreakdown').map((categoryEntry, index) => ({
+    category: getString(categoryEntry, 'category', `patternSummary.categoryBreakdown[${index}]`) as PatternSummary['categoryBreakdown'][number]['category'],
+    count: getNumber(categoryEntry, 'count', `patternSummary.categoryBreakdown[${index}]`),
+    exampleChunkIds: getOptionalStringArray(categoryEntry, 'exampleChunkIds').length > 0
+      ? getOptionalStringArray(categoryEntry, 'exampleChunkIds')
+      : getOptionalStringArray(categoryEntry, 'examples'),
+    insight: getString(categoryEntry, 'insight', `patternSummary.categoryBreakdown[${index}]`)
+  }));
+
+  const keyPatterns = getOptionalRecordArray(patternSummaryRaw, 'keyPatterns').map((pattern, index) => ({
+    pattern: getString(pattern, 'pattern', `patternSummary.keyPatterns[${index}]`),
+    explanation: getString(pattern, 'explanation', `patternSummary.keyPatterns[${index}]`),
+    chunkIds: getOptionalStringArray(pattern, 'chunkIds').length > 0
+      ? getOptionalStringArray(pattern, 'chunkIds')
+      : getOptionalStringArray(pattern, 'chunks')
+  }));
+
+  return {
+    categoryBreakdown,
+    overallInsight: getOptionalString(patternSummaryRaw, 'overallInsight') ?? '',
+    keyPatterns
+  };
+}
+
+function parseActiveRecall(parsed: UnknownRecord): ActiveRecallItem[] {
+  return getRecordArray(parsed, 'activeRecall', 'YAML').map((item, index) => ({
+    id: getString(item, 'id', `activeRecall[${index}]`),
+    prompt: getString(item, 'prompt', `activeRecall[${index}]`),
+    targetChunkIds: getOptionalStringArray(item, 'targetChunkIds'),
+    expectedAnswer: getOptionalString(item, 'expectedAnswer'),
+    hints: getOptionalStringArray(item, 'hints')
+  }));
 }
 
 /**
@@ -335,61 +482,25 @@ function parseYamlBlock(yamlContent: string): {
     throw new Error('No YAML content found');
   }
 
-  let parsed: any;
+  let parsedUnknown: unknown;
   try {
-    parsed = yaml.load(yamlContent);
-  } catch (e) {
-    throw new Error(`YAML parse error: ${(e as Error).message}`);
+    parsedUnknown = loadYaml(yamlContent);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    throw new Error(`YAML parse error: ${message}`);
   }
 
-  // Extract chunkFeedback
-  const chunkFeedbackV2: ChunkFeedbackV2[] = [];
-  const chunkFeedbackObj = parsed.chunkFeedback || {};
-
-  for (const [chunkId, chunk] of Object.entries(chunkFeedbackObj)) {
-    const chunkData = chunk as any;
-    chunkFeedbackV2.push({
-      chunkId,
-      native: chunkData.native,
-      learner: {
-        meaning: chunkData.learner.meaning,
-        useWhen: chunkData.learner.useWhen,
-        commonWrong: chunkData.learner.commonWrong,
-        fix: chunkData.learner.fix,
-        whyOdd: chunkData.learner.whyOdd,
-      },
-      examples: chunkData.examples || [],
-    });
+  if (!isRecord(parsedUnknown)) {
+    throw new Error('YAML root must be an object');
   }
 
-  // Extract blanksInOrder
-  const blanksInOrder: BlankMapping[] = parsed.blanksInOrder || [];
-
-  // Extract patternSummary
-  const patternSummaryRaw = parsed.patternSummary || {};
-  const patternSummary: PatternSummary = {
-    categoryBreakdown: (patternSummaryRaw.categoryBreakdown || []).map((cat: any) => ({
-      category: cat.category,
-      count: cat.count,
-      exampleChunkIds: cat.examples || [],
-      insight: cat.insight,
-    })),
-    overallInsight: patternSummaryRaw.overallInsight || '',
-    keyPatterns: (patternSummaryRaw.keyPatterns || []).map((pattern: any) => ({
-      pattern: pattern.pattern,
-      explanation: pattern.explanation,
-      chunkIds: pattern.chunks || [],
-    })),
-  };
-
-  // Extract activeRecall
-  const activeRecall: ActiveRecallItem[] = parsed.activeRecall || [];
+  const chunkFeedbackObj = getRecord(parsedUnknown, 'chunkFeedback', 'YAML');
 
   return {
-    chunkFeedbackV2,
-    blanksInOrder,
-    patternSummary,
-    activeRecall,
+    chunkFeedbackV2: parseChunkFeedback(chunkFeedbackObj),
+    blanksInOrder: parseBlanksInOrder(parsedUnknown),
+    patternSummary: parsePatternSummary(parsedUnknown),
+    activeRecall: parseActiveRecall(parsedUnknown)
   };
 }
 
@@ -399,7 +510,7 @@ function parseYamlBlock(yamlContent: string): {
 export function convertToRoleplayScript(pkg: ParsedPackage, scenarioId: string): RoleplayScript {
   return {
     id: scenarioId,
-    category: pkg.category as any,
+    category: pkg.category,
     topic: pkg.topic,
     context: pkg.context,
     characters: pkg.characters,
@@ -408,7 +519,7 @@ export function convertToRoleplayScript(pkg: ParsedPackage, scenarioId: string):
     chunkFeedbackV2: pkg.chunkFeedbackV2,
     blanksInOrder: pkg.blanksInOrder,
     patternSummary: pkg.patternSummary,
-    activeRecall: pkg.activeRecall,
+    activeRecall: pkg.activeRecall
   };
 }
 
@@ -421,15 +532,16 @@ const isDirectInvocation = process.argv[1]?.endsWith('parsePackageMarkdown.ts');
 if (isDirectInvocation) {
   const filePath = process.argv[2];
   if (!filePath) {
-    console.error('Usage: npx tsx parsePackageMarkdown.ts <path-to-markdown>');
+    writeErr('Usage: npx tsx parsePackageMarkdown.ts <path-to-markdown>');
     process.exit(1);
   }
 
   try {
     const pkg = parsePackageMarkdown(filePath);
-    console.log(JSON.stringify(pkg, null, 2));
-  } catch (e) {
-    console.error(`Error parsing ${filePath}:`, (e as Error).message);
+    writeOut(JSON.stringify(pkg, null, 2));
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    writeErr(`Error parsing ${filePath}: ${message}`);
     process.exit(1);
   }
 }

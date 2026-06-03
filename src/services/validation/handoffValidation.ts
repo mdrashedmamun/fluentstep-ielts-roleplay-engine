@@ -6,10 +6,20 @@
  * production (addresses root cause of BBC deployment failure).
  *
  * Pipeline flow with checkpoints:
- * content-gen → validate() → blank-inserter → validate() → transformer → validate() → E2E tests
+ * content-gen -> validate() -> blank-inserter -> validate() -> transformer -> validate() -> E2E tests
  */
 
-import { RoleplayScript, RoleplayScriptV1, RoleplayScriptV2 } from '../staticData';
+import { type RoleplayScript, type RoleplayScriptV2 } from '../staticData';
+
+type UnknownRecord = Record<string, unknown>;
+
+interface DialogueLineLike {
+  text?: string;
+}
+
+interface AnswerVariationLike {
+  index?: number;
+}
 
 /**
  * Validation result: {valid, errors[], warnings[]}
@@ -22,6 +32,58 @@ interface ValidationResult {
   warnings: string[];
 }
 
+function isRecord(value: unknown): value is UnknownRecord {
+  return typeof value === 'object' && value !== null;
+}
+
+function getArray(value: unknown): unknown[] | undefined {
+  return Array.isArray(value) ? value : undefined;
+}
+
+function getDialogueArray(scenario: UnknownRecord): DialogueLineLike[] | undefined {
+  const dialogue = getArray(scenario.dialogue);
+
+  if (!dialogue) {
+    return undefined;
+  }
+
+  return dialogue.filter(isRecord).map((line) => ({
+    text: typeof line.text === 'string' ? line.text : undefined
+  }));
+}
+
+function getAnswerVariationsArray(scenario: UnknownRecord): AnswerVariationLike[] | undefined {
+  const answerVariations = getArray(scenario.answerVariations);
+
+  if (!answerVariations) {
+    return undefined;
+  }
+
+  return answerVariations.filter(isRecord).map((answerVariation) => ({
+    index: typeof answerVariation.index === 'number' ? answerVariation.index : undefined
+  }));
+}
+
+function countDialogueBlanks(dialogue: DialogueLineLike[]): number {
+  return dialogue.reduce((sum, dialogueLine) => sum + (dialogueLine.text?.match(/_+/g)?.length ?? 0), 0);
+}
+
+function hasObjectValue(value: unknown): boolean {
+  return isRecord(value);
+}
+
+function hasArrayValue(value: unknown): boolean {
+  return Array.isArray(value);
+}
+
+function hasDefinedProperty(scenario: UnknownRecord, key: string): boolean {
+  return scenario[key] !== undefined;
+}
+
+function isRuntimeV2Scenario(scenario: RoleplayScript): scenario is RoleplayScriptV2 {
+  return 'chunkFeedbackV2' in scenario && scenario.chunkFeedbackV2 !== undefined;
+}
+
 /**
  * CHECKPOINT 1: Content Generation Output Validation
  *
@@ -31,27 +93,38 @@ interface ValidationResult {
  * - Dialogue/answer mismatch
  * - Missing feedback data for V2 scenarios
  */
-export function validateContentGenOutput(scenario: any): ValidationResult {
+export function validateContentGenOutput(scenario: unknown): ValidationResult {
   const errors: string[] = [];
   const warnings: string[] = [];
 
+  if (!isRecord(scenario)) {
+    return {
+      valid: false,
+      errors: ['content-gen: scenario payload missing or invalid'],
+      warnings
+    };
+  }
+
+  const dialogue = getDialogueArray(scenario);
+  const answerVariations = getAnswerVariationsArray(scenario);
+
   // Check dialogue exists and has content
-  if (!scenario.dialogue || !Array.isArray(scenario.dialogue) || scenario.dialogue.length === 0) {
+  if (!dialogue || dialogue.length === 0) {
     errors.push('content-gen: Dialogue array missing or empty');
   }
 
   // Check answer variations exist and match dialogue blanks
-  if (!scenario.answerVariations || !Array.isArray(scenario.answerVariations)) {
+  if (!answerVariations) {
     errors.push('content-gen: answerVariations array missing');
-  } else if (scenario.answerVariations.length === 0) {
+  } else if (answerVariations.length === 0) {
     errors.push('content-gen: answerVariations array is empty');
   }
 
   // For V2 scenarios: check all required feedback properties exist
-  const hasChunkFeedbackV2 = scenario.chunkFeedbackV2 && Array.isArray(scenario.chunkFeedbackV2);
-  const hasBlankMapping = scenario.blanksInOrder && Array.isArray(scenario.blanksInOrder);
-  const hasPatternSummary = scenario.patternSummary && typeof scenario.patternSummary === 'object';
-  const hasActiveRecall = scenario.activeRecall && Array.isArray(scenario.activeRecall);
+  const hasChunkFeedbackV2 = hasArrayValue(scenario.chunkFeedbackV2);
+  const hasBlankMapping = hasArrayValue(scenario.blanksInOrder);
+  const hasPatternSummary = hasObjectValue(scenario.patternSummary);
+  const hasActiveRecall = hasArrayValue(scenario.activeRecall);
 
   const isV2Scenario = hasChunkFeedbackV2 || hasBlankMapping || hasPatternSummary || hasActiveRecall;
 
@@ -65,15 +138,12 @@ export function validateContentGenOutput(scenario: any): ValidationResult {
   }
 
   // Verify answer count consistency
-  if (scenario.dialogue && scenario.answerVariations) {
-    const dialogueBlankCount = scenario.dialogue.reduce(
-      (sum: number, d: any) => sum + (d.text?.match(/_+/g) || []).length,
-      0
-    );
+  if (dialogue && answerVariations) {
+    const dialogueBlankCount = countDialogueBlanks(dialogue);
 
-    if (dialogueBlankCount !== scenario.answerVariations.length) {
+    if (dialogueBlankCount !== answerVariations.length) {
       warnings.push(
-        `content-gen: Dialogue has ${dialogueBlankCount} blanks but answerVariations has ${scenario.answerVariations.length} entries`
+        `content-gen: Dialogue has ${dialogueBlankCount} blanks but answerVariations has ${answerVariations.length} entries`
       );
     }
   }
@@ -81,7 +151,7 @@ export function validateContentGenOutput(scenario: any): ValidationResult {
   return {
     valid: errors.length === 0,
     errors,
-    warnings,
+    warnings
   };
 }
 
@@ -93,28 +163,37 @@ export function validateContentGenOutput(scenario: any): ValidationResult {
  * - blanksInOrder not created
  * - blanksInOrder length != answerVariations length
  */
-export function validateBlankInsertedOutput(scenario: any): ValidationResult {
+export function validateBlankInsertedOutput(scenario: unknown): ValidationResult {
   const errors: string[] = [];
   const warnings: string[] = [];
 
+  if (!isRecord(scenario)) {
+    return {
+      valid: false,
+      errors: ['blank-inserter: scenario payload missing or invalid'],
+      warnings
+    };
+  }
+
+  const blanksInOrder = getArray(scenario.blanksInOrder);
+  const answerVariations = getAnswerVariationsArray(scenario);
+
   // Check blanksInOrder was created
-  if (!scenario.blanksInOrder || !Array.isArray(scenario.blanksInOrder)) {
+  if (!blanksInOrder) {
     errors.push('blank-inserter: blanksInOrder mapping not created - required for UI rendering');
   } else {
     // Check length consistency
-    if (scenario.answerVariations && Array.isArray(scenario.answerVariations)) {
-      if (scenario.blanksInOrder.length !== scenario.answerVariations.length) {
-        errors.push(
-          `blank-inserter: blanksInOrder length (${scenario.blanksInOrder.length}) ` +
-          `does not match answerVariations length (${scenario.answerVariations.length})`
-        );
-      }
+    if (answerVariations && blanksInOrder.length !== answerVariations.length) {
+      errors.push(
+        `blank-inserter: blanksInOrder length (${blanksInOrder.length}) ` +
+          `does not match answerVariations length (${answerVariations.length})`
+      );
     }
 
     // Check each mapping has expected structure
-    scenario.blanksInOrder.forEach((mapping: any, idx: number) => {
-      if (!mapping || typeof mapping !== 'object') {
-        warnings.push(`blank-inserter: blanksInOrder[${idx}] is invalid (should be object)`);
+    blanksInOrder.forEach((mapping, index) => {
+      if (!isRecord(mapping)) {
+        warnings.push(`blank-inserter: blanksInOrder[${index}] is invalid (should be object)`);
       }
     });
   }
@@ -122,7 +201,7 @@ export function validateBlankInsertedOutput(scenario: any): ValidationResult {
   return {
     valid: errors.length === 0,
     errors,
-    warnings,
+    warnings
   };
 }
 
@@ -135,35 +214,46 @@ export function validateBlankInsertedOutput(scenario: any): ValidationResult {
  * - Mixed V1/V2 properties
  * - Invalid data types
  */
-export function validateTransformedOutput(scenario: any): ValidationResult {
+export function validateTransformedOutput(scenario: unknown): ValidationResult {
   const errors: string[] = [];
   const warnings: string[] = [];
 
+  if (!isRecord(scenario)) {
+    return {
+      valid: false,
+      errors: ['transformer: scenario payload missing or invalid'],
+      warnings
+    };
+  }
+
   // Determine schema version
-  const isV2 = scenario.chunkFeedbackV2 !== undefined || scenario.blanksInOrder !== undefined;
-  const isV1 = scenario.deepDive !== undefined || scenario.chunkFeedback !== undefined;
+  const isV2 = hasDefinedProperty(scenario, 'chunkFeedbackV2') || hasDefinedProperty(scenario, 'blanksInOrder');
 
   if (isV2) {
+    const chunkFeedbackV2 = getArray(scenario.chunkFeedbackV2);
+    const blanksInOrder = getArray(scenario.blanksInOrder);
+    const activeRecall = getArray(scenario.activeRecall);
+
     // V2 Validation: ALL properties required
-    if (!scenario.chunkFeedbackV2 || !Array.isArray(scenario.chunkFeedbackV2)) {
+    if (!chunkFeedbackV2) {
       errors.push('transformer: V2 scenario missing chunkFeedbackV2 array');
-    } else if (scenario.chunkFeedbackV2.length === 0) {
+    } else if (chunkFeedbackV2.length === 0) {
       warnings.push('transformer: V2 scenario has empty chunkFeedbackV2 array');
     }
 
-    if (!scenario.blanksInOrder || !Array.isArray(scenario.blanksInOrder)) {
+    if (!blanksInOrder) {
       errors.push('transformer: V2 scenario missing blanksInOrder array');
-    } else if (scenario.blanksInOrder.length === 0) {
+    } else if (blanksInOrder.length === 0) {
       warnings.push('transformer: V2 scenario has empty blanksInOrder array');
     }
 
-    if (!scenario.patternSummary || typeof scenario.patternSummary !== 'object') {
+    if (!hasObjectValue(scenario.patternSummary)) {
       errors.push('transformer: V2 scenario missing patternSummary object');
     }
 
-    if (!scenario.activeRecall || !Array.isArray(scenario.activeRecall)) {
+    if (!activeRecall) {
       errors.push('transformer: V2 scenario missing activeRecall array');
-    } else if (scenario.activeRecall.length === 0) {
+    } else if (activeRecall.length === 0) {
       warnings.push('transformer: V2 scenario has empty activeRecall array (should have spaced repetition)');
     }
 
@@ -173,19 +263,22 @@ export function validateTransformedOutput(scenario: any): ValidationResult {
     }
   }
 
+  const dialogue = getDialogueArray(scenario);
+  const answerVariations = getAnswerVariationsArray(scenario);
+
   // Verify always-required base properties
-  if (!scenario.dialogue || !Array.isArray(scenario.dialogue) || scenario.dialogue.length === 0) {
+  if (!dialogue || dialogue.length === 0) {
     errors.push('transformer: Missing or empty dialogue array');
   }
 
-  if (!scenario.answerVariations || !Array.isArray(scenario.answerVariations) || scenario.answerVariations.length === 0) {
+  if (!answerVariations || answerVariations.length === 0) {
     errors.push('transformer: Missing or empty answerVariations array');
   }
 
   return {
     valid: errors.length === 0,
     errors,
-    warnings,
+    warnings
   };
 }
 
@@ -198,18 +291,25 @@ export function validatePreMergeSchema(scenario: RoleplayScript): ValidationResu
   const errors: string[] = [];
   const warnings: string[] = [];
 
-  // If we got here with TS passing, schema is valid!
-  // This is mainly for runtime validation and detailed error messages
+  // If we got here with TS passing, schema is valid.
+  // This is mainly for runtime validation and detailed error messages.
 
-  const v2scenario = scenario as any as RoleplayScriptV2;
-  if (v2scenario.chunkFeedbackV2 !== undefined) {
+  if (isRuntimeV2Scenario(scenario)) {
     // This is a V2 scenario
     const v2errors: string[] = [];
 
-    if (!v2scenario.chunkFeedbackV2) v2errors.push('chunkFeedbackV2');
-    if (!v2scenario.blanksInOrder) v2errors.push('blanksInOrder');
-    if (!v2scenario.patternSummary) v2errors.push('patternSummary');
-    if (!v2scenario.activeRecall) v2errors.push('activeRecall');
+    if (!scenario.chunkFeedbackV2) {
+      v2errors.push('chunkFeedbackV2');
+    }
+    if (!scenario.blanksInOrder) {
+      v2errors.push('blanksInOrder');
+    }
+    if (!scenario.patternSummary) {
+      v2errors.push('patternSummary');
+    }
+    if (!scenario.activeRecall) {
+      v2errors.push('activeRecall');
+    }
 
     if (v2errors.length > 0) {
       errors.push(`pre-merge: V2 scenario missing required properties: ${v2errors.join(', ')}`);
@@ -219,7 +319,7 @@ export function validatePreMergeSchema(scenario: RoleplayScript): ValidationResu
   return {
     valid: errors.length === 0,
     errors,
-    warnings,
+    warnings
   };
 }
 
@@ -229,16 +329,16 @@ export function validatePreMergeSchema(scenario: RoleplayScript): ValidationResu
 export function formatValidationReport(stepName: string, result: ValidationResult): string {
   const lines: string[] = [];
   lines.push(`\n[${stepName}] Validation Report`);
-  lines.push(`Status: ${result.valid ? '✅ PASS' : '❌ FAIL'}`);
+  lines.push(`Status: ${result.valid ? 'PASS' : 'FAIL'}`);
 
   if (result.errors.length > 0) {
     lines.push('Errors (blocking):');
-    result.errors.forEach(err => lines.push(`  ❌ ${err}`));
+    result.errors.forEach((error) => lines.push(`  ERROR ${error}`));
   }
 
   if (result.warnings.length > 0) {
     lines.push('Warnings (non-blocking):');
-    result.warnings.forEach(warn => lines.push(`  ⚠️  ${warn}`));
+    result.warnings.forEach((warning) => lines.push(`  WARN ${warning}`));
   }
 
   return lines.join('\n');
@@ -249,8 +349,8 @@ export function formatValidationReport(stepName: string, result: ValidationResul
  */
 export function aggregateValidationResults(results: ValidationResult[]): ValidationResult {
   return {
-    valid: results.every(r => r.valid),
-    errors: results.flatMap(r => r.errors),
-    warnings: results.flatMap(r => r.warnings),
+    valid: results.every((result) => result.valid),
+    errors: results.flatMap((result) => result.errors),
+    warnings: results.flatMap((result) => result.warnings)
   };
 }

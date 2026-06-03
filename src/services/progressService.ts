@@ -48,7 +48,7 @@ export const progressService = {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (!stored) return getDefaultProgress();
 
-      const parsed = JSON.parse(stored);
+      const parsed: unknown = JSON.parse(stored);
       // Validate structure
       if (parsed && typeof parsed === 'object' && 'scenarioProgress' in parsed) {
         return parsed as UserProgress;

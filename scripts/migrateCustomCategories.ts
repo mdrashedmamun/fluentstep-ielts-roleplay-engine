@@ -34,29 +34,6 @@ const CATEGORY_MAPPING: Record<string, { type: string; customLabel: string }> = 
   'Formal requests and closing': { type: 'Exit', customLabel: 'Formal requests and closing' },
 };
 
-interface CategoryBreakdown {
-  category: string;
-  customLabel?: string;
-  count: number;
-  exampleChunkIds: string[];
-  examples?: string[];
-  insight: string;
-  nativePatterns?: string[];
-  commonMistakes?: string[];
-}
-
-interface PatternSummary {
-  categoryBreakdown: CategoryBreakdown[];
-  overallInsight: string;
-  keyPatterns: unknown[];
-}
-
-interface RoleplayScript {
-  id: string;
-  patternSummary?: PatternSummary;
-  [key: string]: unknown;
-}
-
 // Read staticData.ts
 const staticDataPath = path.join(__dirname, '../src/services/staticData.ts');
 let fileContent = fs.readFileSync(staticDataPath, 'utf-8');

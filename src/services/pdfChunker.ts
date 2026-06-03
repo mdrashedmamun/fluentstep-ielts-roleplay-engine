@@ -83,7 +83,6 @@ export function chunkPDFByUnits(
   const unitBoundaries = detectUnitBoundaries(pages);
   const chunks: PDFChunk[] = [];
 
-  let currentChunkStart = pages[0]!.pageNum;
   let currentChunkPages: typeof pages = [];
   let currentUnit: (typeof unitBoundaries)[0] | null = null;
 
@@ -95,10 +94,8 @@ export function chunkPDFByUnits(
     if (unitAtPage && currentChunkPages.length > 1) {
       // We're at a new unit, close current chunk first
       if (currentChunkPages.length > 0) {
-        const prevPage = currentChunkPages[currentChunkPages.length - 2];
         chunks.push(createChunk(currentChunkPages.slice(0, -1), currentUnit));
         currentChunkPages = [page];
-        currentChunkStart = page.pageNum;
       }
       currentUnit = unitAtPage;
     }
@@ -107,7 +104,6 @@ export function chunkPDFByUnits(
     if (currentChunkPages.length >= preferredChunkSize) {
       chunks.push(createChunk(currentChunkPages, currentUnit));
       currentChunkPages = [];
-      currentChunkStart = page.pageNum;
     }
   }
 
@@ -157,5 +153,5 @@ export function filterChunksByRichness(
  * Sort chunks by dialogue richness (highest first)
  */
 export function sortChunksByRichness(chunks: PDFChunk[]): PDFChunk[] {
-  return [...chunks]!.sort((a, b) => b.estimatedDialogueRichness - a.estimatedDialogueRichness);
+  return [...chunks].sort((a, b) => b.estimatedDialogueRichness - a.estimatedDialogueRichness);
 }

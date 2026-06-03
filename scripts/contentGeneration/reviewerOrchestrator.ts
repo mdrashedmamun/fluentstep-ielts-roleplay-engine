@@ -6,11 +6,20 @@
 import { runStructuralReview } from './structuralReviewer';
 import { runContentReview } from './contentReviewer';
 import { runLinguisticReview } from './linguisticReviewer';
+import type { ValidationError } from './packageValidator';
+
+const writeOut = (message = ''): void => {
+    process.stdout.write(`${message}\n`);
+};
+
+const formatRules = (issues: ValidationError[]): string => (
+    [...new Set(issues.map((issue) => issue.rule))].join(', ')
+);
 
 export interface ReviewerOutput {
     passed: boolean;
-    criticalIssues: any[];
-    warnings: any[];
+    criticalIssues: ValidationError[];
+    warnings: ValidationError[];
     reviewerName: string;
 }
 
@@ -31,7 +40,7 @@ export interface AggregatedReview {
  * Run all 3 reviewers in parallel
  */
 export async function runReviewersInParallel(packageMarkdown: string): Promise<AggregatedReview> {
-    console.log('\n📋 Running 3 reviewers in parallel...\n');
+    writeOut('\n📋 Running 3 reviewers in parallel...\n');
 
     // Execute all 3 simultaneously
     const [structural, content, linguistic] = await Promise.all([
@@ -56,49 +65,46 @@ export async function runReviewersInParallel(packageMarkdown: string): Promise<A
     const reviewersFailed = [structural, content, linguistic].filter(r => !r.passed).length;
     const passed = structural.passed && content.passed && linguistic.passed;
 
-    console.log('\n📊 REVIEW AGGREGATION');
-    console.log('═══════════════════════════════════════════\n');
+    writeOut('\n📊 REVIEW AGGREGATION');
+    writeOut('═══════════════════════════════════════════\n');
 
     // Summary line
     if (passed) {
-        console.log('✅ ALL REVIEWERS PASSED');
+        writeOut('✅ ALL REVIEWERS PASSED');
     } else {
-        console.log(`❌ ${reviewersFailed} reviewer(s) found issues`);
+        writeOut(`❌ ${reviewersFailed} reviewer(s) found issues`);
     }
 
-    console.log(`\nReviewer Status:`);
-    console.log(`  ${structural.passed ? '✅' : '❌'} Structural: ${structural.criticalIssues.length} critical`);
-    console.log(`  ${content.passed ? '✅' : '❌'} Content: ${content.criticalIssues.length} critical, ${content.warnings.length} warnings`);
-    console.log(`  ${linguistic.passed ? '✅' : '❌'} Linguistic: ${linguistic.criticalIssues.length} critical, ${linguistic.warnings.length} warnings`);
+    writeOut(`\nReviewer Status:`);
+    writeOut(`  ${structural.passed ? '✅' : '❌'} Structural: ${structural.criticalIssues.length} critical`);
+    writeOut(`  ${content.passed ? '✅' : '❌'} Content: ${content.criticalIssues.length} critical, ${content.warnings.length} warnings`);
+    writeOut(`  ${linguistic.passed ? '✅' : '❌'} Linguistic: ${linguistic.criticalIssues.length} critical, ${linguistic.warnings.length} warnings`);
 
-    console.log(`\nTotal Issues:`);
-    console.log(`  Critical: ${allCriticalIssues.length}`);
-    console.log(`  Warnings: ${allWarnings.length}`);
+    writeOut(`\nTotal Issues:`);
+    writeOut(`  Critical: ${allCriticalIssues.length}`);
+    writeOut(`  Warnings: ${allWarnings.length}`);
 
     // Group issues by reviewer
     if (allCriticalIssues.length > 0) {
-        console.log('\n⚠️  Critical Issues by Reviewer:\n');
+        writeOut('\n⚠️  Critical Issues by Reviewer:\n');
 
         const structuralCrit = structural.criticalIssues.length;
         const contentCrit = content.criticalIssues.length;
         const linguisticCrit = linguistic.criticalIssues.length;
 
         if (structuralCrit > 0) {
-            console.log(`  📋 Structural (${structuralCrit}):`);
-            const rules = [...new Set(structural.criticalIssues.map((e: any) => e.rule))];
-            console.log(`     ${rules.join(', ')}`);
+            writeOut(`  📋 Structural (${structuralCrit}):`);
+            writeOut(`     ${formatRules(structural.criticalIssues)}`);
         }
 
         if (contentCrit > 0) {
-            console.log(`  📚 Content (${contentCrit}):`);
-            const rules = [...new Set(content.criticalIssues.map((e: any) => e.rule))];
-            console.log(`     ${rules.join(', ')}`);
+            writeOut(`  📚 Content (${contentCrit}):`);
+            writeOut(`     ${formatRules(content.criticalIssues)}`);
         }
 
         if (linguisticCrit > 0) {
-            console.log(`  🗣️  Linguistic (${linguisticCrit}):`);
-            const rules = [...new Set(linguistic.criticalIssues.map((e: any) => e.rule))];
-            console.log(`     ${rules.join(', ')}`);
+            writeOut(`  🗣️  Linguistic (${linguisticCrit}):`);
+            writeOut(`     ${formatRules(linguistic.criticalIssues)}`);
         }
     }
 
@@ -115,7 +121,7 @@ export async function runReviewersInParallel(packageMarkdown: string): Promise<A
 /**
  * Get all critical issues from aggregated review
  */
-export function getAllCriticalIssues(review: AggregatedReview): any[] {
+export function getAllCriticalIssues(review: AggregatedReview): ValidationError[] {
     return [
         ...review.reviewers.structural.criticalIssues,
         ...review.reviewers.content.criticalIssues,
@@ -126,7 +132,7 @@ export function getAllCriticalIssues(review: AggregatedReview): any[] {
 /**
  * Get all warnings from aggregated review
  */
-export function getAllWarnings(review: AggregatedReview): any[] {
+export function getAllWarnings(review: AggregatedReview): ValidationError[] {
     return [
         ...review.reviewers.structural.warnings,
         ...review.reviewers.content.warnings,

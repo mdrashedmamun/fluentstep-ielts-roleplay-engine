@@ -4,103 +4,140 @@
  * Supports phase-based execution and dry-run mode
  */
 
-import { CURATED_ROLEPLAYS } from '../services/staticData';
-import { runAudit, registerValidator, ValidatorFn } from '../services/linguisticAudit/index';
-import { validateChunkCompliance } from '../services/linguisticAudit/validators/chunkComplianceValidator';
-import { validateUKEnglish } from '../services/linguisticAudit/validators/ukEnglishValidator';
-import { validateTonality } from '../services/linguisticAudit/validators/tonalityValidator';
-import { validateNaturalPatterns } from '../services/linguisticAudit/validators/naturalPatternsValidator';
-import { validateDialogueFlow } from '../services/linguisticAudit/validators/dialogueFlowValidator';
-import { validateAlternatives } from '../services/linguisticAudit/validators/alternativesValidator';
-import { validateDeepDive } from '../services/linguisticAudit/validators/deepDiveValidator';
-import { validateGrammarContext } from '../services/linguisticAudit/validators/grammarContextValidator';
-import { validateContextualSubstitution } from '../services/linguisticAudit/validators/contextualSubstitutionValidator';
-import { validateBlankAnswerPairing } from '../services/linguisticAudit/validators/blankAnswerPairingValidator';
 import { execSync } from 'child_process';
+import { CURATED_ROLEPLAYS } from '../src/services/staticData';
+import { runAudit, registerValidator, ValidatorFn } from '../src/services/linguisticAudit/index';
+import { validateChunkCompliance } from '../src/services/linguisticAudit/validators/chunkComplianceValidator';
+import { validateUKEnglish } from '../src/services/linguisticAudit/validators/ukEnglishValidator';
+import { validateTonality } from '../src/services/linguisticAudit/validators/tonalityValidator';
+import { validateNaturalPatterns } from '../src/services/linguisticAudit/validators/naturalPatternsValidator';
+import { validateDialogueFlow } from '../src/services/linguisticAudit/validators/dialogueFlowValidator';
+import { validateAlternatives } from '../src/services/linguisticAudit/validators/alternativesValidator';
+import { validateDeepDive } from '../src/services/linguisticAudit/validators/deepDiveValidator';
+import { validateGrammarContext } from '../src/services/linguisticAudit/validators/grammarContextValidator';
+import { validateContextualSubstitution } from '../src/services/linguisticAudit/validators/contextualSubstitutionValidator';
+import { validateBlankAnswerPairing } from '../src/services/linguisticAudit/validators/blankAnswerPairingValidator';
 
-// Register all validators
-registerValidator({
-  name: 'Chunk Compliance',
-  validate: validateChunkCompliance
-} as ValidatorFn);
+const writeLine = (message = ''): void => {
+  process.stdout.write(`${message}
+`);
+};
 
-registerValidator({
-  name: 'UK English Spelling',
-  validate: (scenario) => validateUKEnglish(scenario).filter(f => f.validatorName === 'UK English Spelling')
-} as ValidatorFn);
+const writeErrorLine = (message: string): void => {
+  process.stderr.write(`${message}
+`);
+};
 
-registerValidator({
-  name: 'UK English Vocabulary',
-  validate: (scenario) => validateUKEnglish(scenario).filter(f => f.validatorName === 'UK English Vocabulary')
-} as ValidatorFn);
+const getErrorMessage = (error: unknown): string => (
+  error instanceof Error ? error.message : String(error)
+);
 
-registerValidator({
-  name: 'Tonality & Register',
-  validate: validateTonality
-} as ValidatorFn);
+const runCommand = (command: string): void => {
+  execSync(command, { stdio: 'pipe' });
+};
 
-registerValidator({
-  name: 'Natural Patterns',
-  validate: validateNaturalPatterns
-} as ValidatorFn);
+const registerAuditValidators = (): void => {
+  registerValidator({
+    name: 'Chunk Compliance',
+    validate: validateChunkCompliance
+  } as ValidatorFn);
 
-registerValidator({
-  name: 'Dialogue Flow',
-  validate: validateDialogueFlow
-} as ValidatorFn);
+  registerValidator({
+    name: 'UK English Spelling',
+    validate: (scenario) => validateUKEnglish(scenario).filter(finding => finding.validatorName === 'UK English Spelling')
+  } as ValidatorFn);
 
-registerValidator({
-  name: 'Alternatives Quality',
-  validate: validateAlternatives
-} as ValidatorFn);
+  registerValidator({
+    name: 'UK English Vocabulary',
+    validate: (scenario) => validateUKEnglish(scenario).filter(finding => finding.validatorName === 'UK English Vocabulary')
+  } as ValidatorFn);
 
-registerValidator({
-  name: 'Deep Dive Quality',
-  validate: validateDeepDive
-} as ValidatorFn);
+  registerValidator({
+    name: 'Tonality & Register',
+    validate: validateTonality
+  } as ValidatorFn);
 
-registerValidator({
-  name: 'Grammar Context',
-  validate: validateGrammarContext
-} as ValidatorFn);
+  registerValidator({
+    name: 'Natural Patterns',
+    validate: validateNaturalPatterns
+  } as ValidatorFn);
 
-registerValidator({
-  name: 'Contextual Substitution',
-  validate: validateContextualSubstitution
-} as ValidatorFn);
+  registerValidator({
+    name: 'Dialogue Flow',
+    validate: validateDialogueFlow
+  } as ValidatorFn);
 
-registerValidator({
-  name: 'Blank-Answer Pairing',
-  validate: validateBlankAnswerPairing
-} as ValidatorFn);
+  registerValidator({
+    name: 'Alternatives Quality',
+    validate: validateAlternatives
+  } as ValidatorFn);
 
-const PHASE_CONFIG = {
+  registerValidator({
+    name: 'Deep Dive Quality',
+    validate: validateDeepDive
+  } as ValidatorFn);
+
+  registerValidator({
+    name: 'Grammar Context',
+    validate: validateGrammarContext
+  } as ValidatorFn);
+
+  registerValidator({
+    name: 'Contextual Substitution',
+    validate: validateContextualSubstitution
+  } as ValidatorFn);
+
+  registerValidator({
+    name: 'Blank-Answer Pairing',
+    validate: validateBlankAnswerPairing
+  } as ValidatorFn);
+};
+
+/**
+ * Print header
+ */
+function printHeader(title: string): void {
+  writeLine(`\n${'='.repeat(70)}`);
+  writeLine(`  ${title}`);
+  writeLine(`${'='.repeat(70)}\n`);
+}
+
+type PhaseNumber = 1 | 2 | 3;
+
+interface AuditCliArgs {
+  phase?: PhaseNumber;
+  scenarios?: string[];
+  dryRun: boolean;
+}
+
+const PHASE_CONFIG: Record<PhaseNumber, { categories: Array<typeof CURATED_ROLEPLAYS[number]['category']>; name: string }> = {
   1: { categories: ['Advanced', 'Workplace'], name: 'Phase 1: High-Risk' },
   2: { categories: ['Service/Logistics', 'Social'], name: 'Phase 2: Medium-Risk' },
   3: { categories: ['Academic', 'Healthcare', 'Cultural', 'Community'], name: 'Phase 3: Low-Risk' }
 };
 
+const isPhaseNumber = (value: number): value is PhaseNumber => value === 1 || value === 2 || value === 3;
+
 /**
  * Parse command line arguments
  */
-function parseArgs(): {
-  phase?: number;
-  scenarios?: string[];
-  dryRun: boolean;
-} {
+function parseArgs(): AuditCliArgs {
   const args = process.argv.slice(2);
-  const result: any = { dryRun: false };
+  const result: AuditCliArgs = { dryRun: false };
 
   for (const arg of args) {
-    if (arg.startsWith('--')) {
-      const [key, value] = arg.substring(2).split('=');
-      if (key === 'phase' && value) {
-        result.phase = parseInt(value, 10);
-      } else if (key === 'scenarios' && value) {
-        result.scenarios = value.split(',');
-      } else if (key === 'dry-run') {
-        result.dryRun = true;
+    if (!arg.startsWith('--')) continue;
+
+    const [key, value] = arg.substring(2).split('=');
+    if (key === 'phase' && value) {
+      const parsedPhase = Number.parseInt(value, 10);
+      if (isPhaseNumber(parsedPhase)) {
+        result.phase = parsedPhase;
       }
+    } else if (key === 'scenarios' && value) {
+      result.scenarios = value.split(',');
+    } else if (key === 'dry-run') {
+      result.dryRun = true;
     }
   }
 
@@ -111,36 +148,28 @@ function parseArgs(): {
  * Get scenarios for a phase or specific list
  */
 function getScenarios(
-  phase?: number,
+  phase?: PhaseNumber,
   specificIds?: string[]
 ): string[] {
   if (specificIds && specificIds.length > 0) {
     return specificIds;
   }
 
-  if (phase && phase in PHASE_CONFIG) {
-    const config = PHASE_CONFIG[phase as keyof typeof PHASE_CONFIG];
-    return CURATED_ROLEPLAYS.filter(s =>
-      config.categories.includes(s.category)
-    ).map(s => s.id);
+  if (phase) {
+    const config = PHASE_CONFIG[phase];
+    return CURATED_ROLEPLAYS.filter(scenario =>
+      config.categories.includes(scenario.category)
+    ).map(scenario => scenario.id);
   }
 
-  return CURATED_ROLEPLAYS.map(s => s.id);
-}
-
-/**
- * Print header
- */
-function printHeader(title: string) {
-  console.log('\n' + '='.repeat(60));
-  console.log(`  ${title}`);
-  console.log('='.repeat(60) + '\n');
+  return CURATED_ROLEPLAYS.map(scenario => scenario.id);
 }
 
 /**
  * Main orchestrator function
  */
-async function main() {
+async function main(): Promise<void> {
+  registerAuditValidators();
   const args = parseArgs();
   const scenarioIds = getScenarios(args.phase, args.scenarios);
 
@@ -148,29 +177,29 @@ async function main() {
 
   try {
     // Pre-flight checks
-    console.log('📋 Pre-flight checks...');
+    writeLine('📋 Pre-flight checks...');
     try {
-      execSync('npm run build', { stdio: 'pipe' });
-      console.log('  ✓ Build succeeds');
+      runCommand('npm run build');
+      writeLine('  ✓ Build succeeds');
     } catch {
-      console.error('  ✗ Build failed');
+      writeErrorLine('  ✗ Build failed');
       process.exit(1);
     }
 
     // Create git tag
     try {
-      execSync(`git tag audit-phase1-start`, { stdio: 'pipe' });
-      console.log('  ✓ Git tag created: audit-phase1-start');
+      runCommand('git tag audit-phase1-start');
+      writeLine('  ✓ Git tag created: audit-phase1-start');
     } catch {
-      console.log('  ℹ Git tag already exists (continuing...)');
+      writeLine('  ℹ Git tag already exists (continuing...)');
     }
 
     // Get scenarios to validate
-    const scenariosToValidate = CURATED_ROLEPLAYS.filter(s =>
-      scenarioIds.includes(s.id)
+    const scenariosToValidate = CURATED_ROLEPLAYS.filter(scenario =>
+      scenarioIds.includes(scenario.id)
     );
 
-    console.log(`\n📋 Validating ${scenariosToValidate.length} scenarios...`);
+    writeLine(`\n📋 Validating ${scenariosToValidate.length} scenarios...`);
     const startTime = Date.now();
 
     // Run audit on the scenarios
@@ -191,63 +220,63 @@ async function main() {
 
     // Summary
     printHeader('Audit Summary');
-    console.log(`Scenarios validated: ${scenariosToValidate.length}`);
-    console.log(`Total findings: ${totalFindings}`);
-    console.log(`Execution time: ${(executionTime / 1000).toFixed(1)}s`);
-    console.log(`Dry-run mode: ${args.dryRun ? 'Yes' : 'No'}\n`);
+    writeLine(`Scenarios validated: ${scenariosToValidate.length}`);
+    writeLine(`Total findings: ${totalFindings}`);
+    writeLine(`Execution time: ${(executionTime / 1000).toFixed(1)}s`);
+    writeLine(`Dry-run mode: ${args.dryRun ? 'Yes' : 'No'}\n`);
 
     // Show findings by validator
     if (report.validatorResults.length > 0) {
-      console.log('📊 Findings by Validator:');
+      writeLine('📊 Findings by Validator:');
       for (const result of report.validatorResults) {
         if (result.findings.length > 0) {
-          console.log(`  ${result.validatorName}: ${result.findings.length}`);
+          writeLine(`  ${result.validatorName}: ${result.findings.length}`);
         }
       }
     }
 
     // Show top 5 issues if not dry-run
     if (!args.dryRun && report.autoFixesLog.length > 0) {
-      console.log('\n🔧 Sample Fixes Applied:');
+      writeLine('\n🔧 Sample Fixes Applied:');
       report.autoFixesLog.slice(0, 5).forEach((fix, i) => {
-        console.log(
+        writeLine(
           `  ${i + 1}. ${fix.scenarioId} [${fix.location}]`
         );
-        console.log(`     ${fix.reason}`);
-        console.log(`     "${fix.oldValue}" → "${fix.newValue}"`);
+        writeLine(`     ${fix.reason}`);
+        writeLine(`     "${fix.oldValue}" → "${fix.newValue}"`);
       });
       if (report.autoFixesLog.length > 5) {
-        console.log(`  ... and ${report.autoFixesLog.length - 5} more`);
+        writeLine(`  ... and ${report.autoFixesLog.length - 5} more`);
       }
 
       // Verify build after fixes
-      console.log('\n🔨 Verifying build after fixes...');
+      writeLine('\n🔨 Verifying build after fixes...');
       try {
-        execSync('npm run build', { stdio: 'pipe' });
-        console.log('  ✓ Build succeeds');
+        runCommand('npm run build');
+        writeLine('  ✓ Build succeeds');
 
         // Git commit
-        console.log('📦 Creating git commit...');
+        writeLine('📦 Creating git commit...');
         const commitMsg = `audit: Apply ${report.autoFixesLog.length} fixes to ${scenariosToValidate.length} scenarios
 
 Co-Authored-By: Claude Haiku 4.5 <noreply@anthropic.com>`;
 
-        execSync('git add services/staticData.ts', { stdio: 'pipe' });
-        execSync(`git commit -m "${commitMsg}"`, { stdio: 'pipe' });
-        console.log('  ✓ Git commit created');
-      } catch (error) {
-        console.error('  ✗ Build verification or git commit failed');
+        runCommand('git add services/staticData.ts');
+        runCommand(`git commit -m "${commitMsg}"`);
+        writeLine('  ✓ Git commit created');
+      } catch {
+        writeErrorLine('  ✗ Build verification or git commit failed');
         process.exit(1);
       }
     } else if (args.dryRun) {
-      console.log('\n📋 Dry-run mode: No changes applied');
+      writeLine('\n📋 Dry-run mode: No changes applied');
     }
 
-    console.log('');
+    writeLine('');
   } catch (error) {
-    console.error('\n❌ Audit error:', error);
+    writeErrorLine(`\n❌ Audit error: ${getErrorMessage(error)}`);
     process.exit(1);
   }
 }
 
-main();
+void main();

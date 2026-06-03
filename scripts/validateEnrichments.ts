@@ -15,6 +15,18 @@ interface ValidationResult {
   warnings: string[];
 }
 
+const writeLine = (message = ''): void => {
+  process.stdout.write(`${message}\n`);
+};
+
+const writeError = (message: string): void => {
+  process.stderr.write(`${message}\n`);
+};
+
+const getErrorMessage = (error: unknown): string => (
+  error instanceof Error ? error.message : String(error)
+);
+
 function parseArgs(): string {
   const args = process.argv.slice(2);
   for (let i = 0; i < args.length; i++) {
@@ -23,8 +35,8 @@ function parseArgs(): string {
     }
   }
 
-  console.error('Usage: npm run validate:enrichments -- --file=<filename>');
-  console.error('Example: npm run validate:enrichments -- --file=Social-batch1-enriched.md');
+  writeError('Usage: npm run validate:enrichments -- --file=<filename>');
+  writeError('Example: npm run validate:enrichments -- --file=Social-batch1-enriched.md');
   process.exit(1);
 }
 
@@ -360,16 +372,16 @@ function validateCategoryTypes(scenarioId: string, yaml: string): string[] {
   return errors;
 }
 
-async function main() {
+function main() {
   const filename = parseArgs();
   const filePath = path.join(process.cwd(), 'exports', filename);
 
-  console.log(`\n🔍 Validating enriched scenarios...`);
-  console.log(`   File: ${filename}\n`);
+  writeLine(`\n🔍 Validating enriched scenarios...`);
+  writeLine(`   File: ${filename}\n`);
 
   // Check file exists
   if (!fs.existsSync(filePath)) {
-    console.error(`❌ File not found: ${filePath}`);
+    writeError(`❌ File not found: ${filePath}`);
     process.exit(1);
   }
 
@@ -384,50 +396,50 @@ async function main() {
   };
 
   // 1. Validate category header
-  console.log('📋 Checking category header...');
+  writeLine('📋 Checking category header...');
   const headerValidation = validateCategoryHeader(lines);
   if (!headerValidation.valid) {
     result.valid = false;
     result.errors.push(...headerValidation.errors);
   } else {
-    console.log(`   ✅ Category: ${headerValidation.category}`);
+    writeLine(`   ✅ Category: ${headerValidation.category}`);
   }
 
   // 2. Validate YAML blocks
-  console.log('\n📋 Parsing YAML blocks...');
+  writeLine('\n📋 Parsing YAML blocks...');
   const yamlValidation = validateYamlBlocks(content);
   if (!yamlValidation.valid) {
     result.valid = false;
     result.errors.push(...yamlValidation.errors);
   } else {
-    console.log(`   ✅ Found ${yamlValidation.blocks.length} enrichment blocks`);
+    writeLine(`   ✅ Found ${yamlValidation.blocks.length} enrichment blocks`);
   }
 
   // 3. Validate batch size
-  console.log('\n📋 Validating batch size...');
+  writeLine('\n📋 Validating batch size...');
   const batchValidation = validateBatchSize(yamlValidation.blocks.length);
   if (!batchValidation.valid) {
     result.valid = false;
     result.errors.push(...batchValidation.errors);
   } else {
-    console.log(`   ✅ Batch size: ${yamlValidation.blocks.length} scenario(s)`);
+    writeLine(`   ✅ Batch size: ${yamlValidation.blocks.length} scenario(s)`);
   }
 
   // 4. Validate category lock
   if (headerValidation.category) {
-    console.log('\n🔒 Validating category lock...');
+    writeLine('\n🔒 Validating category lock...');
     const scenarioIds = yamlValidation.blocks.map(b => b.scenarioId);
     const lockValidation = validateCategoryLock(headerValidation.category, scenarioIds);
     if (!lockValidation.valid) {
       result.valid = false;
       result.errors.push(...lockValidation.errors);
     } else {
-      console.log(`   ✅ All scenarios match declared category`);
+      writeLine(`   ✅ All scenarios match declared category`);
     }
   }
 
   // 5. Validate word counts and content
-  console.log('\n📋 Validating content...');
+  writeLine('\n📋 Validating content...');
   for (const block of yamlValidation.blocks) {
     const wordErrors = validateWordCounts(block.scenarioId, block.yaml);
     result.errors.push(...wordErrors);
@@ -449,32 +461,34 @@ async function main() {
   }
 
   if (result.errors.length === 0 && result.warnings.length === 0) {
-    console.log(`   ✅ All validations passed`);
+    writeLine(`   ✅ All validations passed`);
   }
 
   // Print results
-  console.log('\n' + '='.repeat(60));
+  writeLine('\n' + '='.repeat(60));
   if (result.valid && result.warnings.length === 0) {
-    console.log('\n✅ All validations passed! Ready to import.');
-    console.log(`\n📥 Next step: npm run import:enrichments -- --file=${filename}`);
+    writeLine('\n✅ All validations passed! Ready to import.');
+    writeLine(`\n📥 Next step: npm run import:enrichments -- --file=${filename}`);
   } else {
     if (result.errors.length > 0) {
-      console.log('\n❌ ERRORS (must fix before import):');
-      result.errors.forEach(e => console.log(`   ${e}`));
+      writeLine('\n❌ ERRORS (must fix before import):');
+      result.errors.forEach(e => writeLine(`   ${e}`));
     }
 
     if (result.warnings.length > 0) {
-      console.log('\n⚠️  WARNINGS (review before import):');
-      result.warnings.forEach(w => console.log(`   ${w}`));
+      writeLine('\n⚠️  WARNINGS (review before import):');
+      result.warnings.forEach(w => writeLine(`   ${w}`));
     }
 
     process.exit(1);
   }
 
-  console.log('');
+  writeLine('');
 }
 
-main().catch(err => {
-  console.error('Error:', err.message);
+try {
+  main();
+} catch (error) {
+  writeError(`Error: ${getErrorMessage(error)}`);
   process.exit(1);
-});
+}

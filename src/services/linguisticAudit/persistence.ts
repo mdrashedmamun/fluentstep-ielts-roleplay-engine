@@ -19,6 +19,10 @@ export interface PersistenceResult {
 const STATIC_DATA_PATH = path.resolve(process.cwd(), 'services/staticData.ts');
 const BACKUP_DIR = path.resolve('/tmp');
 
+const getErrorMessage = (error: unknown): string => (
+  error instanceof Error ? error.message : String(error)
+);
+
 /**
  * Create backup of staticData.ts before applying fixes
  */
@@ -107,7 +111,7 @@ export async function persistFixes(
     } catch (error) {
       // Restore from backup
       await fs.writeFile(STATIC_DATA_PATH, originalContent, 'utf-8');
-      throw new Error(`TypeScript validation failed: ${error}`);
+      throw new Error(`TypeScript validation failed: ${getErrorMessage(error)}`);
     }
 
     // Write to disk if not dry-run
@@ -118,7 +122,7 @@ export async function persistFixes(
 
     return result;
   } catch (error) {
-    throw new Error(`Persistence failed: ${error}`);
+    throw new Error(`Persistence failed: ${getErrorMessage(error)}`);
   }
 }
 

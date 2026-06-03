@@ -7,7 +7,7 @@
 
 import { CURATED_ROLEPLAYS } from '../src/services/staticData';
 import { runQACheck, formatQAReport, generateQASummary, QAReport } from './qaAgent';
-import { analyzeChunkReuseAcrossScenarios, getChunkReuseReport } from './chunkReuseEnforcer';
+import { analyzeChunkReuseAcrossScenarios } from './chunkReuseEnforcer';
 
 interface TestResult {
   passed: boolean;
@@ -18,15 +18,28 @@ interface TestResult {
   reports: QAReport[];
 }
 
+
+const writeLine = (message = ''): void => {
+  process.stdout.write(`${message}\n`);
+};
+
+const writeError = (message: string): void => {
+  process.stderr.write(`${message}\n`);
+};
+
+const getErrorMessage = (error: unknown): string => (
+  error instanceof Error ? error.message : String(error)
+);
+
 /**
  * Run comprehensive test suite
  */
-async function runComprehensiveTests(): Promise<TestResult> {
-  console.log('\n');
-  console.log('╔' + '═'.repeat(68) + '╗');
-  console.log('║' + ' '.repeat(15) + 'QA AGENT COMPREHENSIVE TEST SUITE' + ' '.repeat(20) + '║');
-  console.log('╚' + '═'.repeat(68) + '╝');
-  console.log('\n');
+function runComprehensiveTests(): TestResult {
+  writeLine('\n');
+  writeLine('╔' + '═'.repeat(68) + '╗');
+  writeLine('║' + ' '.repeat(15) + 'QA AGENT COMPREHENSIVE TEST SUITE' + ' '.repeat(20) + '║');
+  writeLine('╚' + '═'.repeat(68) + '╝');
+  writeLine('\n');
 
   const scenarios = CURATED_ROLEPLAYS;
   const reports: QAReport[] = [];
@@ -34,7 +47,7 @@ async function runComprehensiveTests(): Promise<TestResult> {
   let failedCount = 0;
   let totalIssues = 0;
 
-  console.log(`Testing ${scenarios.length} scenarios...\n`);
+  writeLine(`Testing ${scenarios.length} scenarios...\n`);
 
   // Run QA checks on all scenarios
   for (const scenario of scenarios) {
@@ -44,22 +57,22 @@ async function runComprehensiveTests(): Promise<TestResult> {
 
     if (report.passed) {
       passedCount++;
-      console.log(`✅ ${report.scenarioId}: PASSED`);
+      writeLine(`✅ ${report.scenarioId}: PASSED`);
     } else {
       failedCount++;
-      console.log(`❌ ${report.scenarioId}: FAILED (${report.summary.criticalCount} critical)`);
+      writeLine(`❌ ${report.scenarioId}: FAILED (${report.summary.criticalCount} critical)`);
     }
   }
 
-  console.log('\n');
-  console.log('═'.repeat(70));
-  console.log('SUMMARY REPORT');
-  console.log('═'.repeat(70));
-  console.log(generateQASummary(reports));
+  writeLine('\n');
+  writeLine('═'.repeat(70));
+  writeLine('SUMMARY REPORT');
+  writeLine('═'.repeat(70));
+  writeLine(generateQASummary(reports));
 
   // Gate analysis
-  console.log('GATE ANALYSIS:');
-  console.log('─'.repeat(70));
+  writeLine('GATE ANALYSIS:');
+  writeLine('─'.repeat(70));
 
   const gateStats = {
     structuralDiscipline: { passed: 0, failed: 0 },
@@ -92,71 +105,71 @@ async function runComprehensiveTests(): Promise<TestResult> {
   for (const gate of gates) {
     const passRate = ((gate.stats.passed / scenarios.length) * 100).toFixed(0);
     const icon = gate.stats.failed === 0 ? '✅' : '⚠️';
-    console.log(
+    writeLine(
       `${icon} ${gate.name}: ${gate.stats.passed}/${scenarios.length} (${passRate}%)`
     );
   }
 
-  console.log('');
+  writeLine('');
 
   // Issue distribution
-  console.log('ISSUE DISTRIBUTION:');
-  console.log('─'.repeat(70));
+  writeLine('ISSUE DISTRIBUTION:');
+  writeLine('─'.repeat(70));
 
   const criticalIssueCount = reports.reduce((sum, r) => sum + r.summary.criticalCount, 0);
   const warningCount = reports.reduce((sum, r) => sum + r.summary.warningCount, 0);
   const suggestionCount = reports.reduce((sum, r) => sum + r.summary.suggestionCount, 0);
 
-  console.log(`Critical Issues: ${criticalIssueCount}`);
-  console.log(`Warnings: ${warningCount}`);
-  console.log(`Suggestions: ${suggestionCount}`);
-  console.log(`Total: ${totalIssues}`);
-  console.log('');
+  writeLine(`Critical Issues: ${criticalIssueCount}`);
+  writeLine(`Warnings: ${warningCount}`);
+  writeLine(`Suggestions: ${suggestionCount}`);
+  writeLine(`Total: ${totalIssues}`);
+  writeLine('');
 
   // Chunk reuse analysis
-  console.log('CHUNK REUSE ANALYSIS:');
-  console.log('─'.repeat(70));
+  writeLine('CHUNK REUSE ANALYSIS:');
+  writeLine('─'.repeat(70));
   const chunkReuseReport = analyzeChunkReuseAcrossScenarios(scenarios);
-  console.log(
+  writeLine(
     `Synonym replacements: ${chunkReuseReport.synonymReplacements.length}`
   );
   if (chunkReuseReport.recommendations.length > 0) {
-    console.log(`Recommendations: ${chunkReuseReport.recommendations.length}`);
+    writeLine(`Recommendations: ${chunkReuseReport.recommendations.length}`);
     for (const rec of chunkReuseReport.recommendations.slice(0, 3)) {
-      console.log(`  • ${rec}`);
+      writeLine(`  • ${rec}`);
     }
   }
-  console.log('');
+  writeLine('');
 
   // Performance check
-  console.log('PERFORMANCE:');
-  console.log('─'.repeat(70));
-  console.log(`Average confidence: ${(
+  writeLine('PERFORMANCE:');
+  writeLine('─'.repeat(70));
+  writeLine(`Average confidence: ${(
     reports.reduce((sum, r) => sum + r.overallConfidence, 0) / reports.length * 100
   ).toFixed(0)}%`);
-  console.log('');
+  writeLine('');
 
   // Test result
   const passed = failedCount === 0;
 
   if (passed) {
-    console.log('═'.repeat(70));
-    console.log('✅ ALL TESTS PASSED');
-    console.log('═'.repeat(70));
+    writeLine('═'.repeat(70));
+    writeLine('✅ ALL TESTS PASSED');
+    writeLine('═'.repeat(70));
   } else {
-    console.log('═'.repeat(70));
-    console.log(`⚠️  ${failedCount} SCENARIOS REQUIRE ATTENTION`);
-    console.log('═'.repeat(70));
+    writeLine('═'.repeat(70));
+    writeLine(`⚠️  ${failedCount} SCENARIOS REQUIRE ATTENTION`);
+    writeLine('═'.repeat(70));
   }
-  console.log('');
+  writeLine('');
 
   // Detailed results
-  console.log('DETAILED RESULTS (First 3 Failed):');
-  console.log('═'.repeat(70));
+  writeLine('DETAILED RESULTS (First 3 Failed):');
+  writeLine('═'.repeat(70));
   let failedShown = 0;
   for (const report of reports.filter(r => !r.passed)) {
     if (failedShown >= 3) break;
-    console.log(formatQAReport(report));
+    writeLine(formatQAReport(report));
     failedShown++;
   }
 
@@ -171,4 +184,9 @@ async function runComprehensiveTests(): Promise<TestResult> {
 }
 
 // Run the tests
-runComprehensiveTests().catch(console.error);
+try {
+  runComprehensiveTests();
+} catch (error) {
+  writeError(getErrorMessage(error));
+  process.exit(1);
+}

@@ -69,7 +69,7 @@ const PatternSummaryView: React.FC<PatternSummaryViewProps> = ({ summary, scenar
           {summary.categoryBreakdown.map((breakdown, idx) => {
             // Use categoryKey for styling (machine key, always a standard enum)
             // Fall back to deprecated category field for backward compatibility
-            const styleKey = (breakdown.categoryKey || breakdown.category || 'Idioms') as ChunkCategory;
+            const styleKey = (breakdown.categoryKey || breakdown.category || 'Idioms');
             const colors = CATEGORY_COLORS[styleKey] || CATEGORY_COLORS['Idioms'];
             const icon = CATEGORY_ICONS[styleKey] || '💡';
             // Display label: prefer new categoryLabel, fall back to old customLabel, then styleKey
@@ -102,7 +102,7 @@ const PatternSummaryView: React.FC<PatternSummaryViewProps> = ({ summary, scenar
                           key={i}
                           className="text-xs bg-white/80 px-2 py-1 rounded border border-gray-200"
                         >
-                          "{chunk}"
+                          &quot;{chunk}&quot;
                         </span>
                       ))}
                     </div>
@@ -165,7 +165,7 @@ const PatternSummaryView: React.FC<PatternSummaryViewProps> = ({ summary, scenar
                               key={i}
                               className="text-xs bg-white px-2 py-1 rounded border border-gray-300"
                             >
-                              "{chunk}"
+                              &quot;{chunk}&quot;
                             </span>
                           ))}
                         </div>

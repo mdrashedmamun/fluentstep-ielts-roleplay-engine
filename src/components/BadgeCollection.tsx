@@ -17,7 +17,7 @@ const BadgeCollection: React.FC<BadgeCollectionProps> = ({ compact = false }) =>
   const categoryBadges = getBadgesByCategory(selectedCategory);
 
   return (
-    <div className="space-y-6">
+    <div className={compact ? 'space-y-4' : 'space-y-6'}>
       {/* Badge Stats Header */}
       <div className="bg-gradient-to-r from-primary-50 to-accent-50 p-6 rounded-2xl border-2 border-primary-100">
         <div className="flex items-center justify-between">

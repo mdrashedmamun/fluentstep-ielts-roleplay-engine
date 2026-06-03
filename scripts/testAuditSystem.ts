@@ -11,7 +11,29 @@ const chalk = {
   yellow: (s: string) => `\x1b[33m${s}\x1b[0m`
 };
 
-import { CURATED_ROLEPLAYS } from '../src/services/staticData';
+const writeOut = (message = ''): void => {
+  process.stdout.write(`${message}\n`);
+};
+
+const getErrorMessage = (error: unknown): string => (
+  error instanceof Error ? error.message : String(error)
+);
+
+interface ValidatorSmokeResult {
+  scenario: string;
+  validator: string;
+  issues?: number;
+  details?: ValidationFinding[];
+  error?: string;
+}
+
+interface ValidatorSmoke {
+  name: string;
+  fn: (scenario: RoleplayScript) => ValidationFinding[];
+}
+
+import { CURATED_ROLEPLAYS, type RoleplayScript } from '../src/services/staticData';
+import type { ValidationFinding } from '../src/services/linguisticAudit/types';
 import { validateChunkCompliance } from '../src/services/linguisticAudit/validators/chunkComplianceValidator';
 import { validateUKEnglish } from '../src/services/linguisticAudit/validators/ukEnglishValidator';
 import { validateTonality } from '../src/services/linguisticAudit/validators/tonalityValidator';
@@ -20,21 +42,21 @@ import { validateDialogueFlow } from '../src/services/linguisticAudit/validators
 import { validateAlternatives } from '../src/services/linguisticAudit/validators/alternativesValidator';
 import { validateDeepDive } from '../src/services/linguisticAudit/validators/deepDiveValidator';
 
-console.log('\n🧪 Linguistic Audit System - Test Suite\n');
+writeOut('\n🧪 Linguistic Audit System - Test Suite\n');
 
 // Test each validator on first 5 scenarios
 const testScenarios = CURATED_ROLEPLAYS.slice(0, 5);
 
-console.log(`Testing ${testScenarios.length} scenarios...\n`);
+writeOut(`Testing ${testScenarios.length} scenarios...\n`);
 
 let totalFindings = 0;
-const results: any[] = [];
+const results: ValidatorSmokeResult[] = [];
 
 for (const scenario of testScenarios) {
-  console.log(`\n📋 ${scenario.id} (${scenario.category})`);
-  console.log('─'.repeat(60));
+  writeOut(`\n📋 ${scenario.id} (${scenario.category})`);
+  writeOut('─'.repeat(60));
 
-  const validators = [
+  const validators: ValidatorSmoke[] = [
     { name: 'Chunk Compliance', fn: validateChunkCompliance },
     { name: 'UK English', fn: validateUKEnglish },
     { name: 'Tonality', fn: validateTonality },
@@ -51,13 +73,13 @@ for (const scenario of testScenarios) {
       totalFindings += count;
 
       const status = count === 0 ? '✓ PASS' : `⚠ ${count} issue(s)`;
-      console.log(`  ${validator.name.padEnd(20)}: ${status}`);
+      writeOut(`  ${validator.name.padEnd(20)}: ${status}`);
 
       if (count > 0 && count <= 2) {
         // Show details for few findings
         findings.slice(0, 2).forEach(f => {
-          console.log(`    • ${f.issue}`);
-          console.log(`      Confidence: ${Math.round(f.confidence * 100)}%`);
+          writeOut(`    • ${f.issue}`);
+          writeOut(`      Confidence: ${Math.round(f.confidence * 100)}%`);
         });
       }
 
@@ -67,52 +89,53 @@ for (const scenario of testScenarios) {
         issues: count,
         details: findings.slice(0, 3) // Save first 3 findings
       });
-    } catch (error: any) {
-      console.log(`  ${validator.name.padEnd(20)}: ❌ ERROR`);
-      console.log(`    ${error.message}`);
+    } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      writeOut(`  ${validator.name.padEnd(20)}: ❌ ERROR`);
+      writeOut(`    ${errorMessage}`);
       results.push({
         scenario: scenario.id,
         validator: validator.name,
-        error: error.message
+        error: errorMessage
       });
     }
   }
 }
 
 // Summary
-console.log('\n' + '═'.repeat(60));
-console.log('📊 Test Summary');
-console.log('═'.repeat(60));
-console.log(`Total findings: ${totalFindings}`);
-console.log(`Tested scenarios: ${testScenarios.length}`);
-console.log(`Validators: 7`);
-console.log(`Total checks: ${testScenarios.length * 7}`);
+writeOut('\n' + '═'.repeat(60));
+writeOut('📊 Test Summary');
+writeOut('═'.repeat(60));
+writeOut(`Total findings: ${totalFindings}`);
+writeOut(`Tested scenarios: ${testScenarios.length}`);
+writeOut(`Validators: 7`);
+writeOut(`Total checks: ${testScenarios.length * 7}`);
 
 // Check for errors
 const errors = results.filter(r => r.error);
 if (errors.length > 0) {
-  console.log(chalk.red(`\n❌ ${errors.length} validator error(s)`));
+  writeOut(chalk.red(`\n❌ ${errors.length} validator error(s)`));
   errors.forEach(e => {
-    console.log(`  • ${e.validator} (${e.scenario}): ${e.error}`);
+    writeOut(`  • ${e.validator} (${e.scenario}): ${e.error}`);
   });
 } else {
-  console.log(chalk.green('\n✅ All validators executed without errors'));
+  writeOut(chalk.green('\n✅ All validators executed without errors'));
 }
 
 // Sample findings
 const samplesWithIssues = results.filter(r => r.issues && r.issues > 0).slice(0, 3);
 if (samplesWithIssues.length > 0) {
-  console.log(chalk.blue('\n📝 Sample Findings (first 3 issues):'));
+  writeOut(chalk.blue('\n📝 Sample Findings (first 3 issues):'));
   samplesWithIssues.forEach(r => {
     if (r.details && r.details[0]) {
-      console.log(`\n  ${r.scenario} - ${r.validator}`);
-      console.log(`    Issue: ${r.details[0]!.issue}`);
-      console.log(`    Value: "${r.details[0]!.currentValue}"`);
+      writeOut(`\n  ${r.scenario} - ${r.validator}`);
+      writeOut(`    Issue: ${r.details[0].issue}`);
+      writeOut(`    Value: "${r.details[0].currentValue}"`);
     }
   });
 }
 
-console.log(chalk.green('\n✅ Test suite complete!\n'));
+writeOut(chalk.green('\n✅ Test suite complete!\n'));
 
 // Exit with code 0 if no errors
 const hasErrors = errors.length > 0;

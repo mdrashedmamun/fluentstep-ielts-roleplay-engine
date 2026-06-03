@@ -1,7 +1,32 @@
 import fs from 'fs';
 import path from 'path';
 
-async function findUnit4() {
+interface TextContentItem {
+  str?: unknown;
+}
+
+const writeLine = (message = ''): void => {
+  process.stdout.write(`${message}\n`);
+};
+
+const writeError = (message: string): void => {
+  process.stderr.write(`${message}\n`);
+};
+
+const getErrorMessage = (error: unknown): string => (
+  error instanceof Error ? error.message : String(error)
+);
+
+const getTextItemString = (item: unknown): string => {
+  if (typeof item !== 'object' || item === null) {
+    return '';
+  }
+
+  const textItem = item as TextContentItem;
+  return typeof textItem.str === 'string' ? textItem.str : '';
+};
+
+async function findUnit4(): Promise<void> {
   try {
     const pdfjsLib = await import('pdfjs-dist/legacy/build/pdf.mjs');
 
@@ -9,36 +34,38 @@ async function findUnit4() {
     const pdfBuffer = fs.readFileSync(pdfPath);
     const uint8Array = new Uint8Array(pdfBuffer);
     const pdf = await pdfjsLib.getDocument(uint8Array).promise;
-    
-    console.log(`Searching ${pdf.numPages} pages for Unit 4...\n`);
-    
+
+    writeLine(`Searching ${pdf.numPages} pages for Unit 4...`);
+    writeLine();
+
     // Search all pages
     for (let i = 1; i <= pdf.numPages; i++) {
       const page = await pdf.getPage(i);
       const textContent = await page.getTextContent();
       const pageText = textContent.items
-        .map((item: any) => item.str || '')
+        .map(getTextItemString)
         .join(' ')
         .toLowerCase();
-      
+
       if (/unit\s*4|unit\s+4\b/.test(pageText)) {
-        console.log(`✓ Found "Unit 4" at page ${i}`);
-        
+        writeLine(`✓ Found "Unit 4" at page ${i}`);
+
         // Extract and display this page
         const fullText = textContent.items
-          .map((item: any) => item.str || '')
+          .map(getTextItemString)
           .join(' ')
           .replace(/\s+/g, ' ')
           .trim();
-        
-        console.log('\nPage content (first 2000 chars):');
-        console.log(fullText.substring(0, 2000));
-        console.log('\n');
+
+        writeLine();
+        writeLine('Page content (first 2000 chars):');
+        writeLine(fullText.substring(0, 2000));
+        writeLine();
       }
     }
   } catch (error) {
-    console.error('Error:', error);
+    writeError(`Error: ${getErrorMessage(error)}`);
   }
 }
 
-findUnit4();
+void findUnit4();

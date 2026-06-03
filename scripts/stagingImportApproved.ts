@@ -16,6 +16,7 @@ import { promises as fs } from 'fs';
 import { execSync } from 'child_process';
 import * as path from 'path';
 import * as yaml from 'yaml';
+import type { PatternSummary, RoleplayScript } from '../src/services/staticData';
 import { acquireLock, releaseLock } from './utils/fileLocking.js';
 import { createBackup, rollbackFromBackup, cleanupOldBackups } from './utils/backupUtils.js';
 import { listScenariosInState, moveScenario, type StagingState } from './utils/stageStateManager.js';
@@ -23,15 +24,127 @@ import { listScenariosInState, moveScenario, type StagingState } from './utils/s
 const STAGING_BASE = '.staging';
 const STATIC_DATA_PATH = 'src/services/staticData.ts';
 const LOCK_FILE_PATH = path.join(STAGING_BASE, '.import.lock');
+const STAGING_STATES: StagingState[] = ['in-progress', 'ready-for-review', 'approved', 'rejected', 'archived'];
+
+type ImportedCategory = RoleplayScript['category'];
+
+interface ImportOptions {
+  dryRun?: boolean;
+}
+
+interface ImportedCharacter {
+  name: string;
+  description: string;
+}
+
+interface ImportedDialogueLine {
+  speaker: string;
+  text: string;
+}
+
+interface ImportedAnswerVariation {
+  index: number;
+  answer: string;
+  alternatives: string[];
+}
+
+interface ImportedChunkFeedbackV2 {
+  chunkId: string;
+  native: string;
+  learner: {
+    meaning: string;
+    useWhen: string;
+    commonWrong: string;
+    fix: string;
+    whyOdd: string;
+  };
+  examples: string[];
+}
+
+interface ImportedBlankMapping {
+  blankId: string;
+  chunkId: string;
+}
+
+interface ImportedActiveRecallItem {
+  id: string;
+  prompt: string;
+  targetChunkIds: string[];
+  expectedAnswer?: string;
+  hints?: string[];
+}
+
+interface ImportedScenario {
+  id: string;
+  category: ImportedCategory;
+  topic: string;
+  context: string;
+  characters: ImportedCharacter[];
+  dialogue: ImportedDialogueLine[];
+  answerVariations: ImportedAnswerVariation[];
+  chunkFeedbackV2: ImportedChunkFeedbackV2[];
+  blanksInOrder: ImportedBlankMapping[];
+  patternSummary: PatternSummary;
+  activeRecall: ImportedActiveRecallItem[];
+}
+
+type YamlRecord = Record<string, unknown>;
+type LockInfo = Awaited<ReturnType<typeof acquireLock>>;
+
+const writeLine = (message = ''): void => {
+  process.stdout.write(`${message}\n`);
+};
+
+const writeWarnLine = (message: string): void => {
+  process.stderr.write(`${message}\n`);
+};
+
+const writeErrorLine = (message: string): void => {
+  process.stderr.write(`${message}\n`);
+};
+
+const getErrorMessage = (error: unknown): string => (
+  error instanceof Error ? error.message : String(error)
+);
+
+const isRecord = (value: unknown): value is YamlRecord => (
+  typeof value === 'object' && value !== null && !Array.isArray(value)
+);
+
+const getString = (record: YamlRecord, key: string): string => {
+  const value = record[key];
+  return typeof value === 'string' ? value : '';
+};
+
+const getStringArray = (record: YamlRecord, key: string): string[] => {
+  const value = record[key];
+  return Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : [];
+};
+
+const getRecord = (record: YamlRecord, key: string): YamlRecord | null => {
+  const value = record[key];
+  return isRecord(value) ? value : null;
+};
+
+const getRecordArray = (record: YamlRecord, key: string): YamlRecord[] => {
+  const value = record[key];
+  return Array.isArray(value) ? value.filter(isRecord) : [];
+};
+
+const isImportedCategory = (value: string): value is ImportedCategory => (
+  ['Social', 'Workplace', 'Service/Logistics', 'Advanced', 'Academic', 'Healthcare', 'Cultural', 'Community'].includes(value)
+);
+
+const escapeString = (value: string): string => value.replace(/"/g, '\\"');
 
 async function importApprovedScenarios(
   scenarioIds?: string[],
-  options: { dryRun?: boolean } = {}
+  options: ImportOptions = {}
 ): Promise<void> {
   const dryRun = options.dryRun ?? false;
 
-  console.log('📦 Starting Import of Approved Scenarios\n');
-  console.log(`Mode: ${dryRun ? 'DRY-RUN (no changes)' : 'PRODUCTION (will modify files)'}\n`);
+  writeLine('📦 Starting Import of Approved Scenarios\n');
+  writeLine(`Mode: ${dryRun ? 'DRY-RUN (no changes)' : 'PRODUCTION (will modify files)'}\n`);
 
   // Get scenarios to import
   let scenariosToImport = scenarioIds;
@@ -39,26 +152,26 @@ async function importApprovedScenarios(
     scenariosToImport = await listScenariosInState('approved');
 
     if (scenariosToImport.length === 0) {
-      console.log('ℹ️  No scenarios in approved/. Nothing to import.');
+      writeLine('ℹ️  No scenarios in approved/. Nothing to import.');
       return;
     }
   }
 
-  console.log(`📋 Found ${scenariosToImport.length} approved scenario(s) to import\n`);
+  writeLine(`📋 Found ${scenariosToImport.length} approved scenario(s) to import\n`);
 
   // Acquire lock for exclusive write access
-  let lockInfo: any = null;
+  let lockInfo: LockInfo | null = null;
 
   if (!dryRun) {
     try {
-      console.log('🔐 Acquiring exclusive lock...');
+      writeLine('🔐 Acquiring exclusive lock...');
       lockInfo = await acquireLock(LOCK_FILE_PATH, {
         timeout: 300000,
         owner: 'import-agent',
       });
     } catch (error) {
-      console.error('❌ Failed to acquire lock:', error);
-      console.error('Another import process may be running. Try again later.');
+      writeErrorLine(`❌ Failed to acquire lock: ${getErrorMessage(error)}`);
+      writeErrorLine('Another import process may be running. Try again later.');
       process.exit(1);
     }
   }
@@ -68,7 +181,7 @@ async function importApprovedScenarios(
   try {
     // Create backup of staticData.ts
     if (!dryRun) {
-      console.log('📦 Creating backup of staticData.ts...');
+      writeLine('📦 Creating backup of staticData.ts...');
       backupPath = await createBackup(STATIC_DATA_PATH);
     }
 
@@ -79,37 +192,37 @@ async function importApprovedScenarios(
 
     // Run build to verify
     if (!dryRun) {
-      console.log('\n🔨 Running build verification...');
+      writeLine('\n🔨 Running build verification...');
       try {
         execSync('npm run build', { stdio: 'inherit' });
-        console.log('✅ Build successful');
-      } catch (error) {
+        writeLine('✅ Build successful');
+      } catch {
         throw new Error('Build failed after import - rolling back');
       }
 
       // Run E2E tests
-      console.log('\n🧪 Running E2E tests...');
+      writeLine('\n🧪 Running E2E tests...');
       // Note: Tests may have pre-existing flaky tests (alternatives popover).
-      // We accept ≥97% pass rate (max 2 failures out of 71)
+      // We accept >=97% pass rate (max 2 failures out of 71)
       try {
         execSync('npm run test:e2e:tier1', { stdio: 'inherit' });
-        console.log('✅ E2E tests passed');
-      } catch (error: any) {
+        writeLine('✅ E2E tests passed');
+      } catch {
         // Acceptable: 2 failed, 69 passed (97.18% pass rate)
         // This is the known flaky test failure pattern
-        console.log('✅ E2E tests acceptable: 97%+ pass rate achieved');
-        console.log('   (2 pre-existing flaky tests failed - within threshold)');
+        writeLine('✅ E2E tests acceptable: 97%+ pass rate achieved');
+        writeLine('   (2 pre-existing flaky tests failed - within threshold)');
       }
     }
 
     // Success - move scenarios to archived
     if (!dryRun) {
-      console.log('\n📦 Archiving imported scenarios...');
+      writeLine('\n📦 Archiving imported scenarios...');
       for (const scenarioId of scenariosToImport) {
         try {
-          await moveScenario(scenarioId, 'approved' as StagingState, 'archived' as StagingState);
+          await moveScenario(scenarioId, 'approved', 'archived');
         } catch (error) {
-          console.warn(`⚠️  Could not archive ${scenarioId}:`, error);
+          writeWarnLine(`⚠️  Could not archive ${scenarioId}: ${getErrorMessage(error)}`);
         }
       }
 
@@ -117,42 +230,42 @@ async function importApprovedScenarios(
       await cleanupOldBackups(STATIC_DATA_PATH, 5);
 
       // Create git commit
-      console.log('\n📝 Creating git commit...');
+      writeLine('\n📝 Creating git commit...');
       try {
         execSync('git add -A', { stdio: 'pipe' });
-        const message = `feat: Import ${scenariosToImport.length} scenario(s) from staging\n\nScenarios imported:\n${scenariosToImport.map((s) => `- ${s}`).join('\n')}\n\nCo-Authored-By: Staging Import Agent <noreply@fluentstep.ai>`;
+        const message = `feat: Import ${scenariosToImport.length} scenario(s) from staging\n\nScenarios imported:\n${scenariosToImport.map((scenarioId) => `- ${scenarioId}`).join('\n')}\n\nCo-Authored-By: Staging Import Agent <noreply@fluentstep.ai>`;
         execSync(`git commit -m "${message}"`, { stdio: 'inherit' });
-        console.log('✅ Commit created');
+        writeLine('✅ Commit created');
       } catch (error) {
-        console.warn('⚠️  Could not create git commit:', error);
+        writeWarnLine(`⚠️  Could not create git commit: ${getErrorMessage(error)}`);
       }
     }
 
-    console.log('\n✅ Import completed successfully!\n');
-  } catch (error: any) {
-    console.error(`\n❌ Import failed: ${error.message}\n`);
+    writeLine('\n✅ Import completed successfully!\n');
+  } catch (error) {
+    writeErrorLine(`\n❌ Import failed: ${getErrorMessage(error)}\n`);
 
     if (!dryRun && backupPath) {
-      console.log('🔄 Attempting rollback...');
+      writeLine('🔄 Attempting rollback...');
       try {
         await rollbackFromBackup(backupPath, STATIC_DATA_PATH);
-        console.log('✅ Rollback completed - staticData.ts restored');
+        writeLine('✅ Rollback completed - staticData.ts restored');
 
         // Move scenarios back to approved
         for (const scenarioId of scenariosToImport ?? []) {
           try {
             const currentState = await getStateOfScenario(scenarioId);
             if (currentState && currentState !== 'approved') {
-              await moveScenario(scenarioId, currentState as StagingState, 'approved' as StagingState);
+              await moveScenario(scenarioId, currentState, 'approved');
             }
-          } catch (e) {
+          } catch {
             // Ignore move errors during rollback
           }
         }
       } catch (rollbackError) {
-        console.error('❌ Rollback failed:', rollbackError);
-        console.error('\n⚠️  CRITICAL: staticData.ts may be corrupted!');
-        console.error(`Restore from backup: ${backupPath}`);
+        writeErrorLine(`❌ Rollback failed: ${getErrorMessage(rollbackError)}`);
+        writeErrorLine('\n⚠️  CRITICAL: staticData.ts may be corrupted!');
+        writeErrorLine(`Restore from backup: ${backupPath}`);
         process.exit(1);
       }
     }
@@ -164,38 +277,38 @@ async function importApprovedScenarios(
       try {
         await releaseLock(LOCK_FILE_PATH);
       } catch (error) {
-        console.warn('⚠️  Failed to release lock:', error);
+        writeWarnLine(`⚠️  Failed to release lock: ${getErrorMessage(error)}`);
       }
     }
   }
 }
 
-async function importScenario(scenarioId: string, dryRun: boolean = false): Promise<void> {
-  console.log(`\n📥 Importing: ${scenarioId}`);
+async function importScenario(scenarioId: string, dryRun = false): Promise<void> {
+  writeLine(`\n📥 Importing: ${scenarioId}`);
 
   try {
     const filePath = path.join(STAGING_BASE, 'approved', `${scenarioId}.md`);
 
     // Read scenario file
     const content = await fs.readFile(filePath, 'utf-8');
-    console.log('   ✅ Read scenario from staging');
+    writeLine('   ✅ Read scenario from staging');
 
     if (dryRun) {
-      console.log('   ℹ️  [DRY-RUN] Would import this scenario');
-      console.log(`   File size: ${content.length} bytes`);
+      writeLine('   ℹ️  [DRY-RUN] Would import this scenario');
+      writeLine(`   File size: ${content.length} bytes`);
       return;
     }
 
     // Parse and merge into staticData.ts
-    console.log('   🔄 Parsing markdown...');
+    writeLine('   🔄 Parsing markdown...');
     const scenario = parseScenarioMarkdown(content, scenarioId);
 
-    console.log('   🔄 Merging into staticData.ts...');
+    writeLine('   🔄 Merging into staticData.ts...');
     await mergeScenarioIntoStaticData(scenario, STATIC_DATA_PATH);
 
-    console.log('   ✅ Merged successfully');
-  } catch (error: any) {
-    throw new Error(`Failed to import ${scenarioId}: ${error.message}`);
+    writeLine('   ✅ Merged successfully');
+  } catch (error) {
+    throw new Error(`Failed to import ${scenarioId}: ${getErrorMessage(error)}`);
   }
 }
 
@@ -211,9 +324,9 @@ async function importScenario(scenarioId: string, dryRun: boolean = false): Prom
  * - blanksInOrder mapping
  * - activeRecall items
  */
-function parseScenarioMarkdown(content: string, scenarioId: string): any {
+function parseScenarioMarkdown(content: string, scenarioId: string): ImportedScenario {
   const lines = content.split('\n');
-  let metadata: any = {};
+  const metadata: Record<string, string> = {};
   let inFrontmatter = false;
   let frontmatterEnd = 0;
 
@@ -249,23 +362,23 @@ function parseScenarioMarkdown(content: string, scenarioId: string): any {
   const yamlActiveRecall = extractYamlCodeBlock(contentAfterFrontmatter, 'Active Recall Items');
 
   // Parse YAML and transform to TypeScript schema
-  let chunkFeedbackV2: any[] = [];
-  let blanksInOrder: any[] = [];
-  let activeRecall: any[] = [];
+  let chunkFeedbackV2: ImportedChunkFeedbackV2[] = [];
+  let blanksInOrder: ImportedBlankMapping[] = [];
+  let activeRecall: ImportedActiveRecallItem[] = [];
 
   try {
     if (yamlChunkFeedback) {
-      const parsed = yaml.parse(yamlChunkFeedback);
+      const parsed: unknown = yaml.parse(yamlChunkFeedback);
       chunkFeedbackV2 = transformChunkFeedbackYamlToTS(parsed);
     }
 
     if (yamlBlanksInOrder) {
-      const parsed = yaml.parse(yamlBlanksInOrder);
+      const parsed: unknown = yaml.parse(yamlBlanksInOrder);
       blanksInOrder = transformBlanksInOrderYamlToTS(parsed);
     }
 
     if (yamlActiveRecall) {
-      const parsed = yaml.parse(yamlActiveRecall);
+      const parsed: unknown = yaml.parse(yamlActiveRecall);
       activeRecall = transformActiveRecallYamlToTS(parsed);
     }
 
@@ -273,8 +386,8 @@ function parseScenarioMarkdown(content: string, scenarioId: string): any {
     if (chunkFeedbackV2.length > 0 && blanksInOrder.length > 0) {
       validateChunkIdMapping(blanksInOrder, chunkFeedbackV2);
     }
-  } catch (error: any) {
-    throw new Error(`Failed to parse V2 schema YAML: ${error.message}`);
+  } catch (error) {
+    throw new Error(`Failed to parse V2 schema YAML: ${getErrorMessage(error)}`);
   }
 
   // Fallback to placeholder data if YAML parsing failed
@@ -290,10 +403,11 @@ function parseScenarioMarkdown(content: string, scenarioId: string): any {
 
   const patternSummary = buildPatternSummary(blankCount);
   const answerVariations = buildAnswerVariations(answers);
+  const metadataCategory = metadata.category || 'Social';
 
   return {
     id: scenarioId,
-    category: metadata.category || 'Social',
+    category: isImportedCategory(metadataCategory) ? metadataCategory : 'Social',
     topic: metadata.topic || 'Unknown',
     context: metadata.context || '',
     characters,
@@ -353,62 +467,50 @@ function extractYamlCodeBlock(content: string, sectionName: string): string {
  * Output TypeScript format:
  *   { chunkId, native, learner: { meaning, useWhen, commonWrong, fix }, examples: [...] }
  */
-function transformChunkFeedbackYamlToTS(yamlObj: any): any[] {
-  if (!yamlObj || typeof yamlObj !== 'object') {
+function transformChunkFeedbackYamlToTS(yamlObj: unknown): ImportedChunkFeedbackV2[] {
+  if (!isRecord(yamlObj)) {
     return [];
   }
 
-  const result: any[] = [];
+  const result: ImportedChunkFeedbackV2[] = [];
 
   // Handle both "chunkFeedbackV2: { ... }" and direct object format
-  const data = yamlObj.chunkFeedbackV2 || yamlObj;
+  const data = getRecord(yamlObj, 'chunkFeedbackV2') || yamlObj;
 
   for (const [chunkId, chunkData] of Object.entries(data)) {
-    if (typeof chunkData !== 'object' || chunkData === null) {
+    if (!isRecord(chunkData)) {
       continue;
     }
 
-    const chunk = chunkData as any;
-
     // Extract examples from situations array
-    const examples: string[] = [];
-    if (Array.isArray(chunk.situations)) {
-      for (const sit of chunk.situations) {
-        if (sit && sit.example) {
-          examples.push(sit.example);
-        }
-      }
-    }
+    const examples = getRecordArray(chunkData, 'situations')
+      .map((situation) => getString(situation, 'example'))
+      .filter((example) => example.length > 0);
 
     // Extract common mistakes and fix
-    let commonWrong = '';
-    let fix = '';
-    if (chunk.commonMistakes) {
-      if (Array.isArray(chunk.commonMistakes.wrong)) {
-        commonWrong = chunk.commonMistakes.wrong[0] || '';
-      }
-      if (typeof chunk.commonMistakes.correct === 'string') {
-        fix = chunk.commonMistakes.correct;
-      }
-    }
+    const commonMistakes = getRecord(chunkData, 'commonMistakes');
+    const wrongExamples = commonMistakes ? getStringArray(commonMistakes, 'wrong') : [];
+    const commonWrong = wrongExamples[0] || '';
+    const fix = commonMistakes ? getString(commonMistakes, 'correct') : '';
 
     // Extract meaning
+    const meaningValue = chunkData.meaning;
     let meaning = '';
-    if (typeof chunk.meaning === 'object' && chunk.meaning?.english) {
-      meaning = chunk.meaning.english;
-    } else if (typeof chunk.meaning === 'string') {
-      meaning = chunk.meaning;
+    if (isRecord(meaningValue)) {
+      meaning = getString(meaningValue, 'english');
+    } else if (typeof meaningValue === 'string') {
+      meaning = meaningValue;
     }
 
     result.push({
       chunkId,
-      native: chunk.native || chunk.blank || '',
+      native: getString(chunkData, 'native') || getString(chunkData, 'blank'),
       learner: {
         meaning,
-        useWhen: chunk.whyPeopleUseIt || '',
+        useWhen: getString(chunkData, 'whyPeopleUseIt'),
         commonWrong,
         fix,
-        whyOdd: chunk.whyOdd || '',
+        whyOdd: getString(chunkData, 'whyOdd'),
       },
       examples: examples.slice(0, 5), // Limit to 5 examples
     });
@@ -427,49 +529,53 @@ function transformChunkFeedbackYamlToTS(yamlObj: any): any[] {
  * Output TypeScript format:
  *   { blankId: "b0", chunkId: "service_1_ch_party_size" }
  */
-function transformBlanksInOrderYamlToTS(yamlArray: any): any[] {
-  if (!Array.isArray(yamlArray)) {
-    // Handle format: blanksInOrder: [...]
-    const data = yamlArray?.blanksInOrder;
-    if (!Array.isArray(data)) {
-      return [];
-    }
-    yamlArray = data;
-  }
+function transformBlanksInOrderYamlToTS(yamlData: unknown): ImportedBlankMapping[] {
+  const sourceArray = Array.isArray(yamlData)
+    ? yamlData
+    : isRecord(yamlData) && Array.isArray(yamlData.blanksInOrder)
+      ? yamlData.blanksInOrder
+      : [];
 
-  return yamlArray.map((item: any, index: number) => ({
-    blankId: `b${item.blankNumber ? item.blankNumber - 1 : index}`,
-    chunkId: item.chunkId || `ch_${index}`,
-  }));
+  return sourceArray.filter(isRecord).map((item, index) => {
+    const blankNumber = typeof item.blankNumber === 'number' ? item.blankNumber : null;
+    return {
+      blankId: `b${blankNumber ? blankNumber - 1 : index}`,
+      chunkId: getString(item, 'chunkId') || `ch_${index}`,
+    };
+  });
 }
 
 /**
  * Transform YAML activeRecall array to TypeScript schema
  */
-function transformActiveRecallYamlToTS(yamlData: any): any[] {
+function transformActiveRecallYamlToTS(yamlData: unknown): ImportedActiveRecallItem[] {
   if (!yamlData) {
     return [];
   }
 
-  const array = yamlData.activeRecall || yamlData;
-  if (!Array.isArray(array)) {
-    return [];
-  }
+  const sourceArray = isRecord(yamlData) && Array.isArray(yamlData.activeRecall)
+    ? yamlData.activeRecall
+    : Array.isArray(yamlData)
+      ? yamlData
+      : [];
 
-  return array.map((item: any) => ({
-    id: item.id || '',
-    prompt: item.prompt || '',
-    targetChunkIds: item.targetChunkIds || [],
-    expectedAnswer: item.expectedAnswer || '',
-    hints: item.hints || [],
+  return sourceArray.filter(isRecord).map((item) => ({
+    id: getString(item, 'id'),
+    prompt: getString(item, 'prompt'),
+    targetChunkIds: getStringArray(item, 'targetChunkIds'),
+    expectedAnswer: getString(item, 'expectedAnswer'),
+    hints: getStringArray(item, 'hints'),
   }));
 }
 
 /**
  * Validate that all chunk IDs referenced in blanksInOrder exist in chunkFeedbackV2
  */
-function validateChunkIdMapping(blanksInOrder: any[], chunkFeedback: any[]): void {
-  const chunkIds = new Set(chunkFeedback.map((cf: any) => cf.chunkId));
+function validateChunkIdMapping(
+  blanksInOrder: ImportedBlankMapping[],
+  chunkFeedback: ImportedChunkFeedbackV2[]
+): void {
+  const chunkIds = new Set(chunkFeedback.map((feedback) => feedback.chunkId));
 
   for (const blank of blanksInOrder) {
     if (!chunkIds.has(blank.chunkId)) {
@@ -483,8 +589,8 @@ function validateChunkIdMapping(blanksInOrder: any[], chunkFeedback: any[]): voi
 /**
  * Build placeholder chunkFeedbackV2 data (fallback)
  */
-function buildPlaceholderChunkFeedback(blankCount: number): any[] {
-  const result: any[] = [];
+function buildPlaceholderChunkFeedback(blankCount: number): ImportedChunkFeedbackV2[] {
+  const result: ImportedChunkFeedbackV2[] = [];
   for (let i = 0; i < blankCount; i++) {
     result.push({
       chunkId: `ch_${i}`,
@@ -502,8 +608,8 @@ function buildPlaceholderChunkFeedback(blankCount: number): any[] {
   return result;
 }
 
-function parseCharactersSection(content: string): any[] {
-  const chars: any[] = [];
+function parseCharactersSection(content: string): ImportedCharacter[] {
+  const chars: ImportedCharacter[] = [];
   const charStart = content.indexOf('## Characters');
   if (charStart === -1) return chars;
 
@@ -528,8 +634,8 @@ function parseCharactersSection(content: string): any[] {
   return chars;
 }
 
-function parseDialogueSection(content: string): { dialogue: any[], blankCount: number } {
-  const dialogue: any[] = [];
+function parseDialogueSection(content: string): { dialogue: ImportedDialogueLine[]; blankCount: number } {
+  const dialogue: ImportedDialogueLine[] = [];
   let totalBlanks = 0;
 
   const dialogueStart = content.indexOf('## Dialogue');
@@ -551,7 +657,7 @@ function parseDialogueSection(content: string): { dialogue: any[], blankCount: n
       const text = match[2].trim();
 
       // Count blanks in this line
-      const blanks = (text.match(/________/g) || []).length;
+      const blanks = (text.match(/_{8}/g) || []).length;
       totalBlanks += blanks;
 
       dialogue.push({ speaker, text });
@@ -584,7 +690,7 @@ function parseAnswersSection(content: string): string[] {
   return answers;
 }
 
-function buildAnswerVariations(answers: string[]): any[] {
+function buildAnswerVariations(answers: string[]): ImportedAnswerVariation[] {
   return answers.map((answer, index) => ({
     index,
     answer,
@@ -592,8 +698,8 @@ function buildAnswerVariations(answers: string[]): any[] {
   }));
 }
 
-function buildBlanksInOrder(blankCount: number): any[] {
-  const blanks: any[] = [];
+function buildBlanksInOrder(blankCount: number): ImportedBlankMapping[] {
+  const blanks: ImportedBlankMapping[] = [];
   for (let i = 0; i < blankCount; i++) {
     blanks.push({
       blankId: `b${i}`,
@@ -603,7 +709,7 @@ function buildBlanksInOrder(blankCount: number): any[] {
   return blanks;
 }
 
-function buildPatternSummary(blankCount: number): any {
+function buildPatternSummary(blankCount: number): PatternSummary {
   return {
     categoryBreakdown: [
       {
@@ -618,7 +724,7 @@ function buildPatternSummary(blankCount: number): any {
   };
 }
 
-function buildActiveRecall(scenarioId: string): any[] {
+function buildActiveRecall(scenarioId: string): ImportedActiveRecallItem[] {
   return [
     {
       id: `${scenarioId}_ar_1`,
@@ -631,7 +737,7 @@ function buildActiveRecall(scenarioId: string): any[] {
 /**
  * Merge scenario into staticData.ts
  */
-async function mergeScenarioIntoStaticData(scenario: any, staticDataPath: string): Promise<void> {
+async function mergeScenarioIntoStaticData(scenario: ImportedScenario, staticDataPath: string): Promise<void> {
   const content = await fs.readFile(staticDataPath, 'utf-8');
 
   // Convert scenario object to TypeScript code
@@ -644,7 +750,7 @@ async function mergeScenarioIntoStaticData(scenario: any, staticDataPath: string
   //
   // We need to replace the last } with },  and then add new scenario before ];
 
-  const closingPattern = /^  \}\n\];$/m;
+  const closingPattern = /^ {2}\}\n\];$/m;
 
   if (!closingPattern.test(content)) {
     throw new Error('Could not find CURATED_ROLEPLAYS array closing bracket in staticData.ts');
@@ -662,23 +768,23 @@ async function mergeScenarioIntoStaticData(scenario: any, staticDataPath: string
 /**
  * Serialize a scenario object to TypeScript code
  */
-function serializeScenario(scenario: any): string {
+function serializeScenario(scenario: ImportedScenario): string {
   const lines: string[] = [];
 
   lines.push('{');
   lines.push(`  "id": "${scenario.id}",`);
   lines.push(`  "category": "${scenario.category}",`);
   lines.push(`  "topic": "${scenario.topic}",`);
-  lines.push(`  "context": "${scenario.context.replace(/"/g, '\\"')}",`);
+  lines.push(`  "context": "${escapeString(scenario.context)}",`);
 
   // Characters
   lines.push('  "characters": [');
   for (let i = 0; i < scenario.characters.length; i++) {
-    const char = scenario.characters[i];
+    const character = scenario.characters[i];
     const comma = i < scenario.characters.length - 1 ? ',' : '';
-    lines.push(`    {`);
-    lines.push(`      "name": "${char.name}",`);
-    lines.push(`      "description": "${char.description.replace(/"/g, '\\"')}"`);
+    lines.push('    {');
+    lines.push(`      "name": "${character.name}",`);
+    lines.push(`      "description": "${escapeString(character.description)}"`);
     lines.push(`    }${comma}`);
   }
   lines.push('  ],');
@@ -686,11 +792,11 @@ function serializeScenario(scenario: any): string {
   // Dialogue
   lines.push('  "dialogue": [');
   for (let i = 0; i < scenario.dialogue.length; i++) {
-    const dlg = scenario.dialogue[i];
+    const dialogueLine = scenario.dialogue[i];
     const comma = i < scenario.dialogue.length - 1 ? ',' : '';
-    lines.push(`    {`);
-    lines.push(`      "speaker": "${dlg.speaker}",`);
-    lines.push(`      "text": "${dlg.text.replace(/"/g, '\\"')}"`);
+    lines.push('    {');
+    lines.push(`      "speaker": "${dialogueLine.speaker}",`);
+    lines.push(`      "text": "${escapeString(dialogueLine.text)}"`);
     lines.push(`    }${comma}`);
   }
   lines.push('  ],');
@@ -698,23 +804,26 @@ function serializeScenario(scenario: any): string {
   // Answer variations
   lines.push('  "answerVariations": [');
   for (let i = 0; i < scenario.answerVariations.length; i++) {
-    const av = scenario.answerVariations[i];
+    const answerVariation = scenario.answerVariations[i];
     const comma = i < scenario.answerVariations.length - 1 ? ',' : '';
-    lines.push(`    {`);
-    lines.push(`      "index": ${av.index},`);
-    lines.push(`      "answer": "${av.answer.replace(/"/g, '\\"')}",`);
-    lines.push(`      "alternatives": [${av.alternatives.map((a: string) => `"${a.replace(/"/g, '\\"')}"`).join(', ')}]`);
+    const alternatives = answerVariation.alternatives
+      .map((alternative) => `"${escapeString(alternative)}"`)
+      .join(', ');
+    lines.push('    {');
+    lines.push(`      "index": ${answerVariation.index},`);
+    lines.push(`      "answer": "${escapeString(answerVariation.answer)}",`);
+    lines.push(`      "alternatives": [${alternatives}]`);
     lines.push(`    }${comma}`);
   }
   lines.push('  ],');
 
   // chunkFeedbackV2
-  if (scenario.chunkFeedbackV2 && scenario.chunkFeedbackV2.length > 0) {
+  if (scenario.chunkFeedbackV2.length > 0) {
     lines.push('  "chunkFeedbackV2": [');
     for (let i = 0; i < scenario.chunkFeedbackV2.length; i++) {
-      const cf = scenario.chunkFeedbackV2[i];
+      const chunkFeedback = scenario.chunkFeedbackV2[i];
       const comma = i < scenario.chunkFeedbackV2.length - 1 ? ',' : '';
-      lines.push(`    ${JSON.stringify(cf, null, 6)}${comma}`);
+      lines.push(`    ${JSON.stringify(chunkFeedback, null, 6)}${comma}`);
     }
     lines.push('  ],');
   } else {
@@ -724,21 +833,21 @@ function serializeScenario(scenario: any): string {
   // blanksInOrder
   lines.push('  "blanksInOrder": [');
   for (let i = 0; i < scenario.blanksInOrder.length; i++) {
-    const bo = scenario.blanksInOrder[i];
+    const blankOrder = scenario.blanksInOrder[i];
     const comma = i < scenario.blanksInOrder.length - 1 ? ',' : '';
-    lines.push(`    ${JSON.stringify(bo)}${comma}`);
+    lines.push(`    ${JSON.stringify(blankOrder)}${comma}`);
   }
   lines.push('  ],');
 
   // patternSummary
-  lines.push('  "patternSummary": ' + JSON.stringify(scenario.patternSummary, null, 4).split('\n').join('\n  ') + ',');
+  lines.push(`  "patternSummary": ${JSON.stringify(scenario.patternSummary, null, 4).split('\n').join('\n  ')},`);
 
   // activeRecall
   lines.push('  "activeRecall": [');
   for (let i = 0; i < scenario.activeRecall.length; i++) {
-    const ar = scenario.activeRecall[i];
+    const activeRecall = scenario.activeRecall[i];
     const comma = i < scenario.activeRecall.length - 1 ? ',' : '';
-    lines.push(`    ${JSON.stringify(ar)}${comma}`);
+    lines.push(`    ${JSON.stringify(activeRecall)}${comma}`);
   }
   lines.push('  ]');
 
@@ -747,10 +856,8 @@ function serializeScenario(scenario: any): string {
   return lines.join('\n');
 }
 
-async function getStateOfScenario(scenarioId: string): Promise<string | null> {
-  const states = ['in-progress', 'ready-for-review', 'approved', 'rejected', 'archived'];
-
-  for (const state of states) {
+async function getStateOfScenario(scenarioId: string): Promise<StagingState | null> {
+  for (const state of STAGING_STATES) {
     const filePath = path.join(STAGING_BASE, state, `${scenarioId}.md`);
     try {
       await fs.access(filePath);
@@ -771,9 +878,9 @@ const scenarioIds = args
 
 const dryRun = args.includes('--dry-run');
 
-importApprovedScenarios(scenarioIds.length > 0 ? scenarioIds : undefined, { dryRun }).catch(
-  (error) => {
-    console.error('❌ Import process failed:', error);
+void importApprovedScenarios(scenarioIds.length > 0 ? scenarioIds : undefined, { dryRun }).catch(
+  (error: unknown) => {
+    writeErrorLine(`❌ Import process failed: ${getErrorMessage(error)}`);
     process.exit(1);
   }
 );

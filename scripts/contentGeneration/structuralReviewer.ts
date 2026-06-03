@@ -20,6 +20,10 @@ export interface ReviewerOutput {
     reviewerName: string;
 }
 
+const writeOut = (message = ''): void => {
+    process.stdout.write(`${message}\n`);
+};
+
 /**
  * Parse markdown package into structured format
  * Stub implementation - actual parser would extract all sections
@@ -36,7 +40,7 @@ function parsePackageMarkdown(markdown: string): ParsedPackage {
         chunkFeedback: [],
         patternSummary: {},
         activeRecall: [],
-        yamlBlock: ''
+        yamlBlock: markdown
     };
 }
 
@@ -44,8 +48,8 @@ function parsePackageMarkdown(markdown: string): ParsedPackage {
  * Run structural validation
  * Checks: blank count consistency, YAML syntax, blank-chunk mapping, dialogue structure, chunk slug uniqueness
  */
-export async function runStructuralReview(packageMarkdown: string): Promise<ReviewerOutput> {
-    console.log('  🔍 Reviewer 1: Structural validation...');
+export function runStructuralReview(packageMarkdown: string): Promise<ReviewerOutput> {
+    writeOut('  🔍 Reviewer 1: Structural validation...');
 
     const parsed = parsePackageMarkdown(packageMarkdown);
 
@@ -59,18 +63,18 @@ export async function runStructuralReview(packageMarkdown: string): Promise<Revi
 
     const passed = criticalIssues.length === 0;
 
-    console.log(`    ${passed ? '✅' : '❌'} ${criticalIssues.length} critical issues`);
+    writeOut(`    ${passed ? '✅' : '❌'} ${criticalIssues.length} critical issues`);
 
     if (!passed && criticalIssues.length > 0) {
-        console.log(`       Rules violated: ${[...new Set(criticalIssues.map(e => e.rule))].join(', ')}`);
+        writeOut(`       Rules violated: ${[...new Set(criticalIssues.map(e => e.rule))].join(', ')}`);
     }
 
-    return {
+    return Promise.resolve({
         passed,
         criticalIssues,
         warnings: [],
         reviewerName: 'Structural Validator'
-    };
+    });
 }
 
 /**

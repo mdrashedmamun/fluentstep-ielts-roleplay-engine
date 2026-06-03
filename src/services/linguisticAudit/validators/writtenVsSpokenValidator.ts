@@ -5,7 +5,7 @@
 
 import { RoleplayScript } from '../../staticData';
 import { ValidationFinding } from '../types';
-import { findWrittenVsSpokenIssues, soundsWritten } from '../rules/writtenVsSpokenPatterns';
+import { soundsWritten } from '../rules/writtenVsSpokenPatterns';
 import { scoreConfidence } from '../fixers/confidenceScorer';
 
 export function validateWrittenVsSpoken(scenario: RoleplayScript): ValidationFinding[] {

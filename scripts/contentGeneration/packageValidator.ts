@@ -29,6 +29,41 @@ export interface Answer {
     alternatives: string[];
 }
 
+export interface PackagePatternSummary {
+    categoryBreakdown?: Array<{
+        category: string;
+        exampleChunkIds?: string[];
+    }>;
+    keyPatterns?: Array<{
+        pattern: string;
+        chunkIds?: string[];
+    }>;
+    overallInsight?: string;
+}
+
+const getErrorMessage = (error: unknown): string => (
+    error instanceof Error ? error.message : String(error)
+);
+
+const getYamlLine = (error: unknown): string => {
+    if (typeof error !== 'object' || error === null || !('linePos' in error)) {
+        return 'unknown';
+    }
+
+    const linePos: unknown = error.linePos;
+    if (!Array.isArray(linePos)) {
+        return 'unknown';
+    }
+
+    const firstLine: unknown = linePos[0];
+    if (typeof firstLine !== 'object' || firstLine === null || !('line' in firstLine)) {
+        return 'unknown';
+    }
+
+    const line: unknown = firstLine.line;
+    return typeof line === 'number' || typeof line === 'string' ? String(line) : 'unknown';
+};
+
 export interface ParsedPackage {
     category: string;
     context: string;
@@ -48,7 +83,7 @@ export interface ParsedPackage {
         };
         examples: string[];
     }>;
-    patternSummary: any;
+    patternSummary: PackagePatternSummary;
     activeRecall: Array<{ id: string; prompt: string; targetChunkIds: string[] }>;
     yamlBlock: string;
 }
@@ -102,13 +137,13 @@ export function validateYamlSyntax(yamlBlock: string): ValidationError[] {
     try {
         YAML.parse(yamlBlock);
         return [];
-    } catch (e: any) {
+    } catch (error) {
         return [
             {
                 rule: 'yaml-syntax',
                 severity: 'critical',
-                message: `YAML parsing failed: ${e.message}`,
-                location: `Line ${e.linePos?.[0]?.line || 'unknown'}`
+                message: `YAML parsing failed: ${getErrorMessage(error)}`,
+                location: `Line ${getYamlLine(error)}`
             }
         ];
     }
@@ -398,7 +433,7 @@ export function validateWhyOddSpecificity(feedback: ParsedPackage['chunkFeedback
 export function validatePatternInsights(pkg: ParsedPackage): ValidationError[] {
     const warnings: ValidationError[] = [];
 
-    if (!pkg.patternSummary?.overallInsight) return warnings;
+    if (!pkg.patternSummary.overallInsight) return warnings;
 
     const definitionKeywords = [
         'is a',

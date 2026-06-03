@@ -264,6 +264,8 @@ export function getWrittenVsSpokenReport(
   text: string,
   scenarioContext: string = ''
 ): string {
+  void scenarioContext;
+
   const analysis = soundsWritten(text);
   const lines = [
     `Text: "${text}"`,

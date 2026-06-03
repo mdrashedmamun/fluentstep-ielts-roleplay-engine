@@ -39,7 +39,7 @@ const FeedbackCard: React.FC<FeedbackCardProps> = ({ feedback, isExpanded: initi
 
   // TWEAK 5: For V2, use 'Chunk' category (neutral, not domain-specific)
   // For V1, use the actual category
-  const category = isChunkFeedbackV2(feedback) ? 'Chunk' : (feedback as ChunkFeedback).category;
+  const category = isChunkFeedbackV2(feedback) ? 'Chunk' : (feedback).category;
   const colors = CATEGORY_COLORS[category] || CATEGORY_COLORS['Idioms'];
   const icon = CATEGORY_ICONS[category] || '💡';
 
@@ -57,7 +57,7 @@ const FeedbackCard: React.FC<FeedbackCardProps> = ({ feedback, isExpanded: initi
               {category}
             </p>
             <p className="text-lg font-bold text-neutral-800">
-              "{isChunkFeedbackV2(feedback) ? feedback.native : (feedback as ChunkFeedback).chunk}"
+              &quot;{isChunkFeedbackV2(feedback) ? feedback.native : (feedback).chunk}&quot;
             </p>
           </div>
         </div>
@@ -109,7 +109,7 @@ const FeedbackCard: React.FC<FeedbackCardProps> = ({ feedback, isExpanded: initi
                   <div className="space-y-2">
                     {safeArray(feedback.examples).map((example, idx) => (
                       <div key={idx} className="text-neutral-700 italic p-3 bg-primary-50 rounded-lg border border-primary-100">
-                        "{example}"
+                        &quot;{example}&quot;
                       </div>
                     ))}
                   </div>
@@ -122,22 +122,22 @@ const FeedbackCard: React.FC<FeedbackCardProps> = ({ feedback, isExpanded: initi
               {/* A. Core Function */}
               <div>
                 <h4 className="text-xs font-bold text-primary-700 uppercase tracking-wider mb-2">Why It Works</h4>
-                <p className="text-neutral-700 leading-relaxed text-base">{(feedback as ChunkFeedback).coreFunction}</p>
+                <p className="text-neutral-700 leading-relaxed text-base">{(feedback).coreFunction}</p>
               </div>
 
               {/* B. Real-Life Situations */}
               <div>
                 <h4 className="text-xs font-bold text-primary-700 uppercase tracking-wider mb-3">3 Real-Life Situations</h4>
                 <div className="space-y-3">
-                  {safeArray((feedback as ChunkFeedback).situations).map((situation, idx) => (
+                  {safeArray((feedback).situations).map((situation, idx) => (
                     <div key={idx} className="bg-gradient-to-r from-primary-50 to-accent-50 p-4 rounded-xl border border-primary-100">
                       <p className="text-xs font-semibold text-primary-600 uppercase tracking-wider mb-1">
                         {situation?.context || 'Context'}
                       </p>
                       <p className="text-neutral-700 italic">
-                        <span className="font-bold text-primary-700">"{(feedback as ChunkFeedback).chunk}"</span>
-                        {situation?.example?.includes((feedback as ChunkFeedback).chunk)
-                          ? ` ${(situation?.example || '').replace((feedback as ChunkFeedback).chunk, '').trim()}`
+                        <span className="font-bold text-primary-700">&quot;{(feedback).chunk}&quot;</span>
+                        {situation?.example?.includes((feedback).chunk)
+                          ? ` ${(situation?.example || '').replace((feedback).chunk, '').trim()}`
                           : ` - ${situation?.example || ''}`
                         }
                       </p>
@@ -150,7 +150,7 @@ const FeedbackCard: React.FC<FeedbackCardProps> = ({ feedback, isExpanded: initi
               <div>
                 <h4 className="text-xs font-bold text-primary-700 uppercase tracking-wider mb-2">Native Usage Notes</h4>
                 <ul className="space-y-2">
-                  {safeArray((feedback as ChunkFeedback).nativeUsageNotes).map((note, idx) => (
+                  {safeArray((feedback).nativeUsageNotes).map((note, idx) => (
                     <li key={idx} className="flex gap-3 text-neutral-700 line-clamp-2">
                       <span className="text-primary-500 font-bold flex-shrink-0">✓</span>
                       <span>{note || ''}</span>
@@ -163,7 +163,7 @@ const FeedbackCard: React.FC<FeedbackCardProps> = ({ feedback, isExpanded: initi
               <div>
                 <h4 className="text-xs font-bold text-primary-700 uppercase tracking-wider mb-3">Non-Native vs Native</h4>
                 <div className="space-y-3">
-                  {safeArray((feedback as ChunkFeedback).nonNativeContrast).map((contrast, idx) => (
+                  {safeArray((feedback).nonNativeContrast).map((contrast, idx) => (
                     <div key={idx} className="space-y-2 p-4 bg-neutral-50 rounded-xl border border-neutral-200">
                       {/* Non-Native */}
                       <div className="flex gap-3">

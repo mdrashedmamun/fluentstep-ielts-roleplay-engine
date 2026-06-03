@@ -58,6 +58,9 @@ interface ScoredPhrase {
   position: number;
   alternatives: string[];
 }
+const writeOut = (message = ""): void => {
+  process.stdout.write(`${message}\n`);
+};
 
 /**
  * Build lookup maps from UNIVERSAL_CHUNKS
@@ -125,8 +128,7 @@ function buildChunkMaps() {
 function scorePhrase(
   phrase: string,
   bucketA: Map<string, string>,
-  bucketB: Map<string, string>,
-  allPhrases: Set<string>
+  bucketB: Map<string, string>
 ): {
   score: number;
   bucket: 'BUCKET_A' | 'BUCKET_B' | 'NOVEL';
@@ -215,11 +217,10 @@ function scorePhrase(
 /**
  * Extract candidate phrases from a dialogue
  */
-function extractCandidates(
+export function extractCandidates(
   dialogue: Array<{ speaker: string; text: string }>,
   bucketA: Map<string, string>,
-  bucketB: Map<string, string>,
-  allPhrases: Set<string>
+  bucketB: Map<string, string>
 ): ScoredPhrase[] {
   const candidates: ScoredPhrase[] = [];
   const seen = new Set<string>();
@@ -231,7 +232,7 @@ function extractCandidates(
     const wordMatches = text.matchAll(/\b(\w+(?:\s+\w+){1,4})\b/g);
 
     for (const match of wordMatches) {
-      const phrase = match[0]!.trim();
+      const phrase = match[0].trim();
       const lower = phrase.toLowerCase();
 
       // Skip if already scored
@@ -244,8 +245,7 @@ function extractCandidates(
       const { score, bucket, alternatives: alts } = scorePhrase(
         phrase,
         bucketA,
-        bucketB,
-        allPhrases
+        bucketB
       );
 
       // Only include scored phrases
@@ -307,7 +307,7 @@ function generateAlternatives(
   const lower = answer.toLowerCase();
 
   if (synonymMap[lower]) {
-    alternatives.push(...synonymMap[lower]!.slice(0, 2));
+    alternatives.push(...synonymMap[lower].slice(0, 2));
   } else if (bucket === 'BUCKET_A') {
     // For BUCKET_A items without mapped synonyms, suggest related vocabulary
     alternatives.push(...generateRelatedTerms(answer));
@@ -353,8 +353,7 @@ function generateRelatedTerms(answer: string): string[] {
 function processDialogue(
   unitDialogue: (typeof UNIT_4_DIALOGUES)[0],
   bucketA: Map<string, string>,
-  bucketB: Map<string, string>,
-  allPhrases: Set<string>
+  bucketB: Map<string, string>
 ): Unit4RoleplayScript {
   // Parse dialogue text to extract blanks and original answers
   const parseResult = parseDialogueWithBlanks(unitDialogue.dialogue);
@@ -366,8 +365,7 @@ function processDialogue(
     const { score, bucket, alternatives: alts } = scorePhrase(
       blank.phrase,
       bucketA,
-      bucketB,
-      allPhrases
+      bucketB
     );
 
     return {
@@ -420,7 +418,7 @@ function processDialogue(
   const deepDive = selectedBlanks.map((blank, idx) => ({
     index: idx + 1,
     phrase: blank.phrase,
-    insight: generateDeepDiveInsight(blank.phrase, blank.bucket, unitDialogue.title)
+    insight: generateDeepDiveInsight(blank.phrase, blank.bucket)
   }));
 
   return {
@@ -521,10 +519,10 @@ function insertBlankMarkers(
   dialogue: Array<{ speaker: string; text: string }>,
   selectedBlanks: ScoredPhrase[]
 ): Array<{ speaker: string; text: string }> {
-  const result = JSON.parse(JSON.stringify(dialogue));
+  const result = dialogue.map(line => ({ ...line }));
 
   // Sort blanks by line and position (reverse order to maintain positions)
-  const sorted = [...selectedBlanks]!.sort(
+  const sorted = [...selectedBlanks].sort(
     (a, b) =>
       b.dialogueIndex - a.dialogueIndex || b.position - a.position
   );
@@ -587,8 +585,7 @@ function getCharacterDescription(
  */
 function generateDeepDiveInsight(
   phrase: string,
-  bucket: 'BUCKET_A' | 'BUCKET_B' | 'NOVEL',
-  topic: string
+  bucket: "BUCKET_A" | "BUCKET_B" | "NOVEL"
 ): string {
   const insightMap: Record<string, string> = {
     'shaped the way': 'C1 phrase expressing transformational impact. Note the "shaped" metaphor.',
@@ -635,10 +632,10 @@ function generateDeepDiveInsight(
  * Main execution: Process all Unit 4 dialogues
  */
 export function processAllUnit4Dialogues(): Unit4RoleplayScript[] {
-  const { bucketA, bucketB, allPhrases } = buildChunkMaps();
+  const { bucketA, bucketB } = buildChunkMaps();
 
   return UNIT_4_DIALOGUES.map(unitDialogue =>
-    processDialogue(unitDialogue, bucketA, bucketB, allPhrases)
+    processDialogue(unitDialogue, bucketA, bucketB)
   );
 }
 
@@ -694,9 +691,9 @@ export function generateProcessingReport(
 // Execute if run directly
 if (require.main === module) {
   const scripts = processAllUnit4Dialogues();
-  console.log(JSON.stringify(scripts, null, 2));
-  console.log('\n\n');
-  console.log(generateProcessingReport(scripts));
+  writeOut(JSON.stringify(scripts, null, 2));
+  writeOut('\n\n');
+  writeOut(generateProcessingReport(scripts));
 }
 
 export type { Unit4RoleplayScript };

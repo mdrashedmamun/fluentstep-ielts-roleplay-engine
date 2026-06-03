@@ -30,7 +30,7 @@ export function getEncouragementMessage(
       title: "Great momentum!",
       message: `${completedCount} scenarios down. You're building real confidence!`,
       emoji: "⚡",
-      tone: "motivated"
+      tone: "motivational"
     };
   }
 

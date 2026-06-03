@@ -3,10 +3,10 @@
  * Shows user's journey overview, stats, and achievements
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { CURATED_ROLEPLAYS } from '../services/staticData';
 import { progressService } from '../services/progressService';
-import { getCurrentStreak, getTotalDaysActive } from '../services/streakService';
+import { getTotalDaysActive } from '../services/streakService';
 import { getUnlockedBadgeCount, getRecentlyUnlockedBadges } from '../services/badgeService';
 import MountainProgress from './MountainProgress';
 import StreakFlame from './StreakFlame';
@@ -18,24 +18,17 @@ interface PersonalDashboardProps {
 }
 
 const PersonalDashboard: React.FC<PersonalDashboardProps> = ({ onSelectScenario, onClose }) => {
-  const [completionPercentage, setCompletionPercentage] = useState(0);
-  const [completedScenarios, setCompletedScenarios] = useState<string[]>([]);
-  const [streak, setStreak] = useState(0);
-  const [totalDays, setTotalDays] = useState(0);
-  const [unlockedBadges, setUnlockedBadges] = useState(0);
-  const [recentBadges, setRecentBadges] = useState<any[]>([]);
-  const [showAllBadges, setShowAllBadges] = useState(false);
-
-  useEffect(() => {
+  const [{ completionPercentage, completedScenarios, totalDays, unlockedBadges, recentBadges }] = useState(() => {
     const progress = progressService.getProgress();
-    setCompletedScenarios(progress.completedScenarios);
-    setCompletionPercentage(progressService.getCompletionPercentage(CURATED_ROLEPLAYS.length));
-
-    setStreak(getCurrentStreak());
-    setTotalDays(getTotalDaysActive());
-    setUnlockedBadges(getUnlockedBadgeCount());
-    setRecentBadges(getRecentlyUnlockedBadges());
-  }, []);
+    return {
+      completedScenarios: progress.completedScenarios,
+      completionPercentage: progressService.getCompletionPercentage(CURATED_ROLEPLAYS.length),
+      totalDays: getTotalDaysActive(),
+      unlockedBadges: getUnlockedBadgeCount(),
+      recentBadges: getRecentlyUnlockedBadges()
+    };
+  });
+  const [showAllBadges, setShowAllBadges] = useState(false);
 
   // Get recently started scenarios
   const recentScenarios = CURATED_ROLEPLAYS
@@ -166,7 +159,7 @@ const PersonalDashboard: React.FC<PersonalDashboardProps> = ({ onSelectScenario,
         <div className="bg-gradient-to-r from-success-100 to-success-50 p-6 rounded-2xl border-2 border-success-300 text-center">
           <p className="text-2xl font-bold text-success-700 mb-2">🎉 Congratulations!</p>
           <p className="text-neutral-700 font-semibold">
-            You've completed all 36 scenarios and reached the summit of English fluency!
+            You&apos;ve completed all 36 scenarios and reached the summit of English fluency!
           </p>
           <p className="text-sm text-neutral-600 mt-2">
             Keep practicing and reviewing to maintain your fluency.

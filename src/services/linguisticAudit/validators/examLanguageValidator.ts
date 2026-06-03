@@ -7,7 +7,6 @@
 import { RoleplayScript } from '../../staticData';
 import { ValidationFinding } from '../types';
 import {
-  findExamLanguageIssues,
   usesExamLanguage,
   usesRoboticPoliteness
 } from '../rules/examLanguagePatterns';

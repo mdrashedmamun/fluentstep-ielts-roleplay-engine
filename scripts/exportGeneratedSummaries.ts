@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { CURATED_ROLEPLAYS, RoleplayScript } from '../src/services/staticData';
+import { CURATED_ROLEPLAYS, type PatternSummary, type RoleplayScript } from '../src/services/staticData';
 import { generatePatternSummaryForScenario } from '../src/services/feedbackGeneration/patternSummaryGenerator';
 
 /**
@@ -8,58 +8,87 @@ import { generatePatternSummaryForScenario } from '../src/services/feedbackGener
  * Usage: npm run generate:pattern-summaries -- --category=Social --batch=1
  */
 
+type CategoryName = RoleplayScript['category'];
+
 interface ExportOptions {
-  category: string;
+  category: CategoryName;
   batch: number;
 }
 
+interface CategoryInfo {
+  fileName: string;
+  prefix: string;
+  count: number;
+}
+
 // Map category names to file names and valid prefixes
-const CATEGORY_MAP: Record<string, { fileName: string; prefix: string; count: number }> = {
-  'Social': { fileName: 'Social', prefix: 'social-', count: 12 },
-  'Workplace': { fileName: 'Workplace', prefix: 'workplace-', count: 11 },
+const CATEGORY_MAP: Record<CategoryName, CategoryInfo> = {
+  Social: { fileName: 'Social', prefix: 'social-', count: 12 },
+  Workplace: { fileName: 'Workplace', prefix: 'workplace-', count: 11 },
   'Service/Logistics': { fileName: 'Service-Logistics', prefix: 'service-', count: 14 },
-  'Advanced': { fileName: 'Advanced', prefix: 'advanced-', count: 11 },
-  'Academic': { fileName: 'Academic', prefix: 'academic-', count: 1 },
-  'Healthcare': { fileName: 'Healthcare', prefix: 'healthcare-', count: 1 },
-  'Cultural': { fileName: 'Cultural', prefix: 'cultural-', count: 1 },
-  'Community': { fileName: 'Community', prefix: 'community-', count: 1 },
+  Advanced: { fileName: 'Advanced', prefix: 'advanced-', count: 11 },
+  Academic: { fileName: 'Academic', prefix: 'academic-', count: 1 },
+  Healthcare: { fileName: 'Healthcare', prefix: 'healthcare-', count: 1 },
+  Cultural: { fileName: 'Cultural', prefix: 'cultural-', count: 1 },
+  Community: { fileName: 'Community', prefix: 'community-', count: 1 }
 };
+
+function writeOut(message = ''): void {
+  process.stdout.write(`${message}\n`);
+}
+
+function writeErr(message = ''): void {
+  process.stderr.write(`${message}\n`);
+}
+
+function isCategoryName(value: string): value is CategoryName {
+  return Object.prototype.hasOwnProperty.call(CATEGORY_MAP, value);
+}
 
 function parseArgs(): ExportOptions {
   const args = process.argv.slice(2);
-  const options: Partial<ExportOptions> = {};
+  let category: CategoryName | undefined;
+  let batch: number | undefined;
 
-  for (let i = 0; i < args.length; i++) {
-    if (args[i] === '--category' && i + 1 < args.length) {
-      options.category = args[i + 1];
-      i++;
-    } else if (args[i] === '--batch' && i + 1 < args.length) {
-      options.batch = parseInt(args[i + 1], 10);
-      i++;
+  for (let index = 0; index < args.length; index += 1) {
+    const arg = args[index];
+    const nextArg = args[index + 1];
+
+    if (arg === '--category' && nextArg) {
+      if (!isCategoryName(nextArg)) {
+        writeErr(`Invalid category: ${nextArg}`);
+        writeErr(`Valid categories: ${Object.keys(CATEGORY_MAP).join(', ')}`);
+        process.exit(1);
+      }
+
+      category = nextArg;
+      index += 1;
+    } else if (arg === '--batch' && nextArg) {
+      const parsedBatch = Number.parseInt(nextArg, 10);
+      if (Number.isNaN(parsedBatch) || parsedBatch < 1) {
+        writeErr(`Invalid batch: ${nextArg}`);
+        process.exit(1);
+      }
+
+      batch = parsedBatch;
+      index += 1;
     }
   }
 
-  if (!options.category || !options.batch) {
-    console.error('Usage: npm run generate:pattern-summaries -- --category=<NAME> --batch=<NUM>');
-    console.error('Example: npm run generate:pattern-summaries -- --category=Social --batch=1');
+  if (!category || !batch) {
+    writeErr('Usage: npm run generate:pattern-summaries -- --category=<NAME> --batch=<NUM>');
+    writeErr('Example: npm run generate:pattern-summaries -- --category=Social --batch=1');
     process.exit(1);
   }
 
-  return options as ExportOptions;
+  return { category, batch };
 }
 
-function getScenariosForBatch(category: string, batch: number): RoleplayScript[] {
-  const categoryInfo = CATEGORY_MAP[category];
-  if (!categoryInfo) {
-    console.error(`❌ Invalid category: ${category}`);
-    console.error(`Valid categories: ${Object.keys(CATEGORY_MAP).join(', ')}`);
-    process.exit(1);
-  }
-
-  const scenarios = CURATED_ROLEPLAYS.filter(s => s.category === category);
+function getScenariosForBatch(category: CategoryName, batch: number): RoleplayScript[] {
+  const scenarios = CURATED_ROLEPLAYS.filter((scenario) => scenario.category === category);
 
   if (scenarios.length === 0) {
-    console.error(`❌ No scenarios found for category: ${category}`);
+    writeErr(`No scenarios found for category: ${category}`);
     process.exit(1);
   }
 
@@ -68,39 +97,45 @@ function getScenariosForBatch(category: string, batch: number): RoleplayScript[]
   const endIndex = Math.min(startIndex + 5, scenarios.length);
 
   if (startIndex >= scenarios.length) {
-    console.error(`❌ Batch ${batch} out of range. Category has ${scenarios.length} scenarios.`);
+    writeErr(`Batch ${batch} out of range. Category has ${scenarios.length} scenarios.`);
     process.exit(1);
   }
 
   return scenarios.slice(startIndex, endIndex);
 }
 
-function formatYaml(summary: any, indent: string = ''): string {
-  if (!summary) return '';
+function formatQuotedList(items: string[]): string {
+  return items.map((item) => `"${item}"`).join(', ');
+}
 
+function getCategoryLabel(item: PatternSummary['categoryBreakdown'][number]): string {
+  return String(item.category ?? item.categoryKey);
+}
+
+function formatYaml(summary: PatternSummary, indent = ''): string {
   let yaml = '';
 
   // categoryBreakdown
   yaml += `${indent}categoryBreakdown:\n`;
   for (const item of summary.categoryBreakdown) {
-    yaml += `${indent}  - category: "${item.category}"\n`;
+    yaml += `${indent}  - category: "${getCategoryLabel(item)}"\n`;
     yaml += `${indent}    count: ${item.count}\n`;
     // NEW: Export exampleChunkIds with debug comment mapping to chunk text
-    if (item.exampleChunkIds && item.exampleChunkIds.length > 0) {
-      yaml += `${indent}    exampleChunkIds: [${item.exampleChunkIds.map((id: string) => `"${id}"`).join(', ')}]\n`;
+    if (item.exampleChunkIds.length > 0) {
+      yaml += `${indent}    exampleChunkIds: [${formatQuotedList(item.exampleChunkIds)}]\n`;
     }
     // DEPRECATED: Keep examples for backward compat (auto-populated during import)
     if (item.examples && item.examples.length > 0) {
-      yaml += `${indent}    # Chunks: [${item.examples.map((e: string) => `"${e}"`).join(', ')}]\n`;
+      yaml += `${indent}    # Chunks: [${formatQuotedList(item.examples)}]\n`;
     }
     yaml += `${indent}    insight: "${item.insight}"\n`;
     // NEW: Optional native patterns
     if (item.nativePatterns && item.nativePatterns.length > 0) {
-      yaml += `${indent}    nativePatterns: [${item.nativePatterns.map((p: string) => `"${p}"`).join(', ')}]\n`;
+      yaml += `${indent}    nativePatterns: [${formatQuotedList(item.nativePatterns)}]\n`;
     }
     // NEW: Optional common mistakes
     if (item.commonMistakes && item.commonMistakes.length > 0) {
-      yaml += `${indent}    commonMistakes: [${item.commonMistakes.map((m: string) => `"${m}"`).join(', ')}]\n`;
+      yaml += `${indent}    commonMistakes: [${formatQuotedList(item.commonMistakes)}]\n`;
     }
   }
 
@@ -113,27 +148,27 @@ function formatYaml(summary: any, indent: string = ''): string {
     yaml += `${indent}  - pattern: "${pattern.pattern}"\n`;
     yaml += `${indent}    explanation: "${pattern.explanation}"\n`;
     // NEW: Export chunkIds with debug comment mapping to chunk text
-    if (pattern.chunkIds && pattern.chunkIds.length > 0) {
-      yaml += `${indent}    chunkIds: [${pattern.chunkIds.map((id: string) => `"${id}"`).join(', ')}]\n`;
+    if (pattern.chunkIds.length > 0) {
+      yaml += `${indent}    chunkIds: [${formatQuotedList(pattern.chunkIds)}]\n`;
     }
     // DEPRECATED: Keep chunks for backward compat (auto-populated during import)
     if (pattern.chunks && pattern.chunks.length > 0) {
-      yaml += `${indent}    # Chunks: [${pattern.chunks.map((c: string) => `"${c}"`).join(', ')}]\n`;
+      yaml += `${indent}    # Chunks: [${formatQuotedList(pattern.chunks)}]\n`;
     }
     // NEW: Optional native patterns
     if (pattern.nativePatterns && pattern.nativePatterns.length > 0) {
-      yaml += `${indent}    nativePatterns: [${pattern.nativePatterns.map((p: string) => `"${p}"`).join(', ')}]\n`;
+      yaml += `${indent}    nativePatterns: [${formatQuotedList(pattern.nativePatterns)}]\n`;
     }
     // NEW: Optional common mistakes
     if (pattern.commonMistakes && pattern.commonMistakes.length > 0) {
-      yaml += `${indent}    commonMistakes: [${pattern.commonMistakes.map((m: string) => `"${m}"`).join(', ')}]\n`;
+      yaml += `${indent}    commonMistakes: [${formatQuotedList(pattern.commonMistakes)}]\n`;
     }
   }
 
   return yaml;
 }
 
-function generateMarkdown(scenarios: RoleplayScript[], category: string, batch: number): string {
+function generateMarkdown(scenarios: RoleplayScript[], category: CategoryName, batch: number): string {
   const categoryInfo = CATEGORY_MAP[category];
   let markdown = '';
 
@@ -143,9 +178,9 @@ function generateMarkdown(scenarios: RoleplayScript[], category: string, batch: 
   markdown += `# Scenarios included: ${scenarios.length}\n\n`;
 
   markdown += `## Generated Pattern Summaries - Batch ${batch}\n\n`;
-  markdown += `**Status**: 🤖 Template-generated (requires human review)\n`;
-  markdown += `**Generated**: ${new Date().toISOString().split('T')[0]}\n`;
-  markdown += `**Action**: Review each scenario's pattern summary below. Edit insights and key patterns as needed. `;
+  markdown += '**Status**: Template-generated (requires human review)\n';
+  markdown += `**Generated**: ${new Date().toISOString().slice(0, 10)}\n`;
+  markdown += '**Action**: Review each scenario\'s pattern summary below. Edit insights and key patterns as needed. ';
   markdown += `Check QA boxes, then save as \`${categoryInfo.fileName}-batch${batch}-enriched.md\` and run: `;
   markdown += `\`npm run import:enrichments -- --file=${categoryInfo.fileName}-batch${batch}-enriched.md\`\n\n`;
 
@@ -192,7 +227,7 @@ function generateMarkdown(scenarios: RoleplayScript[], category: string, batch: 
     markdown += '- Verify all chunks reference actual chunkFeedback items\n\n';
 
     markdown += '**Author Comments** (optional):\n';
-    markdown += `[ Add your refinement notes here ]\n\n`;
+    markdown += '[ Add your refinement notes here ]\n\n';
 
     markdown += '---\n\n';
   }
@@ -208,16 +243,18 @@ function generateMarkdown(scenarios: RoleplayScript[], category: string, batch: 
   return markdown;
 }
 
-async function main() {
+function main(): void {
   const options = parseArgs();
+  const categoryInfo = CATEGORY_MAP[options.category];
 
-  console.log(`\n📋 Generating pattern summaries...`);
-  console.log(`   Category: ${options.category}`);
-  console.log(`   Batch: ${options.batch}`);
+  writeOut();
+  writeOut('Generating pattern summaries...');
+  writeOut(`   Category: ${options.category}`);
+  writeOut(`   Batch: ${options.batch}`);
 
   // Get scenarios for this batch
   const scenarios = getScenariosForBatch(options.category, options.batch);
-  console.log(`   Scenarios: ${scenarios.length} (${scenarios.map(s => s.id).join(', ')})`);
+  writeOut(`   Scenarios: ${scenarios.length} (${scenarios.map((scenario) => scenario.id).join(', ')})`);
 
   // Generate markdown
   const markdown = generateMarkdown(scenarios, options.category, options.batch);
@@ -229,21 +266,25 @@ async function main() {
   }
 
   // Write file
-  const categoryInfo = CATEGORY_MAP[options.category];
   const outputFile = path.join(outputDir, `${categoryInfo.fileName}-batch${options.batch}-generated.md`);
 
   fs.writeFileSync(outputFile, markdown, 'utf-8');
 
-  console.log(`\n✅ Generated: ${outputFile}`);
-  console.log(`\n📖 Next steps:`);
-  console.log(`   1. Open: ${outputFile}`);
-  console.log(`   2. Review and edit pattern summaries`);
-  console.log(`   3. Save as: ${categoryInfo.fileName}-batch${options.batch}-enriched.md`);
-  console.log(`   4. Run: npm run import:enrichments -- --file=${categoryInfo.fileName}-batch${options.batch}-enriched.md`);
-  console.log('');
+  writeOut();
+  writeOut(`Generated: ${outputFile}`);
+  writeOut();
+  writeOut('Next steps:');
+  writeOut(`   1. Open: ${outputFile}`);
+  writeOut('   2. Review and edit pattern summaries');
+  writeOut(`   3. Save as: ${categoryInfo.fileName}-batch${options.batch}-enriched.md`);
+  writeOut(`   4. Run: npm run import:enrichments -- --file=${categoryInfo.fileName}-batch${options.batch}-enriched.md`);
+  writeOut();
 }
 
-main().catch(err => {
-  console.error('Error:', err.message);
+try {
+  main();
+} catch (error) {
+  const message = error instanceof Error ? error.message : String(error);
+  writeErr(`Error: ${message}`);
   process.exit(1);
-});
+}

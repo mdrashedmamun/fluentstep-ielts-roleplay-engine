@@ -12,7 +12,7 @@
  */
 
 import { RoleplayScript } from '../src/services/staticData';
-import { ValidationFinding, Severity, FixConfidence } from '../src/services/linguisticAudit/types';
+import { ValidationFinding } from '../src/services/linguisticAudit/types';
 import { validateStructuralDiscipline } from './structuralDisciplineValidator';
 import { validateChunkCompliance } from '../src/services/linguisticAudit/validators/chunkComplianceValidator';
 import { validateNaturalPatterns } from '../src/services/linguisticAudit/validators/naturalPatternsValidator';
@@ -23,6 +23,27 @@ import { validateAlternatives } from '../src/services/linguisticAudit/validators
 import { validateUKEnglish } from '../src/services/linguisticAudit/validators/ukEnglishValidator';
 import { validateWrittenVsSpoken } from '../src/services/linguisticAudit/validators/writtenVsSpokenValidator';
 import { validateExamLanguage } from '../src/services/linguisticAudit/validators/examLanguageValidator';
+import { validateIELTSAuthenticity } from '../src/services/linguisticAudit/validators/ieltsAuthenticityValidator';
+import { validateSpokenNaturalness } from '../src/services/linguisticAudit/validators/spokenNaturalnessValidator';
+import { validatePedagogy } from '../src/services/linguisticAudit/validators/pedagogyValidator';
+
+type GateType =
+  | 'structural'
+  | 'pragmatic'
+  | 'chunk'
+  | 'register'
+  | 'ielts'
+  | 'spoken'
+  | 'pedagogy';
+
+export type FinalApprovalStatus = 'approved' | 'blocked' | 'needs-human-review';
+
+export interface FinalApproval {
+  status: FinalApprovalStatus;
+  blockingGates: string[];
+  humanReviewRequired: boolean;
+  reason: string;
+}
 
 /**
  * Result from a single QA gate
@@ -52,7 +73,16 @@ export interface QAReport {
     pragmaticSensitivity: GateResult;
     chunkAwareness: GateResult;
     registerControl: GateResult;
+    ieltsAuthenticity: GateResult;
+    spokenNaturalness: GateResult;
+    pedagogy: GateResult;
   };
+
+  humanReview: {
+    status: 'not-started' | 'not-required';
+    required: boolean;
+  };
+  finalApproval: FinalApproval;
 
   criticalIssues: ValidationFinding[];
   warnings: ValidationFinding[];
@@ -103,18 +133,30 @@ export function runQACheck(scenario: RoleplayScript): QAReport {
   const registerGate = classifyFindings(registerFindings, 'register');
   allFindings.push(...registerFindings);
 
-  // Determine overall pass/fail: Fail if any gate has critical issues
-  const passed =
-    !structuralGate.criticalIssues.length &&
-    !chunkGate.criticalIssues.length &&
-    pragmaticGate.criticalIssues.length === 0;
+  // GATE 5: IELTS Authenticity (Critical Gate)
+  const ieltsFindings = validateIELTSAuthenticity(scenario);
+  const ieltsGate = classifyFindings(ieltsFindings, 'ielts');
+  allFindings.push(...ieltsFindings);
+
+  // GATE 6: Spoken Naturalness (Subjective unless severe)
+  const spokenFindings = validateSpokenNaturalness(scenario);
+  const spokenGate = classifyFindings(spokenFindings, 'spoken');
+  allFindings.push(...spokenFindings);
+
+  // GATE 7: Pedagogy (Major failures block)
+  const pedagogyFindings = validatePedagogy(scenario);
+  const pedagogyGate = classifyFindings(pedagogyFindings, 'pedagogy');
+  allFindings.push(...pedagogyFindings);
 
   // Calculate overall confidence
   const gateConfidences = [
     structuralGate.confidence,
     pragmaticGate.confidence,
     chunkGate.confidence,
-    registerGate.confidence
+    registerGate.confidence,
+    ieltsGate.confidence,
+    spokenGate.confidence,
+    pedagogyGate.confidence
   ];
   const overallConfidence = gateConfidences.reduce((a, b) => a + b, 0) / gateConfidences.length;
 
@@ -123,22 +165,43 @@ export function runQACheck(scenario: RoleplayScript): QAReport {
     ...structuralGate.criticalIssues,
     ...pragmaticGate.criticalIssues,
     ...chunkGate.criticalIssues,
-    ...registerGate.criticalIssues
+    ...registerGate.criticalIssues,
+    ...ieltsGate.criticalIssues,
+    ...spokenGate.criticalIssues,
+    ...pedagogyGate.criticalIssues
   ];
 
   const allWarnings = [
     ...structuralGate.warnings,
     ...pragmaticGate.warnings,
     ...chunkGate.warnings,
-    ...registerGate.warnings
+    ...registerGate.warnings,
+    ...ieltsGate.warnings,
+    ...spokenGate.warnings,
+    ...pedagogyGate.warnings
   ];
 
   const allSuggestions = [
     ...structuralGate.suggestions,
     ...pragmaticGate.suggestions,
     ...chunkGate.suggestions,
-    ...registerGate.suggestions
+    ...registerGate.suggestions,
+    ...ieltsGate.suggestions,
+    ...spokenGate.suggestions,
+    ...pedagogyGate.suggestions
   ];
+
+  const finalApproval = getFinalApproval({
+    structuralDiscipline: structuralGate,
+    pragmaticSensitivity: pragmaticGate,
+    chunkAwareness: chunkGate,
+    registerControl: registerGate,
+    ieltsAuthenticity: ieltsGate,
+    spokenNaturalness: spokenGate,
+    pedagogy: pedagogyGate
+  });
+
+  const passed = finalApproval.status !== 'blocked';
 
   return {
     scenarioId: scenario.id,
@@ -150,8 +213,16 @@ export function runQACheck(scenario: RoleplayScript): QAReport {
       structuralDiscipline: structuralGate,
       pragmaticSensitivity: pragmaticGate,
       chunkAwareness: chunkGate,
-      registerControl: registerGate
+      registerControl: registerGate,
+      ieltsAuthenticity: ieltsGate,
+      spokenNaturalness: spokenGate,
+      pedagogy: pedagogyGate
     },
+    humanReview: {
+      status: finalApproval.humanReviewRequired ? 'not-started' : 'not-required',
+      required: finalApproval.humanReviewRequired
+    },
+    finalApproval,
     criticalIssues: allCriticalIssues,
     warnings: allWarnings,
     suggestions: allSuggestions,
@@ -169,15 +240,38 @@ export function runQACheck(scenario: RoleplayScript): QAReport {
  */
 function classifyFindings(
   findings: ValidationFinding[],
-  gateType: 'structural' | 'pragmatic' | 'chunk' | 'register'
+  gateType: GateType
 ): GateResult {
   const criticalIssues: ValidationFinding[] = [];
   const warnings: ValidationFinding[] = [];
   const suggestions: ValidationFinding[] = [];
 
   for (const finding of findings) {
-    // Structural and chunk gates are always critical if they have findings
-    if ((gateType === 'structural' || gateType === 'chunk') && finding.confidence >= 0.8) {
+    // Chunk compliance is policy-critical, but individual findings can be slot vocabulary.
+    // Treat high-confidence chunk breaks as blockers and route lower-confidence cases to review.
+    if (gateType === 'chunk') {
+      if (finding.confidence >= 0.85) {
+        criticalIssues.push(finding);
+      } else if (finding.confidence >= 0.7) {
+        warnings.push(finding);
+      } else {
+        suggestions.push(finding);
+      }
+    }
+    // Structural remains a hard gate for high-confidence structural findings.
+    else if (gateType === 'structural' && finding.confidence >= 0.8) {
+      criticalIssues.push(finding);
+    }
+    // IELTS authenticity blocks only high-confidence authenticity failures.
+    else if (gateType === 'ielts' && finding.confidence >= 0.85) {
+      criticalIssues.push(finding);
+    }
+    // Major pedagogy failures block; minor teaching quality issues are warnings.
+    else if (gateType === 'pedagogy' && finding.confidence >= 0.85) {
+      criticalIssues.push(finding);
+    }
+    // Spoken naturalness is subjective unless severe.
+    else if (gateType === 'spoken' && finding.confidence >= 0.9) {
       criticalIssues.push(finding);
     }
     // For pragmatic and register gates, high confidence = critical, medium = warning, low = suggestion
@@ -206,6 +300,50 @@ function classifyFindings(
   };
 }
 
+function getFinalApproval(gates: QAReport['gates']): FinalApproval {
+  const gateEntries = [
+    ['Structural Discipline', gates.structuralDiscipline],
+    ['Pragmatic Sensitivity', gates.pragmaticSensitivity],
+    ['Chunk Awareness', gates.chunkAwareness],
+    ['Register Control', gates.registerControl],
+    ['IELTS Authenticity', gates.ieltsAuthenticity],
+    ['Spoken Naturalness', gates.spokenNaturalness],
+    ['Pedagogy', gates.pedagogy],
+  ] as const;
+
+  const blockingGates = gateEntries
+    .filter(([, gate]) => gate.criticalIssues.length > 0)
+    .map(([name]) => name);
+
+  if (blockingGates.length > 0) {
+    return {
+      status: 'blocked',
+      blockingGates,
+      humanReviewRequired: false,
+      reason: `Blocked by critical issues in: ${blockingGates.join(', ')}`
+    };
+  }
+
+  const warningCount = gateEntries.reduce((sum, [, gate]) => sum + gate.warnings.length, 0);
+  const suggestionCount = gateEntries.reduce((sum, [, gate]) => sum + gate.suggestions.length, 0);
+
+  if (warningCount > 0 || suggestionCount > 0) {
+    return {
+      status: 'needs-human-review',
+      blockingGates: [],
+      humanReviewRequired: true,
+      reason: `No blocking issues, but ${warningCount} warning(s) and ${suggestionCount} suggestion(s) need reviewer judgement.`
+    };
+  }
+
+  return {
+    status: 'approved',
+    blockingGates: [],
+    humanReviewRequired: false,
+    reason: 'All automated QA gates passed with no warnings.'
+  };
+}
+
 /**
  * Format QA report as readable text
  */
@@ -222,6 +360,8 @@ export function formatQAReport(report: QAReport): string {
   const statusSymbol = report.passed ? '✅' : '❌';
   const statusText = report.passed ? 'PASSED' : 'FAILED';
   lines.push(`${statusSymbol} Status: ${statusText} (Confidence: ${(report.overallConfidence * 100).toFixed(0)}%)`);
+  lines.push(`Final Approval: ${report.finalApproval.status.toUpperCase()} - ${report.finalApproval.reason}`);
+  lines.push(`Human Review: ${report.humanReview.required ? 'Required' : 'Not required'}`);
   lines.push('');
 
   // Gate results
@@ -232,7 +372,10 @@ export function formatQAReport(report: QAReport): string {
     { name: 'Structural Discipline', gate: report.gates.structuralDiscipline },
     { name: 'Pragmatic Sensitivity', gate: report.gates.pragmaticSensitivity },
     { name: 'Chunk Awareness', gate: report.gates.chunkAwareness },
-    { name: 'Register Control', gate: report.gates.registerControl }
+    { name: 'Register Control', gate: report.gates.registerControl },
+    { name: 'IELTS Authenticity', gate: report.gates.ieltsAuthenticity },
+    { name: 'Spoken Naturalness', gate: report.gates.spokenNaturalness },
+    { name: 'Pedagogy', gate: report.gates.pedagogy }
   ];
 
   for (const { name, gate } of gates) {
@@ -314,7 +457,11 @@ export function formatQAReport(report: QAReport): string {
   // Final verdict
   if (report.passed) {
     lines.push('═'.repeat(60));
-    lines.push('  ✅ APPROVED FOR PRODUCTION');
+    lines.push(
+      report.finalApproval.status === 'approved'
+        ? '  ✅ APPROVED BY AUTOMATED QA'
+        : '  ⚠️  NEEDS HUMAN REVIEW BEFORE APPROVAL'
+    );
     lines.push('═'.repeat(60));
   } else {
     lines.push('═'.repeat(60));
@@ -326,6 +473,63 @@ export function formatQAReport(report: QAReport): string {
   return lines.join('\n');
 }
 
+export function formatQAReportMarkdown(report: QAReport): string {
+  const lines: string[] = [
+    `# Content QA Report: ${report.scenarioTitle}`,
+    '',
+    `- Scenario ID: ${report.scenarioId}`,
+    `- Generated: ${report.timestamp}`,
+    `- Final approval: ${report.finalApproval.status}`,
+    `- Human review: ${report.humanReview.required ? 'required' : 'not required'}`,
+    `- Reason: ${report.finalApproval.reason}`,
+    '',
+    '## Gate Results',
+    '',
+    '| Gate | Status | Critical | Warnings | Suggestions |',
+    '| --- | --- | ---: | ---: | ---: |',
+  ];
+
+  const gates = [
+    ['Structural Discipline', report.gates.structuralDiscipline],
+    ['Pragmatic Sensitivity', report.gates.pragmaticSensitivity],
+    ['Chunk Awareness', report.gates.chunkAwareness],
+    ['Register Control', report.gates.registerControl],
+    ['IELTS Authenticity', report.gates.ieltsAuthenticity],
+    ['Spoken Naturalness', report.gates.spokenNaturalness],
+    ['Pedagogy', report.gates.pedagogy],
+  ] as const;
+
+  for (const [name, gate] of gates) {
+    lines.push(
+      `| ${name} | ${gate.passed ? 'PASS' : 'FAIL'} | ${gate.criticalIssues.length} | ${gate.warnings.length} | ${gate.suggestions.length} |`
+    );
+  }
+
+  lines.push('', '## Critical Issues', '');
+  appendFindings(lines, report.criticalIssues, 'No critical issues.');
+
+  lines.push('', '## Warnings', '');
+  appendFindings(lines, report.warnings, 'No warnings.');
+
+  lines.push('', '## Suggestions', '');
+  appendFindings(lines, report.suggestions, 'No suggestions.');
+
+  return `${lines.join('\n')}\n`;
+}
+
+function appendFindings(lines: string[], findings: ValidationFinding[], emptyText: string): void {
+  if (findings.length === 0) {
+    lines.push(emptyText);
+    return;
+  }
+
+  for (const finding of findings) {
+    lines.push(
+      `- ${finding.validatorName} (${finding.location}): ${finding.issue} [confidence ${(finding.confidence * 100).toFixed(0)}%]`
+    );
+  }
+}
+
 /**
  * Generate summary report for multiple scenarios
  */
@@ -334,6 +538,9 @@ export function generateQASummary(reports: QAReport[]): string {
 
   const passed = reports.filter(r => r.passed).length;
   const failed = reports.filter(r => !r.passed).length;
+  const needsHumanReview = reports.filter(r => r.finalApproval.status === 'needs-human-review').length;
+  const approved = reports.filter(r => r.finalApproval.status === 'approved').length;
+  const blocked = reports.filter(r => r.finalApproval.status === 'blocked').length;
   const avgConfidence = reports.reduce((sum, r) => sum + r.overallConfidence, 0) / reports.length;
 
   lines.push('');
@@ -343,6 +550,7 @@ export function generateQASummary(reports: QAReport[]): string {
   lines.push('');
   lines.push(`  ✅ Passed: ${passed}/${reports.length}`);
   lines.push(`  ❌ Failed: ${failed}/${reports.length}`);
+  lines.push(`  Final Approval: ${approved} approved, ${needsHumanReview} needs human review, ${blocked} blocked`);
   lines.push(`  📊 Average Confidence: ${(avgConfidence * 100).toFixed(0)}%`);
   lines.push('');
 
