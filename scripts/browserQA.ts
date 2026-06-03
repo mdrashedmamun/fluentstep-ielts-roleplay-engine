@@ -5,6 +5,7 @@ import { spawn, type ChildProcessWithoutNullStreams } from 'node:child_process';
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
+import { CURATED_ROLEPLAYS } from '../src/services/staticData';
 
 type Severity = 'Blocker' | 'High' | 'Medium' | 'Low';
 
@@ -157,6 +158,133 @@ async function prepareContext(browser: Browser, viewport: { width: number; heigh
     window.localStorage.setItem('fluentstep:skipOnboarding', 'true');
   });
   return context;
+}
+
+
+async function advanceUntilBlankCount(page: Page, minimumCount: number): Promise<void> {
+  for (let i = 0; i < 20; i++) {
+    if (await page.getByText(/Tap to discover/i).count() >= minimumCount) {
+      return;
+    }
+
+    const nextTurn = page.getByRole('button', { name: /Next Turn/i });
+    if (await visible(nextTurn, 500)) {
+      await nextTurn.click();
+      await page.waitForTimeout(150);
+      continue;
+    }
+
+    return;
+  }
+}
+
+async function assertScenarioRoute(page: Page, scenarioIdToCheck: string): Promise<void> {
+  const expectedScenario = CURATED_ROLEPLAYS.find((scenario) => scenario.id === scenarioIdToCheck);
+  if (!expectedScenario) {
+    recordIssue({
+      severity: 'Blocker',
+      location: `Scenario route /scenario/${scenarioIdToCheck}`,
+      evidence: 'Scenario id was not found in CURATED_ROLEPLAYS.',
+      whyItMatters: 'Browser QA cannot verify route identity for missing scenario data.',
+      recommendedFix: 'Fix the browser QA sample list or restore the missing scenario data.',
+      validationMethod: 'Rerun npm run qa:browser.',
+      status: 'open',
+    });
+    return;
+  }
+
+  await page.goto(`${baseURL}/scenario/${scenarioIdToCheck}`, { waitUntil: 'domcontentloaded' });
+  if (!page.url().includes(`/scenario/${scenarioIdToCheck}`)) {
+    recordIssue({
+      severity: 'High',
+      location: `Scenario route /scenario/${scenarioIdToCheck}`,
+      evidence: `URL after navigation: ${page.url()}`,
+      whyItMatters: 'Scenario route and rendered scenario must not drift during learner practice.',
+      recommendedFix: 'Fix scenario routing so URL ids remain stable.',
+      validationMethod: 'Rerun npm run qa:browser and inspect the blank-integrity regression section.',
+      status: 'open',
+    });
+  }
+
+  await requireVisible(page, page.getByText(expectedScenario.topic), `Scenario title ${scenarioIdToCheck}`, `Expected topic was not visible: ${expectedScenario.topic}`);
+}
+
+async function runBlankIntegrityRegression(browser: Browser): Promise<void> {
+  const context = await prepareContext(browser, { width: 1440, height: 1000 });
+  const page = await context.newPage();
+
+  await assertScenarioRoute(page, 'workplace-1-performance-review');
+  await screenshot(page, 'desktop-route-workplace-performance-review', '1440x1000');
+
+  await assertScenarioRoute(page, 'social-10-new-neighbor');
+  await advanceUntilBlankCount(page, 2);
+  const blanks = page.getByText(/Tap to discover/i);
+  if (await blanks.count() < 2) {
+    recordIssue({
+      severity: 'High',
+      location: 'social-10-new-neighbor blank regression',
+      evidence: `Expected at least 2 visible blanks, found ${await blanks.count()}.`,
+      whyItMatters: 'The known regression depends on revealing the first two blanks in the neighbour scenario.',
+      recommendedFix: 'Check scenario progression and blank rendering for social-10-new-neighbor.',
+      validationMethod: 'Rerun npm run qa:browser and confirm the regression screenshot shows blank 2.',
+      status: 'open',
+    });
+  } else {
+    await blanks.nth(0).click();
+    await page.waitForTimeout(250);
+    await page.getByText(/Tap to discover/i).first().click();
+    await page.waitForTimeout(350);
+
+    const peacefulVisible = await visible(page.getByText(/^peaceful$/i), 1500);
+    if (!peacefulVisible) {
+      recordIssue({
+        severity: 'High',
+        location: 'social-10-new-neighbor blank 2',
+        evidence: 'After revealing the second blank, the answer "peaceful" was not visible.',
+        whyItMatters: 'This is the exact learner-trust regression: the UI previously showed "Nice to meet" in an adjective slot.',
+        recommendedFix: 'Fix rendered blank index to answerVariation index mapping.',
+        validationMethod: 'Rerun npm run qa:browser; blank 2 must show "peaceful".',
+        status: 'open',
+      });
+    }
+
+    const popoverCount = await page.getByText(/Native Alternatives/i).count();
+    if (popoverCount !== 1) {
+      recordIssue({
+        severity: 'Medium',
+        location: 'Blank alternatives popover',
+        evidence: `Expected exactly 1 open alternatives popover after opening a second blank, found ${popoverCount}.`,
+        whyItMatters: 'Overlapping popovers obscure learning content and make the flow feel broken.',
+        recommendedFix: 'Track revealed answers separately from the single active popover.',
+        validationMethod: 'Rerun npm run qa:browser; only one Native Alternatives panel should be visible.',
+        status: 'open',
+      });
+    }
+  }
+  await screenshot(page, 'desktop-blank-integrity-neighbor', '1440x1000');
+
+  for (const scenarioIdToCheck of ['service_1_restaurant_order', 'community-1-council-meeting']) {
+    await assertScenarioRoute(page, scenarioIdToCheck);
+    await advanceUntilBlankCount(page, 1);
+    const firstBlank = page.getByText(/Tap to discover/i).first();
+    if (await visible(firstBlank, 1500)) {
+      await firstBlank.click();
+      await page.waitForTimeout(250);
+      await requireVisible(page, page.getByText(/Native Alternatives|Answer/i), `${scenarioIdToCheck} first blank`, 'First blank did not open an answer popover.');
+    } else {
+      recordIssue({
+        severity: 'High',
+        location: `${scenarioIdToCheck} first blank`,
+        evidence: 'No revealable blank appeared in the sampled browser regression flow.',
+        whyItMatters: 'The blank integrity gate needs coverage for zero-based and dense V2 scenarios.',
+        recommendedFix: 'Fix scenario progression or adjust the browser sample to a stable blank-bearing state.',
+        validationMethod: 'Rerun npm run qa:browser.',
+        status: 'open',
+      });
+    }
+  }
+
+  await context.close();
 }
 
 async function runDesktopFlow(browser: Browser): Promise<void> {
@@ -362,6 +490,7 @@ async function main(): Promise<void> {
   try {
     browser = await chromium.launch({ headless: true });
     await runDesktopFlow(browser);
+    await runBlankIntegrityRegression(browser);
     await runMobileFlow(browser);
   } catch (error) {
     recordIssue({

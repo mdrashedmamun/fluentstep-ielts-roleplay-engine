@@ -232,40 +232,33 @@ class TestTier1BlankFilling:
 
     @pytest.mark.parametrize("scenario_id", list(TIER1_SCENARIOS.keys())[:2])
     def test_multiple_blanks_independent(self, page, goto_scenario, scenario_id):
-        """Test that revealing multiple blanks works independently."""
+        """Test that multiple blanks reveal independently while only one popover stays active."""
         goto_scenario(scenario_id)
 
-        blanks = page.locator('button:has-text("Tap to discover")').all()
+        blanks = page.locator('button:has-text("Tap to discover")')
 
         # Need at least 2 blanks to test
-        if len(blanks) < 2:
-            # Skip if not enough blanks
+        if blanks.count() < 2:
             return
 
         # Reveal first blank
-        blanks[0].click()
+        blanks.first.click()
         page.wait_for_timeout(500)
 
-        # Verify it's revealed
-        popover1 = page.locator('text=Native Alternatives')
-        assert popover1.is_visible()
+        popovers = page.locator('text=Native Alternatives')
+        assert popovers.count() == 1
+        first_revealed_text = page.locator('.interactive-blank-container button').first.inner_text().strip()
+        assert first_revealed_text, "First blank should show its revealed answer text"
 
-        # Close popover (using Font Awesome close button or click outside)
-        close_btn = page.locator('button:has(i.fa-times)').first
-        if close_btn.count() > 0:
-            close_btn.click()
-        else:
-            # Click outside to close popover
-            page.click('body')
+        # Reveal the next remaining blank. The Tap-to-discover list shrinks after reveal.
+        remaining_blanks = page.locator('button:has-text("Tap to discover")')
+        assert remaining_blanks.count() >= 1, "Expected a second unrevealed blank"
+        remaining_blanks.first.click()
         page.wait_for_timeout(500)
 
-        # Reveal second blank
-        blanks[1].click()
-        page.wait_for_timeout(500)
-
-        # Verify popover appears for second blank
-        popover2 = page.locator('text=Native Alternatives')
-        assert popover2.is_visible()
+        # Both answers should remain visible, but only the latest popover should be open.
+        assert page.get_by_text(first_revealed_text).count() > 0
+        assert popovers.count() == 1
 
 
 class TestTier1ChunkFeedbackModal:

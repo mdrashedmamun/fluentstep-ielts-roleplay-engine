@@ -3263,3 +3263,50 @@ Remaining work:
 - Named human content reviewer must still approve scenarios.
 - Founder/product signoff remains open for the local defaults.
 
+
+
+### Checkpoint: Blank Integrity Regression Gate
+
+Date: 2026-06-03
+
+Files inspected:
+- `src/components/RoleplayViewer.tsx`
+- `src/services/staticData.ts`
+- `scripts/validateAnswerAlternatives.ts`
+- `scripts/browserQA.ts`
+- `tests/e2e/scenarios/tier1_with_feedback.py`
+
+Fixes made:
+- Added shared blank-index normalisation in `src/services/blankIndexing.ts` so one-based scenarios map rendered blank 2 to answer index 2 instead of accidentally reusing answer index 1.
+- Updated `RoleplayViewer` to use the shared resolver for render and listen flows.
+- Split revealed answer state from active popover state; multiple answers can remain visible while only one `Native Alternatives` popover stays open.
+- Added `npm run validate:blank-integrity`, which reconstructs all blank-bearing sentences and audits every accepted answer/alternative substitution.
+- Extended `npm run qa:browser` with focused blank-integrity regression coverage for `social-10-new-neighbor`, `workplace-1-performance-review`, one zero-based scenario, and one dense V2 scenario.
+- Updated the stale Tier 1 multiple-blank expectation to re-query remaining blanks after reveal and assert a single active popover.
+
+Commands run:
+- `npm run validate:blank-integrity`: exit 0; 53 scenarios, 715 blanks, 2179 substitutions, 0 issues.
+- `npm run validate:critical`: exit 0; 53 scenarios, 0 critical errors, inherited 14 `social-7-house-rules` chunk-ID warnings.
+- `npm run validate`: exit 0; 53 scenarios, zero errors.
+- `npm run validate:feedback`: exit 0; 14 feedback items, 0 errors, 0 warnings.
+- `npm run validate:alternatives`: exit 0; 53 scenarios, 715 blanks, 2179 alternatives including main answers, 0 issues.
+- `npm run qa-check -- --strict`: exit 0; 53/53 passed, final approval remains 0 approved / 53 needs human review / 0 blocked.
+- `npm run type-check`: exit 0.
+- `npm run lint`: exit 0; 0 errors, 108 inherited warnings plus `.eslintignore` deprecation warning.
+- `npm run build`: exit 0; prebuild validations passed and build completed.
+- `npm run qa:browser`: exit 0; generated `2026-06-03T10:42:31Z`, 12 screenshots, 0 issues, 0 console errors, 0 failed responses.
+- `npm run qa:visual-lint`: exit 0; generated `2026-06-03T10:43:26Z`, screenshot fallback checked 12 screenshots and found 0 issues.
+- `npm run test:e2e:tier1:local`: first attempt exit 1 because `http://127.0.0.1:3000` was not running; all 71 failures were `ERR_CONNECTION_REFUSED`.
+- `npm run test:e2e:tier1:local`: rerun after starting dev server produced 70 passed / 1 failed / 3 warnings in 371.95s; the single failure was the stale `test_multiple_blanks_independent[service-1-cafe]` locator expecting two remaining `Tap to discover` buttons after the first reveal.
+- Focused reruns of `test_multiple_blanks_independent`: blocked before assertions by Chromium MachPort permission failure (`bootstrap_check_in ... MachPortRendezvousServer ... Permission denied`). Escalated rerun requests timed out twice. Python file syntax was checked in-memory and passed.
+
+Screenshots captured:
+- Current browser QA refreshed 12 screenshots, including `desktop-blank-integrity-neighbor.png` and `desktop-route-workplace-performance-review.png`.
+
+Issues found:
+- `FS-QA-009` High fixed locally: one-based answer indexes could render the prior answer into later blanks. Evidence: `social-10-new-neighbor` blank 2 should render `peaceful`; the prior helper tried exact index before `+1` fallback, allowing answer index 1 (`Nice to meet`) to appear in blank position 2.
+- Tier 1 E2E final rerun is environment-blocked by Chromium MachPort permissions after the stale test expectation was updated. This is a verifier environment blocker, not a known product assertion failure.
+
+Remaining work:
+- Rerun focused `test_multiple_blanks_independent` and then full `npm run test:e2e:tier1:local` in a browser environment where Chromium can register the macOS MachPort.
+- Keep `npm run qa:browser` and `npm run validate:blank-integrity` as the current blocking regression gates for this specific blank-answer bug.

@@ -1,6 +1,6 @@
 # Visual Layout Lint Report
 
-Generated: 2026-06-03T05:51:25.887Z
+Generated: 2026-06-03T10:43:26.696Z
 Base URL: http://127.0.0.1:3000
 Scenario: service_1_restaurant_order
 Pages checked: 1
@@ -16,19 +16,21 @@ Claim boundary: this is automated layout lint only. It does not replace named hu
 - Viewport: browser-qa-screenshots
 - Mode: screenshot fallback because Chromium DOM visual lint could not launch in this sandbox.
 - Runtime blocker: browserType.launch: Target page, context or browser has been closed
-- Browser QA report generated: 2026-06-03T05:48:29.669Z
-- Browser QA screenshots: 10
+- Browser QA report generated: 2026-06-03T10:42:31.552Z
+- Browser QA screenshots: 12
 - Browser QA issue/console/network entries: 0
-- desktop-home: 1440x3526, 2043761 bytes
-- desktop-healthcare-disclaimer: 1440x1143, 261803 bytes
-- desktop-scenario-start: 1440x1143, 206989 bytes
-- desktop-blank-popover: 1440x1143, 387300 bytes
-- desktop-completion-feedback: 1440x1143, 253684 bytes
-- desktop-pattern-summary: 1440x1143, 400279 bytes
-- desktop-active-recall: 1440x1143, 251346 bytes
-- desktop-invalid-scenario: 1440x1000, 44873 bytes
-- mobile-home: 390x5711, 785275 bytes
-- mobile-roleplay: 390x1030, 146372 bytes
+- desktop-home: 1440x3526, 510086 bytes
+- desktop-healthcare-disclaimer: 1440x1143, 249202 bytes
+- desktop-scenario-start: 1440x1143, 207157 bytes
+- desktop-blank-popover: 1440x1143, 387824 bytes
+- desktop-completion-feedback: 1440x1143, 255822 bytes
+- desktop-pattern-summary: 1440x1143, 400248 bytes
+- desktop-active-recall: 1440x1143, 255467 bytes
+- desktop-invalid-scenario: 1440x1000, 44755 bytes
+- desktop-route-workplace-performance-review: 1440x1143, 393952 bytes
+- desktop-blank-integrity-neighbor: 1440x1143, 435255 bytes
+- mobile-home: 390x5711, 787750 bytes
+- mobile-roleplay: 390x1030, 146371 bytes
 - Automated layout lint issues: 0
 
 ## Issue Register

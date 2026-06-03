@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useFloating, flip, shift, offset } from '@floating-ui/react';
 import { RoleplayScript, CURATED_ROLEPLAYS, ChunkFeedback, ChunkFeedbackV2 } from '../services/staticData';
+import { getAnswerDataForBlank } from '../services/blankIndexing';
 import { progressService } from '../services/progressService';
 import { navigationService } from '../services/navigationService';
 import { useKeyboard } from '../hooks/useKeyboard';
@@ -35,23 +36,15 @@ const getV2ChunkFeedback = (script: RoleplayScript): ChunkFeedbackV2[] => {
 };
 
 
-const getAnswerDataForBlank = (
-  script: RoleplayScript,
-  blankIndex: number
-): RoleplayScript['answerVariations'][number] | undefined => {
-  return script.answerVariations.find(v => v.index === blankIndex) ||
-    script.answerVariations.find(v => v.index === blankIndex + 1);
-};
-
-
 const InteractiveBlank: React.FC<{
   answer: string;
   alternatives: string[];
   isRevealed: boolean;
+  isPopoverOpen: boolean;
   onReveal: () => void;
   expectedChunkId?: string;
   actualChunkId?: string;
-}> = ({ answer, alternatives, isRevealed, onReveal, expectedChunkId, actualChunkId }) => {
+}> = ({ answer, alternatives, isRevealed, isPopoverOpen, onReveal, expectedChunkId, actualChunkId }) => {
   const chunkMismatch = expectedChunkId && actualChunkId && expectedChunkId !== actualChunkId;
   const isClosingRef = useRef(false);
   const [referenceElement, setReferenceElement] = useState<HTMLButtonElement | null>(null);
@@ -67,7 +60,7 @@ const InteractiveBlank: React.FC<{
   });
 
   useEffect(() => {
-    if (!isRevealed) return;
+    if (!isPopoverOpen) return;
 
     const handleClickOutside = (e: MouseEvent) => {
       if (isClosingRef.current) return;
@@ -81,7 +74,7 @@ const InteractiveBlank: React.FC<{
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isRevealed, onReveal]);
+  }, [isPopoverOpen, onReveal]);
 
   return (
     <span className="inline-block group mx-1 align-baseline interactive-blank-container">
@@ -115,7 +108,7 @@ const InteractiveBlank: React.FC<{
         )}
       </button>
 
-      {isRevealed && (
+      {isPopoverOpen && (
         <div
           ref={setFloatingElement}
           style={floatingStyles}
@@ -199,6 +192,7 @@ import { speakWithGoogle } from '../services/ttsService';
 const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [revealedBlanks, setRevealedBlanks] = useState<Set<number>>(new Set());
+  const [activeBlankIndex, setActiveBlankIndex] = useState<number | null>(null);
   const [showDeepDive, setShowDeepDive] = useState(false);
   const [activeTab, setActiveTab] = useState<'chunks' | 'summary'>('chunks');
   const [activeSpeechIdx, setActiveSpeechIdx] = useState<number | null>(null);
@@ -427,31 +421,29 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
 
 
   const handleBlankReveal = useCallback((blankIndex: number) => {
-    // Toggle reveal state
+    const answerData = getAnswerDataForBlank(script, blankIndex);
+
     setRevealedBlanks(prev => {
+      if (prev.has(blankIndex)) {
+        return prev;
+      }
+
       const newSet = new Set(prev);
-      const wasRevealed = newSet.has(blankIndex);
+      newSet.add(blankIndex);
 
-      if (wasRevealed) {
-        newSet.delete(blankIndex);  // Close popup
-      } else {
-        newSet.add(blankIndex);     // Open popup
-
-        // Play audio for the answer when revealing
-        const answerData = getAnswerDataForBlank(script, blankIndex);
-        if (answerData) {
-          // Small delay allows popup to appear first (better UX)
-          setTimeout(() => {
-            void speakWithGoogle({
-              text: answerData.answer,
-              rate: 0.95
-            });
-          }, 150);
-        }
+      if (answerData) {
+        setTimeout(() => {
+          void speakWithGoogle({
+            text: answerData.answer,
+            rate: 0.95
+          });
+        }, 150);
       }
 
       return newSet;
     });
+
+    setActiveBlankIndex(prev => (prev === blankIndex ? null : blankIndex));
   }, [script]);
 
   // Handler for navigation buttons
@@ -716,6 +708,7 @@ const RoleplayViewer: React.FC<RoleplayViewerProps> = ({ script, onReset }) => {
                                 answer={answerData?.answer || '??'}
                                 alternatives={answerData?.alternatives || []}
                                 isRevealed={revealedBlanks.has(blankIdx)}
+                                isPopoverOpen={activeBlankIndex === blankIdx}
                                 onReveal={() => handleBlankReveal(blankIdx)}
                                 expectedChunkId={expectedChunkId}
                               />

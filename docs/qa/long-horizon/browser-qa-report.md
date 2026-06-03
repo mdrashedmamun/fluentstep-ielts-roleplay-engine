@@ -1,9 +1,9 @@
 # Long-Horizon Browser QA Report
 
-- Generated: 2026-06-03T05:48:29.680Z
+- Generated: 2026-06-03T10:42:31.562Z
 - Base URL: http://127.0.0.1:3000
 - Scenario: service_1_restaurant_order
-- Screenshots: 10
+- Screenshots: 12
 - Issues: 0
 
 ## Screenshots
@@ -16,6 +16,8 @@
 - desktop-pattern-summary (1440x1000): /Users/md.rashedmamun/Documents/Business/Active/fluentstep_-ielts-roleplay-engine/docs/qa/long-horizon/screenshots/desktop-pattern-summary.png
 - desktop-active-recall (1440x1000): /Users/md.rashedmamun/Documents/Business/Active/fluentstep_-ielts-roleplay-engine/docs/qa/long-horizon/screenshots/desktop-active-recall.png
 - desktop-invalid-scenario (1440x1000): /Users/md.rashedmamun/Documents/Business/Active/fluentstep_-ielts-roleplay-engine/docs/qa/long-horizon/screenshots/desktop-invalid-scenario.png
+- desktop-route-workplace-performance-review (1440x1000): /Users/md.rashedmamun/Documents/Business/Active/fluentstep_-ielts-roleplay-engine/docs/qa/long-horizon/screenshots/desktop-route-workplace-performance-review.png
+- desktop-blank-integrity-neighbor (1440x1000): /Users/md.rashedmamun/Documents/Business/Active/fluentstep_-ielts-roleplay-engine/docs/qa/long-horizon/screenshots/desktop-blank-integrity-neighbor.png
 - mobile-home (390x844): /Users/md.rashedmamun/Documents/Business/Active/fluentstep_-ielts-roleplay-engine/docs/qa/long-horizon/screenshots/mobile-home.png
 - mobile-roleplay (390x844): /Users/md.rashedmamun/Documents/Business/Active/fluentstep_-ielts-roleplay-engine/docs/qa/long-horizon/screenshots/mobile-roleplay.png
 

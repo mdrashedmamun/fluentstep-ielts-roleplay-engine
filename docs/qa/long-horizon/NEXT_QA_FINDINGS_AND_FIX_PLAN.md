@@ -53,6 +53,20 @@ Private-beta blocker status:
 - 0 unresolved objective Codex-fixable Blocker/High issues are known after this pass.
 - Remaining gates are founder/human/visual accountability gates, not source-content fixes.
 
+
+## 2026-06-03 Blank Integrity Regression Update
+
+Current blank-integrity state:
+- `FS-QA-009`: fixed locally. `RoleplayViewer` now normalises answer index base per scenario through `src/services/blankIndexing.ts`, avoiding the prior exact-index-first fallback that could render `Nice to meet` into `It's quite ________ here`.
+- `npm run validate:blank-integrity`: exit 0; 53 scenarios, 715 blanks, 2179 substitutions, 0 issues. Reports: `blank-integrity-report.md` and `blank-integrity-report.json`.
+- `npm run qa:browser`: exit 0; generated `2026-06-03T10:42:31Z`; 12 screenshots, 0 issues, 0 console errors, 0 failed responses. New screenshots include `desktop-blank-integrity-neighbor.png` and `desktop-route-workplace-performance-review.png`.
+- `npm run qa:visual-lint`: exit 0; generated `2026-06-03T10:43:26Z`; screenshot fallback checked 12 screenshots and found 0 issues.
+
+Tier 1 E2E caveat:
+- Full rerun after starting the dev server reached product assertions and produced 70 passed / 1 failed / 3 warnings. The one failure was a stale test locator for the old multiple-popover behavior, not the blank-answer product bug.
+- The stale test was updated to re-query remaining blanks and assert one active alternatives popover.
+- Focused reruns after the test update are currently blocked before assertions by Chromium MachPort permissions in this sandbox. Rerun in a browser environment that allows Chromium launch before treating Tier 1 as green again.
+
 ## Current Evidence
 
 Latest automated browser evidence:
@@ -93,6 +107,7 @@ Claim boundary: `ai-reviewed` and locally validated, not human-approved.
 
 | ID | Severity | Location | Evidence | Why It Matters | Recommended Fix | Validation Method | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| FS-QA-009 | High | `src/components/RoleplayViewer.tsx`, `social-10-new-neighbor` blank 2 | UI could render `Nice to meet` in `Welcome to the neighbourhood. It's quite ________ here` because answer lookup tried exact rendered blank index before one-based fallback. | Learners see an impossible sentence and lose trust in blank feedback. | Fixed locally with shared per-scenario index-base normalisation and single-active-popover state. | `npm run validate:blank-integrity`: exit 0; `npm run qa:browser`: exit 0 with `desktop-blank-integrity-neighbor.png`; rerun Tier 1 when Chromium MachPort allows. | Fixed locally |
 | FS-QA-001 | High | `src/services/staticData.ts`, `social-1-flatmate` | Dialogue blank says `keep ________` and answer index 3 is `clean` at lines 188 and 243-249, but `chunkFeedback` blankIndex 3 teaches `keep track` at lines 365-400. | Feedback can teach the wrong phrase after the learner answers correctly, undermining trust and pattern fluency. | Replace the mismatched feedback with content for `clean`/`keep clean`, or change the dialogue/answer to match `keep track` if product intent was monitoring rather than house cleanliness. | Run `npm run validate:critical`, `npm run qa-check --strict`, `npm run audit:report`; manually replay `social-1-flatmate` blank 3 and confirm feedback matches the answer. | Fixed locally |
 | FS-QA-002 | High | `src/services/staticData.ts`, `service_1_restaurant_order` | All 27 `answerVariations` in the sampled restaurant scenario have empty `alternatives` arrays at lines 13096-13231. | The exercise becomes brittle and less conversational; learners get less support for acceptable UK English variants. | Add natural alternatives for each blank, prioritising multi-word service phrases, dietary/allergy language, and billing phrases. Keep alternatives semantically valid in the exact sentence. | Run `npm run validate:critical`, `npm run qa-check --strict`, `npm run validate:alternatives`, then browser-smoke the restaurant flow. | Fixed locally |
 | FS-QA-003 | Medium | `src/services/staticData.ts`, `service_1_restaurant_order` V2 feedback | V2 feedback examples often exceed the local interface contract of 1-2 examples and several `whyOdd` fields are empty, e.g. lines 13242-13250 and 13260-13268. | Feedback becomes verbose and less diagnostic; empty `whyOdd` weakens the learning loop and makes reports appear polished while omitting the actual explanation. | Trim examples to focused 1-2 items per chunk and fill every `whyOdd` with a specific learner-facing reason. | Add or run a validator that checks V2 `examples.length <= 2` and non-empty `whyOdd`; then run `npm run validate:critical` and `npm run qa-check --strict`. | Fixed locally |

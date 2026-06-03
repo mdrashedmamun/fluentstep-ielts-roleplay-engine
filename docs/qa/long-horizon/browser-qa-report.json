@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-03T05:48:29.669Z",
+  "generatedAt": "2026-06-03T10:42:31.552Z",
   "baseURL": "http://127.0.0.1:3000",
   "scenarioId": "service_1_restaurant_order",
   "screenshots": [
@@ -41,6 +41,16 @@
     {
       "name": "desktop-invalid-scenario",
       "path": "/Users/md.rashedmamun/Documents/Business/Active/fluentstep_-ielts-roleplay-engine/docs/qa/long-horizon/screenshots/desktop-invalid-scenario.png",
+      "viewport": "1440x1000"
+    },
+    {
+      "name": "desktop-route-workplace-performance-review",
+      "path": "/Users/md.rashedmamun/Documents/Business/Active/fluentstep_-ielts-roleplay-engine/docs/qa/long-horizon/screenshots/desktop-route-workplace-performance-review.png",
+      "viewport": "1440x1000"
+    },
+    {
+      "name": "desktop-blank-integrity-neighbor",
+      "path": "/Users/md.rashedmamun/Documents/Business/Active/fluentstep_-ielts-roleplay-engine/docs/qa/long-horizon/screenshots/desktop-blank-integrity-neighbor.png",
       "viewport": "1440x1000"
     },
     {

@@ -13,6 +13,7 @@
     "validate:perfect": "node --import tsx scripts/validatePerfectScenarios.ts",
     "validate:feedback": "node --import tsx scripts/validateChunkFeedback.ts",
     "validate:alternatives": "node --import tsx scripts/validateAnswerAlternatives.ts",
+    "validate:blank-integrity": "node --import tsx scripts/validateBlankIntegrity.ts",
     "pre-commit": "npm run validate:critical",
     "audit": "node --import tsx cli/auditLanguage.ts",
     "audit:report": "node --import tsx cli/auditLanguage.ts --report-only",
