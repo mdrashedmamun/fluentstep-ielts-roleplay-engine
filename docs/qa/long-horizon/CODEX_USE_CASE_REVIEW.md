@@ -23,7 +23,7 @@ Official guidance frames Computer Use QA as clicking through real product flows 
 Applicability:
 - Primary route: `npm run qa:browser` for deterministic Playwright screenshots and automated issue capture.
 - Secondary route: Computer Use or Chrome only when Playwright cannot inspect a behavior, such as nuanced hover discoverability, perceived mobile text fit, or human visual judgement.
-- Current evidence: browser QA generated 10 screenshots, 0 automated issues, 0 console errors, and 0 failed responses.
+- Current evidence: browser QA generated 12 screenshots, 0 automated issues, 0 console errors, and 0 failed responses; blank integrity validation audited 715 blanks and 2179 substitutions with 0 issues.
 - Missing evidence: screenshots still need human visual review; automated browser QA is not a substitute for human design approval.
 
 ### 2. Granular UI changes
@@ -81,15 +81,15 @@ Current automated evidence:
 - `npm run qa-check --strict`: passed with 53/53 automated pass, but 53 need human review.
 - `npm run audit:report`: generated `AUDIT_REPORT.md` with 1409 approval-required suggestions.
 - `npm run type-check`: passed using app-focused `tsconfig.app.json`.
-- `npm run build`: passed with a non-blocking Vite chunk-size warning.
-- `npm run qa:browser`: passed with 10 screenshots and 0 automated browser issues.
-- `npm run test:e2e:tier1:local`: passed with 71 tests and 3 inherited pytest warnings.
+- `npm run build`: passed; later chunk splitting removed the prior Vite chunk-size warning in current launch-candidate evidence.
+- `npm run qa:browser`: passed with 12 screenshots and 0 automated browser issues.
+- `npm run test:e2e:tier1:local`: previously passed with 71 tests and 3 inherited pytest warnings; latest post-blank-integrity rerun is blocked by local Chromium MachPort permissions after the stale multiple-blank test expectation was updated.
 
 Current approval boundary:
 - Automated QA has passed locally.
 - Human content approval has not happened.
 - Manual visual review of screenshots has not happened.
-- Full `npm run test:e2e` has not been run after the local tier-1 pass.
+- Full `npm run test:e2e` has not been run after the local tier-1 pass and remains budgeted-only.
 
 ## Recommendations
 

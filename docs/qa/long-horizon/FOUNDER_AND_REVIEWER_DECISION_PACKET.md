@@ -11,9 +11,10 @@ Claim boundary: this packet lists decisions and reviews still requiring a named 
 - Strict QA: passing locally; all 53 scenarios still need human review.
 - Build: passing locally with no Vite chunk-size warning after scenario-data and vendor chunk split.
 - Lint: fixed locally as a blocking command; `npm run lint` exits 0 across `src`, `cli`, and `scripts`. Latest parsed report is 0 errors / 108 warnings / 175 files; warning cleanup and `.eslintignore` migration remain optional engineering follow-ups.
-- Browser QA: passing locally; latest run `2026-06-03T05:48:29Z`; 10 screenshots including Healthcare disclaimer evidence, 0 automated issues, 0 console errors, and 0 failed responses.
-- Visual layout lint: current run `2026-06-03T05:51:25Z` exits 0 through screenshot fallback because Chromium DOM lint cannot register the macOS MachPort under sandbox permissions. Treat as automated evidence, not visual approval.
-- Tier 1 local E2E: latest run passed locally; 71 passed, 3 inherited pytest warnings, runtime 294.68s.
+- Browser QA: passing locally; latest run `2026-06-03T10:42:31Z`; 12 screenshots including Healthcare disclaimer evidence and blank-integrity regression evidence, 0 automated issues, 0 console errors, and 0 failed responses.
+- Blank integrity: passing locally; `npm run validate:blank-integrity` audited 53 scenarios, 715 blanks, and 2179 substitutions with 0 issues.
+- Visual layout lint: current run `2026-06-03T10:43:26Z` exits 0 through screenshot fallback because Chromium DOM lint cannot register the macOS MachPort under sandbox permissions. Treat as automated evidence, not visual approval.
+- Tier 1 local E2E: previously passed locally; latest post-blank-integrity full rerun reached 70 passed / 1 stale-test failure, the test expectation was updated, and focused reruns are blocked before assertions by Chromium MachPort permissions. Rerun in a browser environment that can launch Chromium before treating Tier 1 as freshly green.
 - Full E2E: harness is bounded and retry-aware; implicated direct batches now pass (`tier2_batch_02.py` 71 passed / 4 skipped, `tier2_batch_09.py` 73 passed / 2 skipped). A clean complete full-suite pass is not being treated as the next default gate because the suite is too resource-heavy locally; focused E2E evidence is the practical engineering handoff gate unless a full run is explicitly budgeted.
 
 ## Parallel Subagent QA Model
@@ -27,12 +28,12 @@ Situation: automated local QA has reached useful signal for this pass; more long
 Known truth:
 - Local validators, build, lint, browser QA, visual layout lint, Tier 1 E2E, and focused implicated E2E batches have passing evidence recorded in `PROGRESS_LOG.md` and `NEXT_QA_FINDINGS_AND_FIX_PLAN.md`.
 - Content/Pedagogy AI pre-review is complete for all 53 scenarios; human content approval is still absent for all 53 scenarios.
-- Manual visual approval is still absent for all 10 refreshed screenshots.
+- Manual visual approval is still absent for all 12 refreshed screenshots.
 - Product defaults for PROD-001 and PROD-003 have been applied locally, but founder signoff remains open; PROD-002 remains kept-by-default pending visual review.
 
 Do now:
 1. Assign a named content reviewer to the seven-scenario batch below and update `HUMAN_CONTENT_REVIEW_LEDGER.md`.
-2. Assign a named visual/design reviewer to inspect the 10 screenshots and update `VISUAL_SCREENSHOT_REVIEW_CHECKLIST.md`.
+2. Assign a named visual/design reviewer to inspect the 12 screenshots and update `VISUAL_SCREENSHOT_REVIEW_CHECKLIST.md`.
 3. Record founder signoff for `PROD-001`, `PROD-002`, and `PROD-003` in this packet or the linked product decision artifact; local defaults are not founder signatures.
 
 Do not do by default:
@@ -66,7 +67,7 @@ Completion rule: a scenario is not content-approved until `Human State`, `Review
 
 Artifact: `VISUAL_SCREENSHOT_REVIEW_CHECKLIST.md`
 
-A named visual/design reviewer must inspect all 10 screenshots and update each row. Automated `qa:browser` and `qa:visual-lint` are useful objective evidence, but they are not visual approval. The image-viewing route failed for Codex again even after copying PNGs to `/private/tmp`, so this still needs a working browser/image route or a human reviewer opening the screenshots directly.
+A named visual/design reviewer must inspect all 12 screenshots and update each row. Automated `qa:browser` and `qa:visual-lint` are useful objective evidence, but they are not visual approval. The image-viewing route failed for Codex again even after copying PNGs to `/private/tmp`, so this still needs a working browser/image route or a human reviewer opening the screenshots directly.
 
 ## Founder/Product Decisions
 

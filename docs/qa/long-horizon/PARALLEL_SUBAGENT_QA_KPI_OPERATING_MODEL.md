@@ -41,10 +41,11 @@ Use this table at the start and close of each QA pass. Scores are evidence state
 | Human content approval | 53/53 `approved` or explicitly `blocked/changes-requested` with owner | `Human State`, `Reviewer`, `Reviewed At`, notes | Named human reviewer | Blocks content approval |
 | Critical validators | `validate:critical` exit 0 | command output in `PROGRESS_LOG.md` | Engineering QA | Blocks local QA closeout |
 | Alternatives validator | `validate:alternatives` exit 0 and no empty alternatives in target scope | command output plus issue register | Content + Engineering QA | Blocks content fix closeout |
+| Blank integrity validator | `validate:blank-integrity` exit 0 with 715/715 blanks and every main/alternative substitution audited | `blank-integrity-report.md/json`, command output | Content + Engineering QA | Blocks blank/answer/content closeout |
 | Strict QA | `qa-check -- --strict` exit 0; human-review status not overclaimed | command output | Engineering QA | Blocks local QA closeout |
 | Visual automated layout | `qa:visual-lint` exit 0; horizontal overflow delta 0px for checked states | `visual-lint-report.md/json` | UI/Visual QA | Blocks visual-ready state |
-| Visual manual review | 10/10 screenshot rows reviewed by named reviewer | `VISUAL_SCREENSHOT_REVIEW_CHECKLIST.md` | Named visual reviewer | Blocks visual approval |
-| Browser QA smoke | 10 screenshots, 0 console errors, 0 failed responses for current evidence set | `browser-qa-report.md/json` | E2E Browser QA | Blocks browser-ready state |
+| Visual manual review | 12/12 screenshot rows reviewed by named reviewer | `VISUAL_SCREENSHOT_REVIEW_CHECKLIST.md` | Named visual reviewer | Blocks visual approval |
+| Browser QA smoke | 12 screenshots, 0 console errors, 0 failed responses for current evidence set | `browser-qa-report.md/json` | E2E Browser QA | Blocks browser-ready state |
 | Focused E2E | Changed or previously failing flows pass focused rerun | pytest/E2E command output | E2E Browser QA | Blocks changed-flow closeout |
 | Full E2E budget control | No full `npm run test:e2e` unless explicitly budgeted | `PROGRESS_LOG.md` command log | Atlas + Engineering QA | Blocks resource safety if violated |
 | Founder decisions | 3/3 decisions filled with founder/date | `FOUNDER_PRODUCT_DECISION_FORM.md` | Founder/Product Gate | Blocks product approval |
@@ -119,7 +120,7 @@ For the first seven scenarios in `HUMAN_CONTENT_REVIEW_BATCH_BRIEF.md`:
 
 | KPI | Target |
 | --- | --- |
-| Screenshot coverage | 10/10 screenshots reviewed by AI pre-review and then named visual reviewer |
+| Screenshot coverage | 12/12 screenshots reviewed by AI pre-review and then named visual reviewer |
 | Automated layout lint | 0 issues and mobile overflow delta 0px |
 | Gross blocker scan | 0 obvious blocker/high layout failures in contact-sheet pre-review |
 | Full-size review | Named reviewer checks full-size screenshots before visual approval |

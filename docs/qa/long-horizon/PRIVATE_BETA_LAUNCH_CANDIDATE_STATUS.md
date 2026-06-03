@@ -22,9 +22,9 @@ Evidence-supported progress:
 
 | Gate | State | Owner | Next action |
 | --- | --- | --- | --- |
-| Visual lint | pass via screenshot fallback | Engineering QA | Keep Chromium DOM lint as preferred route when available; current fallback validates 10 fresh browser QA screenshots. |
+| Visual lint | pass via screenshot fallback | Engineering QA | Keep Chromium DOM lint as preferred route when available; current fallback validates 12 fresh browser QA screenshots. |
 | Human content approval | 0/53 approved | Named human reviewer | Review all scenarios in `HUMAN_CONTENT_REVIEW_LEDGER.md`; start with post-fix rows. |
-| Visual/design approval | 0/10 screenshots reviewed | Named visual/design reviewer | Inspect current screenshots and update `VISUAL_SCREENSHOT_REVIEW_CHECKLIST.md`. |
+| Visual/design approval | 0/12 screenshots reviewed | Named visual/design reviewer | Inspect current screenshots and update `VISUAL_SCREENSHOT_REVIEW_CHECKLIST.md`. |
 | Founder product signoff | local defaults applied, signatures open | Founder/product owner | Fill `FOUNDER_PRODUCT_DECISION_FORM.md` for PROD-001, PROD-002, and PROD-003. |
 | Tier 1 local E2E final rerun | blocked by Chromium MachPort after test update | Engineering QA | Rerun focused multiple-blank test and then full Tier 1 in an environment where Chromium can launch. |
 | Full E2E | budgeted-only | Engineering QA | Do not run by default; use focused E2E unless explicitly budgeted. |
@@ -41,7 +41,7 @@ Evidence-supported progress:
 | Tier 1 local E2E | Needs final rerun | Latest full rerun: 70 passed / 1 stale-test failure; test updated; focused rerun blocked by Chromium MachPort permissions. |
 | Visual lint | Pass with fallback | `npm run qa:visual-lint`: exit 0; screenshot fallback checked 12 current browser QA screenshots, 0 issues. |
 | Human approval | Open | `HUMAN_CONTENT_REVIEW_LEDGER.md`: 0 approved. |
-| Visual approval | Open | `VISUAL_SCREENSHOT_REVIEW_CHECKLIST.md`: 0 reviewed. |
+| Visual approval | Open | `VISUAL_SCREENSHOT_REVIEW_CHECKLIST.md`: 0/12 reviewed. |
 
 ## Next Safe Gate
 

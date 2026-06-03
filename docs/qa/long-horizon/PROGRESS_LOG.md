@@ -3310,3 +3310,39 @@ Issues found:
 Remaining work:
 - Rerun focused `test_multiple_blanks_independent` and then full `npm run test:e2e:tier1:local` in a browser environment where Chromium can register the macOS MachPort.
 - Keep `npm run qa:browser` and `npm run validate:blank-integrity` as the current blocking regression gates for this specific blank-answer bug.
+
+
+### Checkpoint: Control Artifact Sync After Blank Integrity Gate
+
+Files inspected:
+- `CODEX_LONG_HORIZON_QA_PLAN.md`
+- `docs/qa/long-horizon/PRIVATE_BETA_LAUNCH_CANDIDATE_STATUS.md`
+- `docs/qa/long-horizon/NEXT_QA_FINDINGS_AND_FIX_PLAN.md`
+- `docs/qa/long-horizon/VISUAL_SCREENSHOT_REVIEW_CHECKLIST.md`
+- `docs/qa/long-horizon/browser-qa-report.md`
+- `docs/qa/long-horizon/visual-lint-report.md`
+
+Commands run:
+- `git status --short --branch` -> exit 0; branch `codex/private-beta-qa-candidate`; inherited unstaged `.gitignore`, content-generation scripts, and `vite.config.ts` preserved.
+- `rg -n "10 screenshots|10/10|0/10|validate:blank-integrity" ...` -> exit 0; current-control references reconciled; dated historical entries left as historical evidence.
+- Contact-sheet generation from 12 current browser QA screenshots -> exit 0 via `/private/tmp` scratch path and `cp` into `docs/qa/long-horizon/screenshots/contact-sheet.png`.
+
+Results:
+- Added `npm run validate:blank-integrity` to the root long-horizon plan as a blocking regression gate after blank, answer, alternative, feedback, or UI lookup changes.
+- Updated KPI and handoff artifacts from 10-screen evidence to the current 12-screenshot browser QA set.
+- Updated the visual checklist with the direct-route regression and blank-integrity neighbour screenshot rows.
+- Kept human content approval, founder product signoff, visual approval, and Tier 1 final rerun as open gates.
+
+Screenshots captured/refreshed:
+- `docs/qa/long-horizon/screenshots/contact-sheet.png` refreshed from the 12 current browser QA screenshots.
+
+Issues found:
+- Documentation drift: several current-control artifacts still referenced the older 10-screenshot browser QA pass after the blank-integrity run added two screenshots.
+
+Fixes made:
+- Updated only QA/control artifacts and the local screenshot contact sheet.
+
+Remaining work:
+- Rerun focused multiple-blank E2E and full Tier 1 in an environment where Chromium can launch.
+- Named visual/design reviewer must inspect all 12 screenshot rows.
+- Named human reviewer/founder must complete the approval/signoff artifacts before any human-approved, production-ready, buyer-ready, deploy-safe, legal-approved, or visual-approved claim.

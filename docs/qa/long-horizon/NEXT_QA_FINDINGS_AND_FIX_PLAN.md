@@ -45,9 +45,9 @@ Objective fixes applied in this pass:
 - `Academic` and `Cultural` category filters were added to the scenario picker, and stale 43-scenario hero copy was removed.
 
 Fresh automated evidence:
-- `npm run qa:browser`: exit 0; generated `2026-06-03T05:48:29Z`; 10 screenshots, 0 issues, 0 console errors, 0 failed responses.
+- Earlier `npm run qa:browser`: exit 0; generated `2026-06-03T05:48:29Z`; 10 screenshots, 0 issues, 0 console errors, 0 failed responses. Superseded by the `2026-06-03T10:42:31Z` 12-screenshot blank-integrity run below.
 - `npm run test:e2e:tier1:local`: exit 0; 71 passed, 3 inherited pytest warnings, runtime 294.68s.
-- `npm run qa:visual-lint`: exit 0; generated `2026-06-03T05:51:25Z`; Chromium DOM lint could not launch under macOS sandbox MachPort permissions, so the command used screenshot fallback against the 10 fresh browser QA screenshots and found 0 issues.
+- Earlier `npm run qa:visual-lint`: exit 0; generated `2026-06-03T05:51:25Z`; Chromium DOM lint could not launch under macOS sandbox MachPort permissions, so the command used screenshot fallback against the 10 browser QA screenshots and found 0 issues. Superseded by the `2026-06-03T10:43:26Z` 12-screenshot fallback run below.
 
 Private-beta blocker status:
 - 0 unresolved objective Codex-fixable Blocker/High issues are known after this pass.
@@ -70,9 +70,9 @@ Tier 1 E2E caveat:
 ## Current Evidence
 
 Latest automated browser evidence:
-- `docs/qa/long-horizon/browser-qa-report.md` generated at `2026-06-03T05:48:29Z` against `http://127.0.0.1:3000`.
-- Automated browser report captured 10 screenshots, including `desktop-healthcare-disclaimer.png`, and reported 0 issues, 0 console errors, and 0 failed responses.
-- `npm run qa:visual-lint`: current report generated at `2026-06-03T05:51:25Z` and exits 0 through screenshot fallback. It checked 10 current browser QA screenshots and found 0 issues; manual visual approval remains separate.
+- `docs/qa/long-horizon/browser-qa-report.md` generated at `2026-06-03T10:42:31Z` against `http://127.0.0.1:3000`.
+- Automated browser report captured 12 screenshots, including `desktop-healthcare-disclaimer.png`, `desktop-route-workplace-performance-review.png`, and `desktop-blank-integrity-neighbor.png`, and reported 0 issues, 0 console errors, and 0 failed responses.
+- `npm run qa:visual-lint`: current report generated at `2026-06-03T10:43:26Z` and exits 0 through screenshot fallback. It checked 12 current browser QA screenshots and found 0 issues; manual visual approval remains separate.
 - Manual visual/design approval remains incomplete because the image-viewing route failed; see `VISUAL_SCREENSHOT_REVIEW_CHECKLIST.md`.
 
 Latest automated content/engineering gates after Atlas coordination:
@@ -87,7 +87,7 @@ Latest automated content/engineering gates after Atlas coordination:
 - Full E2E status: not a practical routine blocking gate in this local environment. A full concurrency-3 run produced 9/11 passing agents before targeted fixes; a later concurrency-3 run showed load-sensitive failure/timeout; a concurrency-2 run was stopped because it was consuming too much wall-clock time without producing timely signal. Use focused E2E batches by default; run full suite only with an explicit time/resource budget.
 
 Current human/content state:
-- `HUMAN_CONTENT_REVIEW_LEDGER.md` currently tracks 51 scenarios as `not-reviewed` and 2 scenarios as product/founder `blocked`.
+- `HUMAN_CONTENT_REVIEW_LEDGER.md` currently tracks 52 scenarios as `not-reviewed` and 1 scenario as `blocked` for Healthcare/founder/legal judgement.
 - Codex-local fixes are complete for FS-QA-001 through FS-QA-008 and first-batch AI pre-review fixes FS-CONTENT-AI-001/002/005, but named human approval remains absent.
 
 ## First Batch AI Content Pre-Review
@@ -124,9 +124,9 @@ Content QA:
 - Human review remains required for all 53 scenarios. Use `HUMAN_CONTENT_REVIEW_LEDGER.md`; start with the seven representative/post-fix scenarios.
 
 UI/Visual QA:
-- Automated browser QA is green with 10 refreshed screenshots and 0 issues.
-- Automated visual layout lint exits 0 through screenshot fallback when Chromium DOM lint is blocked by macOS sandbox MachPort permissions. It validates the 10 current browser QA screenshots; manual visual/design review remains open.
-- Manual visual/design approval remains open in `VISUAL_SCREENSHOT_REVIEW_CHECKLIST.md`; the `view_image` route still fails on valid PNG evidence, including the new Healthcare screenshot.
+- Automated browser QA is green with 12 refreshed screenshots and 0 issues.
+- Automated visual layout lint exits 0 through screenshot fallback when Chromium DOM lint is blocked by macOS sandbox MachPort permissions. It validates the 12 current browser QA screenshots; manual visual/design review remains open.
+- Manual visual/design approval remains open in `VISUAL_SCREENSHOT_REVIEW_CHECKLIST.md`; the contact sheet has been refreshed to the 12 current screenshots, but named visual review is still required.
 
 UX/E2E QA:
 - Tier 1 local E2E passed twice consecutively after fixture hardening.
@@ -174,7 +174,7 @@ OPEN SIGNOFF - Private-beta default applied locally: Healthcare scenarios now sh
 Primary next gate: run the named human/founder/visual review gates using `HUMAN_CONTENT_REVIEW_LEDGER.md`, `HUMAN_CONTENT_REVIEW_PLAN.md`, and `FOUNDER_PRODUCT_DECISION_FORM.md`.
 
 Parallel non-human gates:
-- Visual/design reviewer inspects `VISUAL_SCREENSHOT_REVIEW_CHECKLIST.md`.
+- Visual/design reviewer inspects the 12-row `VISUAL_SCREENSHOT_REVIEW_CHECKLIST.md`.
 - Engineering QA next gate: use focused E2E reruns for changed/failed flows and avoid another full run unless explicitly budgeted. `ENG-QA-001` through `ENG-QA-004` are fixed locally; ENG-QA-005 is mitigated but not fully closed.
 
 Do not claim human approval, visual approval, production readiness, buyer readiness, or deploy safety until the relevant ledger/checklist entries are completed by named reviewers.

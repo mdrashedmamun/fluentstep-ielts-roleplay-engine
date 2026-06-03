@@ -95,6 +95,7 @@ Commands:
 - `npm run validate`
 - `npm run validate:feedback`
 - `npm run validate:alternatives`
+- `npm run validate:blank-integrity`
 - `npm run qa-test`
 
 Pass criteria:
@@ -199,6 +200,7 @@ Minimum flows:
 - Direct scenario route.
 - Roleplay start.
 - Blank reveal and close.
+- Blank integrity regression for `social-10-new-neighbor` blank 2 and single active alternatives popover.
 - Answer alternatives/feedback.
 - Audio/listen button.
 - Deep dive/chunk feedback.
@@ -243,7 +245,7 @@ Run after approved fixes:
 - Focused verifier for touched area.
 - `npm run type-check`.
 - `npm run build`.
-- Relevant validators.
+- Relevant validators, including `npm run validate:blank-integrity` after blank, answer, alternative, or feedback changes.
 - Focused Playwright smoke.
 - `npm run test:e2e:tier1` for broad confidence.
 - Full `npm run test:e2e` only for explicitly budgeted final regression or when E2E infrastructure changes require it. Prefer focused batch reruns for changed or previously failing flows.
@@ -362,6 +364,7 @@ Output:
 | `npm run validate` | Scenario validation | Baseline and after content/schema changes | Exit code 0 |
 | `npm run validate:feedback` | Chunk feedback validation | Baseline and after feedback/content changes | Exit code 0 |
 | `npm run validate:alternatives` | Answer alternative quality | Baseline and after blank/answer changes | Exit code 0 |
+| `npm run validate:blank-integrity` | Exact sentence substitution audit for every blank, main answer, and alternative | Baseline and after blank/answer/alternative/feedback/UI lookup changes | Exit code 0; 0 Blocker/High sentence-substitution issues |
 | `npm run qa-test` | QA agent test | Baseline and closeout | Exit code 0 |
 | `npm run test:e2e:tier1` | Focused high-value E2E | After browser route is local-ready | Exit code 0 or documented findings |
 | `npm run test:e2e` | Full E2E suite | Explicitly budgeted final regression only | Meets quality gate threshold, with retry-pass agents recorded |
@@ -440,6 +443,7 @@ Stop and write `BLOCKED` with the exact decision needed when:
 - Dev server cannot start on `localhost:3000`.
 - Playwright cannot launch Chromium.
 - E2E target cannot be reconciled between live and local.
+- `validate:blank-integrity` reports a wrong-answer substitution, impossible sentence, or duplicate/shifted-answer issue.
 - Authority docs conflict in a way that changes QA gates.
 - A proposed fix needs product judgment.
 - A verifier fails repeatedly and the failure cause is unclear.

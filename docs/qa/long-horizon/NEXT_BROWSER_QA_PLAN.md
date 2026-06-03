@@ -2,7 +2,7 @@
 
 ## Scope
 
-This plan defines the next manual-plus-automated browser QA pass for FluentStep. It does not authorize source-code changes. Current automated browser QA has 10 screenshots and 0 automated issues, but manual visual review is still required.
+This plan defines the next manual-plus-automated browser QA pass for FluentStep. It does not authorize source-code changes. Current automated browser QA has 12 screenshots and 0 automated issues, including blank-integrity regression coverage, but manual visual review is still required.
 
 ## Environment
 
@@ -58,6 +58,7 @@ Steps:
 
 Screenshots:
 - `desktop-blank-popover.png`
+- `desktop-blank-integrity-neighbor.png`
 
 ### Flow 4: Audio/pronunciation
 
@@ -94,7 +95,20 @@ Screenshots:
 - `desktop-pattern-summary.png`
 - `desktop-active-recall.png`
 
-### Flow 7: Invalid scenario and error state
+### Flow 7: Direct route and blank-integrity regression
+
+Steps:
+1. Navigate directly to `/scenario/workplace-1-performance-review`.
+2. Confirm URL scenario id, rendered title, and scenario data match.
+3. Navigate to `/scenario/social-10-new-neighbor`.
+4. Reveal the first two blanks and confirm blank 2 renders `peaceful`, not `Nice to meet`.
+5. Confirm only one `Native Alternatives` popover is open at a time.
+
+Screenshots:
+- `desktop-route-workplace-performance-review.png`
+- `desktop-blank-integrity-neighbor.png`
+
+### Flow 8: Invalid scenario and error state
 
 Steps:
 1. Navigate to a non-existent scenario route.
@@ -104,7 +118,7 @@ Steps:
 Screenshots:
 - `desktop-invalid-scenario.png`
 
-### Flow 8: Mobile viewport
+### Flow 9: Mobile viewport
 
 Steps:
 1. Use 390x844 viewport.
