@@ -3419,3 +3419,43 @@ Remaining work:
 - Named visual/design review remains 0/12 approved.
 - Founder/product signoff remains open for product decisions.
 - Full `npm run test:e2e` remains budgeted-only, not a default closeout gate.
+
+
+### Checkpoint: Final Private-Beta Verifier Pack
+
+Files inspected:
+- `package.json`
+- `docs/qa/long-horizon/PRIVATE_BETA_LAUNCH_CANDIDATE_STATUS.md`
+- `docs/qa/long-horizon/NEXT_QA_FINDINGS_AND_FIX_PLAN.md`
+
+Commands run:
+- `npm run validate:critical` -> exit 0; 53 scenarios, 0 critical errors, 14 inherited `social-7-house-rules` chunk ID warnings.
+- `npm run validate` -> exit 0; 53 scenarios, zero validation errors.
+- `npm run validate:feedback` -> exit 0; 14 feedback items, 0 errors, 0 warnings.
+- `npm run validate:alternatives` -> exit 0; 53 scenarios, 715 blanks, 2179 alternatives including main answers, 0 issues.
+- `npm run qa-check -- --strict` -> exit 0; 53/53 passed, 0 failed, 53 need human review, 0 approved.
+- `npm run type-check` -> exit 0.
+- `npm run build` -> exit 0; prebuild checks passed; Vite build completed with split `index`, `scenario-data`, and `vendor` chunks.
+- `npm run validate:blank-integrity` -> exit 0; 53 scenarios, 715 blanks, 2179 substitutions, 0 issues.
+- `npx vercel inspect <latest-preview-url>` -> exit 0 during this continuation; final-push preview reached Ready.
+- `curl -I <latest-preview-url>` -> exit 0 during this continuation; final-push preview returned HTTP 200.
+
+Results:
+- Current branch verifier pack is green for all automatable private-beta gates run in this continuation.
+- Browser QA, visual-lint, focused multiple-blank E2E, and full Tier 1 local E2E were refreshed earlier in this continuation and remained the current browser/E2E evidence.
+- Human/founder/visual approval gates remain open by design and are not impersonated by Codex.
+
+Screenshots captured:
+- No new screenshots in this checkpoint; current screenshot set remains the 12-image browser QA evidence pack.
+
+Issues found:
+- No new objective Blocker/High issue.
+
+Fixes made:
+- Progress/status documentation only.
+
+Remaining work:
+- Named human content approval: 0/53 approved.
+- Named visual/design approval: 0/12 reviewed.
+- Founder/product signoff remains open for the product decision form.
+- Remote preview browser smoke remains unclaimed because local Node fetch cannot reach Vercel preview even though `curl` can; local browser QA is the verified browser route.
