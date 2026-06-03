@@ -62,10 +62,10 @@ Current blank-integrity state:
 - `npm run qa:browser`: exit 0; generated `2026-06-03T13:52:17Z`; 12 screenshots, 0 issues, 0 console errors, 0 failed responses. New screenshots include `desktop-blank-integrity-neighbor.png` and `desktop-route-workplace-performance-review.png`.
 - `npm run qa:visual-lint`: exit 0; generated `2026-06-03T13:52:46Z`; screenshot fallback checked 12 screenshots and found 0 issues.
 
-Tier 1 E2E caveat:
-- Full rerun after starting the dev server reached product assertions and produced 70 passed / 1 failed / 3 warnings. The one failure was a stale test locator for the old multiple-popover behavior, not the blank-answer product bug.
-- The stale test was updated to re-query remaining blanks and assert one active alternatives popover.
-- Focused reruns after the test update are currently blocked before assertions by Chromium MachPort permissions in this sandbox. Rerun in a browser environment that allows Chromium launch before treating Tier 1 as green again.
+Tier 1 E2E closure:
+- The stale multiple-blank test was updated to re-query remaining blanks and assert one active alternatives popover.
+- Focused multiple-blank rerun passed: 2 selected tests passed, 69 deselected, 3 inherited warnings, 14.09s.
+- Full Tier 1 local rerun passed: 71 passed, 3 inherited warnings, 234.23s.
 
 ## Current Evidence
 
@@ -82,7 +82,7 @@ Latest automated content/engineering gates after Atlas coordination:
 - `npm run qa-check -- --strict`: exit 0; 53/53 passed; all 53 still need human review.
 - `npm run build`: exit 0; chunk split verified with `index` 131.42 KB, `scenario-data` 238.20 KB, and `vendor` 251.28 KB; no Vite chunk-size warning.
 - `npm run lint`: exit 0; latest parsed report is 0 errors / 108 warnings / 175 files. Remaining warnings are mostly script `no-console` and cleanup-style warnings; `.eslintignore` still emits an ESLint 9 deprecation message. `npm run quality` exits 0 outside sandbox.
-- `npm run test:e2e:tier1:local`: latest exit 0; 71 passed, 3 inherited pytest warnings, 294.68s.
+- `npm run test:e2e:tier1:local`: latest exit 0; 71 passed, 3 inherited pytest warnings, 234.23s.
 - Full E2E harness smoke: deliberate one-second timeout returns bounded diagnostics and retry output instead of hanging.
 - Focused E2E regression after harness fixes: `tier2_batch_01.py` 71 passed / 4 skipped in 5:50; `tier2_batch_02.py` 71 passed / 4 skipped in 9:07 after the Next Turn fallback; `tier2_batch_09.py` 73 passed / 2 skipped in 9:06; `tier2_batch_10.py` 15 passed in 2:39.
 - Full E2E status: not a practical routine blocking gate in this local environment. A full concurrency-3 run produced 9/11 passing agents before targeted fixes; a later concurrency-3 run showed load-sensitive failure/timeout; a concurrency-2 run was stopped because it was consuming too much wall-clock time without producing timely signal. Use focused E2E batches by default; run full suite only with an explicit time/resource budget.
@@ -108,7 +108,7 @@ Claim boundary: `ai-reviewed` and locally validated, not human-approved.
 
 | ID | Severity | Location | Evidence | Why It Matters | Recommended Fix | Validation Method | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| FS-QA-009 | High | `src/components/RoleplayViewer.tsx`, `social-10-new-neighbor` blank 2 | UI could render `Nice to meet` in `Welcome to the neighbourhood. It's quite ________ here` because answer lookup tried exact rendered blank index before one-based fallback. | Learners see an impossible sentence and lose trust in blank feedback. | Fixed locally with shared per-scenario index-base normalisation and single-active-popover state. | `npm run validate:blank-integrity`: exit 0; `npm run qa:browser`: exit 0 with `desktop-blank-integrity-neighbor.png`; rerun Tier 1 when Chromium MachPort allows. | Fixed locally |
+| FS-QA-009 | High | `src/components/RoleplayViewer.tsx`, `social-10-new-neighbor` blank 2 | UI could render `Nice to meet` in `Welcome to the neighbourhood. It's quite ________ here` because answer lookup tried exact rendered blank index before one-based fallback. | Learners see an impossible sentence and lose trust in blank feedback. | Fixed locally with shared per-scenario index-base normalisation and single-active-popover state. | `npm run validate:blank-integrity`: exit 0; `npm run qa:browser`: exit 0 with `desktop-blank-integrity-neighbor.png`; focused multiple-blank E2E: 2 passed; full Tier 1 local E2E: 71 passed. | Fixed locally |
 | FS-QA-001 | High | `src/services/staticData.ts`, `social-1-flatmate` | Dialogue blank says `keep ________` and answer index 3 is `clean` at lines 188 and 243-249, but `chunkFeedback` blankIndex 3 teaches `keep track` at lines 365-400. | Feedback can teach the wrong phrase after the learner answers correctly, undermining trust and pattern fluency. | Replace the mismatched feedback with content for `clean`/`keep clean`, or change the dialogue/answer to match `keep track` if product intent was monitoring rather than house cleanliness. | Run `npm run validate:critical`, `npm run qa-check --strict`, `npm run audit:report`; manually replay `social-1-flatmate` blank 3 and confirm feedback matches the answer. | Fixed locally |
 | FS-QA-002 | High | `src/services/staticData.ts`, `service_1_restaurant_order` | All 27 `answerVariations` in the sampled restaurant scenario have empty `alternatives` arrays at lines 13096-13231. | The exercise becomes brittle and less conversational; learners get less support for acceptable UK English variants. | Add natural alternatives for each blank, prioritising multi-word service phrases, dietary/allergy language, and billing phrases. Keep alternatives semantically valid in the exact sentence. | Run `npm run validate:critical`, `npm run qa-check --strict`, `npm run validate:alternatives`, then browser-smoke the restaurant flow. | Fixed locally |
 | FS-QA-003 | Medium | `src/services/staticData.ts`, `service_1_restaurant_order` V2 feedback | V2 feedback examples often exceed the local interface contract of 1-2 examples and several `whyOdd` fields are empty, e.g. lines 13242-13250 and 13260-13268. | Feedback becomes verbose and less diagnostic; empty `whyOdd` weakens the learning loop and makes reports appear polished while omitting the actual explanation. | Trim examples to focused 1-2 items per chunk and fill every `whyOdd` with a specific learner-facing reason. | Add or run a validator that checks V2 `examples.length <= 2` and non-empty `whyOdd`; then run `npm run validate:critical` and `npm run qa-check --strict`. | Fixed locally |
@@ -130,7 +130,7 @@ UI/Visual QA:
 - Manual visual/design approval remains open in `VISUAL_SCREENSHOT_REVIEW_CHECKLIST.md`; the contact sheet has been refreshed to the 12 current screenshots, but named visual review is still required.
 
 UX/E2E QA:
-- Tier 1 local E2E passed twice consecutively after fixture hardening.
+- Tier 1 local E2E passed after the blank-integrity test expectation update: focused multiple-blank 2/2 selected cases passed, and full Tier 1 local passed 71/71.
 - The browser route now verifies it is running against FluentStep rather than an unrelated localhost app.
 - Full-suite E2E is materially improved but still long/load-sensitive. The runner is bounded and retry-aware; implicated batches 02 and 09 now pass directly. Treat focused E2E plus targeted reruns as the next practical engineering regression gate; full E2E is a budgeted deep-regression option, not routine closeout.
 
@@ -148,7 +148,7 @@ Packet A - Human content review batch:
 - Claim boundary: no content approval until reviewer/date/checklist evidence is recorded.
 
 Packet B - Visual/design review:
-- Scope: named reviewer inspects all 10 refreshed screenshots.
+- Scope: named reviewer inspects all 12 refreshed screenshots.
 - Artifact: `VISUAL_SCREENSHOT_REVIEW_CHECKLIST.md`.
 - Claim boundary: automated `qa:browser` is not visual approval.
 

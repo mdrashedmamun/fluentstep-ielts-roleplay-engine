@@ -83,7 +83,7 @@ Current automated evidence:
 - `npm run type-check`: passed using app-focused `tsconfig.app.json`.
 - `npm run build`: passed; later chunk splitting removed the prior Vite chunk-size warning in current launch-candidate evidence.
 - `npm run qa:browser`: passed with 12 screenshots and 0 automated browser issues.
-- `npm run test:e2e:tier1:local`: previously passed with 71 tests and 3 inherited pytest warnings; latest post-blank-integrity rerun is blocked by local Chromium MachPort permissions after the stale multiple-blank test expectation was updated.
+- `npm run test:e2e:tier1:local`: passed after the blank-integrity test expectation update; latest full rerun was 71 passed with 3 inherited pytest warnings.
 
 Current approval boundary:
 - Automated QA has passed locally.

@@ -3386,3 +3386,36 @@ Remaining work:
 - Run preview browser smoke from an environment where Node/Playwright can reach Vercel, if preview browser evidence is required.
 - Rerun Tier 1 local E2E in an environment where Chromium can launch.
 - Complete named human, visual, and founder approval artifacts before upgrading claims.
+
+
+### Checkpoint: Tier 1 E2E Final Rerun Closed
+
+Files inspected:
+- `docs/qa/long-horizon/PRIVATE_BETA_LAUNCH_CANDIDATE_STATUS.md`
+- `docs/qa/long-horizon/NEXT_QA_FINDINGS_AND_FIX_PLAN.md`
+- `tests/e2e/scenarios/tier1_with_feedback.py`
+
+Commands run:
+- `npm run dev -- --host 127.0.0.1 --port 3000` -> exit via Ctrl-C after verification; local app served `http://127.0.0.1:3000`.
+- `npm run test:e2e:tier1:local -- -k test_multiple_blanks_independent` -> exit 0; 2 passed, 69 deselected, 3 inherited warnings, 14.09s.
+- `npm run test:e2e:tier1:local` -> exit 0; 71 passed, 3 inherited warnings, 234.23s.
+
+Results:
+- The post-blank-integrity E2E final rerun gate is closed locally.
+- The formerly stale multiple-blank expectation passes both focused and inside the full Tier 1 suite.
+- Remaining warnings are inherited pytest config/collection warnings, not product assertion failures.
+
+Screenshots captured:
+- None in this E2E checkpoint; screenshot evidence remains the 12-image browser QA set.
+
+Issues found:
+- No new product assertion failures.
+
+Fixes made:
+- Status/control artifact updates only.
+
+Remaining work:
+- Named human content review remains 0/53 approved.
+- Named visual/design review remains 0/12 approved.
+- Founder/product signoff remains open for product decisions.
+- Full `npm run test:e2e` remains budgeted-only, not a default closeout gate.

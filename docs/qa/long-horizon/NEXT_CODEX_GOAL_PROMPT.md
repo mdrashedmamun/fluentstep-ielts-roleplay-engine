@@ -17,7 +17,7 @@ Read first:
 - scripts/stagingValidateContent.ts
 
 Current boundary:
-Local automated QA has passed: validate:critical, validate, validate:feedback, validate:alternatives, validate:blank-integrity, qa-check --strict, type-check, lint, build, qa:browser, and qa:visual-lint. Browser QA has 12 screenshots and 0 automated issues. Tier 1 local E2E previously passed, but the latest post-blank-integrity final rerun is blocked by Chromium MachPort permissions after the stale multiple-blank test expectation was updated. Manual visual review and human content approval are still required.
+Local automated QA has passed: validate:critical, validate, validate:feedback, validate:alternatives, validate:blank-integrity, qa-check --strict, type-check, lint, build, qa:browser, qa:visual-lint, focused multiple-blank E2E, and full test:e2e:tier1:local. Browser QA has 12 screenshots and 0 automated issues. Manual visual review and human content approval are still required.
 
 Workstreams:
 1. Manual browser/screenshot QA: review desktop/mobile screenshots and rerun npm run qa:browser if screenshots are stale or missing.
