@@ -16,7 +16,7 @@ Evidence-supported progress:
 - Academic elite framing was generalised.
 - Browser QA passed at `2026-06-03T13:52:17Z` with 12 screenshots, 0 issues, 0 console errors, and 0 failed responses.
 - Blank integrity validation passed with 715/715 blanks and 2179 substitutions audited, 0 issues.
-- Vercel preview is Ready and HTTP 200 at `https://fluentstep-ielts-roleplay-engine-2pgzvm9wy.vercel.app`; no production deploy was performed.
+- Vercel preview was checked during this pass and reached Ready with HTTP 200; re-run `npx vercel ls fluentstep-ielts-roleplay-engine` after each push because preview URLs change per commit. No production deploy was performed.
 - Tier 1 local E2E previously passed with 71 tests; the latest post-fix rerun reached 70 passed / 1 stale-test failure, then focused reruns were blocked by Chromium MachPort permissions after the test was updated.
 
 ## Open Gates

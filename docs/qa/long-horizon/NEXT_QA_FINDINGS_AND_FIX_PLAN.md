@@ -70,7 +70,7 @@ Tier 1 E2E caveat:
 ## Current Evidence
 
 Latest automated browser evidence:
-- Vercel preview deployment is Ready at `https://fluentstep-ielts-roleplay-engine-2pgzvm9wy.vercel.app` and `curl -I` returned HTTP 200. Remote browser smoke is not claimed because Node fetch cannot reach the preview from this local environment.
+- Vercel preview deployment was checked during this pass and reached Ready with HTTP 200; re-run `npx vercel ls fluentstep-ielts-roleplay-engine` after each push because preview URLs change per commit. Remote browser smoke is not claimed because Node fetch cannot reach the preview from this local environment.
 - `docs/qa/long-horizon/browser-qa-report.md` generated at `2026-06-03T13:52:17Z` against `http://127.0.0.1:3000`.
 - Automated browser report captured 12 screenshots, including `desktop-healthcare-disclaimer.png`, `desktop-route-workplace-performance-review.png`, and `desktop-blank-integrity-neighbor.png`, and reported 0 issues, 0 console errors, and 0 failed responses.
 - `npm run qa:visual-lint`: current report generated at `2026-06-03T13:52:46Z` and exits 0 through screenshot fallback. It checked 12 current browser QA screenshots and found 0 issues; manual visual approval remains separate.
