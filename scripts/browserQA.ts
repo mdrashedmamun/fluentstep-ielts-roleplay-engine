@@ -27,6 +27,8 @@ interface ScreenshotEvidence {
 
 const cwd = process.cwd();
 const baseURL = process.env.FLUENTSTEP_QA_BASE_URL || 'http://127.0.0.1:3000';
+const isLocalBaseURL = /^https?:\/\/(127\.0\.0\.1|localhost)(?::\d+)?/i.test(baseURL);
+const identityTimeoutMs = isLocalBaseURL ? 1500 : 6000;
 const scenarioId = process.env.FLUENTSTEP_QA_SCENARIO || 'service_1_restaurant_order';
 const reportDir = path.join(cwd, 'docs/qa/long-horizon');
 const screenshotDir = path.join(reportDir, 'screenshots');
@@ -48,7 +50,7 @@ interface AppIdentity {
 
 async function getAppIdentity(): Promise<AppIdentity> {
   try {
-    const response = await fetch(baseURL, { signal: AbortSignal.timeout(1500) });
+    const response = await fetch(baseURL, { signal: AbortSignal.timeout(identityTimeoutMs) });
     const html = await response.text();
     const title = html.match(/<title>(.*?)<\/title>/i)?.[1]?.trim() || 'missing title';
     const isFluentStep = response.status < 500 && /FluentStep:\s*IELTS Roleplay Engine/i.test(title);
@@ -75,6 +77,19 @@ async function startLocalApp(): Promise<void> {
   const identity = await getAppIdentity();
   if (identity.isFluentStep) {
     return;
+  }
+
+  if (!isLocalBaseURL) {
+    recordIssue({
+      severity: 'Blocker',
+      location: 'Browser QA target',
+      evidence: `${baseURL} did not identify as FluentStep. ${identity.evidence}`,
+      whyItMatters: 'Browser QA must fail clearly when a preview or remote target is unavailable or serves the wrong app.',
+      recommendedFix: 'Check the preview deployment status, warm the route, or set FLUENTSTEP_QA_BASE_URL to a reachable FluentStep deployment, then rerun npm run qa:browser.',
+      validationMethod: 'FLUENTSTEP_QA_BASE_URL=<preview-url> npm run qa:browser exits 0 only after the preview identifies as FluentStep.',
+      status: 'open',
+    });
+    throw new Error(`QA target did not become reachable as FluentStep at ${baseURL}: ${identity.evidence}`);
   }
 
   if (identity.reachable) {

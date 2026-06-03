@@ -14,8 +14,9 @@ Evidence-supported progress:
 - Healthcare learning-only disclaimer is implemented and included in browser QA screenshot coverage.
 - `advanced-1-manager-escalation` uses the Service/Logistics private-beta default locally.
 - Academic elite framing was generalised.
-- Browser QA passed at `2026-06-03T10:42:31Z` with 12 screenshots, 0 issues, 0 console errors, and 0 failed responses.
+- Browser QA passed at `2026-06-03T13:52:17Z` with 12 screenshots, 0 issues, 0 console errors, and 0 failed responses.
 - Blank integrity validation passed with 715/715 blanks and 2179 substitutions audited, 0 issues.
+- Vercel preview is Ready and HTTP 200 at `https://fluentstep-ielts-roleplay-engine-2pgzvm9wy.vercel.app`; no production deploy was performed.
 - Tier 1 local E2E previously passed with 71 tests; the latest post-fix rerun reached 70 passed / 1 stale-test failure, then focused reruns were blocked by Chromium MachPort permissions after the test was updated.
 
 ## Open Gates
@@ -36,7 +37,7 @@ Evidence-supported progress:
 | Scenario AI pre-review | Pass: 53/53 | Content/Pedagogy subagent wave integrated into QA artifacts. |
 | Objective Blocker/High fixes | Pass locally | `NEXT_QA_FINDINGS_AND_FIX_PLAN.md` plus source fixes. |
 | Healthcare disclaimer | Pass locally, signoff open | `RoleplayViewer.tsx`, `browserQA.ts`, `desktop-healthcare-disclaimer.png`. |
-| Browser QA | Pass | `browser-qa-report.md` generated `2026-06-03T10:42:31Z`; 12 screenshots, 0 issues. |
+| Browser QA | Pass | `browser-qa-report.md` generated `2026-06-03T13:52:17Z`; 12 screenshots, 0 issues. |
 | Blank integrity | Pass | `npm run validate:blank-integrity`: 715 blanks, 2179 substitutions, 0 issues. |
 | Tier 1 local E2E | Needs final rerun | Latest full rerun: 70 passed / 1 stale-test failure; test updated; focused rerun blocked by Chromium MachPort permissions. |
 | Visual lint | Pass with fallback | `npm run qa:visual-lint`: exit 0; screenshot fallback checked 12 current browser QA screenshots, 0 issues. |

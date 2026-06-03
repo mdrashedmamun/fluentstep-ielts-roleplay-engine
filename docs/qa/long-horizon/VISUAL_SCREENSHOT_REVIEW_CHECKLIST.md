@@ -8,11 +8,11 @@ Claim boundary: automated browser QA reported 0 issues, but manual visual approv
 
 - Browser report: `docs/qa/long-horizon/browser-qa-report.md`
 - Contact sheet for manual review: `docs/qa/long-horizon/screenshots/contact-sheet.png`
-- Generated: `2026-06-03T10:42:31.562Z`; contact sheet refreshed after blank-integrity regression screenshots were added
+- Generated: `2026-06-03T13:52:17.568Z`; contact sheet refreshed after blank-integrity regression screenshots were added
 - Base URL: `http://127.0.0.1:3000`
 - Scenario: `service_1_restaurant_order`
 - Automated browser result: 12 screenshots, 0 automated issues, 0 console errors, 0 failed responses
-- Automated visual layout lint: current `npm run qa:visual-lint` exits 0 through screenshot fallback; report generated `2026-06-03T10:43:26.696Z`; 12 current browser QA screenshots checked, 0 issues
+- Automated visual layout lint: current `npm run qa:visual-lint` exits 0 through screenshot fallback; report generated `2026-06-03T13:52:46.348Z`; 12 current browser QA screenshots checked, 0 issues
 
 ## Review Criteria
 
@@ -37,7 +37,7 @@ For each screenshot, check layout, hierarchy, text fit, contrast, obvious overla
 
 ## Automated Visual Layout Lint
 
-Latest current run: `2026-06-03T10:43:26.696Z`; screenshot fallback used because Chromium DOM lint was blocked by sandbox MachPort permissions
+Latest current run: `2026-06-03T13:52:46.348Z`; screenshot fallback used because Chromium DOM lint was blocked by sandbox MachPort permissions
 
 Report: `docs/qa/long-horizon/visual-lint-report.md`
 

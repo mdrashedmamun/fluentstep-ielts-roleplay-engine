@@ -45,9 +45,9 @@ Objective fixes applied in this pass:
 - `Academic` and `Cultural` category filters were added to the scenario picker, and stale 43-scenario hero copy was removed.
 
 Fresh automated evidence:
-- Earlier `npm run qa:browser`: exit 0; generated `2026-06-03T05:48:29Z`; 10 screenshots, 0 issues, 0 console errors, 0 failed responses. Superseded by the `2026-06-03T10:42:31Z` 12-screenshot blank-integrity run below.
+- Earlier `npm run qa:browser`: exit 0; generated `2026-06-03T05:48:29Z`; 10 screenshots, 0 issues, 0 console errors, 0 failed responses. Superseded by the `2026-06-03T13:52:17Z` 12-screenshot blank-integrity run below.
 - `npm run test:e2e:tier1:local`: exit 0; 71 passed, 3 inherited pytest warnings, runtime 294.68s.
-- Earlier `npm run qa:visual-lint`: exit 0; generated `2026-06-03T05:51:25Z`; Chromium DOM lint could not launch under macOS sandbox MachPort permissions, so the command used screenshot fallback against the 10 browser QA screenshots and found 0 issues. Superseded by the `2026-06-03T10:43:26Z` 12-screenshot fallback run below.
+- Earlier `npm run qa:visual-lint`: exit 0; generated `2026-06-03T05:51:25Z`; Chromium DOM lint could not launch under macOS sandbox MachPort permissions, so the command used screenshot fallback against the 10 browser QA screenshots and found 0 issues. Superseded by the `2026-06-03T13:52:46Z` 12-screenshot fallback run below.
 
 Private-beta blocker status:
 - 0 unresolved objective Codex-fixable Blocker/High issues are known after this pass.
@@ -59,8 +59,8 @@ Private-beta blocker status:
 Current blank-integrity state:
 - `FS-QA-009`: fixed locally. `RoleplayViewer` now normalises answer index base per scenario through `src/services/blankIndexing.ts`, avoiding the prior exact-index-first fallback that could render `Nice to meet` into `It's quite ________ here`.
 - `npm run validate:blank-integrity`: exit 0; 53 scenarios, 715 blanks, 2179 substitutions, 0 issues. Reports: `blank-integrity-report.md` and `blank-integrity-report.json`.
-- `npm run qa:browser`: exit 0; generated `2026-06-03T10:42:31Z`; 12 screenshots, 0 issues, 0 console errors, 0 failed responses. New screenshots include `desktop-blank-integrity-neighbor.png` and `desktop-route-workplace-performance-review.png`.
-- `npm run qa:visual-lint`: exit 0; generated `2026-06-03T10:43:26Z`; screenshot fallback checked 12 screenshots and found 0 issues.
+- `npm run qa:browser`: exit 0; generated `2026-06-03T13:52:17Z`; 12 screenshots, 0 issues, 0 console errors, 0 failed responses. New screenshots include `desktop-blank-integrity-neighbor.png` and `desktop-route-workplace-performance-review.png`.
+- `npm run qa:visual-lint`: exit 0; generated `2026-06-03T13:52:46Z`; screenshot fallback checked 12 screenshots and found 0 issues.
 
 Tier 1 E2E caveat:
 - Full rerun after starting the dev server reached product assertions and produced 70 passed / 1 failed / 3 warnings. The one failure was a stale test locator for the old multiple-popover behavior, not the blank-answer product bug.
@@ -70,9 +70,10 @@ Tier 1 E2E caveat:
 ## Current Evidence
 
 Latest automated browser evidence:
-- `docs/qa/long-horizon/browser-qa-report.md` generated at `2026-06-03T10:42:31Z` against `http://127.0.0.1:3000`.
+- Vercel preview deployment is Ready at `https://fluentstep-ielts-roleplay-engine-2pgzvm9wy.vercel.app` and `curl -I` returned HTTP 200. Remote browser smoke is not claimed because Node fetch cannot reach the preview from this local environment.
+- `docs/qa/long-horizon/browser-qa-report.md` generated at `2026-06-03T13:52:17Z` against `http://127.0.0.1:3000`.
 - Automated browser report captured 12 screenshots, including `desktop-healthcare-disclaimer.png`, `desktop-route-workplace-performance-review.png`, and `desktop-blank-integrity-neighbor.png`, and reported 0 issues, 0 console errors, and 0 failed responses.
-- `npm run qa:visual-lint`: current report generated at `2026-06-03T10:43:26Z` and exits 0 through screenshot fallback. It checked 12 current browser QA screenshots and found 0 issues; manual visual approval remains separate.
+- `npm run qa:visual-lint`: current report generated at `2026-06-03T13:52:46Z` and exits 0 through screenshot fallback. It checked 12 current browser QA screenshots and found 0 issues; manual visual approval remains separate.
 - Manual visual/design approval remains incomplete because the image-viewing route failed; see `VISUAL_SCREENSHOT_REVIEW_CHECKLIST.md`.
 
 Latest automated content/engineering gates after Atlas coordination:

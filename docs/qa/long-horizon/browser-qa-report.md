@@ -1,6 +1,6 @@
 # Long-Horizon Browser QA Report
 
-- Generated: 2026-06-03T10:42:31.562Z
+- Generated: 2026-06-03T13:52:17.568Z
 - Base URL: http://127.0.0.1:3000
 - Scenario: service_1_restaurant_order
 - Screenshots: 12

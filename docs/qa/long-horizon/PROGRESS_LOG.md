@@ -3346,3 +3346,43 @@ Remaining work:
 - Rerun focused multiple-blank E2E and full Tier 1 in an environment where Chromium can launch.
 - Named visual/design reviewer must inspect all 12 screenshot rows.
 - Named human reviewer/founder must complete the approval/signoff artifacts before any human-approved, production-ready, buyer-ready, deploy-safe, legal-approved, or visual-approved claim.
+
+
+### Checkpoint: Preview Status And Remote QA Tooling Guard
+
+Files inspected:
+- `.vercel/project.json`
+- `scripts/browserQA.ts`
+- `docs/qa/long-horizon/browser-qa-report.md`
+- `docs/qa/long-horizon/visual-lint-report.md`
+
+Commands run:
+- `npx vercel ls fluentstep-ielts-roleplay-engine` -> exit 0; latest preview initially building, prior preview ready.
+- `npx vercel inspect https://fluentstep-ielts-roleplay-engine-2pgzvm9wy.vercel.app` -> exit 0; latest preview status Ready.
+- `curl -I https://fluentstep-ielts-roleplay-engine-2pgzvm9wy.vercel.app` -> exit 0; HTTP 200.
+- `FLUENTSTEP_QA_BASE_URL=https://fluentstep-ielts-roleplay-engine-2pgzvm9wy.vercel.app npm run qa:browser` -> exit 1; Node fetch could not reach the preview from this local environment, while curl could. No remote browser-smoke approval claimed.
+- `npm run qa:browser` -> exit 0; local route refreshed at `2026-06-03T13:52:17Z`; 12 screenshots, 0 issues, 0 console errors, 0 failed responses.
+- `npm run validate:blank-integrity` -> exit 0; 53 scenarios, 715 blanks, 2179 substitutions, 0 issues.
+- `npm run lint` -> exit 0; 0 errors, inherited 108 warnings and `.eslintignore` deprecation warning.
+- `npm run qa:visual-lint` -> exit 0; screenshot fallback refreshed at `2026-06-03T13:52:46Z`; 12 screenshots, 0 issues.
+
+Results:
+- Preview deployment is Ready and HTTP 200, but not remote-browser-smoke approved due local Node fetch failure.
+- `scripts/browserQA.ts` now treats non-local `FLUENTSTEP_QA_BASE_URL` targets as remote QA targets and fails clearly instead of attempting to spawn a local Vite server for a Vercel URL.
+- Local browser QA remains the primary verified browser route and passed after the tooling guard.
+
+Screenshots captured/refreshed:
+- 12 browser QA screenshots in `docs/qa/long-horizon/screenshots/`.
+- `docs/qa/long-horizon/screenshots/contact-sheet.png` refreshed from the 12 current screenshots.
+
+Issues found:
+- Remote preview browser QA is blocked in this local environment because Node fetch cannot reach the preview even though curl can; do not claim preview browser-smoke approval.
+
+Fixes made:
+- Narrow tooling fix in `scripts/browserQA.ts` for remote base URL handling.
+- Refreshed browser/visual reports and screenshot evidence.
+
+Remaining work:
+- Run preview browser smoke from an environment where Node/Playwright can reach Vercel, if preview browser evidence is required.
+- Rerun Tier 1 local E2E in an environment where Chromium can launch.
+- Complete named human, visual, and founder approval artifacts before upgrading claims.
